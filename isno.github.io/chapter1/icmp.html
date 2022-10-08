@@ -1,0 +1,533 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>ICMP协议及应用 · 高可用服务建设实践</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-katex/katex.min.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="ping.html" />
+    
+    
+    <link rel="prev" href="bgp.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                        <b>1.1.</b>
+                    
+                    关于本书
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="net.html">
+            
+                <a href="net.html">
+            
+                    
+                        <b>1.2.</b>
+                    
+                    网络原理与优化实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="monet.html">
+            
+                <a href="monet.html">
+            
+                    
+                        <b>1.2.1.</b>
+                    
+                    移动网络基本原理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="ethernet.html">
+            
+                <a href="ethernet.html">
+            
+                    
+                        <b>1.2.2.</b>
+                    
+                    局域网通信原理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="bgp.html">
+            
+                <a href="bgp.html">
+            
+                    
+                        <b>1.2.3.</b>
+                    
+                    互联网AS自治系统及BGP讲解
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.4" data-path="icmp.html">
+            
+                <a href="icmp.html">
+            
+                    
+                        <b>1.2.4.</b>
+                    
+                    ICMP协议及应用
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.4.1" data-path="ping.html">
+            
+                <a href="ping.html">
+            
+                    
+                        <b>1.2.4.1.</b>
+                    
+                    Ping
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4.2" data-path="traceroute.html">
+            
+                <a href="traceroute.html">
+            
+                    
+                        <b>1.2.4.2.</b>
+                    
+                    traceroute
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4.3" data-path="mtr.html">
+            
+                <a href="mtr.html">
+            
+                    
+                        <b>1.2.4.3.</b>
+                    
+                    使用MTR探测网络质量
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="tcp.html">
+            
+                <a href="tcp.html">
+            
+                    
+                        <b>1.2.5.</b>
+                    
+                    TCP优化实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.5.1" data-path="tcp握手优化.html">
+            
+                <a href="tcp握手优化.html">
+            
+                    
+                        <b>1.2.5.1.</b>
+                    
+                    TCP连接优化：参数优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.2" data-path="TCPFastOpen.html">
+            
+                <a href="TCPFastOpen.html">
+            
+                    
+                        <b>1.2.5.2.</b>
+                    
+                    TCP连接优化：TCP Fast Open
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.3" data-path="tcp挥手优化.html">
+            
+                <a href="tcp挥手优化.html">
+            
+                    
+                        <b>1.2.5.3.</b>
+                    
+                    TCP挥手优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.4" data-path="tcp传输优化.html">
+            
+                <a href="tcp传输优化.html">
+            
+                    
+                        <b>1.2.5.4.</b>
+                    
+                    TCP传输优化实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.5.4.1" data-path="tcp-params.html">
+            
+                <a href="tcp-params.html">
+            
+                    
+                        <b>1.2.5.4.1.</b>
+                    
+                    TCP传输参数优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.4.2" data-path="tcp-ecn.html">
+            
+                <a href="tcp-ecn.html">
+            
+                    
+                        <b>1.2.5.4.2.</b>
+                    
+                    TCP ECN
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.4.3" data-path="tcp-bbr.html">
+            
+                <a href="tcp-bbr.html">
+            
+                    
+                        <b>1.2.5.4.3.</b>
+                    
+                    升级BBRv2传输算法
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="application.md">
+            
+                <span>
+            
+                    
+                        <b>1.3.</b>
+                    
+                    应用服务的优化与实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >ICMP协议及应用</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="icmp&#x534F;&#x8BAE;&#x53CA;&#x5E94;&#x7528;">ICMP&#x534F;&#x8BAE;&#x53CA;&#x5E94;&#x7528;</h1>
+<p>&#x5728;&#x65E5;&#x5E38;&#x7684;&#x8FD0;&#x7EF4;&#x5DE5;&#x4F5C;&#x4E2D;&#xFF0C;&#x6211;&#x4EEC;&#x7ECF;&#x5E38;&#x5224;&#x65AD;&#x7F51;&#x7EDC;&#x662F;&#x5426;&#x8054;&#x901A;&#x3001;&#x4E24;&#x4E2A;&#x7AEF;&#x70B9;&#x4E4B;&#x95F4;&#x7684;&#x5EF6;&#x8FDF;&#x7B49;&#xFF0C;&#x4F7F;&#x7528;&#x6700;&#x591A;&#x7684;&#x547D;&#x4EE4;&#x5C31;&#x662F; ping&#x3001;traceroute&#x3001;mtr&#x7B49;&#xFF0C; &#x8FD9;&#x4E9B;&#x5DE5;&#x5177;&#x90FD;&#x662F;&#x57FA;&#x4E8E;ICMP&#x534F;&#x8BAE;&#x6765;&#x5B9E;&#x73B0;&#x7684;&#x3002;</p>
+<p>ICMP &#x5168;&#x79F0;&#x662F; Internet Control Message Protocol&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x4E92;&#x8054;&#x7F51;&#x63A7;&#x5236;&#x62A5;&#x6587;&#x534F;&#x8BAE;&#x3002;</p>
+<p>&#x63A7;&#x5236;&#x62A5;&#x6587;&#x534F;&#x8BAE;ICMP&#x662F;&#x4E00;&#x4E2A;&#x5DEE;&#x9519;&#x62A5;&#x544A;&#x673A;&#x5236;&#xFF0C;&#x5C5E;&#x4E8E;&#x7F51;&#x7EDC;&#x5C42;&#x534F;&#x8BAE;&#xFF0C;&#x4E3B;&#x8981;&#x7528;&#x4E8E;&#x5728;IP&#x4E3B;&#x673A;&#x548C;&#x8DEF;&#x7531;&#x5668;&#x4E4B;&#x95F4;&#x4F20;&#x9012;&#x63A7;&#x5236;&#x6D88;&#x606F;&#xFF0C;&#x6536;&#x96C6;&#x5404;&#x79CD;&#x7F51;&#x7EDC;&#x4FE1;&#x606F;&#xFF0C;&#x5BF9;&#x4E8E;&#x8BCA;&#x65AD;&#x548C;&#x6392;&#x9664;&#x5404;&#x79CD;&#x7F51;&#x7EDC;&#x6545;&#x969C;&#x4EE5;&#x53CA;&#x7528;&#x6237;&#x6570;&#x636E;&#x7684;&#x4F20;&#x9012;&#x5177;&#x6709;&#x81F3;&#x5173;&#x91CD;&#x8981;&#x7684;&#x4F5C;&#x7528;&#x3002;</p>
+<p>&#x867D;&#x7136; ICMP &#x662F;&#x7F51;&#x7EDC;&#x5C42;&#x534F;&#x8BAE;&#xFF0C;&#x4F46;&#x662F;&#x5B83;&#x4E0D;&#x50CF; IP &#x534F;&#x8BAE;&#x548C; ARP &#x534F;&#x8BAE;&#x4E00;&#x6837;&#x76F4;&#x63A5;&#x4F20;&#x9012;&#x7ED9;&#x6570;&#x636E;&#x94FE;&#x8DEF;&#x5C42;&#xFF0C;&#x800C;&#x662F;&#x5148;&#x5C01;&#x88C5;&#x6210; IP &#x6570;&#x636E;&#x5305;&#x7136;&#x540E;&#x518D;&#x4F20;&#x9012;&#x7ED9;&#x6570;&#x636E;&#x94FE;&#x8DEF;&#x5C42;&#x3002;</p>
+<p>&#x5728; IP &#x6570;&#x636E;&#x5305;&#x4E2D;&#x5982;&#x679C;&#x534F;&#x8BAE;&#x7C7B;&#x578B;&#x5B57;&#x6BB5;&#x7684;&#x503C;&#x662F; 1 &#x7684;&#x8BDD;&#xFF0C;&#x5C31;&#x8868;&#x793A; IP &#x6570;&#x636E;&#x662F; ICMP &#x62A5;&#x6587;&#x3002;</p>
+<div align="center">
+    <p>&#x56FE;&#xFF1A;&#x6293;&#x5305;&#x793A;&#x4F8B;&#x4E00;&#x4E2A;ICMP&#x62A5;&#x6587;</p>
+    <img src="../assets/icmp.png" width="600" align="center">
+</div>
+
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="bgp.html" class="navigation navigation-prev " aria-label="Previous page: 互联网AS自治系统及BGP讲解">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="ping.html" class="navigation navigation-next " aria-label="Next page: Ping">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"ICMP协议及应用","level":"1.2.4","depth":2,"next":{"title":"Ping","level":"1.2.4.1","depth":3,"path":"chapter1/ping.md","ref":"chapter1/ping.md","articles":[]},"previous":{"title":"互联网AS自治系统及BGP讲解","level":"1.2.3","depth":2,"path":"chapter1/bgp.md","ref":"chapter1/bgp.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters","katex"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"expandable-chapters":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"katex":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"高可用服务建设实践","gitbook":"*"},"file":{"path":"chapter1/icmp.md","mtime":"2022-10-01T23:07:12.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-10-08T08:41:41.310Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
