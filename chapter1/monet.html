@@ -1,0 +1,520 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>移动网络基本原理 · 高可用服务体系建设最佳实践</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="bgp.html" />
+    
+    
+    <link rel="prev" href="ethernet.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                        <b>1.1.</b>
+                    
+                    关于本书
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="net.html">
+            
+                <a href="net.html">
+            
+                    
+                        <b>1.2.</b>
+                    
+                    网络原理与优化实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="ethernet.html">
+            
+                <a href="ethernet.html">
+            
+                    
+                        <b>1.2.1.</b>
+                    
+                    局域网通信原理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.2" data-path="monet.html">
+            
+                <a href="monet.html">
+            
+                    
+                        <b>1.2.2.</b>
+                    
+                    移动网络基本原理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="bgp.html">
+            
+                <a href="bgp.html">
+            
+                    
+                        <b>1.2.3.</b>
+                    
+                    互联网AS自治系统及BGP讲解
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="icmp.html">
+            
+                <a href="icmp.html">
+            
+                    
+                        <b>1.2.4.</b>
+                    
+                    ICMP协议及应用
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.4.1" data-path="ping.html">
+            
+                <a href="ping.html">
+            
+                    
+                        <b>1.2.4.1.</b>
+                    
+                    Ping
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4.2" data-path="traceroute.html">
+            
+                <a href="traceroute.html">
+            
+                    
+                        <b>1.2.4.2.</b>
+                    
+                    traceroute
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4.3" data-path="mtr.html">
+            
+                <a href="mtr.html">
+            
+                    
+                        <b>1.2.4.3.</b>
+                    
+                    使用MTR探测网络质量
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="tcp.html">
+            
+                <a href="tcp.html">
+            
+                    
+                        <b>1.2.5.</b>
+                    
+                    TCP优化实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.5.1" data-path="tcp握手优化.html">
+            
+                <a href="tcp握手优化.html">
+            
+                    
+                        <b>1.2.5.1.</b>
+                    
+                    TCP连接优化：参数优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.2" data-path="TCPFastOpen.html">
+            
+                <a href="TCPFastOpen.html">
+            
+                    
+                        <b>1.2.5.2.</b>
+                    
+                    TCP连接优化：TCP Fast Open
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.3" data-path="tcp挥手优化.html">
+            
+                <a href="tcp挥手优化.html">
+            
+                    
+                        <b>1.2.5.3.</b>
+                    
+                    TCP挥手优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.4" data-path="tcp传输优化.html">
+            
+                <a href="tcp传输优化.html">
+            
+                    
+                        <b>1.2.5.4.</b>
+                    
+                    TCP传输优化实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.5.4.1" data-path="tcp-params.html">
+            
+                <a href="tcp-params.html">
+            
+                    
+                        <b>1.2.5.4.1.</b>
+                    
+                    TCP传输参数优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.4.2" data-path="tcp-ecn.html">
+            
+                <a href="tcp-ecn.html">
+            
+                    
+                        <b>1.2.5.4.2.</b>
+                    
+                    TCP ECN
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.4.3" data-path="tcp-bbr.html">
+            
+                <a href="tcp-bbr.html">
+            
+                    
+                        <b>1.2.5.4.3.</b>
+                    
+                    升级BBRv2传输算法
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="application.md">
+            
+                <span>
+            
+                    
+                        <b>1.3.</b>
+                    
+                    应用服务的优化与实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >移动网络基本原理</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="&#x79FB;&#x52A8;&#x7F51;&#x7EDC;&#x57FA;&#x672C;&#x539F;&#x7406;">&#x79FB;&#x52A8;&#x7F51;&#x7EDC;&#x57FA;&#x672C;&#x539F;&#x7406;</h1>
+<p>&#x79FB;&#x52A8;&#x7F51;&#x7EDC;&#x5229;&#x7528;&#x7535;&#x78C1;&#x6CE2;&#x901A;&#x8BAF;&#xFF0C;&#x8BBE;&#x5907;&#x5230;AP&#x4E4B;&#x95F4;&#xFF0C;&#x4F1A;&#x968F;&#x7740;&#x4FE1;&#x53F7;&#x5F3A;&#x5EA6;&#x3001;&#x65E0;&#x7EBF;&#x5E72;&#x6270;&#x7B49;&#x56E0;&#x7D20;&#xFF0C;&#x76F8;&#x5BF9;&#x4E8E;&#x6709;&#x7EBF;&#x7F51;&#xFF0C;&#x7F51;&#x7EDC;&#x6296;&#x52A8;&#x3001;&#x4FE1;&#x53F7;&#x89E3;&#x6790;&#x5931;&#x8D25;&#x5BFC;&#x81F4;&#x4E22;&#x5305;&#x7387;&#x8FC7;&#x9AD8;&#x7B49;&#x95EE;&#x9898;&#x4E5F;&#x66F4;&#x7A81;&#x51FA;&#x3002;</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="ethernet.html" class="navigation navigation-prev " aria-label="Previous page: 局域网通信原理">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="bgp.html" class="navigation navigation-next " aria-label="Next page: 互联网AS自治系统及BGP讲解">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"移动网络基本原理","level":"1.2.2","depth":2,"next":{"title":"互联网AS自治系统及BGP讲解","level":"1.2.3","depth":2,"path":"chapter1/bgp.md","ref":"chapter1/bgp.md","articles":[]},"previous":{"title":"局域网通信原理","level":"1.2.1","depth":2,"path":"chapter1/ethernet.md","ref":"chapter1/ethernet.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"expandable-chapters":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"高可用服务体系建设最佳实践","gitbook":"*"},"file":{"path":"chapter1/monet.md","mtime":"2022-10-08T02:41:59.247Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-10-08T04:00:41.243Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
