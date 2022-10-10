@@ -414,7 +414,22 @@
                     
                         <b>1.3.1.</b>
                     
-                    DNS优化
+                    DNS优化实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../chapter2/http.html">
+            
+                <a href="../chapter2/http.html">
+            
+                    
+                        <b>1.3.2.</b>
+                    
+                    HTTP的优化与实践
             
                 </a>
             
@@ -424,6 +439,21 @@
     
 
             </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../chapter3/intro.html">
+            
+                <a href="../chapter3/intro.html">
+            
+                    
+                        <b>1.4.</b>
+                    
+                    云原生
+            
+                </a>
+            
+
             
         </li>
     
@@ -482,6 +512,7 @@
 <blockquote>
 <p>&#x5176;&#x4E2D;&#xFF1A;C&#x4E3A;&#x4FE1;&#x606F;&#x901F;&#x7387;&#x7684;&#x6781;&#x9650;&#x503C;&#xFF1B;B&#x4E3A;&#x4FE1;&#x9053;&#x5E26;&#x5BBD;&#xFF08;Hz&#xFF09;&#xFF1B;S&#x4E3A;&#x4FE1;&#x53F7;&#x529F;&#x7387;&#xFF08;W&#xFF09;&#xFF1B;N&#x4E3A;&#x566A;&#x58F0;&#x529F;&#x7387;&#xFF08;W&#xFF09;&#xFF1B;S/N&#x8868;&#x793A;&#x4FE1;&#x566A;&#x6BD4;&#x3002;</p>
 </blockquote>
+<p>&#x4E0D;&#x8BBA;&#x662F;1G&#x3001;2G&#x3001;3G&#xFF0C;&#x8FD8;&#x662F;&#x76EE;&#x524D;&#x6D41;&#x884C;&#x7684;4G&#x3001;5G&#x4EA6;&#x6216;&#x8005;&#x672A;&#x6765;&#x7684;6G&#x3001;7G&#x7684;&#x901A;&#x4FE1;&#x53D8;&#x66F4;&#xFF0C;&#x6B8A;&#x9014;&#x540C;&#x5F52;&#xFF0C;&#x5168;&#x4E16;&#x754C;&#x7684;&#x8FD0;&#x8425;&#x5546;&#x90FD;&#x662F;&#x8FFD;&#x9010;&#x9999;&#x519C;&#x6781;&#x9650;&#x3002;</p>
 <p>&#x4FE1;&#x9053;&#x7F16;&#x7801;(Turbo&#x3001;LDPC&#x3001;Polar)&#x4E0E;&#x590D;&#x7528;&#x6280;&#x672F;(OFDM)&#x7684;&#x51FA;&#x73B0;&#xFF0C;&#x4F7F;&#x5F97;&#x4FE1;&#x606F;&#x901A;&#x4FE1;&#x6548;&#x7387;&#x5B9E;&#x73B0;&#x63A5;&#x8FD1;&#x9999;&#x519C;&#x6781;&#x9650;&#xFF0C;&#x7531;&#x6B64;&#x4E5F;&#x50AC;&#x751F;&#x4E86;4G&#x3001;5G&#x7684;&#x8FD0;&#x7528;&#x548C;&#x53D1;&#x5C55;&#x3002;</p>
 <div align="center">
     <p>&#x56FE;: &#x79FB;&#x52A8;&#x901A;&#x8BAF;&#x53D1;&#x5C55;</p>
@@ -490,7 +521,7 @@
 
 
 
-<p>&#x4E0D;&#x8BBA;&#x662F;1G&#x3001;2G&#x3001;3G&#xFF0C;&#x8FD8;&#x662F;&#x76EE;&#x524D;&#x6D41;&#x884C;&#x7684;4G&#x3001;5G&#x4EA6;&#x6216;&#x8005;&#x672A;&#x6765;&#x7684;6G&#x3001;7G&#x7684;&#x901A;&#x4FE1;&#x53D8;&#x66F4;&#xFF0C;&#x6B8A;&#x9014;&#x540C;&#x5F52;&#xFF0C;&#x5168;&#x4E16;&#x754C;&#x7684;&#x8FD0;&#x8425;&#x5546;&#x90FD;&#x662F;&#x8FFD;&#x9010;&#x9999;&#x519C;&#x6781;&#x9650;&#x3002;</p>
+
 <h3 id="4g&#x7F51;&#x7EDC;&#x8BB2;&#x89E3;">4G&#x7F51;&#x7EDC;&#x8BB2;&#x89E3;</h3>
 <p>&#x76EE;&#x524D;&#x79FB;&#x52A8;&#x7F51;&#x7EDC;&#x4F7F;&#x7528;&#x7684;&#x6280;&#x672F;&#x6807;&#x51C6;&#x666E;&#x904D;&#x5DF2;&#x7ECF;&#x6F14;&#x8FDB;&#x4E3A;LTE&#x3001;LTE-Advanced&#xFF08;4G&#xFF09;&#x3001;NR&#xFF08;5G&#xFF09;&#xFF08;&#x5728;&#x4E1C;&#x5357;&#x4E9A;&#x90E8;&#x5206;&#x5730;&#x533A;&#xFF0C;&#x8FD8;&#x5B58;&#x5728;&#x5F88;&#x591A;LTE&#x7F51;&#x7EDC;&#xFF09;</p>
 <p>3GPP&#x7EC4;&#x7EC7;&#x4ECE;2004&#x5E74;&#x5F00;&#x59CB;&#x957F;&#x671F;&#x6F14;&#x8FDB;(Long Term Evilution, LTE)&#x7684;&#x6807;&#x51C6;&#x5316;&#x9879;&#x76EE;&#xFF0C;LTE&#x7CFB;&#x7EDF;&#x7CFB;&#x7EDF;&#x652F;&#x6301;&#x9891;&#x5206;&#x53CC;&#x5DE5;(Frequency Division Duplex FDD) &#x548C;&#x65F6;&#x5206;&#x53CC;&#x5DE5; (Time Division Duplex TDD) &#x4EE5;&#x53CA;&#x534A;&#x53CC;&#x5DE5;FDD (Half-duplex FDD ,  H-FDD)&#x3002;&#x5728;&#x4E00;&#x4E9B;&#x82F1;&#x6587;&#x73AF;&#x5883;&#x4E0B;&#xFF0C;&#x624B;&#x673A;&#x7684;&#x7F51;&#x7EDC;&#x72B6;&#x6001;&#x4E00;&#x822C;&#x4E3A;FDD-LTE&#x6216; TD-LTE&#xFF0C;&#x53EF;&#x4EE5;&#x77E5;&#x6653;&#x5F53;&#x524D;&#x7F51;&#x7EDC;&#x91C7;&#x7528;&#x4E86;&#x54EA;&#x79CD;&#x6280;&#x672F;&#xFF01;</p>
@@ -551,7 +582,7 @@ e-NodeB&#xFF1A;evolved Node B &#x57FA;&#x7AD9;&#x3002;
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"移动网络基本原理","level":"1.2.1","depth":2,"next":{"title":"局域网通信原理","level":"1.2.2","depth":2,"path":"chapter1/ethernet.md","ref":"chapter1/ethernet.md","articles":[]},"previous":{"title":"网络原理与优化实践","level":"1.2","depth":1,"path":"chapter1/net.md","ref":"chapter1/net.md","articles":[{"title":"移动网络基本原理","level":"1.2.1","depth":2,"path":"chapter1/monet.md","ref":"chapter1/monet.md","articles":[]},{"title":"局域网通信原理","level":"1.2.2","depth":2,"path":"chapter1/ethernet.md","ref":"chapter1/ethernet.md","articles":[]},{"title":"互联网AS自治系统及BGP讲解","level":"1.2.3","depth":2,"path":"chapter1/bgp.md","ref":"chapter1/bgp.md","articles":[]},{"title":"ICMP协议及应用","level":"1.2.4","depth":2,"path":"chapter1/icmp.md","ref":"chapter1/icmp.md","articles":[{"title":"Ping","level":"1.2.4.1","depth":3,"path":"chapter1/ping.md","ref":"chapter1/ping.md","articles":[]},{"title":"traceroute","level":"1.2.4.2","depth":3,"path":"chapter1/traceroute.md","ref":"chapter1/traceroute.md","articles":[]},{"title":"使用MTR探测网络质量","level":"1.2.4.3","depth":3,"path":"chapter1/mtr.md","ref":"chapter1/mtr.md","articles":[]}]},{"title":"TCP优化实践","level":"1.2.5","depth":2,"path":"chapter1/tcp.md","ref":"chapter1/tcp.md","articles":[{"title":"TCP连接优化：参数优化","level":"1.2.5.1","depth":3,"path":"chapter1/tcp握手优化.md","ref":"chapter1/tcp握手优化.md","articles":[]},{"title":"TCP连接优化：TCP Fast Open","level":"1.2.5.2","depth":3,"path":"chapter1/TCPFastOpen.md","ref":"chapter1/TCPFastOpen.md","articles":[]},{"title":"TCP挥手优化","level":"1.2.5.3","depth":3,"path":"chapter1/tcp挥手优化.md","ref":"chapter1/tcp挥手优化.md","articles":[]},{"title":"TCP传输优化实践","level":"1.2.5.4","depth":3,"path":"chapter1/tcp传输优化.md","ref":"chapter1/tcp传输优化.md","articles":[{"title":"TCP传输参数优化","level":"1.2.5.4.1","depth":4,"path":"chapter1/tcp-params.md","ref":"chapter1/tcp-params.md","articles":[]},{"title":"TCP ECN","level":"1.2.5.4.2","depth":4,"path":"chapter1/tcp-ecn.md","ref":"chapter1/tcp-ecn.md","articles":[]},{"title":"升级BBRv2传输算法","level":"1.2.5.4.3","depth":4,"path":"chapter1/tcp-bbr.md","ref":"chapter1/tcp-bbr.md","articles":[]}]}]},{"title":"使用边缘节点加速","level":"1.2.6","depth":2,"path":"chapter1/akamai.md","ref":"chapter1/akamai.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["expandable-chapters","katex"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"expandable-chapters":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"katex":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"高可用服务建设实践","gitbook":"*"},"file":{"path":"chapter1/monet.md","mtime":"2022-10-08T08:40:51.254Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-10-09T15:15:20.389Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"移动网络基本原理","level":"1.2.1","depth":2,"next":{"title":"局域网通信原理","level":"1.2.2","depth":2,"path":"chapter1/ethernet.md","ref":"chapter1/ethernet.md","articles":[]},"previous":{"title":"网络原理与优化实践","level":"1.2","depth":1,"path":"chapter1/net.md","ref":"chapter1/net.md","articles":[{"title":"移动网络基本原理","level":"1.2.1","depth":2,"path":"chapter1/monet.md","ref":"chapter1/monet.md","articles":[]},{"title":"局域网通信原理","level":"1.2.2","depth":2,"path":"chapter1/ethernet.md","ref":"chapter1/ethernet.md","articles":[]},{"title":"互联网AS自治系统及BGP讲解","level":"1.2.3","depth":2,"path":"chapter1/bgp.md","ref":"chapter1/bgp.md","articles":[]},{"title":"ICMP协议及应用","level":"1.2.4","depth":2,"path":"chapter1/icmp.md","ref":"chapter1/icmp.md","articles":[{"title":"Ping","level":"1.2.4.1","depth":3,"path":"chapter1/ping.md","ref":"chapter1/ping.md","articles":[]},{"title":"traceroute","level":"1.2.4.2","depth":3,"path":"chapter1/traceroute.md","ref":"chapter1/traceroute.md","articles":[]},{"title":"使用MTR探测网络质量","level":"1.2.4.3","depth":3,"path":"chapter1/mtr.md","ref":"chapter1/mtr.md","articles":[]}]},{"title":"TCP优化实践","level":"1.2.5","depth":2,"path":"chapter1/tcp.md","ref":"chapter1/tcp.md","articles":[{"title":"TCP连接优化：参数优化","level":"1.2.5.1","depth":3,"path":"chapter1/tcp握手优化.md","ref":"chapter1/tcp握手优化.md","articles":[]},{"title":"TCP连接优化：TCP Fast Open","level":"1.2.5.2","depth":3,"path":"chapter1/TCPFastOpen.md","ref":"chapter1/TCPFastOpen.md","articles":[]},{"title":"TCP挥手优化","level":"1.2.5.3","depth":3,"path":"chapter1/tcp挥手优化.md","ref":"chapter1/tcp挥手优化.md","articles":[]},{"title":"TCP传输优化实践","level":"1.2.5.4","depth":3,"path":"chapter1/tcp传输优化.md","ref":"chapter1/tcp传输优化.md","articles":[{"title":"TCP传输参数优化","level":"1.2.5.4.1","depth":4,"path":"chapter1/tcp-params.md","ref":"chapter1/tcp-params.md","articles":[]},{"title":"TCP ECN","level":"1.2.5.4.2","depth":4,"path":"chapter1/tcp-ecn.md","ref":"chapter1/tcp-ecn.md","articles":[]},{"title":"升级BBRv2传输算法","level":"1.2.5.4.3","depth":4,"path":"chapter1/tcp-bbr.md","ref":"chapter1/tcp-bbr.md","articles":[]}]}]},{"title":"使用边缘节点加速","level":"1.2.6","depth":2,"path":"chapter1/akamai.md","ref":"chapter1/akamai.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["expandable-chapters","katex"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"expandable-chapters":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"katex":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"高可用服务建设实践","gitbook":"*"},"file":{"path":"chapter1/monet.md","mtime":"2022-10-10T01:43:20.091Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-10-10T12:39:38.264Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
