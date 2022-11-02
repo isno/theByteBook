@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>使用TLS1.3 · 高可用服务建设实践</title>
+        <title>HTTP/2 · 高可用服务建设实践</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -65,10 +65,10 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="ecc.html" />
+    <link rel="next" href="http2-1.html" />
     
     
-    <link rel="prev" href="tls1.2.html" />
+    <link rel="prev" href="http1.1.html" />
     
 
     </head>
@@ -453,7 +453,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.2.2" data-path="http2.html">
+        <li class="chapter active" data-level="1.3.2.2" data-path="http2.html">
             
                 <a href="http2.html">
             
@@ -594,7 +594,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.3.3.3" data-path="tls1.3.html">
+        <li class="chapter " data-level="1.3.3.3" data-path="tls1.3.html">
             
                 <a href="tls1.3.html">
             
@@ -805,7 +805,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >使用TLS1.3</a>
+        <a href=".." >HTTP/2</a>
     </h1>
 </div>
 
@@ -820,8 +820,48 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="&#x4F7F;&#x7528;tls13&#x534F;&#x8BAE;">&#x4F7F;&#x7528;TLS1.3&#x534F;&#x8BAE;</h1>
-<p>TLS1.3&#x5728;2018&#x5E74;&#x53D1;&#x5E03;&#xFF0C;&#x5B83;&#x5305;&#x542B;&#x4E86;&#x5F88;&#x591A;&#x4E0D;&#x540C;&#x4EE5;&#x5F80;&#x7248;&#x672C;&#x7684;&#x6539;&#x8FDB;&#xFF0C;&#x76F8;&#x5BF9;&#x4E4B;&#x524D;&#x7684;&#x7248;&#x672C;&#x5B89;&#x5168;&#x6027;&#x4EE5;&#x53CA;&#x6027;&#x80FD;&#x5177;&#x6709;&#x6781;&#x5927;&#x7684;&#x63D0;&#x5347;&#xFF0C;&#x540C;&#x65F6;&#x5B83;&#x4E5F;&#x5177;&#x5907;&#x4E86;&#x66F4;&#x591A;&#x7684;&#x6269;&#x5C55;&#x548C;&#x63E1;&#x624B;&#x6A21;&#x5F0F;&#x3002;</p>
+                                <h1 id="http2">HTTP/2</h1>
+<p>HTTP/2&#x4E3B;&#x8981;&#x6765;&#x6E90;&#x4E8E;Google&#x5F00;&#x53D1;&#x7684;SPDY&#x534F;&#x8BAE;&#xFF0C;IETF&#x5BF9;&#x5176;&#x8FDB;&#x884C;&#x4E86;&#x6807;&#x51C6;&#x5316;&#xFF0C;&#x4ECE;&#x800C;&#x4EA7;&#x51FA;&#x4E86;HTTP/2&#x3002;</p>
+<p>HTTP/2&#x6CA1;&#x6709;&#x6539;&#x53D8;HTTP&#x7684;&#x8BED;&#x4E49;&#x3001;&#x8BF7;&#x6C42;&#x65B9;&#x6CD5;&#x3001;&#x72B6;&#x6001;&#x7801;&#x7B49;&#x89C4;&#x5212;&#xFF0C;&#x5411;&#x4E0B;&#x517C;&#x5BB9;&#xFF0C;&#x5BF9;&#x4E1A;&#x52A1;&#x5C42;&#x7684;&#x903B;&#x8F91;&#x4E0D;&#x4EA7;&#x751F;&#x5F71;&#x54CD;&#x3002;
+HTTP/2&#x4E3B;&#x8981;&#x6539;&#x53D8;&#x7684;&#x662F;&#x4F20;&#x8F93;&#x65B9;&#x5F0F;&#xFF0C;&#x7531;&#x4E4B;&#x524D;&#x7684;&#x6587;&#x672C;&#x6539;&#x4E3A;&#x4E8C;&#x8FDB;&#x5236;&#xFF0C;&#x8FD9;&#x8BA9;HTTP&#x8BF7;&#x6C42;&#x7684;&#x5206;&#x5757;&#x4F20;&#x8F93;&#x3001;&#x591A;&#x8DEF;&#x590D;&#x7528;&#x7B49;&#x5F97;&#x4EE5;&#x5B9E;&#x73B0;&#xFF0C;&#x9664;&#x6B64;&#xFF0C;&#x5934;&#x90E8;&#x538B;&#x7F29;&#x3001;&#x670D;&#x52A1;&#x5668;&#x63A8;&#x9001;&#x7B49;&#x63AA;&#x65BD;&#x4E5F;&#x5F15;&#x5165;&#x7528;&#x6765;&#x51CF;&#x5C11;&#x7F51;&#x7EDC;&#x5EF6;&#x8FDF;&#xFF0C;&#x63D0;&#x9AD8;&#x5BA2;&#x6237;&#x7AEF;&#x7684;&#x9875;&#x9762;&#x52A0;&#x8F7D;&#x901F;&#x5EA6;&#x3002;</p>
+<p>&#x67E5;&#x770B; HTTP/1.1 &#x4E0E;HTTP/2&#x7684;&#x901F;&#x5EA6;&#x5BF9;&#x6BD4;
+<a href="https://http2.akamai.com/demo" target="_blank">https://http2.akamai.com/demo</a></p>
+<div align="center">
+    <img src="../assets/chapter2/http2vs.png" width="520" align="center">
+</div>
+
+
+<h3 id="http2-&#x5173;&#x952E;&#x7279;&#x6027;&#x89E3;&#x8BF4;">HTTP/2 &#x5173;&#x952E;&#x7279;&#x6027;&#x89E3;&#x8BF4;</h3>
+<p>HTTP/2&#x4F5C;&#x4E3A;&#x65B0;&#x7248;&#x534F;&#x8BAE;&#xFF0C;&#x6539;&#x52A8;&#x7EC6;&#x8282;&#x5FC5;&#x7136;&#x5F88;&#x591A;&#xFF0C;&#x4F46;&#x5BF9;&#x4E8E;&#x5F00;&#x53D1;&#x8005;&#x548C;&#x670D;&#x52A1;&#x5546;&#x5F00;&#x8BF4;&#xFF0C;&#x5F71;&#x54CD;&#x8F83;&#x5927;&#x7684;&#x5C31;&#x51E0;&#x70B9;&#x3002;</p>
+<h4 id="http2&#x4E8C;&#x8FDB;&#x5236;&#x5206;&#x5E27;">HTTP/2&#x4E8C;&#x8FDB;&#x5236;&#x5206;&#x5E27;</h4>
+<p>HTTP/2&#x6240;&#x6709;&#x6027;&#x80FD;&#x589E;&#x5F3A;&#x7684;&#x6838;&#x5FC3;&#x5728;&#x4E8E;&#x65B0;&#x7684;&#x4E8C;&#x8FDB;&#x5236;&#x5206;&#x5E27;&#x5C42;&#xFF0C;HTTP/1.1&#x534F;&#x8BAE;&#x4EE5;&#x6362;&#x884C;&#x7B26;&#x4F5C;&#x4E3A;&#x7EAF;&#x6587;&#x672C;&#x7684;&#x5206;&#x9694;&#x7B26;&#xFF0C;&#x800C;HTTP/2&#x5C06;&#x6240;&#x6709;&#x4F20;&#x8F93;&#x7684;&#x4FE1;&#x606F;&#x5206;&#x5272;&#x4E3A;&#x66F4;&#x5C0F;&#x7684;&#x6D88;&#x606F;&#x548C;&#x5E27;&#xFF0C;&#x5E76;&#x91C7;&#x7528;&#x4E8C;&#x8FDB;&#x5236;&#x683C;&#x5F0F;&#x5BF9;&#x5B83;&#x4EEC;&#x7F16;&#x7801;&#xFF0C;&#x8FD9;&#x4E9B;&#x5E27;&#x5BF9;&#x5E94;&#x7740;&#x7279;&#x5B9A;&#x6570;&#x636E;&#x6D41;&#x4E2D;&#x7684;&#x6D88;&#x606F;&#xFF0C;&#x4ED6;&#x4EEC;&#x90FD;&#x5728;&#x4E00;&#x4E2A;TCP&#x8FDE;&#x63A5;&#x5185;&#x590D;&#x7528;&#x3002;</p>
+<p>http2.0&#x7528;binary&#x683C;&#x5F0F;&#x5B9A;&#x4E49;&#x4E86;&#x4E00;&#x4E2A;&#x4E00;&#x4E2A;&#x7684;frame&#xFF0C;&#x548C;http1.x&#x7684;&#x683C;&#x5F0F;&#x5BF9;&#x6BD4;&#x5982;&#x4E0B;&#x56FE;&#xFF1A;</p>
+<div align="center">
+    <p>&#x56FE;&#xFF1A;HTTP&#x683C;&#x5F0F;&#x5BF9;&#x6BD4;</p>
+    <img src="../assets/chapter2/http2-1.png" width="320" align="center">
+</div>
+
+<p>http2.0&#x7684;&#x683C;&#x5F0F;&#x5B9A;&#x4E49;&#x66F4;&#x63A5;&#x8FD1;tcp&#x5C42;&#x7684;&#x65B9;&#x5F0F;&#xFF0C;&#x8FD9;&#x5F20;&#x4E8C;&#x673A;&#x5236;&#x7684;&#x65B9;&#x5F0F;&#x5341;&#x5206;&#x9AD8;&#x6548;&#x4E14;&#x7CBE;&#x7B80;&#x3002;length&#x5B9A;&#x4E49;&#x4E86;&#x6574;&#x4E2A;frame&#x7684;&#x5F00;&#x59CB;&#x5230;&#x7ED3;&#x675F;&#xFF0C;type&#x5B9A;&#x4E49;frame&#x7684;&#x7C7B;&#x578B;&#xFF08;&#x4E00;&#x5171;10&#x79CD;&#xFF09;&#xFF0C;flags&#x7528;bit&#x4F4D;&#x5B9A;&#x4E49;&#x4E00;&#x4E9B;&#x91CD;&#x8981;&#x7684;&#x53C2;&#x6570;&#xFF0C;stream id&#x7528;&#x4F5C;&#x6D41;&#x63A7;&#x5236;&#xFF0C;&#x5269;&#x4E0B;&#x7684;payload&#x5C31;&#x662F;request&#x7684;&#x6B63;&#x6587;&#x4E86;&#x3002;</p>
+<p>&#x867D;&#x7136;&#x770B;&#x4E0A;&#x53BB;&#x534F;&#x8BAE;&#x7684;&#x683C;&#x5F0F;&#x548C;http1.x&#x5B8C;&#x5168;&#x4E0D;&#x540C;,&#x5B9E;&#x9645;&#x4E0A;http2.0&#x5E76;&#x6CA1;&#x6709;&#x6539;&#x53D8;http1.x&#x7684;&#x8BED;&#x4E49;&#xFF0C;&#x53EA;&#x662F;&#x628A;&#x539F;&#x6765;http1.x&#x7684;header&#x548C;body&#x90E8;&#x5206;&#x7528;frame&#x91CD;&#x65B0;&#x5C01;&#x88C5;&#x4E86;&#x4E00;&#x5C42;&#x800C;&#x5DF2;&#x3002;
+&#x5177;&#x4F53;&#x7684;&#x534F;&#x8BAE;&#x5173;&#x7CFB;&#x53EF;&#x4EE5;&#x7528;&#x4E0B;&#x56FE;&#x8868;&#x793A;&#xFF1A;</p>
+<div align="center">
+    <p>&#x56FE;&#xFF1A;HTTP&#x4E8C;&#x8FDB;&#x5236;&#x5206;&#x5E27;</p>
+    <img src="../assets/chapter2/http2.png" width="380" align="center">
+</div>
+
+
+<h4 id="&#x591A;&#x8DEF;&#x590D;&#x7528;">&#x591A;&#x8DEF;&#x590D;&#x7528;</h4>
+<p>http/2&#x8981;&#x89E3;&#x51B3;&#x7684;&#x4E00;&#x5927;&#x96BE;&#x9898;&#x5C31;&#x662F;&#x591A;&#x8DEF;&#x590D;&#x7528;&#xFF08;MultiPlexing&#xFF09;&#xFF0C;&#x4E5F;&#x53EF;&#x79F0;&#x4E4B;&#x4E3A;&#x8FDE;&#x63A5;&#x5171;&#x4EAB;&#x3002;&#x4E0A;&#x9762;&#x534F;&#x8BAE;&#x89E3;&#x6790;&#x4E2D;&#x63D0;&#x5230;&#x7684;stream id&#x5C31;&#x662F;&#x7528;&#x4F5C;&#x591A;&#x8DEF;&#x590D;&#x7528;&#x673A;&#x5236;&#x7684;&#x3002;&#x4E00;&#x4E2A;request&#x5BF9;&#x5E94;&#x4E00;&#x4E2A;stream&#x5E76;&#x5206;&#x914D;&#x4E00;&#x4E2A;id&#xFF0C;&#x8FD9;&#x6837;&#x4E00;&#x4E2A;&#x8FDE;&#x63A5;&#x4E0A;&#x53EF;&#x4EE5;&#x6709;&#x591A;&#x4E2A;stream&#xFF0C;&#x6BCF;&#x4E2A;stream&#x7684;frame&#x53EF;&#x4EE5;&#x968F;&#x673A;&#x7684;&#x6DF7;&#x6742;&#x5728;&#x4E00;&#x8D77;&#xFF0C;&#x63A5;&#x6536;&#x65B9;&#x53EF;&#x4EE5;&#x6839;&#x636E;stream id&#x5C06;frame&#x518D;&#x5F52;&#x5C5E;&#x5230;&#x5404;&#x81EA;&#x4E0D;&#x540C;&#x7684;request&#x91CC;&#x9762;&#x3002;</p>
+<p>http/2&#x91CC;&#x7684;&#x6BCF;&#x4E2A;stream&#x90FD;&#x53EF;&#x4EE5;&#x8BBE;&#x7F6E;&#x53C8;&#x4F18;&#x5148;&#x7EA7;&#xFF08;Priority&#xFF09;&#x548C;&#x4F9D;&#x8D56;&#xFF08;Dependency&#xFF09;&#x3002;&#x4F18;&#x5148;&#x7EA7;&#x9AD8;&#x7684;stream&#x4F1A;&#x88AB;server&#x4F18;&#x5148;&#x5904;&#x7406;&#x548C;&#x8FD4;&#x56DE;&#x7ED9;&#x5BA2;&#x6237;&#x7AEF;&#xFF0C;stream&#x8FD8;&#x53EF;&#x4EE5;&#x4F9D;&#x8D56;&#x5176;&#x5B83;&#x7684;sub streams&#x3002;&#x4F18;&#x5148;&#x7EA7;&#x548C;&#x4F9D;&#x8D56;&#x90FD;&#x662F;&#x53EF;&#x4EE5;&#x52A8;&#x6001;&#x8C03;&#x6574;&#x7684;&#x3002;&#x52A8;&#x6001;&#x8C03;&#x6574;&#x5728;&#x6709;&#x4E9B;&#x573A;&#x666F;&#x4E0B;&#x5F88;&#x6709;&#x7528;&#xFF0C;&#x6570;&#x636E;&#x63D0;&#x524D;&#x53D1;&#x7ED9;&#x5BA2;&#x6237;&#x7AEF;&#xFF0C;&#x53EF;&#x4EE5;&#x6709;&#x5F88;&#x5927;&#x7684;&#x6539;&#x9020;&#x578B;&#x3002;</p>
+<h4 id="&#x9996;&#x90E8;&#x538B;&#x7F29;">&#x9996;&#x90E8;&#x538B;&#x7F29;</h4>
+<p>HTTP&#x6BCF;&#x6B21;&#x8BF7;&#x6C42;&#x6216;&#x54CD;&#x5E94;&#x90FD;&#x4F1A;&#x643A;&#x5E26;&#x9996;&#x90E8;&#x4FE1;&#x606F;&#x7528;&#x4E8E;&#x63CF;&#x8FF0;&#x8D44;&#x6E90;&#x5C5E;&#x6027;&#x3002;HTTP/1.1&#x4F7F;&#x7528;&#x6587;&#x672C;&#x7684;&#x5F62;&#x5F0F;&#x4F20;&#x8F93;&#x6D88;&#x606F;&#x5934;&#xFF0C;&#x6D88;&#x606F;&#x5934;&#x4E2D;&#x643A;&#x5E26;cookie&#x6BCF;&#x6B21;&#x90FD;&#x9700;&#x8981;&#x91CD;&#x590D;&#x4F20;&#x8F93;&#x51E0;&#x767E;&#x5230;&#x51E0;&#x5343;&#x7684;&#x5B57;&#x8282;&#xFF0C;&#x8FD9;&#x5341;&#x5206;&#x5360;&#x7528;&#x8D44;&#x6E90;&#x3002;</p>
+<p>HTTP/2&#x4F7F;&#x7528;&#x4E86;HPACK&#x7B97;&#x6CD5;&#x6765;&#x538B;&#x7F29;&#x5934;&#x5B57;&#x6BB5;&#xFF0C;&#x8FD9;&#x79CD;&#x538B;&#x7F29;&#x683C;&#x5F0F;&#x5BF9;&#x4F20;&#x8F93;&#x7684;&#x5934;&#x5B57;&#x6BB5;&#x8FDB;&#x884C;&#x7F16;&#x7801;&#xFF0C;&#x51CF;&#x5C11;&#x4E86;&#x5934;&#x5B57;&#x6BB5;&#x7684;&#x5927;&#x5C0F;&#x3002;&#x540C;&#x65F6;&#xFF0C;&#x5728;&#x4E24;&#x7AEF;&#x7EF4;&#x62A4;&#x4E86;&#x7D22;&#x5F15;&#x8868;&#xFF0C;&#x7528;&#x4E8E;&#x8BB0;&#x5F55;&#x51FA;&#x73B0;&#x8FC7;&#x7684;&#x5934;&#x5B57;&#x6BB5;&#xFF0C;&#x540E;&#x9762;&#x5728;&#x4F20;&#x8F93;&#x8FC7;&#x7A0B;&#x4E2D;&#x5C31;&#x53EF;&#x4EE5;&#x4F20;&#x8F93;&#x5DF2;&#x7ECF;&#x8BB0;&#x5F55;&#x8FC7;&#x7684;&#x5934;&#x5B57;&#x6BB5;&#x7684;&#x7D22;&#x5F15;&#x53F7;&#xFF0C;&#x5BF9;&#x7AEF;&#x6536;&#x5230;&#x6570;&#x636E;&#x540E;&#x5C31;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x7D22;&#x5F15;&#x53F7;&#x627E;&#x5230;&#x5BF9;&#x5E94;&#x7684;&#x503C;&#x3002;</p>
+<p>&#x524D;&#x9762;&#x8BB2;&#x8FC7;tcp&#x6709;slow start&#x7684;&#x7279;&#x6027;&#xFF0C;&#x4E09;&#x6B21;&#x63E1;&#x624B;&#x4E4B;&#x540E;&#x5F00;&#x59CB;&#x53D1;&#x9001;tcp segment&#xFF0C;&#x7B2C;&#x4E00;&#x6B21;&#x80FD;&#x53D1;&#x9001;&#x7684;&#x6CA1;&#x6709;&#x88AB;ack&#x7684;segment&#x6570;&#x91CF;&#x662F;&#x7531;initial tcp window&#x5927;&#x5C0F;&#x51B3;&#x5B9A;&#x7684;&#x3002;&#x8FD9;&#x4E2A;initial tcp window&#x6839;&#x636E;&#x5E73;&#x53F0;&#x7684;&#x5B9E;&#x73B0;&#x4F1A;&#x6709;&#x5DEE;&#x5F02;&#xFF0C;&#x4F46;&#x4E00;&#x822C;&#x662F;2&#x4E2A;segment&#x6216;&#x8005;&#x662F;4k&#x7684;&#x5927;&#x5C0F;&#xFF08;&#x4E00;&#x4E2A;segment&#x5927;&#x6982;&#x662F;1500&#x4E2A;&#x5B57;&#x8282;&#xFF09;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x8BF4;&#x5F53;&#x4F60;&#x53D1;&#x9001;&#x7684;&#x5305;&#x5927;&#x5C0F;&#x8D85;&#x8FC7;&#x8FD9;&#x4E2A;&#x503C;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x8981;&#x7B49;&#x524D;&#x9762;&#x7684;&#x5305;&#x88AB;ack&#x4E4B;&#x540E;&#x624D;&#x80FD;&#x53D1;&#x9001;&#x540E;&#x7EED;&#x7684;&#x5305;&#xFF0C;&#x663E;&#x7136;&#x8FD9;&#x79CD;&#x60C5;&#x51B5;&#x4E0B;&#x5EF6;&#x8FDF;&#x66F4;&#x9AD8;&#x3002;http&#x7684;header&#x73B0;&#x5728;&#x81A8;&#x80C0;&#x5230;&#x6709;&#x53EF;&#x80FD;&#x4F1A;&#x8D85;&#x8FC7;&#x8FD9;&#x4E2A;intial window&#x7684;&#x503C;&#x4E86;&#xFF0C;&#x6240;&#x4EE5;&#x66F4;&#x663E;&#x5F97;&#x538B;&#x7F29;header&#x7684;&#x91CD;&#x8981;&#x6027;&#x3002;</p>
+<h4 id="server-push">Server Push</h4>
+<p>http1.x&#x53EA;&#x80FD;&#x7531;&#x5BA2;&#x6237;&#x7AEF;&#x53D1;&#x8D77;&#x8BF7;&#x6C42;&#xFF0C;&#x7136;&#x540E;&#x670D;&#x52A1;&#x5668;&#x88AB;&#x52A8;&#x7684;&#x53D1;&#x9001;response&#x3002;&#x5F00;&#x542F;server push&#x4E4B;&#x540E;&#xFF0C;server&#x901A;&#x8FC7;X-Associated-Content header&#xFF08;X-&#x5F00;&#x5934;&#x7684;header&#x90FD;&#x5C5E;&#x4E8E;&#x975E;&#x6807;&#x51C6;&#x7684;&#xFF0C;&#x81EA;&#x5B9A;&#x4E49;header&#xFF09;&#x544A;&#x77E5;&#x5BA2;&#x6237;&#x7AEF;&#x4F1A;&#x6709;&#x65B0;&#x7684;&#x5185;&#x5BB9;&#x63A8;&#x9001;&#x8FC7;&#x6765;&#x3002;&#x5728;&#x7528;&#x6237;&#x7B2C;&#x4E00;&#x6B21;&#x6253;&#x5F00;&#x7F51;&#x7AD9;&#x9996;&#x9875;&#x7684;&#x65F6;&#x5019;&#xFF0C;server&#x5C06;&#x8D44;&#x6E90;&#x4E3B;&#x52A8;&#x63A8;&#x9001;&#x8FC7;&#x6765;&#x53EF;&#x4EE5;&#x6781;&#x5927;&#x7684;&#x63D0;&#x5347;&#x7528;&#x6237;&#x4F53;&#x9A8C;&#x3002;</p>
+<p>http2.0&#x80FD;&#x901A;&#x8FC7;push&#x7684;&#x65B9;&#x5F0F;&#x5C06;&#x5BA2;&#x6237;&#x7AEF;&#x9700;&#x8981;&#x7684;&#x5185;&#x5BB9;&#x9884;&#x5148;&#x63A8;&#x9001;&#x8FC7;&#x53BB;&#xFF0C;&#x6240;&#x4EE5;&#x4E5F;&#x53EB;&#x201C;cache push&#x201D;&#x3002;&#x53E6;&#x5916;&#x6709;&#x4E00;&#x70B9;&#x503C;&#x5F97;&#x6CE8;&#x610F;&#x7684;&#x662F;&#xFF0C;&#x5BA2;&#x6237;&#x7AEF;&#x5982;&#x679C;&#x9000;&#x51FA;&#x67D0;&#x4E2A;&#x4E1A;&#x52A1;&#x573A;&#x666F;&#xFF0C;&#x51FA;&#x4E8E;&#x6D41;&#x91CF;&#x6216;&#x8005;&#x5176;&#x5B83;&#x56E0;&#x7D20;&#x9700;&#x8981;&#x53D6;&#x6D88;server push&#xFF0C;&#x4E5F;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x53D1;&#x9001;RST_STREAM&#x7C7B;&#x578B;&#x7684;frame&#x6765;&#x505A;&#x5230;&#x3002;</p>
+<p><strong>Server Push &#x5141;&#x8BB8;&#x7F51;&#x7AD9;&#x4E3B;&#x52A8;&#x63A8;&#x9001;&#x9875;&#x9762;&#x6240;&#x9700;&#x7684;&#x8D44;&#x6E90;&#xFF0C;&#x800C;&#x4E0D;&#x662F;&#x88AB;&#x52A8;&#x7B49;&#x5F85;&#x3002;&#x4F46;&#x5B9E;&#x9645;&#x4E0A;&#x5F88;&#x96BE;&#x4EE5;&#x6B64;&#x5B9E;&#x73B0;&#x6027;&#x80FD;&#x63D0;&#x5347;&#xFF0C;&#x6240;&#x4EE5;&#x7528;&#x8FD9;&#x4E2A;&#x7279;&#x6027;&#x7684;&#x4EBA;&#x5E76;&#x4E0D;&#x591A;&#xFF0C;&#x8BE5;&#x7279;&#x6027;&#x73B0;&#x5728;&#x5DF2;&#x7ECF;&#x9010;&#x6E10;&#x5728;HTTP/2&#x5B9E;&#x73B0;&#x4E2D;&#x53D6;&#x6D88;&#x3002; Chrome&#x7684;&#x5F00;&#x53D1;&#x56E2;&#x961F;&#x4E5F;&#x8868;&#x793A; Chrome 106 &#x548C;&#x4E4B;&#x540E;&#x7684;&#x7248;&#x672C;&#x5C06;&#x9ED8;&#x8BA4;&#x7981;&#x7528; HTTP/2 Server Push &#x7279;&#x6027;</strong></p>
+<p>HTTP/2 Server Push &#x7684;&#x66FF;&#x4EE3;&#x54C1;&#x662F;103 Early Hints&#xFF0C;&#x5B83;&#x6709;&#x5F88;&#x591A;&#x4E0E; Push &#x76F8;&#x540C;&#x7684;&#x4F18;&#x70B9;&#x3002;&#x4E0E;&#x670D;&#x52A1;&#x7AEF;&#x63A8;&#x9001;&#x8D44;&#x6E90;&#x4E0D;&#x540C;&#xFF0C;103 Early Hints &#x53EA;&#x5411;&#x6D4F;&#x89C8;&#x5668;&#x53D1;&#x9001;&#x53EF;&#x80FD;&#x4F1A;&#x7ACB;&#x5373;&#x8BF7;&#x6C42;&#x7684;&#x8D44;&#x6E90;&#x63D0;&#x793A;&#xFF0C;&#x5E76;&#x5C06;&#x8BF7;&#x6C42;&#x8D44;&#x6E90;&#x7684;&#x63A7;&#x5236;&#x6743;&#x4EA4;&#x7ED9;&#x6D4F;&#x89C8;&#x5668;&#x3002; &#x5173;&#x4E8E;103 Early Hints&#x7684;&#x8BE6;&#x7EC6;&#x89E3;&#x6790;&#x5C06;&#x5728;&#x540E;&#x7EED;&#x7BC7;&#x7AE0;&#x8BB2;&#x89E3;&#x3002;</p>
 
                                 
                                 </section>
@@ -849,12 +889,12 @@
 
             
                 
-                <a href="tls1.2.html" class="navigation navigation-prev " aria-label="Previous page: TLS1.2的原理与流程">
+                <a href="http1.1.html" class="navigation navigation-prev " aria-label="Previous page: HTTP/1.1">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="ecc.html" class="navigation navigation-next " aria-label="Next page: 使用ECC算法">
+                <a href="http2-1.html" class="navigation navigation-next " aria-label="Next page: HTTP/2的应用">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -865,7 +905,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"使用TLS1.3","level":"1.3.3.3","depth":3,"next":{"title":"使用ECC算法","level":"1.3.3.4","depth":3,"path":"chapter2/ecc.md","ref":"chapter2/ecc.md","articles":[]},"previous":{"title":"TLS1.2的原理与流程","level":"1.3.3.2","depth":3,"path":"chapter2/tls1.2.md","ref":"chapter2/tls1.2.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters","katex","livereload"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"katex":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"expandable-chapters":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"高可用服务建设实践","gitbook":"*"},"file":{"path":"chapter2/tls1.3.md","mtime":"2022-10-23T09:06:44.155Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-11-02T07:57:11.526Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"HTTP/2","level":"1.3.2.2","depth":3,"next":{"title":"HTTP/2的应用","level":"1.3.2.3","depth":3,"path":"chapter2/http2-1.md","ref":"chapter2/http2-1.md","articles":[]},"previous":{"title":"HTTP/1.1","level":"1.3.2.1","depth":3,"path":"chapter2/http1.1.md","ref":"chapter2/http1.1.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters","katex","livereload"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"katex":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"expandable-chapters":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"高可用服务建设实践","gitbook":"*"},"file":{"path":"chapter2/http2.md","mtime":"2022-11-01T14:45:40.528Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-11-02T07:57:11.526Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
