@@ -1,0 +1,1482 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>dpdk · 高可用服务建设实践</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-katex/katex.min.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="nginx-vs.html" />
+    
+    
+    <link rel="prev" href="nginx.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                        <b>1.1.</b>
+                    
+                    关于本书
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../chapter1/net.html">
+            
+                <a href="../chapter1/net.html">
+            
+                    
+                        <b>1.2.</b>
+                    
+                    网络原理与优化实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../chapter1/monet.html">
+            
+                <a href="../chapter1/monet.html">
+            
+                    
+                        <b>1.2.1.</b>
+                    
+                    移动网络基本原理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../chapter1/ethernet.html">
+            
+                <a href="../chapter1/ethernet.html">
+            
+                    
+                        <b>1.2.2.</b>
+                    
+                    局域网通信原理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../chapter1/route.html">
+            
+                <a href="../chapter1/route.html">
+            
+                    
+                        <b>1.2.3.</b>
+                    
+                    IP路由
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../chapter1/bgp.html">
+            
+                <a href="../chapter1/bgp.html">
+            
+                    
+                        <b>1.2.4.</b>
+                    
+                    互联网AS自治系统及BGP讲解
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="../chapter1/icmp.html">
+            
+                <a href="../chapter1/icmp.html">
+            
+                    
+                        <b>1.2.5.</b>
+                    
+                    ICMP协议及应用
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.5.1" data-path="../chapter1/ping.html">
+            
+                <a href="../chapter1/ping.html">
+            
+                    
+                        <b>1.2.5.1.</b>
+                    
+                    Ping
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.2" data-path="../chapter1/traceroute.html">
+            
+                <a href="../chapter1/traceroute.html">
+            
+                    
+                        <b>1.2.5.2.</b>
+                    
+                    traceroute
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5.3" data-path="../chapter1/mtr.html">
+            
+                <a href="../chapter1/mtr.html">
+            
+                    
+                        <b>1.2.5.3.</b>
+                    
+                    使用MTR探测网络质量
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="../chapter1/tcp.html">
+            
+                <a href="../chapter1/tcp.html">
+            
+                    
+                        <b>1.2.6.</b>
+                    
+                    TCP优化实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.6.1" data-path="../chapter1/tcp握手优化.html">
+            
+                <a href="../chapter1/tcp握手优化.html">
+            
+                    
+                        <b>1.2.6.1.</b>
+                    
+                    TCP连接优化：参数优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.2" data-path="../chapter1/TCPFastOpen.html">
+            
+                <a href="../chapter1/TCPFastOpen.html">
+            
+                    
+                        <b>1.2.6.2.</b>
+                    
+                    TCP连接优化：TCP Fast Open
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.3" data-path="../chapter1/tcp挥手优化.html">
+            
+                <a href="../chapter1/tcp挥手优化.html">
+            
+                    
+                        <b>1.2.6.3.</b>
+                    
+                    TCP挥手优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.4" data-path="../chapter1/tcp传输优化.html">
+            
+                <a href="../chapter1/tcp传输优化.html">
+            
+                    
+                        <b>1.2.6.4.</b>
+                    
+                    TCP传输优化实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.6.4.1" data-path="../chapter1/tcp-params.html">
+            
+                <a href="../chapter1/tcp-params.html">
+            
+                    
+                        <b>1.2.6.4.1.</b>
+                    
+                    TCP传输参数优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.4.2" data-path="../chapter1/tcp-ecn.html">
+            
+                <a href="../chapter1/tcp-ecn.html">
+            
+                    
+                        <b>1.2.6.4.2.</b>
+                    
+                    TCP ECN
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6.4.3" data-path="../chapter1/tcp-bbr.html">
+            
+                <a href="../chapter1/tcp-bbr.html">
+            
+                    
+                        <b>1.2.6.4.3.</b>
+                    
+                    升级BBRv2传输算法
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="../chapter1/akamai.html">
+            
+                <a href="../chapter1/akamai.html">
+            
+                    
+                        <b>1.2.7.</b>
+                    
+                    使用边缘节点加速
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../chapter2/intro.html">
+            
+                <a href="../chapter2/intro.html">
+            
+                    
+                        <b>1.3.</b>
+                    
+                    HTTP服务的优化与实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../chapter2/dns.html">
+            
+                <a href="../chapter2/dns.html">
+            
+                    
+                        <b>1.3.1.</b>
+                    
+                    DNS优化实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../chapter2/http.html">
+            
+                <a href="../chapter2/http.html">
+            
+                    
+                        <b>1.3.2.</b>
+                    
+                    HTTP的优化与实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.2.1" data-path="../chapter2/http1.1.html">
+            
+                <a href="../chapter2/http1.1.html">
+            
+                    
+                        <b>1.3.2.1.</b>
+                    
+                    HTTP/1.1
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2.2" data-path="../chapter2/http2.html">
+            
+                <a href="../chapter2/http2.html">
+            
+                    
+                        <b>1.3.2.2.</b>
+                    
+                    HTTP/2
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2.3" data-path="../chapter2/http2-1.html">
+            
+                <a href="../chapter2/http2-1.html">
+            
+                    
+                        <b>1.3.2.3.</b>
+                    
+                    HTTP/2的应用
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2.4" data-path="../chapter2/early-hints.html">
+            
+                <a href="../chapter2/early-hints.html">
+            
+                    
+                        <b>1.3.2.4.</b>
+                    
+                    使用Early Hints加速展现
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2.5" data-path="../chapter2/compress.html">
+            
+                <a href="../chapter2/compress.html">
+            
+                    
+                        <b>1.3.2.5.</b>
+                    
+                    HTTP压缩的原理和实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2.6" data-path="../chapter2/image.html">
+            
+                <a href="../chapter2/image.html">
+            
+                    
+                        <b>1.3.2.6.</b>
+                    
+                    图片类资源的优化与实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2.7" data-path="../chapter2/nginx.html">
+            
+                <a href="../chapter2/nginx.html">
+            
+                    
+                        <b>1.3.2.7.</b>
+                    
+                    Nginx的HTTP配置详解
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../chapter2/http3.html">
+            
+                <a href="../chapter2/http3.html">
+            
+                    
+                        <b>1.3.3.</b>
+                    
+                    HTTP/3的应用实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.3.1" data-path="../chapter2/http3-dev.html">
+            
+                <a href="../chapter2/http3-dev.html">
+            
+                    
+                        <b>1.3.3.1.</b>
+                    
+                    HTTP/3的业界发展情况
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3.2" data-path="../chapter2/quic.html">
+            
+                <a href="../chapter2/quic.html">
+            
+                    
+                        <b>1.3.3.2.</b>
+                    
+                    QUIC协议讲解
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3.3" data-path="../chapter2/quic-future.html">
+            
+                <a href="../chapter2/quic-future.html">
+            
+                    
+                        <b>1.3.3.3.</b>
+                    
+                    QUIC协议的未来
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3.4" data-path="../chapter2/nginx-quic.html">
+            
+                <a href="../chapter2/nginx-quic.html">
+            
+                    
+                        <b>1.3.3.4.</b>
+                    
+                    基于Nginx部署HTTP/3服务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3.5" data-path="../chapter2/quic-act.html">
+            
+                <a href="../chapter2/quic-act.html">
+            
+                    
+                        <b>1.3.3.5.</b>
+                    
+                    HTTP/3的应用实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="../chapter2/ssl.html">
+            
+                <a href="../chapter2/ssl.html">
+            
+                    
+                        <b>1.3.4.</b>
+                    
+                    SSL/TLS优化与实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.4.1" data-path="../chapter2/https.html">
+            
+                <a href="../chapter2/https.html">
+            
+                    
+                        <b>1.3.4.1.</b>
+                    
+                    理解HTTP安全通信原理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4.2" data-path="../chapter2/tls1.2.html">
+            
+                <a href="../chapter2/tls1.2.html">
+            
+                    
+                        <b>1.3.4.2.</b>
+                    
+                    TLS1.2的原理与流程
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4.3" data-path="../chapter2/tls1.3.html">
+            
+                <a href="../chapter2/tls1.3.html">
+            
+                    
+                        <b>1.3.4.3.</b>
+                    
+                    使用TLS1.3
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4.4" data-path="../chapter2/ecc.html">
+            
+                <a href="../chapter2/ecc.html">
+            
+                    
+                        <b>1.3.4.4.</b>
+                    
+                    使用ECC算法
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4.5" data-path="../chapter2/ecc.html">
+            
+                <a href="../chapter2/ecc.html">
+            
+                    
+                        <b>1.3.4.5.</b>
+                    
+                    基于Nginx配置ECC、RSA双证书实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="intro.html">
+            
+                <a href="intro.html">
+            
+                    
+                        <b>1.4.</b>
+                    
+                    负载均衡与网关
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="load-balancing.html">
+            
+                <a href="load-balancing.html">
+            
+                    
+                        <b>1.4.1.</b>
+                    
+                    负载均衡概述
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="c10m.html">
+            
+                <a href="c10m.html">
+            
+                    
+                        <b>1.4.2.</b>
+                    
+                    从C10K到C10M
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="iptables.html">
+            
+                <a href="iptables.html">
+            
+                    
+                        <b>1.4.3.</b>
+                    
+                    iptables与Netfilter
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.3.1" data-path="iptables.html">
+            
+                <a href="iptables.html">
+            
+                    
+                        <b>1.4.3.1.</b>
+                    
+                    lvs理解
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="lvs.html">
+            
+                <a href="lvs.html">
+            
+                    
+                        <b>1.4.4.</b>
+                    
+                    LVS的讲解和实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.4.1" data-path="lvs.html">
+            
+                <a href="lvs.html">
+            
+                    
+                        <b>1.4.4.1.</b>
+                    
+                    lvs理解
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4.2" data-path="lvs-mode.html">
+            
+                <a href="lvs-mode.html">
+            
+                    
+                        <b>1.4.4.2.</b>
+                    
+                    lvs的工作模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4.3" data-path="keepalived.md">
+            
+                <span>
+            
+                    
+                        <b>1.4.4.3.</b>
+                    
+                    keepalived
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4.4" data-path="keepalived.md">
+            
+                <span>
+            
+                    
+                        <b>1.4.4.4.</b>
+                    
+                    lvs + keepalived主备模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4.5" data-path="keepalived.md">
+            
+                <span>
+            
+                    
+                        <b>1.4.4.5.</b>
+                    
+                    lvs + BGP的高可用群集模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="lvs.html">
+            
+                <a href="lvs.html">
+            
+                    
+                        <b>1.4.5.</b>
+                    
+                    Nginx
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.5.1" data-path="nginx.html">
+            
+                <a href="nginx.html">
+            
+                    
+                        <b>1.4.5.1.</b>
+                    
+                    Nginx
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.2" data-path="nginx.html">
+            
+                <a href="nginx.html">
+            
+                    
+                        <b>1.4.5.2.</b>
+                    
+                    Nginx的负载均衡模式
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5.3" data-path="nginx.html">
+            
+                <a href="nginx.html">
+            
+                    
+                        <b>1.4.5.3.</b>
+                    
+                    Nginx的配置文件
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4.6" data-path="nginx-dpdk.html">
+            
+                <a href="nginx-dpdk.html">
+            
+                    
+                        <b>1.4.6.</b>
+                    
+                    dpdk
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.6.1" data-path="nginx-vs.html">
+            
+                <a href="nginx-vs.html">
+            
+                    
+                        <b>1.4.6.1.</b>
+                    
+                    dpdk的概述
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.2" data-path="dpdk-lvs.md">
+            
+                <span>
+            
+                    
+                        <b>1.4.6.2.</b>
+                    
+                    dpdk+lvs
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.3" data-path="nginx-vs.html">
+            
+                <a href="nginx-vs.html">
+            
+                    
+                        <b>1.4.6.3.</b>
+                    
+                    dpdk-nginx的性能测试
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="OpenResty.md">
+            
+                <span>
+            
+                    
+                        <b>1.4.7.</b>
+                    
+                    OpenResty的实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../chapter4/intro.html">
+            
+                <a href="../chapter4/intro.html">
+            
+                    
+                        <b>1.5.</b>
+                    
+                    云原生与微服务的实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../chapter4/readme.md">
+            
+                <span>
+            
+                    
+                        <b>1.5.1.</b>
+                    
+                    什么是云原生
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" data-path="../chapter4/readme.md">
+            
+                <span>
+            
+                    
+                        <b>1.5.2.</b>
+                    
+                    容器实现的基础
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.2.1" data-path="../chapter4/cgroup.html">
+            
+                <a href="../chapter4/cgroup.html">
+            
+                    
+                        <b>1.5.2.1.</b>
+                    
+                    cgroup的设计与分析
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2.2" data-path="../chapter4/cgroup.html">
+            
+                <a href="../chapter4/cgroup.html">
+            
+                    
+                        <b>1.5.2.2.</b>
+                    
+                    namespace设计与分析
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2.3" data-path="../chapter4/cgroup.html">
+            
+                <a href="../chapter4/cgroup.html">
+            
+                    
+                        <b>1.5.2.3.</b>
+                    
+                    overlayFs设计与分析
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="../chapter4/container.md">
+            
+                <span>
+            
+                    
+                        <b>1.5.3.</b>
+                    
+                    Docker的应用与实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.3.1" data-path="../chapter4/docker.html">
+            
+                <a href="../chapter4/docker.html">
+            
+                    
+                        <b>1.5.3.1.</b>
+                    
+                    什么是Docker
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.2" data-path="../chapter4/docker-base.html">
+            
+                <a href="../chapter4/docker-base.html">
+            
+                    
+                        <b>1.5.3.2.</b>
+                    
+                    Docker的基本概念
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.3.2.1" data-path="../chapter4/docker-image.html">
+            
+                <a href="../chapter4/docker-image.html">
+            
+                    
+                        <b>1.5.3.2.1.</b>
+                    
+                    镜像Image
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.2.2" data-path="../chapter4/docker-container.html">
+            
+                <a href="../chapter4/docker-container.html">
+            
+                    
+                        <b>1.5.3.2.2.</b>
+                    
+                    容器Container
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.2.3" data-path="../chapter4/docker-repository.md">
+            
+                <span>
+            
+                    
+                        <b>1.5.3.2.3.</b>
+                    
+                    仓库Repository
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.3" data-path="../chapter4/registry.html">
+            
+                <a href="../chapter4/registry.html">
+            
+                    
+                        <b>1.5.3.3.</b>
+                    
+                    使用Docker Registry搭建私有镜像仓库
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../chapter5/intro.html">
+            
+                <a href="../chapter5/intro.html">
+            
+                    
+                        <b>1.6.</b>
+                    
+                    互联网重大故障的分析
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="../chapter5/facebook.html">
+            
+                <a href="../chapter5/facebook.html">
+            
+                    
+                        <b>1.6.1.</b>
+                    
+                    Facebook全线服务宕机的重大故障
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >dpdk</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="dpdk-nginx">dpdk-nginx</h1>
+<p>dpdk-nginx &#x662F;&#x57FA;&#x4E8E; ans &#x534F;&#x8BAE;&#x6539;&#x9020;&#x7684; nginx&#xFF0C;&#x4F7F; nginx &#x53EF;&#x4EE5;&#x4FDD;&#x7559;&#x5927;&#x90E8;&#x5206;&#x539F;&#x6709;&#x529F;&#x80FD;&#x4E14;&#x5177;&#x6709; dpdk &#x7684;&#x9AD8;&#x901F;&#x5904;&#x7406;&#x6570;&#x636E;&#x7684;&#x7279;&#x6027;&#x3002;</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="nginx.html" class="navigation navigation-prev " aria-label="Previous page: Nginx的配置文件">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="nginx-vs.html" class="navigation navigation-next " aria-label="Next page: dpdk的概述">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"dpdk","level":"1.4.6","depth":2,"next":{"title":"dpdk的概述","level":"1.4.6.1","depth":3,"path":"chapter3/nginx-vs.md","ref":"chapter3/nginx-vs.md","articles":[]},"previous":{"title":"Nginx的配置文件","level":"1.4.5.3","depth":3,"path":"chapter3/nginx.md","ref":"chapter3/nginx.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters","katex","livereload"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"katex":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"expandable-chapters":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"高可用服务建设实践","gitbook":"*"},"file":{"path":"chapter3/nginx-dpdk.md","mtime":"2022-11-08T08:57:44.703Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-11-10T02:26:34.657Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
