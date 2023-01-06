@@ -1737,36 +1737,6 @@
             
         </li>
     
-        <li class="chapter " data-level="1.5.3.2" data-path="../chapter4/vxlan.html">
-            
-                <a href="../chapter4/vxlan.html">
-            
-                    
-                        <b>1.5.3.2.</b>
-                    
-                    云原生网络VXLAN
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.5.3.3" data-path="../chapter4/flannel.html">
-            
-                <a href="../chapter4/flannel.html">
-            
-                    
-                        <b>1.5.3.3.</b>
-                    
-                    云原生网络Flannel
-            
-                </a>
-            
-
-            
-        </li>
-    
 
             </ul>
             
@@ -1845,7 +1815,23 @@
                     
                         <b>1.5.5.</b>
                     
-                    kubernetes
+                    理解kubernetes
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.5.1" data-path="../chapter4/flannel.html">
+            
+                <a href="../chapter4/flannel.html">
+            
+                    
+                        <b>1.5.5.1.</b>
+                    
+                    kubernetes CNI Flannel
             
                 </a>
             
@@ -1853,14 +1839,14 @@
             
         </li>
     
-        <li class="chapter " data-level="1.5.6" data-path="../chapter4/k8s-hello.html">
+        <li class="chapter " data-level="1.5.5.2" data-path="../chapter4/vxlan.html">
             
-                <a href="../chapter4/k8s-hello.html">
+                <a href="../chapter4/vxlan.html">
             
                     
-                        <b>1.5.6.</b>
+                        <b>1.5.5.2.</b>
                     
-                    kubernetes安装使用
+                    Overlay网络与VXLAN
             
                 </a>
             
@@ -1868,33 +1854,89 @@
             
         </li>
     
-        <li class="chapter " data-level="1.5.7" data-path="../chapter4/k8s-cni.md">
-            
-                <span>
-            
-                    
-                        <b>1.5.7.</b>
-                    
-                    kubernetes CNI
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.5.8" data-path="../chapter4/cilium.html">
+        <li class="chapter " data-level="1.5.5.3" data-path="../chapter4/cilium.html">
             
                 <a href="../chapter4/cilium.html">
             
                     
-                        <b>1.5.8.</b>
+                        <b>1.5.5.3.</b>
                     
-                    Cilium
+                    ebpf与Cilium
             
                 </a>
             
 
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6" data-path="../chapter4/kubernetes.html">
+            
+                <a href="../chapter4/kubernetes.html">
+            
+                    
+                        <b>1.5.6.</b>
+                    
+                    kubernetes实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.6.1" data-path="../chapter4/k8s-hello.html">
+            
+                <a href="../chapter4/k8s-hello.html">
+            
+                    
+                        <b>1.5.6.1.</b>
+                    
+                    kubernetes集群服务搭建
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6.2" data-path="../chapter4/k8s-cni.md">
+            
+                <span>
+            
+                    
+                        <b>1.5.6.2.</b>
+                    
+                    kubernetes弹性伸缩实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6.3" data-path="../chapter4/cilium.html">
+            
+                <a href="../chapter4/cilium.html">
+            
+                    
+                        <b>1.5.6.3.</b>
+                    
+                    基于kubernetes的DevOps实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
             
         </li>
     
@@ -2117,7 +2159,7 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"路由及网络互联","level":"1.2.3","depth":2,"next":{"title":"互联网AS自治系统","level":"1.2.3.1","depth":3,"path":"chapter1/bgp.md","ref":"chapter1/bgp.md","articles":[]},"previous":{"title":"理解局域网通信","level":"1.2.2","depth":2,"path":"chapter1/ethernet.md","ref":"chapter1/ethernet.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters","katex","code","github","tbfed-pagefooter","back-to-top-button"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy isno 2022","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"github":{"url":"https://github.com/isno/isno.github.io"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"katex":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"expandable-chapters":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"高可用服务建设实践","gitbook":"*"},"file":{"path":"chapter1/route.md","mtime":"2022-11-28T03:23:30.543Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-01-05T08:12:37.126Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"路由及网络互联","level":"1.2.3","depth":2,"next":{"title":"互联网AS自治系统","level":"1.2.3.1","depth":3,"path":"chapter1/bgp.md","ref":"chapter1/bgp.md","articles":[]},"previous":{"title":"理解局域网通信","level":"1.2.2","depth":2,"path":"chapter1/ethernet.md","ref":"chapter1/ethernet.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters","katex","code","github","tbfed-pagefooter","back-to-top-button","livereload"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy isno 2022","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"github":{"url":"https://github.com/isno/isno.github.io"},"livereload":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"katex":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"expandable-chapters":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"高可用服务建设实践","gitbook":"*"},"file":{"path":"chapter1/route.md","mtime":"2022-11-28T03:23:30.543Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-01-05T09:27:11.327Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
@@ -2140,6 +2182,10 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
     
         
         <script src="../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
         
     
         
