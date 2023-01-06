@@ -1824,14 +1824,14 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.5.5.1" data-path="../chapter4/flannel.html">
+        <li class="chapter " data-level="1.5.5.1" data-path="../chapter4/overlay.html">
             
-                <a href="../chapter4/flannel.html">
+                <a href="../chapter4/overlay.html">
             
                     
                         <b>1.5.5.1.</b>
                     
-                    kubernetes CNI Flannel
+                    Overlay网络与VXLAN
             
                 </a>
             
@@ -1839,14 +1839,14 @@
             
         </li>
     
-        <li class="chapter " data-level="1.5.5.2" data-path="../chapter4/vxlan.html">
+        <li class="chapter " data-level="1.5.5.2" data-path="../chapter4/flannel.html">
             
-                <a href="../chapter4/vxlan.html">
+                <a href="../chapter4/flannel.html">
             
                     
                         <b>1.5.5.2.</b>
                     
-                    Overlay网络与VXLAN
+                    kubernetes CNI Flannel
             
                 </a>
             
@@ -1861,7 +1861,7 @@
                     
                         <b>1.5.5.3.</b>
                     
-                    ebpf与Cilium
+                    eBPF与Cilium
             
                 </a>
             
@@ -2125,7 +2125,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"网络层优化","level":"1.2.5.2","depth":3,"next":{"title":"传输层优化实践","level":"1.2.5.3","depth":3,"path":"chapter1/tcp.md","ref":"chapter1/tcp.md","articles":[{"title":"TCP连接优化：参数优化","level":"1.2.5.3.1","depth":4,"path":"chapter1/tcp-handshake.md","ref":"chapter1/tcp-handshake.md","articles":[]},{"title":"TCP连接优化：TCP Fast Open","level":"1.2.5.3.2","depth":4,"path":"chapter1/TCPFastOpen.md","ref":"chapter1/TCPFastOpen.md","articles":[]},{"title":"TCP挥手优化","level":"1.2.5.3.3","depth":4,"path":"chapter1/tcp-handwave.md","ref":"chapter1/tcp-handwave.md","articles":[]},{"title":"TCP传输优化","level":"1.2.5.3.4","depth":4,"path":"chapter1/tcp-transfer.md","ref":"chapter1/tcp-transfer.md","articles":[{"title":"TCP传输参数","level":"1.2.5.3.4.1","depth":5,"path":"chapter1/tcp-params.md","ref":"chapter1/tcp-params.md","articles":[]},{"title":"TCP ECN","level":"1.2.5.3.4.2","depth":5,"path":"chapter1/tcp-ecn.md","ref":"chapter1/tcp-ecn.md","articles":[]},{"title":"BBRv2安装及测试","level":"1.2.5.3.4.3","depth":5,"path":"chapter1/bbr-install.md","ref":"chapter1/bbr-install.md","articles":[]}]}]},"previous":{"title":"理解拥塞控制","level":"1.2.5.1","depth":3,"path":"chapter1/tcp-bbr.md","ref":"chapter1/tcp-bbr.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters","katex","code","github","tbfed-pagefooter","back-to-top-button","livereload"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy isno 2022","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"github":{"url":"https://github.com/isno/isno.github.io"},"livereload":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"katex":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"expandable-chapters":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"高可用服务建设实践","gitbook":"*"},"file":{"path":"chapter1/net.md","mtime":"2022-11-25T07:34:29.068Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-01-05T09:27:11.327Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"网络层优化","level":"1.2.5.2","depth":3,"next":{"title":"传输层优化实践","level":"1.2.5.3","depth":3,"path":"chapter1/tcp.md","ref":"chapter1/tcp.md","articles":[{"title":"TCP连接优化：参数优化","level":"1.2.5.3.1","depth":4,"path":"chapter1/tcp-handshake.md","ref":"chapter1/tcp-handshake.md","articles":[]},{"title":"TCP连接优化：TCP Fast Open","level":"1.2.5.3.2","depth":4,"path":"chapter1/TCPFastOpen.md","ref":"chapter1/TCPFastOpen.md","articles":[]},{"title":"TCP挥手优化","level":"1.2.5.3.3","depth":4,"path":"chapter1/tcp-handwave.md","ref":"chapter1/tcp-handwave.md","articles":[]},{"title":"TCP传输优化","level":"1.2.5.3.4","depth":4,"path":"chapter1/tcp-transfer.md","ref":"chapter1/tcp-transfer.md","articles":[{"title":"TCP传输参数","level":"1.2.5.3.4.1","depth":5,"path":"chapter1/tcp-params.md","ref":"chapter1/tcp-params.md","articles":[]},{"title":"TCP ECN","level":"1.2.5.3.4.2","depth":5,"path":"chapter1/tcp-ecn.md","ref":"chapter1/tcp-ecn.md","articles":[]},{"title":"BBRv2安装及测试","level":"1.2.5.3.4.3","depth":5,"path":"chapter1/bbr-install.md","ref":"chapter1/bbr-install.md","articles":[]}]}]},"previous":{"title":"理解拥塞控制","level":"1.2.5.1","depth":3,"path":"chapter1/tcp-bbr.md","ref":"chapter1/tcp-bbr.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters","katex","code","github","tbfed-pagefooter","back-to-top-button"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy isno 2022","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"github":{"url":"https://github.com/isno/isno.github.io"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"katex":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"expandable-chapters":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"高可用服务建设实践","gitbook":"*"},"file":{"path":"chapter1/net.md","mtime":"2022-11-25T07:34:29.068Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-01-06T06:11:53.682Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
@@ -2148,10 +2148,6 @@
     
         
         <script src="../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
-        
-    
-        
-        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
         
     
         
