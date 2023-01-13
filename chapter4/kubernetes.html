@@ -77,7 +77,7 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="overlay.html" />
+    <link rel="next" href="flannel.html" />
     
     
     <link rel="prev" href="registry.html" />
@@ -1504,7 +1504,7 @@
                     
                         <b>1.4.12.1.</b>
                     
-                    使用Intel® QAT优化
+                    使用QAT技术对网络请求运算加速
             
                 </a>
             
@@ -1731,12 +1731,27 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.5.3.1" data-path="tap-tun.html">
+        <li class="chapter " data-level="1.5.3.1" data-path="overlay.html">
+            
+                <a href="overlay.html">
+            
+                    
+                        <b>1.5.3.1.</b>
+                    
+                    Overlay网络与VXLAN
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.2" data-path="tap-tun.html">
             
                 <a href="tap-tun.html">
             
                     
-                        <b>1.5.3.1.</b>
+                        <b>1.5.3.2.</b>
                     
                     tap/tun
             
@@ -1833,27 +1848,12 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.5.5.1" data-path="overlay.html">
-            
-                <a href="overlay.html">
-            
-                    
-                        <b>1.5.5.1.</b>
-                    
-                    Overlay网络与VXLAN
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.5.5.2" data-path="flannel.html">
+        <li class="chapter " data-level="1.5.5.1" data-path="flannel.html">
             
                 <a href="flannel.html">
             
                     
-                        <b>1.5.5.2.</b>
+                        <b>1.5.5.1.</b>
                     
                     kubernetes CNI Flannel
             
@@ -1863,12 +1863,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.5.5.3" data-path="cilium.html">
+        <li class="chapter " data-level="1.5.5.2" data-path="cilium.html">
             
                 <a href="cilium.html">
             
                     
-                        <b>1.5.5.3.</b>
+                        <b>1.5.5.2.</b>
                     
                     eBPF与Cilium
             
@@ -2205,7 +2205,7 @@ K8s &#x63D0;&#x4F9B;&#x4E86; Secret &#x8D44;&#x6E90;&#x4F9B;&#x6211;&#x4EEC;&#x6
                 </a>
                 
                 
-                <a href="overlay.html" class="navigation navigation-next " aria-label="Next page: Overlay网络与VXLAN">
+                <a href="flannel.html" class="navigation navigation-next " aria-label="Next page: kubernetes CNI Flannel">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -2216,7 +2216,7 @@ K8s &#x63D0;&#x4F9B;&#x4E86; Secret &#x8D44;&#x6E90;&#x4F9B;&#x6211;&#x4EEC;&#x6
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"理解kubernetes","level":"1.5.5","depth":2,"next":{"title":"Overlay网络与VXLAN","level":"1.5.5.1","depth":3,"path":"chapter4/overlay.md","ref":"chapter4/overlay.md","articles":[]},"previous":{"title":"使用Nexus3搭建私有镜像仓库","level":"1.5.4.3","depth":3,"path":"chapter4/registry.md","ref":"chapter4/registry.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters","katex","code","github","tbfed-pagefooter","back-to-top-button"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy isno 2022","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"github":{"url":"https://github.com/isno/isno.github.io"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"katex":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"expandable-chapters":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"高可用服务建设实践","gitbook":"*"},"file":{"path":"chapter4/kubernetes.md","mtime":"2022-12-14T07:32:45.156Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-01-13T02:50:25.577Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"理解kubernetes","level":"1.5.5","depth":2,"next":{"title":"kubernetes CNI Flannel","level":"1.5.5.1","depth":3,"path":"chapter4/flannel.md","ref":"chapter4/flannel.md","articles":[]},"previous":{"title":"使用Nexus3搭建私有镜像仓库","level":"1.5.4.3","depth":3,"path":"chapter4/registry.md","ref":"chapter4/registry.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters","katex","code","github","tbfed-pagefooter","back-to-top-button"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy isno 2022","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"github":{"url":"https://github.com/isno/isno.github.io"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"katex":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"expandable-chapters":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"高可用服务建设实践","gitbook":"*"},"file":{"path":"chapter4/kubernetes.md","mtime":"2022-12-14T07:32:45.156Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-01-13T09:30:28.575Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

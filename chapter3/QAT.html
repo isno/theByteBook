@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>使用Intel® QAT优化 · 高可用服务建设实践</title>
+        <title>使用QAT技术对网络请求运算加速 · 高可用服务建设实践</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -1504,7 +1504,7 @@
                     
                         <b>1.4.12.1.</b>
                     
-                    使用Intel® QAT优化
+                    使用QAT技术对网络请求运算加速
             
                 </a>
             
@@ -1731,12 +1731,27 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.5.3.1" data-path="../chapter4/tap-tun.html">
+        <li class="chapter " data-level="1.5.3.1" data-path="../chapter4/overlay.html">
+            
+                <a href="../chapter4/overlay.html">
+            
+                    
+                        <b>1.5.3.1.</b>
+                    
+                    Overlay网络与VXLAN
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.2" data-path="../chapter4/tap-tun.html">
             
                 <a href="../chapter4/tap-tun.html">
             
                     
-                        <b>1.5.3.1.</b>
+                        <b>1.5.3.2.</b>
                     
                     tap/tun
             
@@ -1833,27 +1848,12 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.5.5.1" data-path="../chapter4/overlay.html">
-            
-                <a href="../chapter4/overlay.html">
-            
-                    
-                        <b>1.5.5.1.</b>
-                    
-                    Overlay网络与VXLAN
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.5.5.2" data-path="../chapter4/flannel.html">
+        <li class="chapter " data-level="1.5.5.1" data-path="../chapter4/flannel.html">
             
                 <a href="../chapter4/flannel.html">
             
                     
-                        <b>1.5.5.2.</b>
+                        <b>1.5.5.1.</b>
                     
                     kubernetes CNI Flannel
             
@@ -1863,12 +1863,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.5.5.3" data-path="../chapter4/cilium.html">
+        <li class="chapter " data-level="1.5.5.2" data-path="../chapter4/cilium.html">
             
                 <a href="../chapter4/cilium.html">
             
                     
-                        <b>1.5.5.3.</b>
+                        <b>1.5.5.2.</b>
                     
                     eBPF与Cilium
             
@@ -2050,7 +2050,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >使用Intel® QAT优化</a>
+        <a href=".." >使用QAT技术对网络请求运算加速</a>
     </h1>
 </div>
 
@@ -2065,11 +2065,12 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="&#x4F7F;&#x7528;intel-qat&#x4F18;&#x5316;&#x8BF7;&#x6C42;&#xFF1A;ssl&#x53CA;zlib&#x538B;&#x7F29;&#x4F18;&#x5316;">&#x4F7F;&#x7528;Intel&#xAE; QAT&#x4F18;&#x5316;&#x8BF7;&#x6C42;&#xFF1A;SSL&#x53CA;zlib&#x538B;&#x7F29;&#x4F18;&#x5316;</h1>
-<p>QAT(Quick Assist Technology )&#x662F;Intel&#x516C;&#x53F8;&#x63A8;&#x51FA;&#x7684;&#x4E00;&#x79CD;&#x4E13;&#x7528;&#x786C;&#x4EF6;&#x52A0;&#x901F;&#x5361;&#x3002; </p>
-<p>QAT&#x4E0D;&#x4EC5;&#x80FD;&#x5BF9;SSL&#x975E;&#x5BF9;&#x79F0;&#x52A0;&#x89E3;&#x5BC6;&#x7B97;&#x6CD5;&#xFF08;RSA&#x3001;ECDH&#x3001;ECDSA&#x3001;DH&#x3001;DSA&#x7B49;&#xFF09;&#x5177;&#x6709;&#x52A0;&#x901F;&#xFF0C;&#x800C;&#x4E14;&#x63D0;&#x4F9B;&#x4E86;&#x5BF9;&#x5176;&#x539F;&#x751F;zlib&#x4E0E;QAT&#x9002;&#x914D;&#x7684;Zlib-SHIM&#x63A5;&#x53E3;&#xFF0C;&#x5BF9;&#x6570;&#x636E;&#x7684;&#x538B;&#x7F29;&#x4E0E;&#x89E3;&#x538B;&#x4E5F;&#x5177;&#x6709;&#x5F88;&#x597D;&#x7684;&#x52A0;&#x901F;&#x6548;&#x679C;&#x3002;QAT&#x9A71;&#x52A8;&#x91C7;&#x7528;UIO&#xFF08;Userspace I/O&#xFF09;&#x6280;&#x672F;&#xFF0C;&#x5176;&#x5927;&#x90E8;&#x5206;&#x5904;&#x4E8E;&#x7528;&#x6237;&#x6001;&#x3001;&#x53EA;&#x6709;&#x5C11;&#x90E8;&#x5206;&#x5904;&#x7406;&#x786C;&#x4EF6;&#x4E2D;&#x65AD;&#x5E94;&#x7B54;&#x7B49;&#x903B;&#x8F91;&#x5904;&#x4E8E;&#x5185;&#x6838;&#x6001;&#xFF0C;&#x8FD9;&#x6837;&#x4E0D;&#x4EC5;&#x65B9;&#x4FBF;&#x7528;&#x6237;&#x8C03;&#x8BD5;&#xFF0C;&#x800C;&#x4E14;&#x8FD8;&#x89E3;&#x51B3;&#x4E86;&#x5185;&#x6838;&#x4E0D;&#x652F;&#x6301;&#x6D6E;&#x70B9;&#x6570;&#x8FD0;&#x7B97;&#x7684;&#x95EE;&#x9898;&#x3002;</p>
-<h2 id="intel-qat&#x7684;&#x786C;&#x4EF6;&#x8BBE;&#x5907;&#x6027;&#x80FD;">Intel&#xAE; QAT&#x7684;&#x786C;&#x4EF6;&#x8BBE;&#x5907;&#x6027;&#x80FD;</h2>
-<p>&#x4EE5;Intel&#xAE; QuickAssist Adapter 8970&#x4E3A;&#x4F8B;&#xFF0C;&#x80FD;&#x770B;&#x51FA;&#x9488;&#x5BF9;&#x52A0;&#x89E3;&#x5BC6;&#x3001;&#x538B;&#x7F29;&#x4EE5;&#x53CA;&#x89E3;&#x538B;&#x7F29;&#x7B49;&#x8FD0;&#x7B97;&#x90FD;&#x6709;&#x975E;&#x5E38;&#x9AD8;&#x7684;&#x6027;&#x80FD;&#x6307;&#x6807;&#x3002;</p>
+                                <h1 id="&#x4F7F;&#x7528;qat&#x6280;&#x672F;&#x5BF9;&#x7F51;&#x7EDC;&#x8BF7;&#x6C42;&#x8FD0;&#x7B97;&#x52A0;&#x901F;">&#x4F7F;&#x7528;QAT&#x6280;&#x672F;&#x5BF9;&#x7F51;&#x7EDC;&#x8BF7;&#x6C42;&#x8FD0;&#x7B97;&#x52A0;&#x901F;</h1>
+<p>&#x82F1;&#x7279;&#x5C14;&#xAE; Quick Assist Technology &#xFF08;&#x4EE5;&#x4E0B;&#x7B80;&#x79F0; QAT&#xFF09;&#x662F;Intel&#x516C;&#x53F8;&#x63A8;&#x51FA;&#x7684;&#x4E00;&#x79CD;&#x4E13;&#x7528;&#x786C;&#x4EF6;&#x52A0;&#x901F;&#x6280;&#x672F;&#xFF0C;&#x53EF;&#x4EE5;&#x7528;&#x6765;&#x63D0;&#x9AD8;Web&#x670D;&#x52A1;&#x5668;&#x4E2D;&#x8BA1;&#x7B97;&#x5BC6;&#x96C6;&#x7684;&#x516C;&#x94A5;&#x52A0;&#x5BC6;&#x4EE5;&#x53CA;&#x6570;&#x636E;&#x538B;&#x7F29;&#x89E3;&#x538B;&#x7684;&#x541E;&#x5410;&#x7387;&#x4EE5;&#x53CA;&#x964D;&#x4F4E;CPU&#x8D1F;&#x8F7D;&#x3002;&#x5728;&#x7231;&#x5947;&#x827A;&#x5185;&#xFF0C;&#x5982;&#x7F51;&#x5173;&#x3001;CDN&#x7B49;&#x5173;&#x952E;&#x6D41;&#x91CF;&#x5165;&#x53E3;&#xFF0C;&#x5747;&#x6709;&#x8F83;&#x6210;&#x719F;&#x7684;&#x5E94;&#x7528;&#xFF0C;&#x4E5F;&#x53D6;&#x5F97;&#x4E86;&#x4E0D;&#x9519;&#x7684;&#x4F18;&#x5316;&#x6548;&#x679C;&#x3002; </p>
+<p>QAT&#x5728;&#x6280;&#x672F;&#x4E0A;&#x9A71;&#x52A8;&#x91C7;&#x7528;UIO&#x6280;&#x672F;&#xFF0C;&#x5176;&#x5927;&#x90E8;&#x5206;&#x5904;&#x4E8E;&#x7528;&#x6237;&#x6001;&#x3001;&#x53EA;&#x6709;&#x5C11;&#x90E8;&#x5206;&#x5904;&#x7406;&#x786C;&#x4EF6;&#x4E2D;&#x65AD;&#x5E94;&#x7B54;&#x7B49;&#x903B;&#x8F91;&#x5904;&#x4E8E;&#x5185;&#x6838;&#x6001;&#x3002;&#x529F;&#x80FD;&#x652F;&#x6301;&#x4E0A;&#x80FD;&#x5BF9;SSL&#x975E;&#x5BF9;&#x79F0;&#x52A0;&#x89E3;&#x5BC6;&#x7B97;&#x6CD5;&#xFF08;RSA&#x3001;ECDH&#x3001;ECDSA&#x3001;DH&#x3001;DSA&#x7B49;&#xFF09;&#x8FD0;&#x7B97;&#xFF0C;&#x63D0;&#x4F9B;&#x5BF9;&#x5176;&#x539F;&#x751F;zlib&#x4E0E;QAT&#x9002;&#x914D;&#x7684;Zlib-SHIM&#x63A5;&#x53E3;&#xFF0C;&#x652F;&#x6301;&#x5BF9;deflate&#x3001;LZ77&#x7B49;&#x6570;&#x636E;&#x538B;&#x7F29;&#x548C;&#x89E3;&#x538B;&#x8FD0;&#x7B97;&#x3002;</p>
+<p>&#x9664;&#x6B64;&#xFF0C;&#x5728;&#x5982;Hadoop&#x3001;&#x6570;&#x636E;&#x5E93;(RocksDB)&#x3001;&#x6587;&#x4EF6;&#x7CFB;&#x7EDF;(BTRFS)&#x7B49;&#x573A;&#x666F;&#x4E5F;&#x80FD;QAT&#x63D0;&#x9AD8;&#x8FD0;&#x884C;&#x901F;&#x5EA6;&#x548C;&#x5B58;&#x50A8;&#x5BC6;&#x5EA6;&#x3002;</p>
+<h2 id="1-qat&#x6027;&#x80FD;&#x53C2;&#x7167;">1. QAT&#x6027;&#x80FD;&#x53C2;&#x7167;</h2>
+<p>&#x4EE5;&#x786C;&#x4EF6;Intel&#xAE; QuickAssist Adapter 8970&#x578B;&#x53F7;&#x4E3A;&#x4F8B;&#xFF0C;&#x53EF;&#x4EE5;&#x770B;&#x51FA;&#x9488;&#x5BF9;&#x52A0;&#x89E3;&#x5BC6;&#x3001;&#x538B;&#x7F29;&#x4EE5;&#x53CA;&#x89E3;&#x538B;&#x7F29;&#x7B49;&#x8FD0;&#x7B97;&#x90FD;&#x6709;&#x975E;&#x5E38;&#x9AD8;&#x7684;&#x6027;&#x80FD;&#x6307;&#x6807;&#x3002;</p>
 <table>
 <thead>
 <tr>
@@ -2096,13 +2097,21 @@
 </tr>
 </tbody>
 </table>
-<p>&#x5728;Intel&#x7684;&#x5B98;&#x7F51;&#xFF0C;&#x5BF9;&#x4E8E;&#x5982;&#x4F55;&#x4F7F;&#x7528;QAT&#x4EE5;&#x53CA;&#x8BBE;&#x7F6E;HTTPS&#x8FDB;&#x884C;&#x5B8C;&#x6574;&#x7684;&#x63CF;&#x8FF0;&#x548C;&#x5B89;&#x88C5;&#x6307;&#x5BFC;&#xFF0C;&#x6211;&#x7ED3;&#x5408;ZLIB&#x7684;&#x8BBE;&#x7F6E;&#xFF0C;&#x6574;&#x7406;&#x51FA;&#x4EE5;&#x4E0B;&#x5185;&#x5BB9;&#xFF0C;&#x4EE5;&#x4F9B;&#x8BFB;&#x8005;&#x53C2;&#x8003;</p>
-<p>&#x6587;&#x7AE0;&#x5185;&#x4F7F;&#x7528;&#x7684; synch_mode_nginx &#x662F; Nginx &#x7ECF;&#x8FC7;&#x4F18;&#x5316;&#x7684;&#x7248;&#x672C;&#xFF0C;&#x82F1;&#x7279;&#x5C14;&#x5C06;&#x5176;&#x7528;&#x4E8E;&#x652F;&#x6301; Nginx &#x786C;&#x4EF6;&#x548C;&#x8F6F;&#x4EF6;&#x52A0;&#x901F;&#x3002;&#x4E0B;&#x8F7D;&#x4E4B;&#x540E;&#x53EF;&#x76F4;&#x63A5;&#x7F16;&#x8BD1;&#x3002;&#x76F8;&#x5173;&#x8BF4;&#x660E;&#x8BF7;&#x53C2;&#x9605;&#x4EE5;&#x4E0B;&#x94FE;&#x63A5;&#xFF1A;<a href="https://github.com/intel/asynch_mode_nginx" target="_blank">https://github.com/intel/asynch_mode_nginx</a></p>
+<p>&#x53C2;&#x8003;&#x5B98;&#x7F51;&#x7684;&#x8BF4;&#x660E;&#xFF1A;&#x5229;&#x7528;QAT&#x786C;&#x4EF6;&#xFF0C;&#x5728;&#x7F51;&#x7EDC;&#x4E0A;&#x7684;&#x5E94;&#x7528;&#x53EF;&#x4EE5;&#x63D0;&#x9AD8;HTTPS&#x541E;&#x5410;&#x91CF;&#x4E09;&#x500D;&#x4EE5;&#x4E0A;&#xFF0C;&#x4EE5;&#x53CA;&#x63D0;&#x5347;CPU&#x5229;&#x7528;&#x7387;&#x4E09;&#x500D;&#x4EE5;&#x4E0A;</p>
 <blockquote>
-<p><a href="https://www.intel.cn/content/www/cn/zh/developer/articles/guide/nginx-https-with-qat-tuning-guide.html" target="_blank">https://www.intel.cn/content/www/cn/zh/developer/articles/guide/nginx-https-with-qat-tuning-guide.html</a></p>
+<p>&#x6CE8; 1&#xFF1A;OpenSSL (AES-128 SHA1-HMAC @ 16KB) &#xFF08;6 &#x6838; CPU&#xFF09;&#xFF1A;&#x6CA1;&#x6709; QAT &#x65F6;&#xFF1A;14.4G bps &#x541E;&#x5410;&#x91CF;&#xFF1B; QAT&#x52A0;&#x901F;&#x540E;&#xFF1A;&#x8FBE;&#x5230; 44G bps &#x541E;&#x5410;&#x91CF;</p>
+<p>&#x6CE8; 2: OpenSSL (AES-128 SHA1-HMAC @ 16KB) &#xFF08;&#x8FBE;&#x5230; 44G bps &#x541E;&#x5410;&#x91CF;&#xFF09; &#xFF1A;&#x6CA1;&#x6709; QAT &#x65F6;&#xFF1A;&#x9700;&#x8981;&#x5360;&#x7528;18 &#x4E2A;&#x6838;&#xFF1B; QAT &#x52A0;&#x901F;&#x540E;&#xFF1A;&#x4EC5;&#x9700;&#x5360;&#x7528; 6 &#x4E2A;&#x6838;</p>
 </blockquote>
-<p>&#x9002;&#x7528;&#x4E8E; OpenSSL &#x7684;&#x82F1;&#x7279;&#x5C14; QAT &#x5F15;&#x64CE;&#x94FE;&#x63A5;&#xFF1A;<a href="https://github.com/intel/QAT_Engine" target="_blank">https://github.com/intel/QAT_Engine</a></p>
-<h2 id="bios&#x8BBE;&#x7F6E;">BIOS&#x8BBE;&#x7F6E;</h2>
+<h2 id="2-qat&#x914D;&#x7F6E;nginx&#x7684;&#x5B89;&#x88C5;&#x4F7F;&#x7528;">2. QAT&#x914D;&#x7F6E;Nginx&#x7684;&#x5B89;&#x88C5;&#x4F7F;&#x7528;</h2>
+<p>Intel&#x63D0;&#x4F9B;&#x4E86;&#x5229;&#x7528;Nginx&#x52A8;&#x6001;&#x6A21;&#x5757;&#x673A;&#x5236;&#xFF0C;&#x63D0;&#x4F9B;&#x4E86;&#x52A0;&#x89E3;&#x5BC6;&#x3001;&#x89E3;&#x538B;&#x7F29;&#x6838;&#x5FC3;&#x6A21;&#x5757;&#x7684;&#x652F;&#x6301;&#x3002;&#x5728;&#x672C;&#x6587;&#x57FA;&#x4E8E;&#x52A8;&#x6001;&#x6A21;&#x5757;&#x7684;&#x673A;&#x5236;&#x8FDB;&#x884C;Nginx&#x5B89;&#x88C5;&#x548C;&#x914D;&#x7F6E;&#xFF0C;&#x4EE5;&#x4FBF;&#x8BFB;&#x8005;&#x4E86;&#x89E3; QAT&#x5728;Nginx&#x4E2D;&#x7684;&#x5E94;&#x7528;&#x3002;</p>
+<p>&#x5B89;&#x88C5;QAT&#x4E3B;&#x8981;&#x5305;&#x62EC;&#x786C;&#x4EF6;&#x5B89;&#x88C5;&#x3001;BIOS&#x8BBE;&#x7F6E;&#x3001;Linux&#x76F8;&#x5E94;&#x7684;&#x4F18;&#x5316;&#x3001;OpenSSL&#x5347;&#x7EA7;&#x3001;QAT&#x9A71;&#x52A8;&#x5B89;&#x88C5;&#x3001;Nginx&#x6253;QAT Patch&#x4EE5;&#x53CA;&#x76F8;&#x5E94;&#x7684;&#x6D4B;&#x8BD5;&#x7B49;&#x3002;</p>
+<p>Intel&#xAE; QuickAssist Accelerator &#x662F;&#x4E00;&#x5757;PCIe&#x5361;&#xFF0C;&#x9996;&#x5148;&#x9700;&#x8981;&#x5C06;&#x5176;&#x5B89;&#x88C5;&#x5728;&#x670D;&#x52A1;&#x5668;&#x7684;PCIe&#x63D2;&#x69FD;&#x4E2D;&#x3002;&#x4EE5;&#x4E0B;&#x4E3A;QAT&#x52A0;&#x901F;&#x5361;&#x7684;&#x56FE;&#x7247;</p>
+<div align="center">
+    <img src="../assets/chapter3/qat.png" width="450" align="center">
+</div>
+
+<p>&#x5361;&#x5B89;&#x88C5;&#x5B8C;&#x6BD5;&#x540E;&#xFF0C;&#x9700;&#x8981;&#x786E;&#x8BA4;BIOS&#x8BBE;&#x7F6E;&#xFF0C;&#x5C06;PICe link speed&#x8BBE;&#x7F6E;&#x5230; Gen4,X16 &#x4EE5;&#x83B7;&#x5F97;&#x6700;&#x597D;&#x7684;&#x6027;&#x80FD;&#x3002;</p>
+<h3 id="bios&#x8BBE;&#x7F6E;">BIOS&#x8BBE;&#x7F6E;</h3>
 <p>BIOS&#x53EF;&#x4F18;&#x5316;&#x9009;&#x9879;&#x53CA;&#x63A8;&#x8350;&#x503C;&#x5982;&#x4E0B;</p>
 <table>
 <thead>
@@ -2113,11 +2122,11 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align:left">Hyper-Threading</td>
+<td style="text-align:left">Hyper-Threading&#xFF08;&#x8D85;&#x7EBF;&#x7A0B;&#xFF09;</td>
 <td style="text-align:left">Enable</td>
 </tr>
 <tr>
-<td style="text-align:left">CPU C6 report</td>
+<td style="text-align:left">CPU C6 report &#xFF08;CPU C6 &#x62A5;&#x544A;&#xFF09;</td>
 <td style="text-align:left">Auto</td>
 </tr>
 <tr>
@@ -2125,69 +2134,62 @@
 <td style="text-align:left">Enable</td>
 </tr>
 <tr>
-<td style="text-align:left">Turbo Mode</td>
+<td style="text-align:left">Turbo Mode &#xFF08;Turbo &#x6A21;&#x5F0F;&#xFF09;</td>
 <td style="text-align:left">Enable</td>
 </tr>
 <tr>
-<td style="text-align:left">PCIe Link Speed</td>
+<td style="text-align:left">PCIe Link Speed &#xFF08;PCIe &#x94FE;&#x8DEF;&#x901F;&#x5EA6;&#xFF09;</td>
 <td style="text-align:left">Gen4</td>
 </tr>
 <tr>
-<td style="text-align:left">Energy Efficient Turbo</td>
+<td style="text-align:left">Energy Efficient Turbo &#xFF08;&#x8282;&#x80FD;&#x52A0;&#x901F;&#x6280;&#x672F;&#xFF09;</td>
 <td style="text-align:left">Disable</td>
 </tr>
 <tr>
-<td style="text-align:left">Boot Performance Mode</td>
+<td style="text-align:left">Boot Performance Mode &#xFF08;&#x542F;&#x52A8;&#x6027;&#x80FD;&#x6A21;&#x5F0F;&#xFF09;</td>
 <td style="text-align:left">Max Performance</td>
 </tr>
 </tbody>
 </table>
 <h2 id="linux&#x4F18;&#x5316;">Linux&#x4F18;&#x5316;</h2>
-<p>&#x8BBE;&#x7F6E;&#x76F8;&#x5E94;&#x7684;&#x7CFB;&#x7EDF;&#x542F;&#x52A8;&#x53C2;&#x6570;</p>
-<pre><code>intel_iommu=off
-processor.max_cstates=1 
-idle=poll 
-pcie_aspm=off
-</code></pre><p>&#x5173;&#x95ED;cpupower&#x670D;&#x52A1;</p>
+<p>GRUB_CMDLINE_LINUX&#x4E2D;&#x8BBE;&#x7F6E;&#x76F8;&#x5E94;&#x7684;&#x7CFB;&#x7EDF;&#x542F;&#x52A8;&#x53C2;&#x6570;</p>
+<pre><code>intel_iommu=off processor.max_cstates=1 idle=poll pcie_aspm=off
+</code></pre><p>&#x5173;&#x95ED;cpupower&#x670D;&#x52A1;&#x4EE5;&#x53CA;&#x9632;&#x706B;&#x5899;</p>
 <pre><code>systemctl stop cpupower.service
-</code></pre><p>&#x5173;&#x95ED;&#x9632;&#x706B;&#x5899;</p>
-<pre><code>systemctl disable firewalld.service
-</code></pre><p>&#x7528;&#x6237;&#x8FDB;&#x7A0B;&#x8BBE;&#x7F6E;</p>
+systemctl disable firewalld.service
+</code></pre><p>&#x7528;&#x6237;&#x8FDB;&#x7A0B;&#x7684;&#x76F8;&#x5173;&#x8BBE;&#x7F6E;</p>
 <pre><code>ulimit -c unlimited # &#x751F;&#x6210;Core dump
 ulimit -n  1000000 # &#x8BBE;&#x7F6E;&#x6700;&#x5927;&#x6587;&#x4EF6;&#x53E5;&#x67C4;&#x6253;&#x5F00;&#x6570;
-</code></pre><h2 id="intel-qat&#x5B89;&#x88C5;&#x548C;&#x8BBE;&#x7F6E;">Intel&#xAE; QAT&#x5B89;&#x88C5;&#x548C;&#x8BBE;&#x7F6E;</h2>
-<p>Intel&#xAE; QuickAssist Accelerator &#x662F;&#x4E00;&#x5757;PCIe&#x5361;&#xFF0C;&#x9996;&#x5148;&#x9700;&#x8981;&#x5C06;&#x5176;&#x5B89;&#x88C5;&#x5728;&#x670D;&#x52A1;&#x5668;&#x7684;PCIe&#x63D2;&#x69FD;&#x4E2D;&#x3002;&#x4EE5;&#x4E0B;&#x4E3A;QAT&#x52A0;&#x901F;&#x5361;&#x7684;&#x56FE;&#x7247;</p>
-<div align="center">
-    <img src="../assets/chapter3/qat.png" width="450" align="center">
-</div>
-
-<p>&#x5361;&#x5B89;&#x88C5;&#x5B8C;&#x6BD5;&#x540E;&#xFF0C;&#x9700;&#x8981;&#x786E;&#x8BA4;BIOS&#x8BBE;&#x7F6E;&#xFF0C;&#x5C06;PICe link speed&#x8BBE;&#x7F6E;&#x5230; Gen4,X16 &#x4EE5;&#x83B7;&#x5F97;&#x6700;&#x597D;&#x7684;&#x6027;&#x80FD;&#x3002;</p>
-<h3 id="&#x9A71;&#x52A8;&#x5B89;&#x88C5;">&#x9A71;&#x52A8;&#x5B89;&#x88C5;</h3>
-<p>&#x7528;&#x6237;&#x53EF;&#x4EE5;&#x4ECE;&#x4EE5;&#x4E0B;&#x7F51;&#x5740;&#x4E0B;&#x8F7D;&#x52A0;&#x901F;&#x5361;&#x9A71;&#x52A8;&#xFF0C;&#x89E3;&#x538B;&#x7F29;&#x5E76;&#x8FDB;&#x884C;&#x5B89;&#x88C5;&#x64CD;&#x4F5C;&#x3002;&#x672C;&#x6587;&#x4EE5;/QAT&#x4E3A;&#x9A71;&#x52A8;&#x5B89;&#x88C5;&#x76EE;&#x5F55;</p>
+</code></pre><h3 id="qat&#x9A71;&#x52A8;&#x5B89;&#x88C5;">QAT&#x9A71;&#x52A8;&#x5B89;&#x88C5;</h3>
+<p>&#x7528;&#x6237;&#x53EF;&#x4EE5;&#x4ECE;&#x4EE5;&#x4E0B;&#x7F51;&#x5740;&#x4E0B;&#x8F7D;&#x52A0;&#x901F;&#x5361;&#x9A71;&#x52A8;&#x3002;&#x672C;&#x6587;&#x4E0B;&#x8F7D;&#x7684;&#x4E3A;QAT.L.4.20.0-00001.tar.gz &#x5E76;&#x4EE5;/QAT&#x4E3A;&#x9A71;&#x52A8;&#x5B89;&#x88C5;&#x76EE;&#x5F55;</p>
+<blockquote>
 <p><a href="https://www.intel.com/content/www/us/en/download/19734/intel-quickassist-technology-driver-for-linux-hw-version-1-7.html" target="_blank">https://www.intel.com/content/www/us/en/download/19734/intel-quickassist-technology-driver-for-linux-hw-version-1-7.html</a></p>
-<pre><code>cd /
-mkdir QAT
-</code></pre><p>&#x5C06;QAT.L.4.20.0-00001.tar.gz &#x62F7;&#x8D1D;&#x81F3; /QAT &#x76EE;&#x5F55;</p>
+</blockquote>
 <pre><code>cd /QAT
 tar xvzf ./ QAT.L.4.20.0-00001.tar.gz
 ./configure --enable-qat-lkcf --enable-icp-dc-sym-only --enable-kapi
 make
 make install
-make samples-install
+make samples-install // (Optional&#xFF09;&#x5B89;&#x88C5;sample&#x5E94;&#x7528;
 </code></pre><blockquote>
 <p>&#x5728;build&#x4E0B;&#xFF0C; &#x4F1A;&#x51FA; cpa_sample_code.ko &#x6A21;&#x5757;&#xFF0C;&#x53EF;&#x4EE5;&#x7528; insmod ./build/cpa_sample_code.ko &#x52A0;&#x8F7D;cpa_sample_code&#x6267;&#x884C;&#x6D4B;&#x8BD5;</p>
 </blockquote>
 <p>&#x9A71;&#x52A8;&#x5B89;&#x88C5;&#x5B8C;&#x6BD5;&#x540E;&#xFF0C;&#x547D;&#x4EE4;&#x8F93;&#x51FA;&#x4E2D;&#x53EF;&#x4EE5;&#x770B;&#x5230;&#x6709;3&#x4E2A;QAT&#x52A0;&#x901F;&#x8BBE;&#x5907;(qat_dev)&#x5904;&#x4E8E;&#x542F;&#x52A8;&#x72B6;&#x6001;, &#x7136;&#x540E;&#x7528;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x542F;&#x52A8;QAT&#x670D;&#x52A1;</p>
 <pre><code>service qat_service start
 </code></pre><h2 id="openssl-&#x548C;-qatengine&#x5B89;&#x88C5;">OpenSSL &#x548C; QAT_Engine&#x5B89;&#x88C5;</h2>
-<p>QAT&#x7528;&#x5230;&#x7684; openssl &#x7684;&#x7248;&#x672C;&#x9700;&#x8981; 1.1.0 &#x4E4B;&#x4E0A;&#x7684;, &#x8FDB;&#x884C;OpenSSL&#x5347;&#x7EA7;</p>
+<p>QAT&#x7528;&#x5230;&#x7684; OpenSSL &#x7684;&#x7248;&#x672C;&#x9700;&#x8981; 1.1.0 &#x4E4B;&#x4E0A;&#x7684;, &#x8FDB;&#x884C;OpenSSL&#x5347;&#x7EA7;</p>
 <p>OpenSSL&#x6E90;&#x7801;&#x4E0B;&#x8F7D;</p>
 <pre><code>cd ~
 wget https://www.openssl.org/source/openssl-1.1.1s.tar.gz
 </code></pre><p>OpenSSL&#x7F16;&#x8BD1;&#x5B89;&#x88C5; (&#x672C;&#x6587;&#x5B89;&#x88C5;&#x5728;/usr/local/ssl&#x4E2D;)</p>
-<pre><code>tar xvzf openssl-1.1.1s.tar.gz
-cd ./openssl-1.1.1s
-./config --prefix=/usr/local/ssl -W1,-rpath,/usr/local/ssl/lib
+<pre><code>wget https://www.openssl.org/source/openssl-1.1.1s.tar.gz
+tar xvzf openssl-1.1.1s.tar.gz
+
+ln -s openssl-1.1.1s openssl
+cd openssl
+
+./config --prefix=/usr/local/ssl
+make depend
 make
 make install
 
@@ -2197,17 +2199,14 @@ ldconfig
 
 /usr/local/ssl/bin/openssl version //&#x8FDB;&#x884C;&#x9A8C;&#x8BC1;
 </code></pre><h3 id="qat-engine&#x5B89;&#x88C5;">QAT Engine&#x5B89;&#x88C5;</h3>
-<p>QAT Engine&#x6E90;&#x7801;&#x4E0B;&#x8F7D;</p>
-<pre><code>export OPENSSL_ENGINES=/usr/local/ssl/lib/engines-1.1
-cd /usr/local/
-
-git clone https://github.com/intel/QAT_Engine.git
-</code></pre><p>QAT Engine&#x7F16;&#x8BD1;&#x5B89;&#x88C5;</p>
-<pre><code>cd ./QAT_Engine
+<p>QAT Engine&#x7F16;&#x8BD1;&#x5B89;&#x88C5;</p>
+<pre><code>git clone https://github.com/intel/QAT_Engine.git
+cd ./QAT_Engine
 ./autogen.sh
-./configure --with-qat_dir=/QAT --with-openssl_install_dir=/usr/local/ssl
+./configure --with-qat_dir=/QAT --with-openssl_dir=/home/ssl --with-openssl_install_dir=/usr/local/ssl
+export PERL5LIB=$PERL5LIB:/home/openssl
 make &amp;&amp; make install
-</code></pre><h2 id="qat&#x670D;&#x52A1;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x66FF;&#x6362;">QAT&#x670D;&#x52A1;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x66FF;&#x6362;</h2>
+</code></pre><p>QAT&#x670D;&#x52A1;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x66FF;&#x6362;</p>
 <p>&#x4E3A;&#x4E86;&#x4F7F;&#x5F97;QAT Engine&#x80FD;&#x548C; QAT Service&#x8054;&#x5408;&#x5DE5;&#x4F5C;&#xFF0C;&#x8FD8;&#x9700;&#x8981;&#x628A;QAT Engine&#x76EE;&#x5F55;&#x4E0B;&#x7684;&#x5B9E;&#x4F8B;&#x914D;&#x7F6E;&#x62F7;&#x8D1D;&#x81F3;/etc&#x76EE;&#x5F55;&#x4E0B;&#xFF0C;&#x66FF;&#x6362;&#x6389;QAT&#x539F;&#x6765;&#x7684;&#x914D;&#x7F6E;&#x6587;&#x4EF6;</p>
 <pre><code>cd /usr/local/QAT_Engine/qat/config/c6xx/multi_process_event-driven_optimized
 cp * /etc/
@@ -2216,43 +2215,29 @@ cp * /etc/
 </code></pre><h2 id="&#x6D4B;&#x8BD5;&#x9A8C;&#x8BC1;">&#x6D4B;&#x8BD5;&#x9A8C;&#x8BC1;</h2>
 <p>&#x7528;OpenSSL&#x52A0;&#x8F7D;QAT Engine</p>
 <pre><code>/usr/local/ssl/bin/openssl engine -t -vvvv qatengine
-</code></pre><p>&#x7CFB;&#x7EDF;&#x6B63;&#x5E38;&#x8DD1;</p>
-<pre><code>/usr/local/ssl/bin/openssl speed -elapsed rsa2048
-</code></pre><p>&#x52A0;&#x901F;&#x5361;&#x8DD1;</p>
-<pre><code>/usr/local/ssl/bin/openssl speed -engine qat_dev0 -elapsed rsa2048
-</code></pre><h3 id="openssl-speed&#x6D4B;&#x8BD5;&#x547D;&#x4EE4;">openssl speed&#x6D4B;&#x8BD5;&#x547D;&#x4EE4;</h3>
+</code></pre><p>openssl&#x7684;&#x52A0;&#x89E3;&#x5BC6;&#x6D4B;&#x8BD5;</p>
+<pre><code>/usr/local/ssl/bin/openssl speed -elapsed rsa2048  // &#x7CFB;&#x7EDF;&#x6B63;&#x5E38;&#x8DD1;
+/usr/local/ssl/bin/openssl speed -engine qat_dev0 -elapsed rsa2048 // &#x4F7F;&#x7528;&#x52A0;&#x901F;&#x5361;&#x8DD1;
+</code></pre><p>&#x4E0B;&#x9762;&#x9488;&#x5BF9;RSA2048&#x3001;ECDSA-P256&#x8FDB;&#x884C;openssl speed&#x6D4B;&#x8BD5;</p>
 <p>RSA2048</p>
-<pre><code>/usr/local/ssl/bin/opensslspeed -elapsed rsa2048
-# Synchronous &#x540C;&#x6B65;
-/usr/local/ssl/bin/opensslspeed -engine qatengine -elapsed rsa2048
-# Asynchronous1 &#x5F02;&#x6B65;
-/usr/local/ssl/bin/openssl speed -engine qatengine -elapsed -async_jobs 36 rsa2048
-# Asynchronous2 &#x5F02;&#x6B65;
-/usr/local/ssl/bin/openssl speed -engine qatengine -elapsed -async_jobs 72 rsa2048
+<pre><code>/usr/local/ssl/bin/openssl speed -elapsed rsa2048  # Software&#x7EAF;&#x8F6F; 
+/usr/local/ssl/bin/openssl speed -engine qatengine -elapsed rsa2048  # Synchronous &#x540C;&#x6B65;
+/usr/local/ssl/bin/openssl speed -engine qatengine -elapsed -async_jobs 36 rsa2048 # Asynchronous1 &#x5F02;&#x6B65;
+/usr/local/ssl/bin/openssl speed -engine qatengine -elapsed -async_jobs 72 rsa2048 # Asynchronous1 &#x5F02;&#x6B65;
 </code></pre><p>ECDSA-P256</p>
-<pre><code># Software &#x7EAF;&#x8F6F;
-/usr/local/ssl/bin/openssl speed -elapsed ecdsap256
-# Synchronous &#x540C;&#x6B65;
-/usr/local/ssl/bin/openssl speed -engine qatengine -elapsed ecdsap256
-# Asynchronous1 &#x5F02;&#x6B65;1
-/usr/local/ssl/bin/openssl speed -engine qatengine -elapsed -async_jobs 36 ecdsap256
-# Asynchronous2 &#x5F02;&#x6B65;2
-/usr/local/ssl/bin/opensslspeed -engine qatengine -elapsed -async_jobs 72 ecdsap256
-</code></pre><h4 id="&#x67E5;&#x770B;-qat-&#x5361;-&#x63A5;&#x53D7;&#x5904;&#x7406;&#x6570;&#x636E;">&#x67E5;&#x770B; qat &#x5361; &#x63A5;&#x53D7;&#x5904;&#x7406;&#x6570;&#x636E;</h4>
-<p>QAT&#x5361;&#x5728;&#x5DE5;&#x4F5C;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x8BA1;&#x6570;&#x4F1A;&#x4E00;&#x76F4;&#x53D8;&#x5316;</p>
+<pre><code>/usr/local/ssl/bin/openssl speed -elapsed ecdsap256 # Software &#x7EAF;&#x8F6F;
+/usr/local/ssl/bin/openssl speed -engine qatengine -elapsed ecdsap256 # Synchronous &#x540C;&#x6B65;
+/usr/local/ssl/bin/openssl speed -engine qatengine -elapsed -async_jobs 36 ecdsap256 # Asynchronous1 &#x5F02;&#x6B65;1
+/usr/local/ssl/bin/opensslspeed -engine qatengine -elapsed -async_jobs 72 ecdsap256 # Asynchronous2 &#x5F02;&#x6B65;2
+</code></pre><p>&#x67E5;&#x770B; QAT&#x5361;&#x8FDB;&#x884C;&#x63A5;&#x53D7;&#x5904;&#x7406;&#x6570;&#x636E;&#xFF0C; QAT&#x5361;&#x5728;&#x5DE5;&#x4F5C;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x8BA1;&#x6570;&#x4F1A;&#x4E00;&#x76F4;&#x53D8;&#x5316;</p>
 <pre><code>cat /sys/kernel/debug/qat_dh895xcc_0000\:07\:00.0/fw_counters
 </code></pre><h2 id="nginx-&#x5B89;&#x88C5;&#x53CA;&#x4F18;&#x5316;&#x8BBE;&#x7F6E;">Nginx &#x5B89;&#x88C5;&#x53CA;&#x4F18;&#x5316;&#x8BBE;&#x7F6E;</h2>
-<p>Intel QAT &#x52A0;&#x901F;&#x5361;&#x53EF;&#x4EE5;&#x5BF9;HTTPS&#x7684;&#x8BF7;&#x6C42;&#x8FDB;&#x884C;&#x5F02;&#x6B65;&#x8BF7;&#x6C42;&#xFF0C; &#x52A0;&#x5FEB;&#x8BC1;&#x4E66;&#x5904;&#x7406;&#xFF0C; &#x964D;&#x4F4E;&#x7CFB;&#x7EDF;&#x6027;&#x80FD;&#x6D88;&#x8017;&#x3002;Nginx&#x4F5C;&#x4E3A;&#x4EE3;&#x7406;&#xFF0C;&#x53EF;&#x4EE5;&#x4EE3;&#x7406;HTTPS&#x8BF7;&#x6C42;&#xFF0C;&#x9700;&#x8981;&#x91CD;&#x65B0;&#x7F16;&#x8BD1;&#xFF0C;&#x652F;&#x6301;QAT&#x52A0;&#x901F;&#x5361;&#xFF0C;&#x8FD9;&#x6837;&#x624D;&#x80FD;&#x5C06;&#x8BF7;&#x6C42;&#x7ED9;QAT&#x52A0;&#x901F;&#x5361;&#x3002;</p>
-<p>Nginx&#x4EE5;&#x53CA;&#x76F8;&#x5173;&#x7684;Path&#x4E0B;&#x8F7D;</p>
+<p>&#x5728;&#x672C;&#x6587;&#x4F7F;&#x7528;asynch_mode_nginx&#x5BF9;Nginx&#x8FDB;&#x884C;&#x6253;patch&#xFF0C;&#x5E76;&#x4E14;&#x5B89;&#x88C5;QATzip&#xFF0C;&#x4EE5;&#x4FBF;Nginx&#x652F;&#x6301;QAT gzip&#x538B;&#x7F29;&#x5904;&#x7406;&#x3002;</p>
+<p>Nginx&#x4EE5;&#x53CA;&#x76F8;&#x5173;&#x7684;patch&#x4E0B;&#x8F7D;</p>
 <pre><code>wget http://nginx.org/download/nginx-1.18.0.tar.gz
 git clone https://github.com/intel/asynch_mode_nginx.git
 git clone https://github.com/intel/QATzip.git
-</code></pre><p>Nginx Path</p>
-<pre><code>tar -zxf nginx-1.18.0.tar.gz
-diff -Naru -x .git nginx-1.18.0 asynch_mode_nginx &gt; async_mode_nginx_1.18.0.patch
-cd nginx-1.18.0 
-patch -p1 &lt; ../async_mode_nginx_1.18.0.patch
-</code></pre><h3 id="&#x7F16;&#x8BD1;-qatzip">&#x7F16;&#x8BD1; QATzip</h3>
+</code></pre><p>&#x5148;&#x8FDB;&#x884C;QATzip&#x7684;&#x7F16;&#x8BD1;&#x548C;&#x5B89;&#x88C5;</p>
 <pre><code>export QZ_ROOT=/home/QATzip
 echo 1024 &gt; /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
 rmmod usdm_drv
@@ -2268,11 +2253,16 @@ systemctl restart qat_service
 </code></pre><p>QATzip&#x6D4B;&#x8BD5;&#x9A8C;&#x8BC1;</p>
 <pre><code>cd $QZ_ROOT/test/performance_tests
 ./run_perf_test.sh
-</code></pre><h3 id="&#x7F16;&#x8BD1;nginx">&#x7F16;&#x8BD1;Nginx</h3>
-<pre><code>cd /home/nginx-1.18.0
- export NGINX_INSTALL_DIR=/usr/local/nginx
+</code></pre><p>&#x7EE7;&#x7EED;&#x5BF9;Nginx&#x8FDB;&#x884C;&#x6253;async_mode_nginx patch</p>
+<pre><code>tar -zxf nginx-1.18.0.tar.gz
+diff -Naru -x .git nginx-1.18.0 asynch_mode_nginx &gt; async_mode_nginx_1.18.0.patch
+cd nginx-1.18.0 
+patch -p1 &lt; ../async_mode_nginx_1.18.0.patch
+</code></pre><p>&#x7F16;&#x8BD1;Nginx</p>
+<pre><code>cd nginx-1.18.0
+export NGINX_INSTALL_DIR=/usr/local/nginx
 ./configure \
-    --prefix=$NGINX_INSTALL_DIR \
+    --prefix=/usr/local/nginx \
     --with-http_ssl_module \
     --add-dynamic-module=modules/nginx_qatzip_module \
     --add-dynamic-module=modules/nginx_qat_module/ \
@@ -2280,7 +2270,8 @@ systemctl restart qat_service
     --with-ld-opt=&quot;-Wl,-rpath=$OPENSSL_LIB/lib -L$OPENSSL_LIB/lib -L$QZ_ROOT/src -lqatzip -lz&quot; 
 make 
 make install
-</code></pre><h3 id="nginx-&#x4F18;&#x5316;&#x8BBE;&#x7F6E;">Nginx &#x4F18;&#x5316;&#x8BBE;&#x7F6E;</h3>
+</code></pre><p>Nginx&#x5B89;&#x88C5;&#x5B8C;&#x6BD5;&#x4E4B;&#x540E;&#xFF0C;&#x5728;Nginx conf&#x6587;&#x4EF6;&#x4E2D;&#x52A0;&#x8F7D; qat ssl&#x4EE5;&#x53CA;qatzip&#x6A21;&#x5757; &#xFF08;&#x7531;&#x4E8E;Nginx&#x914D;&#x7F6E;&#x8F83;&#x591A;&#xFF0C;&#x6587;&#x672C;&#x4EC5;&#x793A;&#x4F8B;QAT&#x76F8;&#x5173;&#x7684;&#x914D;&#x7F6E;&#xFF09;</p>
+<p>&#x52A0;&#x8F7D;QAT&#x6A21;&#x5757;&#xFF0C;&#x5B9A;&#x4E49;ssl_engine</p>
 <pre><code>load_module modules/ngx_http_qatzip_filter_module.so;
 load_module modules/ngx_ssl_engine_qat_module.so;
 
@@ -2295,15 +2286,7 @@ ssl_engine {
     }
 }
 </code></pre><p>HTTP&#x538B;&#x7F29;&#x76F8;&#x5173;&#x7684;&#x914D;&#x7F6E;</p>
-<pre><code>gzip on;
-gzip_min_length     128;
-gzip_comp_level     1;
-gzip_types  text/css text/javascript text/xml text/plain text/x-component application/javascript application/json application/xml application/rss+xml font/truetype font/opentype application/vnd.ms-fontobject image/svg+xml;
-gzip_vary            on;
-gzip_disable        &quot;msie6&quot;;
-gzip_http_version   1.0;
-
-qatzip_sw failover;
+<pre><code>qatzip_sw failover;
 qatzip_min_length 128;
 qatzip_comp_level 1;
 qatzip_buffers 16 8k;
@@ -2311,44 +2294,69 @@ qatzip_types text/css text/javascript text/xml text/plain text/x-component appli
 qatzip_chunk_size   64k;
 qatzip_stream_size  256k;
 qatzip_sw_threshold 256;
-</code></pre><pre><code>#If QAT Engine enabled,  `asynch` need to add to `listen` directive or just add `ssl_asynch  on;` to the context.
-listen       443 ssl asynch;
+</code></pre><p>Nginx Server &#x7AD9;&#x70B9;&#x5BF9;QAT&#x542F;&#x7528;</p>
+<pre><code>listen       443 ssl backlog=65534 reuseport deferred rcvbuf=8m sndbuf=8m asynch;  # &#x6CE8;&#x610F;&#x5173;&#x952E;&#x5B57; asynch
 server_name  localhost;
 ssl_protocols       TLSv1.2 TLSv1.3;
 ssl_certificate crt/ca.com.crt;
 ssl_certificate_key crt/ca.com.key;
-...
 }
-</code></pre><p>&#x6D4B;&#x8BD5;Nginx&#x914D;&#x7F6E;&#x662F;&#x5426;&#x6B63;&#x5E38;</p>
-<pre><code>/usr/local/nginx/sbin/nginx -t
-</code></pre><p>&#x9A8C;&#x8BC1;QAT&#x5361;&#x662F;&#x5426;&#x5DE5;&#x4F5C;, &#x662F;QAT&#x5361;&#x8BA1;&#x6570;, &#x5F53;QAT&#x5361;&#x5904;&#x7406;&#x8BF7;&#x6C42;&#x65F6;&#xFF0C;&#x8BA1;&#x6570;&#x5668;&#x53D1;&#x751F;&#x53D8;&#x5316;&#x3002;</p>
+</code></pre><p>&#x91CD;&#x542F;Nginx&#x5E76;&#x6D4B;&#x8BD5;QAT&#x662F;&#x5426;&#x6B63;&#x5E38;&#x5DE5;&#x4F5C;&#xFF0C;&#x5F53;QAT&#x5361;&#x5904;&#x7406;&#x8BF7;&#x6C42;&#x65F6;&#xFF0C;&#x8BE5;&#x8BA1;&#x6570;&#x5668;&#x53D1;&#x751F;&#x53D8;&#x5316;&#x3002;</p>
 <pre><code>cat /sys/kernel/debug/qat_dh895xcc_0000\:07\:00.0/fw_counters
-</code></pre><h2 id="&#x8BC4;&#x6D4B;&#x7ED3;&#x679C;">&#x8BC4;&#x6D4B;&#x7ED3;&#x679C;</h2>
-<p>&#x7531;&#x4E8E;&#x4F5C;&#x8005;&#x6CA1;&#x6709;QAT&#x5361;&#xFF0C;&#x6D4B;&#x8BD5;&#x4EE5;&#x53CA;&#x5B89;&#x88C5;&#x7B49;&#x5B9E;&#x8DF5;&#x5F88;&#x96BE;&#x8FDB;&#x884C;&#xFF0C;&#x6211;&#x5728;&#x4E00;&#x4E2A;&#x963F;&#x91CC;&#x793E;&#x533A;&#x770B;&#x5230;Tengine&#xFF08;&#x963F;&#x91CC;7&#x5C42;&#x6D41;&#x91CF;&#x5165;&#x53E3;&#xFF09;&#x4E00;&#x4E2A;QAT&#x5B9E;&#x8DF5;&#x6587;&#x7AE0;&#xFF0C;&#x5728;&#x8FD9;&#x91CC;&#x5F15;&#x7528;&#x8BE5;&#x6587;&#x7AE0;&#x7684;&#x6D4B;&#x8BD5;&#x6570;&#x636E;&#xFF0C;&#x4EE5;&#x4FBF;&#x8BFB;&#x8005;&#x4E86;&#x89E3;&#x6027;&#x80FD;&#x63D0;&#x5347;&#x60C5;&#x51B5;</p>
-<blockquote>
-<p>&#x6570;&#x636E;&#x6765;&#x6E90; <a href="https://developer.aliyun.com/article/597750" target="_blank">https://developer.aliyun.com/article/597750</a></p>
-</blockquote>
-<p><strong>QAT &#x5BF9; SSL &#x52A0;&#x901F;&#x524D;&#x540E;&#x7CFB;&#x7EDF;CPU&#x5BF9;&#x6BD4;</strong></p>
-<ul>
-<li>RSA&#x5957;&#x4EF6;&#x63D0;&#x5347;3.8&#x500D;(8&#x6838;&#x65F6;)</li>
-<li>ECDHE-RSA&#x63D0;&#x5347;2.65&#x500D;(8&#x6838;&#x65F6;)</li>
-<li>ECDHE-ECDSA(P-384) &#x63D0;&#x5347;2&#x500D;(16&#x6838;&#x65F6;)</li>
-<li>ECDHE-ECDSA(P-256) 8&#x6838;&#x8FBE;&#x5230;QAT&#x786C;&#x4EF6;&#x5904;&#x7406;&#x5CF0;&#x503C;16k&#x5DE6;&#x53F3;&#xFF0C; &#x53EA;&#x6709;23%&#x7684;&#x6027;&#x80FD;&#x63D0;&#x5347;&#x3002;</li>
-</ul>
-<div align="center">
-    <img src="../assets/chapter3/qat-test.png" width="550" align="center">
-</div>
-
-<p><strong>QAT &#x5BF9; Gzip &#x52A0;&#x901F;&#x524D;&#x540E;&#x7CFB;&#x7EDF;CPU&#x5BF9;&#x6BD4;</strong></p>
-<p>&#x5F53;qps&#x4E3A;10k&#x5DE6;&#x53F3;&#x65F6;Tengine Gzip&#x4F7F;&#x7528;QAT&#x52A0;&#x901F;&#x540E;CPU&#x8282;&#x7701;15%&#x5DE6;&#x53F3;&#xFF0C;&#x4E14;Gzip&#x57FA;&#x672C;&#x4E0A;&#x5B8C;&#x5168;&#x5378;&#x8F7D;&#x3001;&#x968F;&#x7740;&#x5176;&#x5360;&#x6BD4;&#x53D8;&#x9AD8;&#xFF0C;&#x4F18;&#x5316;&#x6548;&#x679C;&#x5C06;&#x8D8A;&#x597D;&#x3002;&#xFF08;&#x5728;2017&#x5E74;&#x53CC;11&#x96F6;&#x70B9;&#x6D41;&#x91CF;&#x5CF0;&#x503C;&#xFF0C;Tengine&#x52A0;
-&#x901F;&#x673A;&#x5668;&#x76F8;&#x6BD4;&#x666E;&#x901A;&#x673A;&#x5668;&#x6027;&#x80FD;&#x63D0;&#x5347; 21%&#x3002; &#xFF09;</p>
-<div align="center">
-    <img src="../assets/chapter3/qat-test2.png" width="550" align="center">
-</div>
-
-
+</code></pre><h2 id="&#x8BC4;&#x6D4B;">&#x8BC4;&#x6D4B;</h2>
+<p>&#x7B14;&#x8005;&#x901A;&#x8FC7;&#x5BF9;ECC&#x3001;RSA&#x3001;TLS1.2&#x3001;TLS1.3&#x51E0;&#x4E2A;&#x7EF4;&#x5EA6;&#xFF0C;&#x4F7F;&#x7528;ab&#x8FDB;&#x884C;&#x5E76;&#x53D1;&#x6D4B;&#x8BD5;</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">&#x573A;&#x666F;</th>
+<th style="text-align:left">QPS</th>
+<th style="text-align:left">Time</th>
+<th style="text-align:left">&#x5355;&#x6B21;&#x53D1;&#x51FA;&#x8BF7;&#x6C42;&#x6570;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">RSA&#x8BC1;&#x4E66; + TLS1.2</td>
+<td style="text-align:left">316.20</td>
+<td style="text-align:left">316.254ms</td>
+<td style="text-align:left">100</td>
+</tr>
+<tr>
+<td style="text-align:left">RSA&#x8BC1;&#x4E66; + TLS1.2 + QAT</td>
+<td style="text-align:left">530.48</td>
+<td style="text-align:left">188.507ms</td>
+<td style="text-align:left">100</td>
+</tr>
+<tr>
+<td style="text-align:left">RSA&#x8BC1;&#x4E66; + TLS1.3</td>
+<td style="text-align:left">303.01</td>
+<td style="text-align:left">330.017ms</td>
+<td style="text-align:left">100</td>
+</tr>
+<tr>
+<td style="text-align:left">RSA&#x8BC1;&#x4E66; + TLS1.3 + QAT</td>
+<td style="text-align:left">499.29</td>
+<td style="text-align:left">200.285ms</td>
+<td style="text-align:left">100</td>
+</tr>
+<tr>
+<td style="text-align:left">ECC&#x8BC1;&#x4E66; + TLS1.2</td>
+<td style="text-align:left">639.39</td>
+<td style="text-align:left">203.319ms</td>
+<td style="text-align:left">100</td>
+</tr>
+<tr>
+<td style="text-align:left">ECC&#x8BC1;&#x4E66; + TLS1.3</td>
+<td style="text-align:left">627.39</td>
+<td style="text-align:left">159.390ms</td>
+<td style="text-align:left">100</td>
+</tr>
+</tbody>
+</table>
+<p>&#x4F7F;&#x7528;QAT&#x5BF9; Gzip&#x8FDB;&#x884C;&#x52A0;&#x901F;&#x540E;&#xFF0C;cpu load&#x4E5F;&#x964D;&#x4F4E; 20%&#x5DE6;&#x53F3;&#x3002;</p>
+<p>&#x4ECE;&#x5BF9;SSL&#x52A0;&#x901F;&#x7684;&#x7ED3;&#x679C;&#x4E0A;&#x770B;&#xFF0C;&#x4F7F;&#x7528;QAT&#x5BF9;RSA&#x8BC1;&#x4E66;&#x52A0;&#x901F;&#x540E;&#xFF0C;&#x80FD;&#x63D0;&#x5347;40%&#x5DE6;&#x53F3;&#x7684;&#x6027;&#x80FD;&#x3002; &#xFF08;&#x7279;&#x522B;&#x7684;&#x662F;&#xFF1A;&#x4E0D;&#x7BA1;&#x54EA;&#x79CD;&#x573A;&#x666F;&#xFF0C;&#x4F7F;&#x7528;ECC&#x8BC1;&#x4E66;&#x8F83;RSA&#x8BC1;&#x4E66;&#x6027;&#x80FD;&#x63D0;&#x5347;&#x5F88;&#x591A;&#xFF0C;&#x5373;&#x4F7F;RSA&#x4F7F;&#x7528;&#x4E86;QAT&#x52A0;&#x901F;&#x4EA6;&#x662F;&#x5982;&#x6B64;&#xFF0C;ECC&#x8BC1;&#x4E66;&#x5DF2;&#x5728;&#x7B2C;&#x4E8C;&#x7AE0;&#x4ECB;&#x7ECD;&#x8FC7;&#xFF09;</p>
 <footer class="page-footer"><span class="copyright">Copyright &#xA9; isno 2022 all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x8BA2;&#x65F6;&#x95F4;&#xFF1A;
-2023-01-13 02:49:02
+2023-01-13 08:50:10
 </span></footer>
                                 
                                 </section>
@@ -2392,7 +2400,7 @@ ssl_certificate_key crt/ca.com.key;
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"使用Intel® QAT优化","level":"1.4.12.1","depth":3,"next":{"title":"eBPF加速网络请求","level":"1.4.12.2","depth":3,"path":"chapter3/dpdk.md","ref":"chapter3/dpdk.md","articles":[]},"previous":{"title":"网关优化实践","level":"1.4.12","depth":2,"path":"chapter3/api-optimize.md","ref":"chapter3/api-optimize.md","articles":[{"title":"使用Intel® QAT优化","level":"1.4.12.1","depth":3,"path":"chapter3/QAT.md","ref":"chapter3/QAT.md","articles":[]},{"title":"eBPF加速网络请求","level":"1.4.12.2","depth":3,"path":"chapter3/dpdk.md","ref":"chapter3/dpdk.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["expandable-chapters","katex","code","github","tbfed-pagefooter","back-to-top-button"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy isno 2022","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"github":{"url":"https://github.com/isno/isno.github.io"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"katex":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"expandable-chapters":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"高可用服务建设实践","gitbook":"*"},"file":{"path":"chapter3/QAT.md","mtime":"2023-01-13T02:49:02.234Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-01-13T02:50:25.577Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"使用QAT技术对网络请求运算加速","level":"1.4.12.1","depth":3,"next":{"title":"eBPF加速网络请求","level":"1.4.12.2","depth":3,"path":"chapter3/dpdk.md","ref":"chapter3/dpdk.md","articles":[]},"previous":{"title":"网关优化实践","level":"1.4.12","depth":2,"path":"chapter3/api-optimize.md","ref":"chapter3/api-optimize.md","articles":[{"title":"使用QAT技术对网络请求运算加速","level":"1.4.12.1","depth":3,"path":"chapter3/QAT.md","ref":"chapter3/QAT.md","articles":[]},{"title":"eBPF加速网络请求","level":"1.4.12.2","depth":3,"path":"chapter3/dpdk.md","ref":"chapter3/dpdk.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["expandable-chapters","katex","code","github","tbfed-pagefooter","back-to-top-button"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy isno 2022","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"github":{"url":"https://github.com/isno/isno.github.io"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"katex":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"expandable-chapters":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"高可用服务建设实践","gitbook":"*"},"file":{"path":"chapter3/QAT.md","mtime":"2023-01-13T08:50:10.690Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-01-13T09:30:28.575Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
