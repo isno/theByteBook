@@ -1230,27 +1230,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.3.3" data-path="../chapter3/keepalived.html">
-            
-                <a href="../chapter3/keepalived.html">
-            
-                    
-                        <b>1.4.3.3.</b>
-                    
-                    LVS + Keepalived主备模式的实践
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.4.3.4" data-path="../chapter3/ospf.html">
+        <li class="chapter " data-level="1.4.3.3" data-path="../chapter3/ospf.html">
             
                 <a href="../chapter3/ospf.html">
             
                     
-                        <b>1.4.3.4.</b>
+                        <b>1.4.3.3.</b>
                     
                     LVS + OSPF多活模式的实践
             
@@ -1991,6 +1976,8 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="kubernetes&#x7B80;&#x4ECB;">Kubernetes&#x7B80;&#x4ECB;</h1>
+<p>&#x5728;&#x524D;&#x9762;&#x6587;&#x7AE0;&#xFF0C;&#x7B14;&#x8005;&#x8BB2;&#x8FF0;&#x4E86;&#x90E8;&#x5206;&#x8BA1;&#x7B97;&#x673A;&#x8D44;&#x6E90;&#xFF08;cgroup&#x3001;namespace&#xFF09;&#x3001;&#x5BB9;&#x5668;&#x76F8;&#x5173;&#x7684;&#x7406;&#x8BBA;&#x548C;&#x5B9E;&#x8DF5;</p>
+<p>&#x4EE5;&#x6211;&#x4E2A;&#x4EBA;&#x7684;&#x7406;&#x89E3;&#xFF0C;Kubernetes&#x7ED9;&#x6211;&#x4EEC;&#x5E26;&#x6765;&#x7684;&#x66F4;&#x5177;&#x4F53;&#x7684;&#x4F53;&#x9A8C;&#x662F;&#xFF0C;&#x8BA9;&#x4F01;&#x4E1A;&#x7684;IT&#x57FA;&#x7840;&#x67B6;&#x6784;</p>
 <p>Kubernetes&#x662F;&#x57FA;&#x4E8E;&#x5BB9;&#x5668;&#x7684;&#x96C6;&#x7FA4;&#x7BA1;&#x7406;&#x5E73;&#x53F0;&#xFF0C;&#x4E3B;&#x8981;&#x4E3A;&#x5BB9;&#x5668;&#x5316;&#x7684;&#x670D;&#x52A1;&#x63D0;&#x4F9B;&#x8D44;&#x6E90;&#x8C03;&#x5EA6;&#x3001;&#x6269;&#x5BB9;&#x3001;&#x7F29;&#x5BB9;&#x4EE5;&#x53CA;&#x90E8;&#x7F72;&#x7B49;&#x529F;&#x80FD;&#x3002;</p>
 <p>Kubernetes&#x8BA9;&#x5F00;&#x53D1;&#x8005;&#x89E3;&#x51B3;&#x4E86;&#x670D;&#x52A1;&#x4E0E;&#x5B9E;&#x4F53;&#x673A;&#x6216;&#x865A;&#x62DF;&#x673A;&#x7684;&#x9501;&#x94FE;&#xFF0C;&#x4ECE;&#x4EE5;&#x4E3B;&#x673A;&#x4E3A;&#x4E2D;&#x5FC3;&#x7684;&#x96C6;&#x7FA4;&#x67B6;&#x6784;&#x8DC3;&#x81F3;&#x4EE5;&#x5BB9;&#x5668;&#x4E3A;&#x4E2D;&#x5FC3;&#x7684;&#x96C6;&#x7FA4;&#x67B6;&#x6784;&#x3002;</p>
 <h2 id="&#x4E3A;&#x4EC0;&#x4E48;&#x8981;&#x4F7F;&#x7528;kubernetes">&#x4E3A;&#x4EC0;&#x4E48;&#x8981;&#x4F7F;&#x7528;Kubernetes</h2>
@@ -2097,7 +2084,7 @@ K8s &#x63D0;&#x4F9B;&#x4E86; Secret &#x8D44;&#x6E90;&#x4F9B;&#x6211;&#x4EEC;&#x6
 <h2 id="ingress">ingress</h2>
 <p>&#x5185;&#x90E8;&#xFF08;&#x6216;&#x8005;&#x8BF4;&#x5C40;&#x57DF;&#x7F51;&#xFF09;&#x7684;&#x8D44;&#x6E90;&#x4E4B;&#x95F4;&#x8BBF;&#x95EE;&#x6CA1;&#x6709;&#x4EC0;&#x4E48;&#x95EE;&#x9898;&#xFF0C;&#x53EF;&#x662F;&#x5916;&#x90E8;&#x60F3;&#x8981;&#x8BBF;&#x95EE;&#x5185;&#x90E8;&#x7684;&#x8D44;&#x6E90;&#x600E;&#x4E48;&#x529E;&#xFF1F;&#x8FD8;&#x4E0D;&#x80FD;&#x628A;&#x4E00;&#x4E9B; IP &#x5730;&#x5740;&#x5565;&#x7684;&#x9690;&#x79C1;&#x7ED9;&#x66B4;&#x9732;&#x4E86;&#xFF0C;&#x8FD9;&#x5C31;&#x9700;&#x8981; ingress &#x6765;&#x5927;&#x5C55;&#x8EAB;&#x624B;&#x4E86;&#xFF0C;&#x4E00;&#x4E2A; ingress &#x53EF;&#x4EE5;&#x914D;&#x7F6E;&#x7528;&#x4E8E;&#x63D0;&#x4F9B;&#x5916;&#x90E8;&#x53EF;&#x8BBF;&#x95EE;&#x7684;&#x670D;&#x52A1; url&#x3001;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x6D41;&#x91CF;&#x3001;SSL &#x7EC8;&#x7AEF;&#x548C;&#x63D0;&#x4F9B;&#x865A;&#x62DF;&#x4E3B;&#x673A;&#x540D;&#x914D;&#x7F6E;&#xFF0C;ingress controller &#x5C31;&#x662F;&#x5177;&#x4F53;&#x5E72;&#x6D3B;&#x7684;&#xFF0C;ingress &#x4E0D;&#x66B4;&#x9732;&#x4EFB;&#x4F55;&#x7AEF;&#x53E3;&#x6216;&#x534F;&#x8BAE;&#x3002;&#x5C06; HTTP &#x548C; HTTPS &#x4E4B;&#x5916;&#x7684;&#x670D;&#x52A1;&#x516C;&#x5F00;&#x5230;&#x56E0;&#x7279;&#x7F51;&#x901A;&#x5E38;&#x4F7F;&#x7528;&#x7C7B;&#x578B;&#x662F; NodePort &#x6216; loadbalance &#x7684; service&#x3002;</p>
 <footer class="page-footer"><span class="copyright">Copyright &#xA9; isno 2022 all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x8BA2;&#x65F6;&#x95F4;&#xFF1A;
-2022-12-14 07:32:45
+2023-01-20 01:59:57
 </span></footer>
                                 
                                 </section>
@@ -2141,7 +2128,7 @@ K8s &#x63D0;&#x4F9B;&#x4E86; Secret &#x8D44;&#x6E90;&#x4F9B;&#x6211;&#x4EEC;&#x6
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"理解kubernetes","level":"1.5.5","depth":2,"next":{"title":"kubernetes CNI Flannel","level":"1.5.5.1","depth":3,"path":"chapter4/flannel.md","ref":"chapter4/flannel.md","articles":[]},"previous":{"title":"使用Nexus3搭建私有镜像仓库","level":"1.5.4.3","depth":3,"path":"chapter4/registry.md","ref":"chapter4/registry.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters","katex","code","github","tbfed-pagefooter","back-to-top-button"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy isno 2022","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"github":{"url":"https://github.com/isno/isno.github.io"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"katex":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"expandable-chapters":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"高可用服务建设实践","gitbook":"*"},"file":{"path":"chapter4/kubernetes.md","mtime":"2022-12-14T07:32:45.156Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-01-20T01:00:48.771Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"理解kubernetes","level":"1.5.5","depth":2,"next":{"title":"kubernetes CNI Flannel","level":"1.5.5.1","depth":3,"path":"chapter4/flannel.md","ref":"chapter4/flannel.md","articles":[]},"previous":{"title":"使用Nexus3搭建私有镜像仓库","level":"1.5.4.3","depth":3,"path":"chapter4/registry.md","ref":"chapter4/registry.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters","katex","code","github","tbfed-pagefooter","back-to-top-button"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy isno 2022","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"github":{"url":"https://github.com/isno/isno.github.io"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"katex":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"expandable-chapters":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"高可用服务建设实践","gitbook":"*"},"file":{"path":"chapter4/kubernetes.md","mtime":"2023-01-20T01:59:57.552Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-01-27T13:26:29.984Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
