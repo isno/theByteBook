@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Apache/Apisix · 高可用服务建设实践</title>
+        <title>Apache APISIX · 高可用服务建设实践</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -77,7 +77,7 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="api-optimize.html" />
+    <link rel="next" href="apisix-install.html" />
     
     
     <link rel="prev" href="openresty-fire.html" />
@@ -1326,27 +1326,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.6.3" data-path="openresty-limit.html">
+        <li class="chapter " data-level="1.4.6.3" data-path="openresty-balance.html">
             
-                <a href="openresty-limit.html">
+                <a href="openresty-balance.html">
             
                     
                         <b>1.4.6.3.</b>
-                    
-                    OpenResty实现限流
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.4.6.4" data-path="openresty-limit.html">
-            
-                <a href="openresty-limit.html">
-            
-                    
-                        <b>1.4.6.4.</b>
                     
                     OpenResty动态负载均衡
             
@@ -1356,12 +1341,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.6.5" data-path="openresty-fire.html">
+        <li class="chapter " data-level="1.4.6.4" data-path="openresty-fire.html">
             
                 <a href="openresty-fire.html">
             
                     
-                        <b>1.4.6.5.</b>
+                        <b>1.4.6.4.</b>
                     
                     OpenResty火焰图
             
@@ -1383,11 +1368,32 @@
                     
                         <b>1.4.7.</b>
                     
-                    Apache/Apisix
+                    Apache APISIX
             
                 </a>
             
 
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.7.1" data-path="apisix-install.html">
+            
+                <a href="apisix-install.html">
+            
+                    
+                        <b>1.4.7.1.</b>
+                    
+                    APISIX的安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
             
         </li>
     
@@ -1960,7 +1966,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >Apache/Apisix</a>
+        <a href=".." >Apache APISIX</a>
     </h1>
 </div>
 
@@ -1975,29 +1981,41 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="apacheapisix">Apache/Apisix</h1>
-<p>Apache/Apisix &#x662F;&#x4E00;&#x4E2A;&#x57FA;&#x4E8E;Nginx&#x3001;Lua&#x5B9E;&#x73B0;&#x5177;&#x6709;&#x66F4;&#x591A;&#x4E91;&#x539F;&#x751F;&#x517C;&#x5BB9;&#x6027;&#x7684;API&#x7F51;&#x5173;&#xFF0C;&#x5177;&#x6709;&#x52A8;&#x6001;&#x3001;&#x5B9E;&#x65F6;&#x3001;&#x9AD8;&#x6027;&#x80FD;&#x7B49;&#x7279;&#x70B9;&#x3002;</p>
-<p>&#x4E0E;&#x5176;&#x4ED6;&#x7684;API&#x7F51;&#x5173;&#x76F8;&#x6BD4;&#xFF0C;Apisix&#x7684;&#x4E0A;&#x6E38;&#x3001;&#x8DEF;&#x7531;&#x3001;&#x63D2;&#x4EF6;&#x5168;&#x90FD;&#x662F;&#x52A8;&#x6001;&#xFF0C;&#x4FEE;&#x6539;&#x4E5F;&#x4E0D;&#x7528;&#x91CD;&#x542F;&#xFF0C;&#x800C;&#x4E14;Apisix&#x63D2;&#x4EF6;&#x4E5F;&#x662F;&#x70ED;&#x52A0;&#x8F7D;&#xFF0C;&#x53EF;&#x4EE5;&#x968F;&#x65F6;&#x63D2;&#x62D4;&#x3001;&#x4FEE;&#x6539;&#x3002;Apisix&#x4F7F;&#x7528;Etcd&#x5B58;&#x50A8;&#xFF0C;&#x8FD9;&#x4F7F;&#x5F97;Apisix&#x53EF;&#x4EE5;&#x8F7B;&#x677E;&#x652F;&#x6301;&#x6BEB;&#x79D2;&#x7EA7;&#x914D;&#x7F6E;&#x66F4;&#x65B0;&#x3001;&#x652F;&#x6491;&#x6570;&#x5343;&#x7F51;&#x5173;&#x8282;&#x70B9;&#xFF0C;&#x4E14;&#x7F51;&#x5173;&#x8282;&#x70B9;&#x65E0;&#x72B6;&#x6001;&#xFF0C;&#x53EF;&#x4EFB;&#x610F;&#x6269;&#x7F29;&#x5BB9;&#x3002;Apisix&#x53EF;&#x4EE5;&#x5904;&#x7406;L4&#x3001;L7&#x5C42;&#x6D41;&#x91CF;&#xFF0C;&#x53EF;&#x6EE1;&#x8DB3;TCP&#x3001;UDP&#x3001;gRPC&#x3001;HTTP&#x3001;HTTPS&#x76F8;&#x5173;&#x7684;&#x670D;&#x52A1;&#x6CBB;&#x7406;&#xFF0C;
-&#x4E0D;&#x4EC5;&#x53EF;&#x4EE5;&#x5904;&#x7406;&#x5357;&#x5317;&#x5411;&#x7684;&#x6D41;&#x91CF;&#x3001;&#x4E5F;&#x53EF;&#x4EE5;&#x66FF;&#x4EE3;Envoy&#x5904;&#x7406;&#x5404;&#x670D;&#x52A1;&#x4E4B;&#x95F4;&#x7684;&#x4E1C;&#x897F;&#x5411;&#x6D41;&#x91CF;&#x7BA1;&#x7406;&#x3002;</p>
-<h3 id="apisix&#x7684;&#x63D0;&#x5347;">Apisix&#x7684;&#x63D0;&#x5347;</h3>
-<p>&#x7231;&#x5947;&#x827A;&#x6700;&#x521D;&#x4F7F;&#x7528;Kong&#x4F5C;&#x4E3A;&#x7F51;&#x5173;&#x7684;&#x6280;&#x672F;&#x652F;&#x6491;&#xFF0C;&#x540E;&#x9762;&#x56E0;&#x4E91;&#x539F;&#x751F;&#x67B6;&#x6784;&#x7684;&#x5E94;&#x7528;&#x4EE5;&#x53CA;&#x670D;&#x52A1;&#x7684;&#x6269;&#x5F20;&#xFF0C;&#x5347;&#x7EA7;&#x4E3A;Apisix&#xFF0C;&#x5728;&#x4F7F;&#x7528;&#x5BF9;&#x6BD4;&#x4E4B;&#x540E;&#xFF0C;&#x63D0;&#x5347;&#x5305;&#x62EC;</p>
+                                <h1 id="apache-apisix">Apache APISIX</h1>
+<p>Apache APISIX &#x662F; Apache &#x8F6F;&#x4EF6;&#x57FA;&#x91D1;&#x4F1A;&#x4E0B;&#x7684;&#x4E91;&#x539F;&#x751F; API &#x7F51;&#x5173;&#xFF0C;&#x5B83;&#x517C;&#x5177;&#x52A8;&#x6001;&#x3001;&#x5B9E;&#x65F6;&#x3001;&#x9AD8;&#x6027;&#x80FD;&#x7B49;&#x7279;&#x70B9;&#xFF0C;&#x63D0;&#x4F9B;&#x4E86;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x3001;&#x52A8;&#x6001;&#x4E0A;&#x6E38;&#x3001;&#x7070;&#x5EA6;&#x53D1;&#x5E03;&#x3001;&#x670D;&#x52A1;&#x7194;&#x65AD;&#x3001;&#x8EAB;&#x4EFD;&#x8BA4;&#x8BC1;&#x3001;&#x53EF;&#x89C2;&#x6D4B;&#x6027;&#x7B49;&#x4E30;&#x5BCC;&#x7684;&#x6D41;&#x91CF;&#x7BA1;&#x7406;&#x529F;&#x80FD;&#x3002;</p>
+<p>&#x4E0E;&#x5176;&#x4ED6;&#x7684;API&#x7F51;&#x5173;&#x76F8;&#x6BD4;&#xFF0C;APISIX&#x7684;&#x4E0A;&#x6E38;&#x3001;&#x8DEF;&#x7531;&#x3001;&#x63D2;&#x4EF6;&#x5168;&#x90FD;&#x662F;&#x52A8;&#x6001;&#xFF0C;&#x4FEE;&#x6539;&#x4E5F;&#x4E0D;&#x7528;&#x91CD;&#x542F;&#xFF0C;&#x800C;&#x4E14;APISIX&#x63D2;&#x4EF6;&#x4E5F;&#x662F;&#x70ED;&#x52A0;&#x8F7D;&#xFF0C;&#x53EF;&#x4EE5;&#x968F;&#x65F6;&#x63D2;&#x62D4;&#x3001;&#x4FEE;&#x6539;&#x3002;APISIX&#x4F7F;&#x7528;Etcd&#x5B58;&#x50A8;&#xFF0C;&#x8FD9;&#x4F7F;&#x5F97;APISIX&#x53EF;&#x4EE5;&#x8F7B;&#x677E;&#x652F;&#x6301;&#x6BEB;&#x79D2;&#x7EA7;&#x914D;&#x7F6E;&#x66F4;&#x65B0;&#x3001;&#x652F;&#x6491;&#x6570;&#x5343;&#x7F51;&#x5173;&#x8282;&#x70B9;&#xFF0C;&#x4E14;&#x7F51;&#x5173;&#x8282;&#x70B9;&#x65E0;&#x72B6;&#x6001;&#xFF0C;&#x53EF;&#x4EFB;&#x610F;&#x6269;&#x7F29;&#x5BB9;&#x3002;</p>
+<p>&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x4F7F;&#x7528; APISIX &#x6765;&#x5904;&#x7406;&#x4F20;&#x7EDF;&#x7684;&#x5357;&#x5317;&#x5411;&#x6D41;&#x91CF;&#xFF0C;&#x4E5F;&#x53EF;&#x4EE5;&#x5904;&#x7406;&#x670D;&#x52A1;&#x95F4;&#x7684;&#x4E1C;&#x897F;&#x5411;&#x6D41;&#x91CF;&#x3002;</p>
+<p>&#x540C;&#x65F6;&#xFF0C;&#x5B83;&#x4E5F;&#x652F;&#x6301;&#x4F5C;&#x4E3A; K8s Ingress Controller &#x6765;&#x4F7F;&#x7528;&#x3002;</p>
+<h2 id="apisix-&#x5728;&#x7231;&#x5947;&#x827A;&#x5185;&#x7684;&#x5E94;&#x7528;">APISIX &#x5728;&#x7231;&#x5947;&#x827A;&#x5185;&#x7684;&#x5E94;&#x7528;</h2>
+<p>&#x7231;&#x5947;&#x827A;&#x6700;&#x521D;&#x4F7F;&#x7528;Kong&#x4F5C;&#x4E3A;&#x7F51;&#x5173;&#x7684;&#x6280;&#x672F;&#x652F;&#x6491;&#xFF0C;&#x540E;&#x7EED;&#x5347;&#x7EA7;&#x4E3A;APISIX&#xFF0C;Kong&#x548C;APISIX&#x5E95;&#x5C42;&#x90FD;&#x662F;&#x57FA;&#x4E8E; OpenResty&#x5F00;&#x53D1;&#x3002;</p>
+<p>Kong&#x548C;APISIX&#x4E24;&#x8005;&#x90FD;&#x662F;&#x4F18;&#x79C0;&#x7684;&#x7F51;&#x5173;&#x4EA7;&#x54C1;&#xFF0C;&#x4E24;&#x8005;&#x5728;&#x67B6;&#x6784;&#x7684;&#x8BBE;&#x8BA1;&#x4E0A;&#x4E3B;&#x8981;&#x533A;&#x522B;&#x4E3A;&#xFF1A;</p>
 <ul>
-<li>&#x6027;&#x80FD;&#x66F4;&#x4E3A;&#x5F3A;&#x5927;&#xFF1A;&#x65E0;&#x8BBA;&#x662F; http/https, &#x8FD8;&#x662F;&#x957F;/&#x77ED;&#x8FDE;&#x63A5;&#xFF0C;&#x90FD;&#x6709;&#x7EA6; 2.5 &#x500D;&#x7684;&#x6027;&#x80FD;&#x63D0;&#x5347;&#xFF1B;&#x5355;&#x6838; QPS &#x53EF;&#x63D0;&#x5347;&#x5230; 1.5 &#x4E07;</li>
-<li>&#x66F4;&#x7A33;&#x5B9A;&#x7684;&#x670D;&#x52A1;: &#x7528; etcd &#x66FF;&#x4EE3; postgres &#x7BA1;&#x7406;&#x914D;&#x7F6E;&#x4FE1;&#x606F;, &#x53EF;&#x7528;&#x6027;&#x548C;&#x53EF;&#x9760;&#x6027;&#x5927;&#x5927;&#x63D0;&#x5347;</li>
-<li>&#x66F4;&#x9AD8;&#x6548;&#x7684;&#x8DEF;&#x7531;&#x5339;&#x914D;&#x6548;&#x7387;: &#x8DEF;&#x7531;&#x5339;&#x914D;&#x6548;&#x7387;&#x4EC5;&#x548C; URI &#x957F;&#x5EA6;&#x76F8;&#x5173;&#xFF0C;&#x4E0D;&#x4F1A;&#x56E0; API &#x6570;&#x91CF;&#x7684;&#x589E;&#x591A;&#x800C;&#x7EBF;&#x6027;&#x964D;&#x4F4E;</li>
-<li>&#x66F4;&#x4E30;&#x5BCC;&#x7684;&#x529F;&#x80FD;: &#x7EDF;&#x4E00;&#x57DF;&#x540D;&#x3001;&#x7194;&#x65AD;&#x673A;&#x5236;&#x3001;&#x5B89;&#x5168;&#x7BA1;&#x63A7;&#x3001;&#x7CBE;&#x51C6;&#x76D1;&#x63A7;..</li>
-<li>.. </li>
+<li>Apache APISIX &#x7684;&#x8DEF;&#x7531;&#x662F;&#x57FA;&#x6570;&#x6811;&#xFF0C; Kong &#x7684;&#x8DEF;&#x7531;&#x5B9E;&#x73B0;&#x662F;&#x904D;&#x5386;&#x7684;&#xFF0C;&#x4F1A;&#x56E0; API &#x6570;&#x91CF;&#x7684;&#x589E;&#x591A;&#x800C;&#x7EBF;&#x6027;&#x964D;&#x4F4E;</li>
+<li>Kong &#x7684;&#x5B58;&#x50A8;&#x662F; postgres&#xFF0C;&#x9700;&#x8981;&#x8282;&#x70B9;&#x53BB;&#x8F6E;&#x8BE2;&#xFF0C;Apache APISIX &#x662F; etcd &#x7684; watch</li>
+<li>Kong &#x7684; schema &#x6821;&#x9A8C;&#x662F;&#x81EA;&#x5DF1;&#x5B9A;&#x4E49;&#x7684;&#x6807;&#x51C6;&#xFF0C;Apache APISIX &#x662F; json schema</li>
+<li>&#x5728;&#x5355;&#x6838;&#x7684;&#x6027;&#x80FD;&#x6D4B;&#x8BD5;&#x4E0A;&#xFF0C;APISIX QPS&#x7EA6;&#x6709;18000&#xFF0C;&#x5E73;&#x5747;&#x5EF6;&#x8FDF; 0.2ms&#xFF0C; Kong&#x5219;&#x4E3A; 1700&#xFF0C;&#x5E73;&#x5747;&#x5EF6;&#x8FDF; 2ms&#xFF0C; &#x6027;&#x80FD;&#x8868;&#x73B0;&#x4E0A; APISIX &#x66F4;&#x4F18;&#x79C0;</li>
 </ul>
-<h3 id="apisix&#x67B6;&#x6784;">Apisix&#x67B6;&#x6784;</h3>
+<h3 id="skywalker">Skywalker</h3>
+<p>APISIX &#x63D0;&#x4F9B;&#x4E86;&#x5F3A;&#x5927;&#x7684; Admin API &#x548C; Dashboard &#x4F9B;&#x7528;&#x6237;&#x4F7F;&#x7528;&#x3002;&#x5728;&#x4E00;&#x4E2A;&#x5927;&#x578B;&#x7684;&#x4F01;&#x4E1A;&#x5185;&#xFF0C;&#x901A;&#x5E38;&#x4F1A;&#x6709;&#x5927;&#x91CF;&#x7684;&#x9879;&#x76EE;&#x3001;&#x6210;&#x5458;&#x4F7F;&#x7528;&#x7F51;&#x5173;&#x670D;&#x52A1;&#xFF0C;&#x501F;&#x52A9; APISIX admin API&#x3002;&#x60A8;&#x7A0D;&#x5FAE;&#x719F;&#x6089; Springboot + Vue&#xFF0C;&#x5C31;&#x53EF;&#x4EE5;&#x5FEB;&#x901F;&#x5F00;&#x53D1;&#x51FA;&#x7B26;&#x5408;&#x60A8;&#x4F01;&#x4E1A;&#x9700;&#x6C42;&#x7684;&#x7F51;&#x5173;&#x5E73;&#x53F0;&#x3002;</p>
+<div align="center">
+    <img src="../assets/chapter3/skywalker.png" width="600" align="center">
+</div> 
+
+
+<p>&#x7231;&#x5947;&#x827A;&#x7684;&#x5185;&#x90E8;&#x7F51;&#x5173;&#x5E73;&#x53F0;Skywalker&#xFF0C;&#x5C31;&#x662F;&#x57FA;&#x4E8E; APISIX &#x8FDB;&#x884C;&#x6269;&#x5C55;&#x5F00;&#x53D1;&#xFF0C;&#x7BA1;&#x7406;&#x7740;&#x6570;&#x4EE5;&#x4E07;&#x8BA1;API&#x8DEF;&#x7531; &#x4EE5;&#x53CA; &#x767E;&#x4E07;&#x7EA7;&#x522B;&#x7684; QPS&#x3002;</p>
+<p>&#x5728;&#x5B9E;&#x73B0;&#x57FA;&#x7840;&#x7684;&#x7F51;&#x5173;&#x670D;&#x52A1;&#x4E4B;&#x5916;&#xFF0C;&#x5B9E;&#x73B0;&#x8BF8;&#x5982; &#x4F7F;&#x7528; Prometheus &#x63D2;&#x4EF6;&#x5B9E;&#x73B0;&#x62A5;&#x8B66;&#xFF0C;&#x5229;&#x7528; Consul &#x6253;&#x901A; &#x7F51;&#x5173;&#x548C; &#x5FAE;&#x670D;&#x52A1;&#x5E73;&#x53F0;&#x7684;&#x670D;&#x52A1;&#x53D1;&#x73B0;&#x3002;&#x901A;&#x8FC7;&#x591A;&#x5730;&#x90E8;&#x7F72;&#xFF0C;&#x4E1A;&#x52A1; CNAME &#x5230;&#x7EDF;&#x4E00;&#x7F51;&#x5173;&#x65B9;&#x5F0F;&#x76F4;&#x63A5;&#x4E3A;&#x4E1A;&#x52A1;&#x63D0;&#x4F9B; &#x5C31;&#x8FD1;&#x63A5;&#x5165;&#x3001;&#x6545;&#x969C;&#x707E;&#x5907;&#x5207;&#x6362;&#x3001;&#x4EE5;&#x53CA;&#x84DD;&#x7EFF;&#x90E8;&#x7F72;&#x548C;&#x7070;&#x5EA6;&#x53D1;&#x5E03;&#x7B49;&#x4E1A;&#x52A1;&#x9700;&#x6C42;&#x3002;</p>
+<h2 id="apisix-&#x67B6;&#x6784;">APISIX &#x67B6;&#x6784;</h2>
 <div align="center">
     <img src="../assets/chapter3/apisix.webp" width="550" align="center">
 </div> 
 
-<p>Apache APISIX &#x91C7;&#x7528;&#x4E86;&#x6570;&#x636E;&#x5E73;&#x9762;&#x4E0E;&#x63A7;&#x5236;&#x5E73;&#x9762;&#x5206;&#x79BB;&#x7684;&#x67B6;&#x6784;&#x65B9;&#x5F0F;&#xFF0C;&#x901A;&#x8FC7;&#x914D;&#x7F6E;&#x4E2D;&#x5FC3;&#x63A5;&#x6536;&#x3001;&#x4E0B;&#x53D1;&#x914D;&#x7F6E;&#xFF0C;&#x4F7F;&#x5F97;&#x6570;&#x636E;&#x5E73;&#x9762;&#x4E0D;&#x4F1A;&#x53D7;&#x5230;&#x63A7;&#x5236;&#x5E73;&#x9762;&#x5F71;&#x54CD;&#x3002;</p>
-<p>&#x5728;&#x6B64;&#x67B6;&#x6784;&#x4E2D;&#xFF0C;&#x6570;&#x636E;&#x5E73;&#x9762;&#x8D1F;&#x8D23;&#x63A5;&#x6536;&#x5E76;&#x5904;&#x7406;&#x8C03;&#x7528;&#x65B9;&#x8BF7;&#x6C42;&#xFF0C;&#x4F7F;&#x7528; Lua &#x4E0E; Nginx &#x52A8;&#x6001;&#x63A7;&#x5236;&#x8BF7;&#x6C42;&#x6D41;&#x91CF;&#xFF0C;&#x53EF;&#x7528;&#x4E8E;&#x7BA1;&#x7406; API &#x8BF7;&#x6C42;&#x7684;&#x5168;&#x751F;&#x547D;&#x5468;&#x671F;&#x3002;&#x63A7;&#x5236;&#x5E73;&#x9762;&#x5219;&#x5305;&#x542B;&#x4E86; Manager API &#x548C;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;&#x4E2D;&#x5FC3; etcd&#xFF0C;&#x53EF;&#x7528;&#x4E8E;&#x7BA1;&#x7406; API &#x7F51;&#x5173;&#x3002;&#x7BA1;&#x7406;&#x5458;&#x5728;&#x8BBF;&#x95EE;&#x5E76;&#x64CD;&#x4F5C;&#x63A7;&#x5236;&#x53F0;&#x65F6;&#xFF0C;&#x63A7;&#x5236;&#x53F0;&#x5C06;&#x8C03;&#x7528; Manager API &#x4E0B;&#x53D1;&#x914D;&#x7F6E;&#x5230; etcd&#xFF0C;&#x501F;&#x52A9; etcd watch &#x673A;&#x5236;&#xFF0C;&#x914D;&#x7F6E;&#x5C06;&#x5728;&#x7F51;&#x5173;&#x4E2D;&#x5B9E;&#x65F6;&#x751F;&#x6548;&#x3002;&#x914D;&#x7F6E;&#x4E2D;&#x5FC3;&#x9ED8;&#x8BA4;&#x4E3A; etcd&#xFF0C;&#x4E5F;&#x652F;&#x6301; Consul&#x3001;Nacos&#x3001;Eureka &#x7B49;</p>
-<h3 id="apisix-&#x5B89;&#x88C5;">APISIX &#x5B89;&#x88C5;</h3>
+
+<p>APISIX &#x91C7;&#x7528;&#x4E86;&#x6570;&#x636E;&#x5E73;&#x9762;&#x4E0E;&#x63A7;&#x5236;&#x5E73;&#x9762;&#x5206;&#x79BB;&#x7684;&#x67B6;&#x6784;&#x65B9;&#x5F0F;&#xFF0C;&#x901A;&#x8FC7;&#x914D;&#x7F6E;&#x4E2D;&#x5FC3;&#x63A5;&#x6536;&#x3001;&#x4E0B;&#x53D1;&#x914D;&#x7F6E;&#xFF0C;&#x4F7F;&#x5F97;&#x6570;&#x636E;&#x5E73;&#x9762;&#x4E0D;&#x4F1A;&#x53D7;&#x5230;&#x63A7;&#x5236;&#x5E73;&#x9762;&#x5F71;&#x54CD;&#x3002;</p>
+<p>&#x5728;&#x6B64;&#x67B6;&#x6784;&#x4E2D;&#xFF0C;&#x6570;&#x636E;&#x5E73;&#x9762;&#x8D1F;&#x8D23;&#x63A5;&#x6536;&#x5E76;&#x5904;&#x7406;&#x8C03;&#x7528;&#x65B9;&#x8BF7;&#x6C42;&#xFF0C;&#x4F7F;&#x7528; Lua &#x4E0E; Nginx &#x52A8;&#x6001;&#x63A7;&#x5236;&#x8BF7;&#x6C42;&#x6D41;&#x91CF;&#xFF0C;&#x53EF;&#x7528;&#x4E8E;&#x7BA1;&#x7406; API &#x8BF7;&#x6C42;&#x7684;&#x5168;&#x751F;&#x547D;&#x5468;&#x671F;&#x3002;</p>
+<p>&#x63A7;&#x5236;&#x5E73;&#x9762;&#x5219;&#x5305;&#x542B;&#x4E86; Manager API &#x548C;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;&#x4E2D;&#x5FC3; etcd&#xFF0C;&#x53EF;&#x7528;&#x4E8E;&#x7BA1;&#x7406; API &#x7F51;&#x5173;&#x3002;&#x7BA1;&#x7406;&#x5458;&#x5728;&#x8BBF;&#x95EE;&#x5E76;&#x64CD;&#x4F5C;&#x63A7;&#x5236;&#x53F0;&#x65F6;&#xFF0C;&#x63A7;&#x5236;&#x53F0;&#x5C06;&#x8C03;&#x7528; Manager API &#x4E0B;&#x53D1;&#x914D;&#x7F6E;&#x5230; etcd&#xFF0C;&#x501F;&#x52A9; etcd watch &#x673A;&#x5236;&#xFF0C;&#x914D;&#x7F6E;&#x5C06;&#x5728;&#x7F51;&#x5173;&#x4E2D;&#x5B9E;&#x65F6;&#x751F;&#x6548;&#x3002;</p>
+<p>&#x914D;&#x7F6E;&#x4E2D;&#x5FC3;&#x9ED8;&#x8BA4;&#x4E3A; etcd&#xFF0C;&#x4E5F;&#x652F;&#x6301; Consul&#x3001;Nacos&#x3001;Eureka &#x7B49;</p>
 <footer class="page-footer"><span class="copyright">Copyright &#xA9; isno 2022 all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x8BA2;&#x65F6;&#x95F4;&#xFF1A;
-2022-12-09 07:38:00
+2023-01-28 15:08:03
 </span></footer>
                                 
                                 </section>
@@ -2030,7 +2048,7 @@
                 </a>
                 
                 
-                <a href="api-optimize.html" class="navigation navigation-next " aria-label="Next page: 网关优化实践">
+                <a href="apisix-install.html" class="navigation navigation-next " aria-label="Next page: APISIX的安装">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -2041,7 +2059,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Apache/Apisix","level":"1.4.7","depth":2,"next":{"title":"网关优化实践","level":"1.4.8","depth":2,"path":"chapter3/api-optimize.md","ref":"chapter3/api-optimize.md","articles":[{"title":"使用QAT技术对网络请求运算加速","level":"1.4.8.1","depth":3,"path":"chapter3/QAT.md","ref":"chapter3/QAT.md","articles":[]},{"title":"eBPF加速网络请求","level":"1.4.8.2","depth":3,"path":"chapter3/dpdk.md","ref":"chapter3/dpdk.md","articles":[]}]},"previous":{"title":"OpenResty火焰图","level":"1.4.6.5","depth":3,"path":"chapter3/openresty-fire.md","ref":"chapter3/openresty-fire.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters","katex","code","github","tbfed-pagefooter","back-to-top-button"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy isno 2022","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"github":{"url":"https://github.com/isno/isno.github.io"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"katex":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"expandable-chapters":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"高可用服务建设实践","gitbook":"*"},"file":{"path":"chapter3/apisix.md","mtime":"2022-12-09T07:38:00.443Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-01-27T13:26:29.984Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Apache APISIX","level":"1.4.7","depth":2,"next":{"title":"APISIX的安装","level":"1.4.7.1","depth":3,"path":"chapter3/apisix-install.md","ref":"chapter3/apisix-install.md","articles":[]},"previous":{"title":"OpenResty火焰图","level":"1.4.6.4","depth":3,"path":"chapter3/openresty-fire.md","ref":"chapter3/openresty-fire.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters","katex","code","github","tbfed-pagefooter","back-to-top-button"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy isno 2022","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"github":{"url":"https://github.com/isno/isno.github.io"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"katex":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"expandable-chapters":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"高可用服务建设实践","gitbook":"*"},"file":{"path":"chapter3/apisix.md","mtime":"2023-01-28T15:08:03.088Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-01-28T15:08:27.626Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
