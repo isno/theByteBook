@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>某站 2021年7月宕机总结 · 高可用服务建设实践</title>
+        <title>某站 2021年7月宕机总结 · 互联网基础架构设计原理和实践</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -1786,7 +1786,7 @@
                     
                         <b>1.5.6.2.</b>
                     
-                    安装kube三件套
+                    初始化集群
             
                 </a>
             
@@ -1794,14 +1794,44 @@
             
         </li>
     
-        <li class="chapter " data-level="1.5.6.3" data-path="../chapter4/k8s-install-3.html">
+        <li class="chapter " data-level="1.5.6.3" data-path="../chapter4/k8s-install-cni.html">
             
-                <a href="../chapter4/k8s-install-3.html">
+                <a href="../chapter4/k8s-install-cni.html">
             
                     
                         <b>1.5.6.3.</b>
                     
-                    初始化集群
+                    部署 CNI插件 Calico
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6.4" data-path="../chapter4/k8s-install-LoadBalancer.html">
+            
+                <a href="../chapter4/k8s-install-LoadBalancer.html">
+            
+                    
+                        <b>1.5.6.4.</b>
+                    
+                    配置 LoadBalancer 
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6.5" data-path="../chapter4/k8s-install-test.html">
+            
+                <a href="../chapter4/k8s-install-test.html">
+            
+                    
+                        <b>1.5.6.5.</b>
+                    
+                    部署测试用例以及验证 
             
                 </a>
             
@@ -1851,7 +1881,7 @@
                     
                         <b>1.5.9.</b>
                     
-                    使用Prometheus监控集群
+                    使用 Prometheus 配合 Grafana 监控集群
             
                 </a>
             
@@ -2200,7 +2230,7 @@ SLB&#x4F5C;&#x4E3A;&#x6838;&#x5FC3;&#x670D;&#x52A1;&#x4E2D;&#x7684;&#x6838;&#x5F
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"某站 2021年7月宕机总结","level":"1.6.2","depth":2,"next":{"title":"某云 香港机房 2022年12月宕机总结","level":"1.6.3","depth":2,"path":"chapter5/aliyun.md","ref":"chapter5/aliyun.md","articles":[]},"previous":{"title":"Meta 2021年10月宕机总结","level":"1.6.1","depth":2,"path":"chapter5/facebook.md","ref":"chapter5/facebook.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters","katex","code","github","tbfed-pagefooter","back-to-top-button"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy isno 2022","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"github":{"url":"https://github.com/isno/isno.github.io"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"katex":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"expandable-chapters":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"高可用服务建设实践","gitbook":"*"},"file":{"path":"chapter5/bili.md","mtime":"2023-02-06T07:31:03.365Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-02-21T06:28:28.223Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"某站 2021年7月宕机总结","level":"1.6.2","depth":2,"next":{"title":"某云 香港机房 2022年12月宕机总结","level":"1.6.3","depth":2,"path":"chapter5/aliyun.md","ref":"chapter5/aliyun.md","articles":[]},"previous":{"title":"Meta 2021年10月宕机总结","level":"1.6.1","depth":2,"path":"chapter5/facebook.md","ref":"chapter5/facebook.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters","katex","code","github","tbfed-pagefooter","back-to-top-button"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy isno 2022","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"github":{"url":"https://github.com/isno/isno.github.io"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"katex":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"expandable-chapters":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"互联网基础架构设计原理和实践","gitbook":"*"},"file":{"path":"chapter5/bili.md","mtime":"2023-02-06T07:31:03.365Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-02-22T06:59:33.538Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
