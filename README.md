@@ -16,7 +16,7 @@
 
 | Subject | Description | Articles |
 |:-------:|:-------:|:------|
-|理解网络通信| 先理解underlay网络，继而进阶集群网络、用户网络的设计和治理 | [网络篇序](chapter1/intro.md) <br/> [理解移动网络](chapter1/wireless.md)|
+|理解网络通信| Overlay网络、用户网络优化的基础 | [网络篇序](chapter1/intro.md) <br/> [理解移动网络](chapter1/wireless.md)|
 
 
 
