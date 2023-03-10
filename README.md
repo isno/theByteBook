@@ -15,7 +15,7 @@
 ###  [网络原理与优化指南](chapter1/intro.md)
 
 1. [理解网络通信](chapter1/internet.md)
-2. [理解移动网络](chapter1/wireless.md)
+	1.1 [理解移动网络](chapter1/wireless.md)
 
 
 
