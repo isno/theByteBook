@@ -17,7 +17,7 @@
 * [理解网络通信](chapter1/internet.md)
 	* [理解移动网络](chapter1/wireless.md)
 
-
+* [网络性能观测](chapter1/net-observe.md)
 
 
 
