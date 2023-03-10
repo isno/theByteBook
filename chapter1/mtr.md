@@ -14,7 +14,6 @@ yum install -y mtr
 
 ### 参数解释
 
-
 使用一下命令查看 MTR报告 (mtr默认使用ICMP进行网络探测)
 ```
 mtr -z www.iq.com
@@ -25,8 +24,17 @@ mtr -z www.iq.com
 	<img src="/assets/mtr.png" width = "600"  align=center />
 </div>
 
-
-具体输出的列参数含义为：**跳数、AS号、IP地址、丢包率Loss、已发送包数Snt、最后一个包延迟Last、平均延迟Avg、最低延迟Best、最差延迟、Wrst、稳定性 StDev。**
+具体输出的列参数含义为：
+	- 跳数
+	- AS号
+	- IP地址
+	- 丢包率 Loss
+	- 已发送包数 Snt
+	- 最后一个包延迟 Last
+	- 平均延迟 Avg
+	- 最低延迟 Best
+	- 最差延迟 Wrst
+	- 稳定性 StDev
 
 ### 分析 MTR 报告
 在MTR报告中查看除了两个服务器之间的路径、AS外，在它的结果中也提供了很多有价值的数据统计报告。
