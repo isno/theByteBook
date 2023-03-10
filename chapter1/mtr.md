@@ -15,8 +15,6 @@ yum install -y mtr
 ### 参数解释
 
 
-
-
 使用一下命令查看 MTR报告 (mtr默认使用ICMP进行网络探测)
 ```
 mtr -z www.iq.com
