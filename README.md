@@ -18,6 +18,7 @@
 	* [理解移动网络](chapter1/wireless.md)
 
 * [网络性能观测](chapter1/net-observe.md)
+	* [理解各类延迟](chapter1/latency.md)
 	* [使用MTR探测网络质量](chapter1/mtr.md)
 
 
