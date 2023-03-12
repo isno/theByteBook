@@ -1,0 +1,8 @@
+stages:
+  - build
+
+build:
+  stage: build
+  script:
+    - yarn install
+    - yarn docs:build

@@ -1,0 +1,14 @@
+{
+  "name": "thebyte",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "isno <caxcn@qq.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vuepress dev docs",
+    "build": "vuepress build docs"
+  },
+  "devDependencies": {
+    "vuepress": "2.0.0-beta.60"
+  }
+}

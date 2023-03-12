@@ -1,0 +1,2260 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Netfilter与iptables · 互联网基础架构设计原理和实践</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-katex/katex.min.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-code/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-tbfed-pagefooter/footer.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="iptables-example.html" />
+    
+    
+    <link rel="prev" href="load-balancing.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                        <b>1.1.</b>
+                    
+                    关于本书
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../chapter1/intro.html">
+            
+                <a href="../chapter1/intro.html">
+            
+                    
+                        <b>1.2.</b>
+                    
+                    网络原理与优化指南
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../chapter1/internet.html">
+            
+                <a href="../chapter1/internet.html">
+            
+                    
+                        <b>1.2.1.</b>
+                    
+                    理解网络通信
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1.1" data-path="../chapter1/wireless.html">
+            
+                <a href="../chapter1/wireless.html">
+            
+                    
+                        <b>1.2.1.1.</b>
+                    
+                    理解移动网络
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.2" data-path="../chapter1/ethernet.html">
+            
+                <a href="../chapter1/ethernet.html">
+            
+                    
+                        <b>1.2.1.2.</b>
+                    
+                    Underlay和Overylay网络
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../chapter1/route.html">
+            
+                <a href="../chapter1/route.html">
+            
+                    
+                        <b>1.2.2.</b>
+                    
+                    路由及网络互联
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.2.1" data-path="../chapter1/bgp.html">
+            
+                <a href="../chapter1/bgp.html">
+            
+                    
+                        <b>1.2.2.1.</b>
+                    
+                    互联网AS自治系统
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../chapter1/performance.html">
+            
+                <a href="../chapter1/performance.html">
+            
+                    
+                        <b>1.2.3.</b>
+                    
+                    网络性能观测
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.3.1" data-path="../chapter1/latency.html">
+            
+                <a href="../chapter1/latency.html">
+            
+                    
+                        <b>1.2.3.1.</b>
+                    
+                    理解各类延迟
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.2" data-path="../chapter1/net-tool.html">
+            
+                <a href="../chapter1/net-tool.html">
+            
+                    
+                        <b>1.2.3.2.</b>
+                    
+                    网络性能观测工具
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.3.2.1" data-path="../chapter1/ifconfig.html">
+            
+                <a href="../chapter1/ifconfig.html">
+            
+                    
+                        <b>1.2.3.2.1.</b>
+                    
+                    ifconfig网络配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.2.2" data-path="../chapter1/netstat.html">
+            
+                <a href="../chapter1/netstat.html">
+            
+                    
+                        <b>1.2.3.2.2.</b>
+                    
+                    netstat网络连接信息
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.2.3" data-path="../chapter1/sar.html">
+            
+                <a href="../chapter1/sar.html">
+            
+                    
+                        <b>1.2.3.2.3.</b>
+                    
+                    sar网络吞吐和PPS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.2.4" data-path="../chapter1/tcpdump.html">
+            
+                <a href="../chapter1/tcpdump.html">
+            
+                    
+                        <b>1.2.3.2.4.</b>
+                    
+                    tcpdump与wireshark
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.3" data-path="../chapter1/icmp.html">
+            
+                <a href="../chapter1/icmp.html">
+            
+                    
+                        <b>1.2.3.3.</b>
+                    
+                    ICMP协议及应用
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.3.3.1" data-path="../chapter1/ping.html">
+            
+                <a href="../chapter1/ping.html">
+            
+                    
+                        <b>1.2.3.3.1.</b>
+                    
+                    Ping
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.3.2" data-path="../chapter1/traceroute.html">
+            
+                <a href="../chapter1/traceroute.html">
+            
+                    
+                        <b>1.2.3.3.2.</b>
+                    
+                    traceroute
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.3.3" data-path="../chapter1/mtr.html">
+            
+                <a href="../chapter1/mtr.html">
+            
+                    
+                        <b>1.2.3.3.3.</b>
+                    
+                    使用MTR探测网络质量
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.4" data-path="../chapter1/oversea-latency.html">
+            
+                <a href="../chapter1/oversea-latency.html">
+            
+                    
+                        <b>1.2.3.4.</b>
+                    
+                    海外网络的延迟情况
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../chapter1/net-optimize.html">
+            
+                <a href="../chapter1/net-optimize.html">
+            
+                    
+                        <b>1.2.4.</b>
+                    
+                    网络优化实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.4.1" data-path="../chapter1/tcp-bbr.html">
+            
+                <a href="../chapter1/tcp-bbr.html">
+            
+                    
+                        <b>1.2.4.1.</b>
+                    
+                    理解拥塞控制
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4.2" data-path="../chapter1/net.html">
+            
+                <a href="../chapter1/net.html">
+            
+                    
+                        <b>1.2.4.2.</b>
+                    
+                    网络层优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4.3" data-path="../chapter1/tcp.html">
+            
+                <a href="../chapter1/tcp.html">
+            
+                    
+                        <b>1.2.4.3.</b>
+                    
+                    传输层优化实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.4.3.1" data-path="../chapter1/tcp-handshake.html">
+            
+                <a href="../chapter1/tcp-handshake.html">
+            
+                    
+                        <b>1.2.4.3.1.</b>
+                    
+                    TCP连接优化：参数优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4.3.2" data-path="../chapter1/TCPFastOpen.html">
+            
+                <a href="../chapter1/TCPFastOpen.html">
+            
+                    
+                        <b>1.2.4.3.2.</b>
+                    
+                    TCP连接优化：TCP Fast Open
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4.3.3" data-path="../chapter1/tcp-handwave.html">
+            
+                <a href="../chapter1/tcp-handwave.html">
+            
+                    
+                        <b>1.2.4.3.3.</b>
+                    
+                    TCP挥手优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4.3.4" data-path="../chapter1/tcp-transfer.html">
+            
+                <a href="../chapter1/tcp-transfer.html">
+            
+                    
+                        <b>1.2.4.3.4.</b>
+                    
+                    TCP传输优化
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.4.3.4.1" data-path="../chapter1/tcp-params.html">
+            
+                <a href="../chapter1/tcp-params.html">
+            
+                    
+                        <b>1.2.4.3.4.1.</b>
+                    
+                    TCP传输参数
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4.3.4.2" data-path="../chapter1/tcp-ecn.html">
+            
+                <a href="../chapter1/tcp-ecn.html">
+            
+                    
+                        <b>1.2.4.3.4.2.</b>
+                    
+                    TCP ECN
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4.3.4.3" data-path="../chapter1/bbr-install.html">
+            
+                <a href="../chapter1/bbr-install.html">
+            
+                    
+                        <b>1.2.4.3.4.3.</b>
+                    
+                    BBRv2安装及测试
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4.4" data-path="../chapter1/cdn.html">
+            
+                <a href="../chapter1/cdn.html">
+            
+                    
+                        <b>1.2.4.4.</b>
+                    
+                    使用CDN/边缘节点加速
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../chapter2/intro.html">
+            
+                <a href="../chapter2/intro.html">
+            
+                    
+                        <b>1.3.</b>
+                    
+                    应用层服务的实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../chapter2/http-performance.html">
+            
+                <a href="../chapter2/http-performance.html">
+            
+                    
+                        <b>1.3.1.</b>
+                    
+                    HTTP性能分析
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../chapter2/dns.html">
+            
+                <a href="../chapter2/dns.html">
+            
+                    
+                        <b>1.3.2.</b>
+                    
+                    DNS优化实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../chapter2/http.html">
+            
+                <a href="../chapter2/http.html">
+            
+                    
+                        <b>1.3.3.</b>
+                    
+                    HTTP的优化与实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.3.1" data-path="../chapter2/http1.1.html">
+            
+                <a href="../chapter2/http1.1.html">
+            
+                    
+                        <b>1.3.3.1.</b>
+                    
+                    HTTP/1.1实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3.2" data-path="../chapter2/http2.html">
+            
+                <a href="../chapter2/http2.html">
+            
+                    
+                        <b>1.3.3.2.</b>
+                    
+                    理解HTTP/2
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3.3" data-path="../chapter2/http2-1.html">
+            
+                <a href="../chapter2/http2-1.html">
+            
+                    
+                        <b>1.3.3.3.</b>
+                    
+                    HTTP/2的实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3.4" data-path="../chapter2/early-hints.html">
+            
+                <a href="../chapter2/early-hints.html">
+            
+                    
+                        <b>1.3.3.4.</b>
+                    
+                    使用Early Hints加速展现
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3.5" data-path="../chapter2/compress.html">
+            
+                <a href="../chapter2/compress.html">
+            
+                    
+                        <b>1.3.3.5.</b>
+                    
+                    HTTP压缩的原理和实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3.6" data-path="../chapter2/protobuf.html">
+            
+                <a href="../chapter2/protobuf.html">
+            
+                    
+                        <b>1.3.3.6.</b>
+                    
+                    序列化Protobuf
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="../chapter2/http3.html">
+            
+                <a href="../chapter2/http3.html">
+            
+                    
+                        <b>1.3.4.</b>
+                    
+                    HTTP/3的应用实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.4.1" data-path="../chapter2/quic.html">
+            
+                <a href="../chapter2/quic.html">
+            
+                    
+                        <b>1.3.4.1.</b>
+                    
+                    QUIC协议理解
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4.2" data-path="../chapter2/quic-future.html">
+            
+                <a href="../chapter2/quic-future.html">
+            
+                    
+                        <b>1.3.4.2.</b>
+                    
+                    QUIC协议的未来
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4.3" data-path="../chapter2/nginx-quic.html">
+            
+                <a href="../chapter2/nginx-quic.html">
+            
+                    
+                        <b>1.3.4.3.</b>
+                    
+                    基于Nginx部署HTTP/3服务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4.4" data-path="../chapter2/quic-act.html">
+            
+                <a href="../chapter2/quic-act.html">
+            
+                    
+                        <b>1.3.4.4.</b>
+                    
+                    HTTP/3的应用实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5" data-path="../chapter2/ssl.html">
+            
+                <a href="../chapter2/ssl.html">
+            
+                    
+                        <b>1.3.5.</b>
+                    
+                    SSL/TLS的理论与实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.5.1" data-path="../chapter2/https.html">
+            
+                <a href="../chapter2/https.html">
+            
+                    
+                        <b>1.3.5.1.</b>
+                    
+                    理解HTTPS通信原理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5.2" data-path="../chapter2/tls1.2.html">
+            
+                <a href="../chapter2/tls1.2.html">
+            
+                    
+                        <b>1.3.5.2.</b>
+                    
+                    TLS握手协议
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5.3" data-path="../chapter2/tls-2.html">
+            
+                <a href="../chapter2/tls-2.html">
+            
+                    
+                        <b>1.3.5.3.</b>
+                    
+                    TLS记录层协议
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5.4" data-path="../chapter2/tls-handshak-1.html">
+            
+                <a href="../chapter2/tls-handshak-1.html">
+            
+                    
+                        <b>1.3.5.4.</b>
+                    
+                    TLS1.2握手分析
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5.5" data-path="../chapter2/tls-handshak-2.html">
+            
+                <a href="../chapter2/tls-handshak-2.html">
+            
+                    
+                        <b>1.3.5.5.</b>
+                    
+                    TLS1.3握手分析
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5.6" data-path="../chapter2/ecc.html">
+            
+                <a href="../chapter2/ecc.html">
+            
+                    
+                        <b>1.3.5.6.</b>
+                    
+                    使用ECC算法
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5.7" data-path="../chapter2/ecc.html">
+            
+                <a href="../chapter2/ecc.html">
+            
+                    
+                        <b>1.3.5.7.</b>
+                    
+                    基于Nginx配置ECC、RSA双证书实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="intro.html">
+            
+                <a href="intro.html">
+            
+                    
+                        <b>1.4.</b>
+                    
+                    负载均衡与网关
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="load-balancing.html">
+            
+                <a href="load-balancing.html">
+            
+                    
+                        <b>1.4.1.</b>
+                    
+                    负载均衡概述
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4.2" data-path="netfilter.html">
+            
+                <a href="netfilter.html">
+            
+                    
+                        <b>1.4.2.</b>
+                    
+                    Netfilter与iptables
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.2.1" data-path="iptables-example.html">
+            
+                <a href="iptables-example.html">
+            
+                    
+                        <b>1.4.2.1.</b>
+                    
+                    iptables命令示例
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="lvs.html">
+            
+                <a href="lvs.html">
+            
+                    
+                        <b>1.4.3.</b>
+                    
+                    LVS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.3.1" data-path="lvs-dr.html">
+            
+                <a href="lvs-dr.html">
+            
+                    
+                        <b>1.4.3.1.</b>
+                    
+                    LVS的应用
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3.2" data-path="keepalived.html">
+            
+                <a href="keepalived.html">
+            
+                    
+                        <b>1.4.3.2.</b>
+                    
+                    Keepalived
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3.3" data-path="ospf.html">
+            
+                <a href="ospf.html">
+            
+                    
+                        <b>1.4.3.3.</b>
+                    
+                    LVS + OSPF多活模式的实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="api-gateway.html">
+            
+                <a href="api-gateway.html">
+            
+                    
+                        <b>1.4.4.</b>
+                    
+                    API Gateway网关
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="nginx.html">
+            
+                <a href="nginx.html">
+            
+                    
+                        <b>1.4.5.</b>
+                    
+                    Nginx
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="openresty.html">
+            
+                <a href="openresty.html">
+            
+                    
+                        <b>1.4.6.</b>
+                    
+                    OpenResty
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.6.1" data-path="openresty-install.html">
+            
+                <a href="openresty-install.html">
+            
+                    
+                        <b>1.4.6.1.</b>
+                    
+                    OpenResty的安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.2" data-path="openresty-module.html">
+            
+                <a href="openresty-module.html">
+            
+                    
+                        <b>1.4.6.2.</b>
+                    
+                    OpenResty模块编写
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.3" data-path="openresty-balance.html">
+            
+                <a href="openresty-balance.html">
+            
+                    
+                        <b>1.4.6.3.</b>
+                    
+                    OpenResty动态负载均衡
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6.4" data-path="openresty-fire.html">
+            
+                <a href="openresty-fire.html">
+            
+                    
+                        <b>1.4.6.4.</b>
+                    
+                    OpenResty火焰图
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="apisix.html">
+            
+                <a href="apisix.html">
+            
+                    
+                        <b>1.4.7.</b>
+                    
+                    Apache APISIX
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.7.1" data-path="apisix-install.html">
+            
+                <a href="apisix-install.html">
+            
+                    
+                        <b>1.4.7.1.</b>
+                    
+                    APISIX的安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.2" data-path="apisix-api.html">
+            
+                <a href="apisix-api.html">
+            
+                    
+                        <b>1.4.7.2.</b>
+                    
+                    API操作实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7.3" data-path="apisix-observe.html">
+            
+                <a href="apisix-observe.html">
+            
+                    
+                        <b>1.4.7.3.</b>
+                    
+                    API观测性实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.8" data-path="api-optimize.html">
+            
+                <a href="api-optimize.html">
+            
+                    
+                        <b>1.4.8.</b>
+                    
+                    网关优化实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.8.1" data-path="dpvs.html">
+            
+                <a href="dpvs.html">
+            
+                    
+                        <b>1.4.8.1.</b>
+                    
+                    使用DPVS替换LVS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.8.2" data-path="QAT.html">
+            
+                <a href="QAT.html">
+            
+                    
+                        <b>1.4.8.2.</b>
+                    
+                    使用QAT技术对网络请求运算加速
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../chapter4/intro.html">
+            
+                <a href="../chapter4/intro.html">
+            
+                    
+                        <b>1.5.</b>
+                    
+                    云原生与服务治理
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../chapter4/cloud-native.html">
+            
+                <a href="../chapter4/cloud-native.html">
+            
+                    
+                        <b>1.5.1.</b>
+                    
+                    什么是云原生
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" data-path="../chapter4/container.html">
+            
+                <a href="../chapter4/container.html">
+            
+                    
+                        <b>1.5.2.</b>
+                    
+                    容器中资源隔离与镜像
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.2.1" data-path="../chapter4/cgroup.html">
+            
+                <a href="../chapter4/cgroup.html">
+            
+                    
+                        <b>1.5.2.1.</b>
+                    
+                    cgroup的理解与应用
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2.2" data-path="../chapter4/cgroup2.html">
+            
+                <a href="../chapter4/cgroup2.html">
+            
+                    
+                        <b>1.5.2.2.</b>
+                    
+                    cgroup的理解与应用
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2.3" data-path="../chapter4/cgroup-docker.html">
+            
+                <a href="../chapter4/cgroup-docker.html">
+            
+                    
+                        <b>1.5.2.3.</b>
+                    
+                    cgroup在docker中的应用
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2.4" data-path="../chapter4/OverlayFS.html">
+            
+                <a href="../chapter4/OverlayFS.html">
+            
+                    
+                        <b>1.5.2.4.</b>
+                    
+                    镜像与Union FS
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="../chapter4/docker-net.html">
+            
+                <a href="../chapter4/docker-net.html">
+            
+                    
+                        <b>1.5.3.</b>
+                    
+                    网络虚拟化
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.3.1" data-path="../chapter4/overlay.html">
+            
+                <a href="../chapter4/overlay.html">
+            
+                    
+                        <b>1.5.3.1.</b>
+                    
+                    Overlay网络与VXLAN
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.2" data-path="../chapter4/tap-tun.html">
+            
+                <a href="../chapter4/tap-tun.html">
+            
+                    
+                        <b>1.5.3.2.</b>
+                    
+                    tap/tun
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="../chapter4/docker.html">
+            
+                <a href="../chapter4/docker.html">
+            
+                    
+                        <b>1.5.4.</b>
+                    
+                    Docker实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.4.1" data-path="../chapter4/docker-command.html">
+            
+                <a href="../chapter4/docker-command.html">
+            
+                    
+                        <b>1.5.4.1.</b>
+                    
+                    Docker命令
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4.2" data-path="../chapter4/dockerfile.html">
+            
+                <a href="../chapter4/dockerfile.html">
+            
+                    
+                        <b>1.5.4.2.</b>
+                    
+                    DockerFile编写指南
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4.3" data-path="../chapter4/registry.html">
+            
+                <a href="../chapter4/registry.html">
+            
+                    
+                        <b>1.5.4.3.</b>
+                    
+                    使用Nexus3搭建私有镜像仓库
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5" data-path="../chapter4/kubernetes.html">
+            
+                <a href="../chapter4/kubernetes.html">
+            
+                    
+                        <b>1.5.5.</b>
+                    
+                    理解Kubernetes
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.5.1" data-path="../chapter4/k8s-arch.html">
+            
+                <a href="../chapter4/k8s-arch.html">
+            
+                    
+                        <b>1.5.5.1.</b>
+                    
+                    kubernetes 概念以及组件介绍
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.2" data-path="../chapter4/controller.html">
+            
+                <a href="../chapter4/controller.html">
+            
+                    
+                        <b>1.5.5.2.</b>
+                    
+                    kubernetes Controller介绍
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5.3" data-path="../chapter4/service.md">
+            
+                <span>
+            
+                    
+                        <b>1.5.5.3.</b>
+                    
+                    kubernetes Service介绍
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6" data-path="../chapter4/k8s-install.html">
+            
+                <a href="../chapter4/k8s-install.html">
+            
+                    
+                        <b>1.5.6.</b>
+                    
+                    高可用的Kubernetes集群部署实践
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.6.1" data-path="../chapter4/k8s-install-1.html">
+            
+                <a href="../chapter4/k8s-install-1.html">
+            
+                    
+                        <b>1.5.6.1.</b>
+                    
+                    初始化准备
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6.2" data-path="../chapter4/k8s-install-2.html">
+            
+                <a href="../chapter4/k8s-install-2.html">
+            
+                    
+                        <b>1.5.6.2.</b>
+                    
+                    初始化集群
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6.3" data-path="../chapter4/k8s-install-cni.html">
+            
+                <a href="../chapter4/k8s-install-cni.html">
+            
+                    
+                        <b>1.5.6.3.</b>
+                    
+                    部署 CNI插件 Calico
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6.4" data-path="../chapter4/k8s-install-LoadBalancer.html">
+            
+                <a href="../chapter4/k8s-install-LoadBalancer.html">
+            
+                    
+                        <b>1.5.6.4.</b>
+                    
+                    配置 LoadBalancer 
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6.5" data-path="../chapter4/k8s-install-test.html">
+            
+                <a href="../chapter4/k8s-install-test.html">
+            
+                    
+                        <b>1.5.6.5.</b>
+                    
+                    部署测试用例以及验证 
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.7" data-path="../chapter4/cri.html">
+            
+                <a href="../chapter4/cri.html">
+            
+                    
+                        <b>1.5.7.</b>
+                    
+                    CRI以及容器
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.8" data-path="../chapter4/cni.html">
+            
+                <a href="../chapter4/cni.html">
+            
+                    
+                        <b>1.5.8.</b>
+                    
+                    CNI以及网络治理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.9" data-path="../chapter4/csi.html">
+            
+                <a href="../chapter4/csi.html">
+            
+                    
+                        <b>1.5.9.</b>
+                    
+                    CSI以及持久存储
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.10" data-path="../chapter4/prometheus.html">
+            
+                <a href="../chapter4/prometheus.html">
+            
+                    
+                        <b>1.5.10.</b>
+                    
+                    使用 Prometheus 配合 Grafana 监控集群
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.11" data-path="../chapter4/resource.html">
+            
+                <a href="../chapter4/resource.html">
+            
+                    
+                        <b>1.5.11.</b>
+                    
+                    集群弹性伸缩实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.12" data-path="../chapter4/ci-cd.html">
+            
+                <a href="../chapter4/ci-cd.html">
+            
+                    
+                        <b>1.5.12.</b>
+                    
+                    Kubernetes devOps实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../chapter5/intro.html">
+            
+                <a href="../chapter5/intro.html">
+            
+                    
+                        <b>1.6.</b>
+                    
+                    互联网故障经验与总结
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="../chapter5/facebook.html">
+            
+                <a href="../chapter5/facebook.html">
+            
+                    
+                        <b>1.6.1.</b>
+                    
+                    Meta 2021年10月宕机总结
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.2" data-path="../chapter5/bili.html">
+            
+                <a href="../chapter5/bili.html">
+            
+                    
+                        <b>1.6.2.</b>
+                    
+                    某站 2021年7月宕机总结
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3" data-path="../chapter5/iqiyi.html">
+            
+                <a href="../chapter5/iqiyi.html">
+            
+                    
+                        <b>1.6.3.</b>
+                    
+                    删除内容
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4" data-path="../chapter5/aliyun.html">
+            
+                <a href="../chapter5/aliyun.html">
+            
+                    
+                        <b>1.6.4.</b>
+                    
+                    某云 香港机房 2022年12月宕机总结
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.5" data-path="../chapter5/cloudflare.html">
+            
+                <a href="../chapter5/cloudflare.html">
+            
+                    
+                        <b>1.6.5.</b>
+                    
+                    Cloudflare 2022年6月故障总结
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Netfilter与iptables</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="netfilter&#x4E0E;iptables">Netfilter&#x4E0E;iptables</h1>
+<p>&#x6211;&#x4EEC;&#x914D;&#x7F6E;LVS&#x4EE5;&#x53CA;&#x5728;&#x7B2C;&#x56DB;&#x7AE0;&#x8BB2;&#x89E3;&#x4E91;&#x539F;&#x751F;&#x65F6;&#xFF0C;&#x5B89;&#x88C5;Docker&#x6216;&#x8005;Kubernetes&#xFF0C;&#x9996;&#x5148;&#x4F1A;&#x6267;&#x884C;&#x4E24;&#x6761;&#x547D;&#x4EE4;:</p>
+<pre><code>systemctl stop firewalld  // &#x76F8;&#x5F53;&#x4E8E;iptables&#x7684;&#x5347;&#x7EA7;
+echo 1 &gt; /proc/sys/net/ipv4/ip_forward
+</code></pre><p>&#x8FD9;&#x4E24;&#x6761;&#x4E00;&#x4E2A;&#x662F;&#x5173;&#x95ED;&#x7F51;&#x7EDC;&#x6570;&#x636E;&#x5305;&#x63A7;&#x5236;&#xFF0C;&#x4E00;&#x4E2A;&#x662F;&#x5F00;&#x542F;&#x672C;&#x673A;&#x5F00;&#x542F;&#x6570;&#x636E;&#x5305;&#x8F6C;&#x53D1;&#x529F;&#x80FD;&#x3002;</p>
+<p>&#x518D;&#x4ECE;&#x5E94;&#x7528;&#x4E0A;&#x8BB2;&#xFF1A;&#x5B9E;&#x73B0;&#x56DB;&#x5C42;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x7684;LVS&#x6709;&#x4E2A;&#x6838;&#x5FC3;&#x6A21;&#x5757;IPVS&#xFF0C;&#x4EE5;&#x53CA;Kubernetes&#x4E2D;kube-proxy iptables&#x6A21;&#x5F0F;&#xFF0C;&#x5B9E;&#x9645;&#x4E0A;&#x90FD;&#x662F;&#x5728;Netfilter&#x4E0A;&#x5C42;&#x6784;&#x5EFA;&#x7684;&#x5E94;&#x7528;&#xFF0C;&#x4ECE;&#x800C;&#x5B9E;&#x73B0;&#x6570;&#x636E;&#x5305;&#x7684;&#x8F6C;&#x53D1;&#x548C;&#x63A7;&#x5236;&#x3002;</p>
+<p>&#x4ECE;&#x8FD9;&#x4E24;&#x65B9;&#x9762;&#xFF0C;&#x8981;&#x4E86;&#x89E3;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x6216;&#x8005;&#x4E91;&#x539F;&#x751F;&#x7F51;&#x7EDC;&#xFF0C;&#x5F97;&#x5148;&#x6E05;&#x695A;&#x4E00;&#x4E2A;&#x6570;&#x636E;&#x5305;&#x5728;Linux&#x5185;&#x6838;&#x9014;&#x7ECF;&#xFF0C;&#x4EE5;&#x53CA;Netfilter&#x548C;iptables&#x7684;&#x673A;&#x5236;&#x3002;</p>
+<p>Netfilter&#x7684;&#x5B9A;&#x4E49;&#x662F;&#x4E00;&#x4E2A;&#x5DE5;&#x4F5C;&#x5728;Linux&#x5185;&#x6838;&#x7684;&#x7F51;&#x7EDC;&#x6570;&#x636E;&#x5305;&#x5904;&#x7406;&#x6846;&#x67B6;&#xFF0C;&#x4E3A;&#x4E86;&#x7406;&#x89E3;netfilter&#x7684;&#x5DE5;&#x4F5C;&#x65B9;&#x5F0F;&#xFF0C;&#x6211;&#x4EEC;&#x9996;&#x5148;&#x9700;&#x8981;&#x5BF9;&#x6570;&#x636E;&#x5305;&#x5728;Linux&#x5185;&#x6838;&#x4E2D;&#x7684;&#x5904;&#x7406;&#x8DEF;&#x5F84;&#x5EFA;&#x7ACB;&#x57FA;&#x672C;&#x8BA4;&#x8BC6;&#x3002;</p>
+<h2 id="&#x6570;&#x636E;&#x5305;&#x7684;&#x5185;&#x6838;&#x8DEF;&#x5F84;">&#x6570;&#x636E;&#x5305;&#x7684;&#x5185;&#x6838;&#x8DEF;&#x5F84;</h2>
+<p>&#x6570;&#x636E;&#x5305;&#x5728;&#x5185;&#x6838;&#x4E2D;&#x7684;&#x5904;&#x7406;&#x8DEF;&#x5F84;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x5904;&#x7406;&#x7F51;&#x7EDC;&#x6570;&#x636E;&#x5305;&#x7684;&#x5185;&#x6838;&#x4EE3;&#x7801;&#x8C03;&#x7528;&#x94FE;&#xFF0C;&#x5927;&#x4F53;&#x4E0A;&#x4E5F;&#x53EF;&#x6309; TCP/IP &#x6A21;&#x578B;&#x5206;&#x4E3A;&#x591A;&#x4E2A;&#x5C42;&#x7EA7;&#xFF0C;&#x4EE5;&#x63A5;&#x6536;&#x4E00;&#x4E2A; IPv4 &#x7684; TCP &#x6570;&#x636E;&#x5305;&#x4E3A;&#x4F8B;&#xFF0C;&#x5927;&#x81F4;&#x6709;&#x4E09;&#x4E2A;&#x6B65;&#x9AA4;&#xFF1A;</p>
+<p>&#x4E00;: &#x5728;&#x7269;&#x7406;&#x7F51;&#x7EDC;&#x8BBE;&#x5907;&#x5C42;&#xFF0C;&#x7F51;&#x5361;&#x901A;&#x8FC7; DMA &#x5C06;&#x63A5;&#x6536;&#x5230;&#x7684;&#x6570;&#x636E;&#x5305;&#x5199;&#x5165;&#x5185;&#x5B58;&#x4E2D;&#x7684;&#x73AF;&#x5F62;&#x7F13;&#x51B2;&#x533A;(Circular buffer), &#x7ECF;&#x8FC7;&#x4E00;&#x4E9B;&#x5217;&#x7684;&#x4E2D;&#x65AD;&#x8C03;&#x5EA6;&#x540E;&#xFF0C;Linux kernel &#x8C03;&#x7528; skb_dequeue &#x5C06;&#x6570;&#x636E;&#x5305;&#x52A0;&#x5165;&#x5BF9;&#x5E94;&#x8BBE;&#x5907;&#x7684;&#x5904;&#x7406;&#x961F;&#x5217;&#x4E2D;&#xFF0C;&#x5E76;&#x8F6C;&#x6362;&#x6210; sk_buffer &#x7C7B;&#x578B;&#xFF08;Socket buffer&#xFF09;&#xFF0C;&#x6700;&#x540E;&#x8C03;&#x7528; netif_receive_skb &#x51FD;&#x6570;&#x6309;&#x534F;&#x8BAE;&#x7C7B;&#x578B;&#x5BF9;&#x6570;&#x636E;&#x5305;&#x8FDB;&#x884C;&#x5206;&#x7C7B;&#xFF0C;&#x5E76;&#x8DF3;&#x8F6C;&#x5230;&#x5BF9;&#x5E94;&#x7684;&#x5904;&#x7406;&#x51FD;&#x6570;&#x3002;</p>
+<p>&#x5982;&#x4E0B;&#x56FE;&#x6240;&#x793A;&#xFF1A;</p>
+<div align="center">
+    <img src="../assets/chapter3/network-path.png" width="450" align="center">
+</div>
+
+<p>&#x4E8C;: &#x5047;&#x8BBE;&#x6570;&#x636E;&#x5305;&#x4E3A; IP &#x534F;&#x8BAE;&#x5305;&#xFF0C;&#x5BF9;&#x5E94;&#x7684;&#x63A5;&#x6536;&#x5305;&#x5904;&#x7406;&#x51FD;&#x6570; ip_rcv &#x5C06;&#x88AB;&#x8C03;&#x7528;&#xFF0C;&#x6570;&#x636E;&#x5305;&#x5904;&#x7406;&#x8FDB;&#x5165;&#x7F51;&#x7EDC;IP&#x5C42;&#x3002;&#x7ECF;&#x8FC7;&#x5BF9;IP&#x5305;&#x68C0;&#x67E5;&#x3001;&#x805A;&#x5408;&#x7B49;&#x540E;&#x8FDB;&#x884C;&#x8DEF;&#x7531;&#x67E5;&#x8BE2;&#x5E76;&#x51B3;&#x5B9A;&#x662F;&#x5C06;&#x6570;&#x636E;&#x5305;&#x4EA4;&#x4ED8;&#x672C;&#x673A;&#x8FD8;&#x662F;&#x8F6C;&#x53D1;&#x5176;&#x4ED6;&#x4E3B;&#x673A;&#xFF0C;</p>
+<p>&#x5047;&#x8BBE;&#x6570;&#x636E;&#x5305;&#x7684;&#x76EE;&#x7684;&#x5730;&#x5740;&#x662F;&#x672C;&#x4E3B;&#x673A;&#xFF0C;&#x63A5;&#x7740;&#x6267;&#x884C;&#x7684; dst_input &#x51FD;&#x6570;&#x5C06;&#x8C03;&#x7528; ip_local_deliver &#x51FD;&#x6570;&#x3002;ip_local_deliver &#x51FD;&#x6570;&#x4E2D;&#x5C06;&#x6839;&#x636E; IP &#x9996;&#x90E8;&#x4E2D;&#x7684;&#x534F;&#x8BAE;&#x53F7;&#x5224;&#x65AD;&#x8F7D;&#x8377;&#x6570;&#x636E;&#x7684;&#x534F;&#x8BAE;&#x7C7B;&#x578B;&#xFF0C;&#x6700;&#x540E;&#x8C03;&#x7528;&#x5BF9;&#x5E94;&#x7C7B;&#x578B;&#x7684;&#x5305;&#x5904;&#x7406;&#x51FD;&#x6570;&#x3002;&#x672C;&#x4F8B;&#x4E2D;&#x5C06;&#x8C03;&#x7528; TCP &#x534F;&#x8BAE;&#x5BF9;&#x5E94;&#x7684; tcp_v4_rcv &#x51FD;&#x6570;&#xFF0C;&#x4E4B;&#x540E;&#x6570;&#x636E;&#x5305;&#x5904;&#x7406;&#x8FDB;&#x5165;&#x4F20;&#x8F93;&#x5C42;&#x3002;</p>
+<p>&#x4E09;&#xFF1A;tcp_v4_rcv &#x51FD;&#x6570;&#x540C;&#x6837;&#x8BFB;&#x53D6;&#x6570;&#x636E;&#x5305;&#x7684; TCP &#x9996;&#x90E8;&#x5E76;&#x8BA1;&#x7B97;&#x6821;&#x9A8C;&#x548C;&#xFF0C;&#x7136;&#x540E;&#x5728;&#x6570;&#x636E;&#x5305;&#x5BF9;&#x5E94;&#x7684; TCP control buffer &#x4E2D;&#x7EF4;&#x62A4;&#x4E00;&#x4E9B;&#x5FC5;&#x8981;&#x72B6;&#x6001;&#x5305;&#x62EC; TCP &#x5E8F;&#x5217;&#x53F7;&#x4EE5;&#x53CA; SACK &#x53F7;&#x7B49;&#x3002;&#x8BE5;&#x51FD;&#x6570;&#x4E0B;&#x4E00;&#x6B65;&#x5C06;&#x8C03;&#x7528; tcp_v4_lookup &#x67E5;&#x8BE2;&#x6570;&#x636E;&#x5305;&#x5BF9;&#x5E94;&#x7684; socket&#xFF0C;&#x5982;&#x679C;&#x6CA1;&#x627E;&#x5230;&#x6216; socket &#x7684;&#x8FDE;&#x63A5;&#x72B6;&#x6001;&#x5904;&#x4E8E; TCP_TIME_WAIT&#xFF0C;&#x6570;&#x636E;&#x5305;&#x5C06;&#x88AB;&#x4E22;&#x5F03;&#x3002;&#x5982;&#x679C; socket &#x5904;&#x4E8E;&#x672A;&#x52A0;&#x9501;&#x72B6;&#x6001;&#xFF0C;&#x6570;&#x636E;&#x5305;&#x5C06;&#x901A;&#x8FC7;&#x8C03;&#x7528; tcp_prequeue &#x51FD;&#x6570;&#x8FDB;&#x5165; prequeue &#x961F;&#x5217;&#xFF0C;&#x4E4B;&#x540E;&#x6570;&#x636E;&#x5305;&#x5C06;&#x53EF;&#x88AB;&#x7528;&#x6237;&#x6001;&#x7684;&#x7528;&#x6237;&#x7A0B;&#x5E8F;&#x6240;&#x5904;&#x7406;&#x3002;</p>
+<h3 id="netfilter-hooks">Netfilter hooks</h3>
+<p>Netfilter &#x7684;&#x9996;&#x8981;&#x7EC4;&#x6210;&#x90E8;&#x5206;&#x662F; netfilter hooks&#x3002;hooks&#x662F;&#x6570;&#x636E;&#x5305;&#x7ECF;&#x8FC7;&#x7ECF;&#x8FC7;&#x534F;&#x8BAE;&#x6808;&#x65F6;netfilter&#x6CE8;&#x518C;&#x7684;&#x5904;&#x7406;&#x51FD;&#x6570;&#x3002;</p>
+<p><strong>hook &#x89E6;&#x53D1;&#x70B9;</strong></p>
+<p>&#x5BF9;&#x4E8E;&#x4E0D;&#x540C;&#x7684;&#x534F;&#x8BAE;IPv4&#x3001;IPv6 &#x6216; ARP &#x7B49;&#xFF0C;Linux &#x5185;&#x6838;&#x7F51;&#x7EDC;&#x6808;&#x4F1A;&#x5728;&#x8BE5;&#x534F;&#x8BAE;&#x6808;&#x6570;&#x636E;&#x5305;&#x5904;&#x7406;&#x8DEF;&#x5F84;&#x4E0A;&#x7684;&#x9884;&#x8BBE;&#x4F4D;&#x7F6E;&#x89E6;&#x53D1;&#x5BF9;&#x5E94;&#x7684; hook&#x3002;&#x5728;&#x4E0D;&#x540C;&#x534F;&#x8BAE;&#x5904;&#x7406;&#x6D41;&#x7A0B;&#x4E2D;&#x7684;&#x89E6;&#x53D1;&#x70B9;&#x4F4D;&#x7F6E;&#x4EE5;&#x53CA;&#x5BF9;&#x5E94;&#x7684; hook&#xFF0C;&#x672C;&#x6587;&#x4EC5;&#x5173;&#x6CE8; IPv4 &#x534F;&#x8BAE;&#xFF1A;</p>
+<div align="center">
+    <img src="../assets/chapter3/netfilter-hook.jpeg" width="500" align="center">
+</div>
+
+<p>&#x5728;IPv4&#x7684;&#x6570;&#x636E;&#x5305;&#x6D41;&#x7A0B;&#x4E2D;&#xFF0C;&#x6709;&#x4E94;&#x4E2A;&#x91CD;&#x8981;&#x7684;hook</p>
+<ul>
+<li><strong>NF_IP_PRE_ROUTING:</strong> &#x8FD9;&#x4E2A;hook&#x5728;IPv4&#x534F;&#x8BAE;&#x6808;&#x7684; ip_rcv &#x51FD;&#x6570;&#x4E2D;&#x6267;&#x884C;&#xFF0C; &#x662F;&#x6240;&#x6709;&#x63A5;&#x6536;&#x6570;&#x636E;&#x5305;&#x5230;&#x8FBE;&#x7684;&#x7B2C;&#x4E00;&#x4E2A;hook&#x89E6;&#x53D1;&#x70B9;&#xFF0C;&#x4ECE;&#x540D;&#x5B57;&#x53EF;&#x4EE5;&#x770B;&#x51FA;&#x5B83;&#x5728;&#x8FDB;&#x884C;&#x8DEF;&#x7531;&#x5224;&#x65AD;&#x4E4B;&#x524D;&#x8FDB;&#x884C;&#x3002;</li>
+<li><strong>NF_IP_LOCAL_IN:</strong> &#x8FD9;&#x4E2A;hook&#x5728;IPv4&#x534F;&#x8BAE;&#x6808;&#x7684; ip_local_deliver &#x51FD;&#x6570;&#x4E2D;&#x6267;&#x884C;&#xFF0C;&#x7ECF;&#x8FC7;&#x8DEF;&#x7531;&#x5224;&#x65AD;&#x540E;&#xFF0C;&#x76EE;&#x6807;&#x5730;&#x5740;&#x662F;&#x672C;&#x673A;&#x7684;&#x63A5;&#x6536;&#x6570;&#x636E;&#x5305;&#x5230;&#x8FBE;&#x6B64;hook&#x89E6;&#x53D1;&#x70B9;</li>
+<li><strong>NF_IP_FORWARD:</strong> &#x8FD9;&#x4E2A;hook&#x5728;IPv4&#x534F;&#x8BAE;&#x6808;&#x7684; ip_forward &#x51FD;&#x6570;&#x4E2D;&#x6267;&#x884C;&#xFF0C;&#x7ECF;&#x8FC7;&#x8DEF;&#x7531;&#x5224;&#x65AD;&#x540E;&#xFF0C;&#x76EE;&#x6807;&#x5730;&#x5740;&#x4E0D;&#x662F;&#x672C;&#x673A;&#x5730;&#x5740;&#x7684;&#x6570;&#x636E;&#x5305;&#x5230;&#x8FBE;&#x6B64;hook&#x89E6;&#x53D1;&#x70B9;</li>
+<li><strong>NF_IP_LOCAL_OUT:</strong> &#x8FD9;&#x4E2A;hook&#x5728;IPv4&#x534F;&#x8BAE;&#x6808;&#x7684; ip_local_out &#x51FD;&#x6570;&#x4E2D;&#x6267;&#x884C;&#xFF0C;&#x6240;&#x6709;&#x672C;&#x5730;&#x751F;&#x6210;&#x7684;&#x53D1;&#x5F80;&#x5176;&#x4ED6;&#x673A;&#x5668;&#x7684;&#x5305;, &#x5728;&#x8FDB;&#x5165;&#x7F51;&#x7EDC;&#x6808;&#x540E;&#x9996;&#x5148;&#x5230;&#x8FBE;&#x6B64;hook&#x89E6;&#x53D1;&#x70B9;</li>
+<li><strong>NF_IP_POST_ROUTING:</strong> &#x8FD9;&#x4E2A;hook&#x5728;IPv4&#x534F;&#x8BAE;&#x6808;&#x7684; ip_out &#x51FD;&#x6570;&#x4E2D;&#x6267;&#x884C;&#xFF0C;&#x672C;&#x673A;&#x4EA7;&#x751F;&#x51C6;&#x5907;&#x53D1;&#x51FA;&#x7684;&#x5305;&#x6216;&#x8005;&#x8F6C;&#x53D1;&#x7684;&#x5305;&#xFF0C;&#x5728;&#x7ECF;&#x8FC7;&#x8DEF;&#x7531;&#x5224;&#x65AD;&#x540E;&#x5230;&#x8FBE;&#x6B64;hook&#x89E6;&#x53D1;&#x70B9;</li>
+</ul>
+<p>&#x5728;&#x5185;&#x6838;&#x534F;&#x8BAE;&#x6808;&#x7684;&#x5B9E;&#x73B0;&#x4E0A;&#xFF0C;&#x6240;&#x6709;&#x7684;&#x89E6;&#x53D1;&#x70B9;&#x4F4D;&#x7F6E;&#x7EDF;&#x4E00;&#x8C03;&#x7528; NF_HOOK&#x5B8F;&#x6765;&#x89E6;&#x53D1;hook</p>
+<pre><code>static inline int NF_HOOK(uint8_t pf, unsigned int hook, struct sk_buff *skb, struct net_device *in, struct net_device *out, int (*okfn)(struct sk_buff *)) { return NF_HOOK_THRESH(pf, hook, skb, in, out, okfn, INT_MIN); }
+</code></pre><p>&#x5B9E;&#x9645;&#x8C03;&#x7528;&#x65B9;&#x5F0F;&#x4EE5; <code>net/ipv4/ip_forward.c</code> &#x5BF9;&#x6570;&#x636E;&#x5305;&#x8FDB;&#x884C;&#x8F6C;&#x53D1;&#x7684;&#x6E90;&#x7801;&#x4E3A;&#x4F8B;</p>
+<p>&#x5728; ip_forward &#x51FD;&#x6570;&#x4E2D;&#x4EE5; NF_INET_FORWARD hook &#x4F5C;&#x4E3A;&#x5165;&#x53C2;&#x8C03;&#x7528;&#x4E86; NF_HOOK &#x5B8F;&#xFF0C;&#x5E76;&#x5C06;&#x7F51;&#x7EDC;&#x6808;&#x63A5;&#x4E0B;&#x6765;&#x7684;&#x5904;&#x7406;&#x51FD;&#x6570; ip_forward_finish &#x4F5C;&#x4E3A; okfn &#x53C2;&#x6570;&#x4F20;&#x5165;&#xFF1A;</p>
+<pre><code>int ip_forward(struct sk_buff *skb) { 
+    .....
+    /*&#x8DEF;&#x7531;&#x91CD;&#x5B9A;&#x5411;&#x62A5;&#x6587;*/
+    if (rt-&gt;rt_flags&amp;RTCF_DOREDIRECT &amp;&amp; !opt-&gt;srr)
+        ip_rt_send_redirect(skb);
+    skb-&gt;priority = rt_tos2priority(iph-&gt;tos);
+
+    return NF_HOOK(PF_INET, NF_IP_FORWARD, skb, skb-&gt;dev, rt-&gt;u.dst.dev,
+               ip_forward_finish);
+}
+</code></pre><p><strong>hook&#x56DE;&#x8C03;&#x51FD;&#x6570;</strong></p>
+<p>Netfilter &#x7684;&#x53E6;&#x4E00;&#x7EC4;&#x6210;&#x90E8;&#x5206;&#x662F; hook &#x7684;&#x56DE;&#x8C03;&#x51FD;&#x6570;&#x3002;</p>
+<p>&#x5185;&#x6838;&#x7F51;&#x7EDC;&#x6808;&#x65E2;&#x4F7F;&#x7528; hook &#x6765;&#x4EE3;&#x8868;&#x7279;&#x5B9A;&#x89E6;&#x53D1;&#x4F4D;&#x7F6E;&#xFF0C;&#x4E5F;&#x4F7F;&#x7528; hook&#x7684;&#x6574;&#x6570;&#x503C;&#x4F5C;&#x4E3A;&#x6570;&#x636E;&#x7D22;&#x5F15;&#x6765;&#x8BBF;&#x95EE;&#x89E6;&#x53D1;&#x70B9;&#x5BF9;&#x5E94;&#x7684;&#x56DE;&#x8C03;&#x51FD;&#x6570;&#x3002;</p>
+<p>&#x5185;&#x6838;&#x7684;&#x5176;&#x4ED6;&#x6A21;&#x5757;&#x53EF;&#x4EE5;&#x901A;&#x8FC7; netfilter &#x63D0;&#x4F9B;&#x7684; API &#x5411;&#x6307;&#x5B9A;&#x7684; hook &#x6CE8;&#x518C;&#x56DE;&#x8C03;&#x51FD;&#x6570;&#xFF0C;&#x540C;&#x4E00; hook &#x53EF;&#x4EE5;&#x6CE8;&#x518C;&#x591A;&#x4E2A;&#x56DE;&#x8C03;&#x51FD;&#x6570;&#xFF0C;&#x901A;&#x8FC7;&#x6CE8;&#x518C;&#x65F6;&#x6307;&#x5B9A;&#x7684; priority &#x53C2;&#x6570;&#x53EF;&#x6307;&#x5B9A;&#x56DE;&#x8C03;&#x51FD;&#x6570;&#x5728;&#x6267;&#x884C;&#x65F6;&#x7684;&#x4F18;&#x5148;&#x7EA7;&#x3002;</p>
+<p>Netfilter&#x7684; hook &#x7684;&#x56DE;&#x8C03;&#x51FD;&#x6570;&#x662F;&#x4E00;&#x4E2A;nf_hook_ops&#x7684;&#x7ED3;&#x6784;&#x4F53;&#x3002;</p>
+<p>&#x540C;&#x4E00; Netfilter hook&#x4E0B;&#x6240;&#x6709;&#x7684; nf_hook_ops &#x6CE8;&#x518C;&#x540E;&#x4EE5;Priority&#x4E3A;&#x987A;&#x5E8F;&#x7EC4;&#x6210;&#x4E00;&#x4E2A;&#x94FE;&#x8868;&#x7ED3;&#x6784;&#xFF0C;&#x6CE8;&#x518C;&#x8FC7;&#x7A0B;&#x4F1A;&#x6839;&#x636E;Priority&#x4ECE;&#x94FE;&#x8868;&#x4E2D;&#x627E;&#x5230;&#x5408;&#x9002;&#x7684;&#x4F4D;&#x7F6E;&#xFF0C;&#x7136;&#x540E;&#x6267;&#x884C;&#x94FE;&#x8868;&#x63D2;&#x5165;&#x64CD;&#x4F5C;&#x3002;</p>
+<p>&#x5728;&#x6267;&#x884C;&#x89E6;&#x53D1;&#x6307;&#x5B9A;&#x7684; hook &#x65F6;&#xFF0C;&#x5C06;&#x8FED;&#x4EE3;&#x8BE5;hook&#x5BF9;&#x5E94;&#x7684;nf_hook_ops &#x94FE;&#x8868;&#xFF0C;&#x5E76;&#x4F9D;&#x6B21;&#x8C03;&#x7528;&#x6BCF;&#x4E00;&#x4E2A; nf_hook_ops&#x7684;&#x6CE8;&#x518C;&#x51FD;&#x6570;&#x6210;&#x5458; hookfn&#x3002;&#x793A;&#x610F;&#x56FE;&#x5982;&#x4E0B;&#xFF1A;</p>
+<div align="center">
+    <img src="../assets/chapter3/netfilter-hookfn.png" width="650" align="center">
+</div>
+
+<p>&#x8FD9;&#x79CD;&#x94FE;&#x5F0F;&#x8C03;&#x7528;&#x56DE;&#x8C03;&#x51FD;&#x6570;&#x7684;&#x5DE5;&#x4F5C;&#x65B9;&#x5F0F;&#xFF0C;&#x4E5F;&#x8BA9; Netfilter hook &#x88AB;&#x79F0;&#x4E3A; Chain&#xFF0C;&#x8FD9;&#x4E5F;&#x4E0E;iptables&#x4E2D;&#x5E38;&#x8BB2;&#x7684;&#x56DB;&#x8868;&#x4E94;&#x94FE;&#x76F8;&#x547C;&#x5E94;&#x3002;</p>
+<h2 id="&#x7406;&#x89E3;iptables">&#x7406;&#x89E3;iptables</h2>
+<p>&#x5728;&#x4E0A;&#x6587;&#x6211;&#x4EEC;&#x4E86;&#x89E3;&#x4E86; Netfilter&#x7684;&#x673A;&#x5236;&#xFF0C;&#x5B83;&#x63D0;&#x4F9B;&#x7684; hook &#x6765;&#x5B9E;&#x73B0;&#x5BF9;&#x6570;&#x636E;&#x5305;&#x5904;&#x7406;&#xFF0C;&#x5E76;&#x5B9E;&#x73B0;API&#x63D0;&#x4F9B;&#x5BF9;&#x4E0A;&#x5C42;&#x7684;&#x8C03;&#x7528;&#x3002; </p>
+<p>iptables&#x5219;&#x662F;Netfilter&#x7684;&#x64CD;&#x4F5C;&#x63A5;&#x53E3;&#xFF0C;iptables&#x5728;&#x7528;&#x6237;&#x7A7A;&#x95F4;&#x7BA1;&#x7406;&#x5E94;&#x7528;&#x4E8E;&#x6570;&#x636E;&#x5305;&#x7684;&#x81EA;&#x5B9A;&#x4E49;&#x89C4;&#x5219;&#xFF0C;Netfilter&#x6267;&#x884C;&#x89C4;&#x5219;&#x6240;&#x5BF9;&#x5E94;&#x7684;&#x7B56;&#x7565;&#x5BF9;&#x6570;&#x636E;&#x5305;&#x8FDB;&#x884C;&#x5904;&#x7406;&#x3002;</p>
+<div align="center">
+    <p>&#x56FE;&#xFF1A;iptables&#x4E0E;netfilter&#x7684;&#x5173;&#x7CFB;</p>
+    <img src="../assets/chapter3/netfliter.png" width="450" align="center">
+</div>
+
+
+<p>iptables &#x5206;&#x4E3A;&#x4E24;&#x90E8;&#x5206;&#xFF1A;</p>
+<ul>
+<li>&#x7528;&#x6237;&#x7A7A;&#x95F4;&#x7684; iptables &#x547D;&#x4EE4;&#x5411;&#x7528;&#x6237;&#x63D0;&#x4F9B;&#x8BBF;&#x95EE;&#x5185;&#x6838; iptables &#x6A21;&#x5757;&#x7684;&#x7BA1;&#x7406;&#x754C;&#x9762;&#x3002;</li>
+<li>&#x5185;&#x6838;&#x7A7A;&#x95F4;&#x7684; iptables &#x6A21;&#x5757;&#x5728;&#x5185;&#x5B58;&#x4E2D;&#x7EF4;&#x62A4;&#x89C4;&#x5219;&#x8868;&#xFF0C;&#x5B9E;&#x73B0;&#x8868;&#x7684;&#x521B;&#x5EFA;&#x53CA;&#x6CE8;&#x518C;&#x3002;</li>
+</ul>
+<h4 id="iptables&#x5185;&#x6838;&#x7A7A;&#x95F4;">iptables&#x5185;&#x6838;&#x7A7A;&#x95F4;</h4>
+<p>&#x5728;&#x5185;&#x6838;&#x7F51;&#x7EDC;&#x6808;&#x4E2D;&#xFF0C;iptables &#x901A;&#x8FC7;&#x7EF4;&#x62A4;xt_table&#x5BF9;&#x4F17;&#x591A;&#x7684;&#x6570;&#x636E;&#x5305;&#x5904;&#x7406;&#x89C4;&#x5219;&#x8FDB;&#x884C;&#x6709;&#x5E8F;&#x7BA1;&#x7406;&#xFF0C;&#x4E00;&#x4E2A;xt_table&#x5BF9;&#x5E94;&#x4E00;&#x4E2A;&#x89C4;&#x5219;&#x8868;&#xFF0C;&#x5BF9;&#x5E94;&#x7684;&#x7528;&#x6237;&#x7A7A;&#x95F4;&#x6982;&#x5FF5;&#x4E3A; table&#x3002;&#x4E0D;&#x540C;&#x7684;&#x89C4;&#x5219;&#x8868;&#x6709;&#x4EE5;&#x4E0B;&#x7279;&#x5F81;&#xFF1A;&#x5BF9;&#x4E0D;&#x540C;&#x7684; netfilter hooks &#x751F;&#x6548;&#xFF0C; &#x5728;&#x540C;&#x4E00; hook &#x4E2D;&#x68C0;&#x67E5;&#x4E0D;&#x540C;&#x89C4;&#x5219;&#x8868;&#x7684;&#x4F18;&#x5148;&#x7EA7;&#x4E0D;&#x540C;&#x3002;</p>
+<p>&#x57FA;&#x4E8E;&#x89C4;&#x5219;&#x7684;&#x6700;&#x7EC8;&#x76EE;&#x7684;&#xFF1A;iptables &#x9ED8;&#x8BA4;&#x521D;&#x59CB;&#x5316;&#x4E86; 4 &#x4E2A;&#x4E0D;&#x540C;&#x7684;&#x89C4;&#x5219;&#x8868;&#xFF0C;&#x5206;&#x522B;&#x662F; raw&#x3001; filter&#x3001;nat&#x3001;mangle&#x3002;</p>
+<ul>
+<li><strong>raw&#x8868;</strong>: &#x8D1F;&#x8D23;&#x53BB;&#x9664;&#x6570;&#x636E;&#x5305;&#x4E0A;&#x7684;&#x8FDE;&#x63A5;&#x8FFD;&#x8E2A;&#x673A;&#x5236;&#xFF08;iptables&#x9ED8;&#x8BA4;&#x5F00;&#x542F;&#x5BF9;&#x6570;&#x636E;&#x5305;&#x7684;&#x8FDE;&#x63A5;&#x8FFD;&#x8E2A;&#xFF09;</li>
+<li><strong>mangle&#x8868;</strong>&#xFF1A; &#x8D1F;&#x8D23;&#x6570;&#x636E;&#x5305;&#x7684;&#x62C6;&#x89E3;&#x3001;&#x4FEE;&#x6539;&#x3001;&#x518D;&#x5C01;&#x88C5;</li>
+<li><strong>nat&#x8868;</strong> &#x8D1F;&#x8D23;&#x6570;&#x636E;&#x5305;&#x7684;&#x7F51;&#x7EDC;&#x5730;&#x5740;&#x8F6C;&#x6362;</li>
+<li><strong>filter&#x8868;</strong> &#x8D1F;&#x8D23;&#x6570;&#x636E;&#x5305;&#x8FC7;&#x6EE4;&#x529F;&#x80FD;&#xFF0C;&#x9632;&#x706B;&#x5899;&#x7684;&#x771F;&#x6B63;&#x5B9E;&#x73B0;</li>
+</ul>
+<p>&#x4EE5; filter &#x4E3A;&#x4F8B;&#x4ECB;&#x7ECD; xt_table&#x7684;&#x521D;&#x59CB;&#x5316;&#x548C;&#x8C03;&#x7528;&#x8FC7;&#x7A0B;&#xFF1A;</p>
+<pre><code>#define FILTER_VALID_HOOKS ((1 &lt;&lt; NF_INET_LOCAL_IN) | \
+                (1 &lt;&lt; NF_INET_FORWARD) | \
+                (1 &lt;&lt; NF_INET_LOCAL_OUT))
+
+static const struct xt_table packet_filter = {
+    .name        = &quot;filter&quot;,
+    .valid_hooks    = FILTER_VALID_HOOKS,
+    .me        = THIS_MODULE,
+    .af        = NFPROTO_IPV4,
+    .priority    = NF_IP_PRI_FILTER,
+};
+</code></pre><p>&#x5728; net/ipv4/netfilter/iptable_filter.c &#x6A21;&#x5757;&#x7684;&#x521D;&#x59CB;&#x5316;&#x51FD;&#x6570; iptable_filter_init &#x4E2D;&#xFF0C;&#x8C03;&#x7528;xt_hook_link &#x5BF9; xt_table &#x7ED3;&#x6784; packet_filter &#x8FDB;&#x884C;&#x5982;&#x4E0B;&#x521D;&#x59CB;&#x5316;&#xFF1A;</p>
+<ul>
+<li>&#x901A;&#x8FC7; .valid_hooks &#x5C5E;&#x6027;&#x8FED;&#x4EE3; xt_table &#x5C06;&#x751F;&#x6548;&#x7684;&#x6BCF;&#x4E00;&#x4E2A; hook&#xFF0C;&#x5BF9;&#x4E8E; filter &#x6765;&#x8BF4;&#x662F; NF_INET_LOCAL_IN&#xFF0C;NF_INET_FORWARD &#x548C; NF_INET_LOCAL_OUT &#x8FD9; 3 &#x4E2A; hook&#x3002;</li>
+<li>&#x5BF9;&#x6BCF;&#x4E00;&#x4E2A; hook&#xFF0C;&#x4F7F;&#x7528; xt_table &#x7684; priority &#x5C5E;&#x6027;&#x5411; hook &#x6CE8;&#x518C;&#x4E00;&#x4E2A;&#x56DE;&#x8C03;&#x51FD;&#x6570;&#x3002;</li>
+</ul>
+<p>&#x4E0D;&#x540C; table &#x7684; priority &#x5176;&#x5B9A;&#x4E49;&#x5728; include/linux/netfilter_ipv4.h &#x6587;&#x4EF6;&#xFF0C;&#x5728; netfilter &#x6846;&#x67B6;&#x4E0B;&#xFF0C;&#x5404;&#x4E2A; hook &#x70B9;&#x4E0A;&#x7684; hook &#x51FD;&#x6570;&#x662F;&#x4EE5;&#x4E00;&#x5B9A;&#x7684;&#x4F18;&#x5148;&#x7EA7;&#x6302;&#x5728;&#x4E00;&#x4E2A;&#x94FE;&#x8868;&#x4E0A;&#x7684;&#xFF0C;&#x4F18;&#x5148;&#x7EA7;&#x6392;&#x5E8F;&#x662F;&#x7531;&#x9AD8;&#x5230;&#x5E95;</p>
+<pre><code>enum nf_ip_hook_priorities { 
+    NF_IP_PRI_RAW = -300, 
+    NF_IP_PRI_MANGLE = -150, 
+    NF_IP_PRI_NAT_DST = -100, 
+    NF_IP_PRI_FILTER = 0, 
+    NF_IP_PRI_SECURITY = 50, 
+    NF_IP_PRI_NAT_SRC = 100, 
+};
+</code></pre><p>&#x5F53;&#x6570;&#x636E;&#x5305;&#x5230;&#x8FBE;&#x67D0;&#x4E00; hook &#x89E6;&#x53D1;&#x70B9;&#x65F6;&#xFF0C;&#x4F1A;&#x4F9D;&#x6B21;&#x6267;&#x884C;&#x4E0D;&#x540C; table &#x5728;&#x8BE5; hook &#x4E0A;&#x6CE8;&#x518C;&#x7684;&#x6240;&#x6709;&#x56DE;&#x8C03;&#x51FD;&#x6570;&#xFF0C;&#x8FD9;&#x4E9B;&#x56DE;&#x8C03;&#x51FD;&#x6570;&#x603B;&#x662F;&#x6839;&#x636E;&#x4E0A;&#x6587;&#x7684; priority &#x503C;&#x4EE5;&#x56FA;&#x5B9A;&#x7684;&#x76F8;&#x5BF9;&#x987A;&#x5E8F;&#x6267;&#x884C;&#xFF1A;</p>
+<div align="center">
+    <img src="../assets/chapter3/netfilter-chain.png" width="600" align="center">
+</div>
+
+<p>filter &#x6CE8;&#x518C;&#x7684; hook &#x56DE;&#x8C03;&#x51FD;&#x6570; iptable_filter_hook,&#x5BF9; xt_table &#x7ED3;&#x6784;&#x6267;&#x884C;&#x516C;&#x5171;&#x7684;&#x89C4;&#x5219;&#x68C0;&#x67E5;&#x51FD;&#x6570; ipt_do_table&#x3002;ipt_do_table &#x63A5;&#x6536; skb&#x3001;hook &#x548C; xt_table&#x4F5C;&#x4E3A;&#x53C2;&#x6570;&#xFF0C;&#x5BF9; skb &#x6267;&#x884C;&#x540E;&#x4E24;&#x4E2A;&#x53C2;&#x6570;&#x6240;&#x786E;&#x5B9A;&#x7684;&#x89C4;&#x5219;&#x96C6;&#xFF0C;&#x8FD4;&#x56DE; netfilter &#x5411;&#x91CF;&#x4F5C;&#x4E3A;&#x56DE;&#x8C03;&#x51FD;&#x6570;&#x7684;&#x8FD4;&#x56DE;&#x503C;&#x3002;</p>
+<pre><code>extern unsigned int ipt_do_table(void *priv, struct sk_buff *skb, const struct nf_hook_state *state);
+</code></pre><p>&#x5728;&#x4E86;&#x89E3;&#x89C4;&#x5219;&#x6267;&#x884C;&#x8FC7;&#x7A0B;&#x524D;&#xFF0C;&#x9700;&#x8981;&#x5148;&#x4E86;&#x89E3;&#x89C4;&#x5219;&#x96C6;&#x5982;&#x4F55;&#x5728;&#x5185;&#x5B58;&#x4E2D;&#x8868;&#x793A;&#x3002;&#x6BCF;&#x4E00;&#x6761;&#x89C4;&#x5219;&#x7531; 3 &#x90E8;&#x5206;&#x7EC4;&#x6210;&#xFF1A;</p>
+<ul>
+<li>&#x4E00;&#x4E2A; ipt_entry &#x7ED3;&#x6784;&#x4F53;&#x3002;&#x901A;&#x8FC7; .next_offset &#x6307;&#x5411;&#x4E0B;&#x4E00;&#x4E2A; ipt_entry &#x7684;&#x5185;&#x5B58;&#x504F;&#x79FB;&#x5730;&#x5740;&#x3002;</li>
+<li>0 &#x4E2A;&#x6216;&#x591A;&#x4E2A; ipt_entry_match &#x7ED3;&#x6784;&#x4F53;&#xFF0C;&#x6BCF;&#x4E2A;&#x7ED3;&#x6784;&#x4F53;&#x53EF;&#x4EE5;&#x52A8;&#x6001;&#x7684;&#x6DFB;&#x52A0;&#x989D;&#x5916;&#x6570;&#x636E;&#x3002;</li>
+<li>1 &#x4E2A; ipt_entry_target &#x7ED3;&#x6784;&#x4F53;&#xFF0C; &#x7ED3;&#x6784;&#x4F53;&#x53EF;&#x4EE5;&#x52A8;&#x6001;&#x7684;&#x6DFB;&#x52A0;&#x989D;&#x5916;&#x6570;&#x636E;&#x3002;</li>
+</ul>
+<pre><code>struct ipt_entry {
+    struct ipt_ip ip;
+    unsigned int nfcache;
+
+    /* ipt_entry + matches &#x5728;&#x5185;&#x5B58;&#x4E2D;&#x7684;&#x5927;&#x5C0F;*/
+    u_int16_t target_offset;
+    /* ipt_entry + matches + target &#x5728;&#x5185;&#x5B58;&#x4E2D;&#x7684;&#x5927;&#x5C0F; */
+    u_int16_t next_offset;
+
+    /* &#x8DF3;&#x8F6C;&#x540E;&#x6307;&#x5411;&#x524D;&#x4E00;&#x89C4;&#x5219; */
+    unsigned int comefrom;
+    /* &#x6570;&#x636E;&#x5305;&#x8BA1;&#x6570;&#x5668; */
+    struct xt_counters counters;
+    /* &#x957F;&#x5EA6;&#x4E3A;0&#x6570;&#x7EC4;&#x7684;&#x7279;&#x6B8A;&#x7528;&#x6CD5;&#xFF0C;&#x4F5C;&#x4E3A; match &#x7684;&#x5185;&#x5B58;&#x5730;&#x5740; */
+    unsigned char elems[0];
+};
+</code></pre><p>ipt_do_table &#x9996;&#x5148;&#x6839;&#x636E; hook &#x7C7B;&#x578B;&#x4EE5;&#x53CA; xt_table.private.entries &#x5C5E;&#x6027;&#x8DF3;&#x8F6C;&#x5230;&#x5BF9;&#x5E94;&#x7684;&#x89C4;&#x5219;&#x96C6;&#x5185;&#x5B58;&#x533A;&#x57DF;&#xFF0C;&#x6267;&#x884C;&#x5982;&#x4E0B;&#x8FC7;&#x7A0B;&#xFF1A;</p>
+<div align="center">
+    <img src="../assets/chapter3/ipt_do_table.png" width="650" align="center">
+</div>
+
+<ul>
+<li>&#x9996;&#x5148;&#x68C0;&#x67E5;&#x6570;&#x636E;&#x5305;&#x7684; IP &#x9996;&#x90E8;&#x4E0E;&#x7B2C;&#x4E00;&#x6761;&#x89C4;&#x5219; ipt_entry &#x7684; .ipt_ip &#x5C5E;&#x6027;&#x662F;&#x5426;&#x4E00;&#x81F4;&#xFF0C;&#x5982;&#x4E0D;&#x5339;&#x914D;&#x6839;&#x636E; next_offset &#x5C5E;&#x6027;&#x8DF3;&#x8F6C;&#x5230;&#x4E0B;&#x4E00;&#x6761;&#x89C4;&#x5219;&#x3002;</li>
+<li>&#x82E5; IP &#x9996;&#x90E8;&#x5339;&#x914D; &#xFF0C;&#x5219;&#x5F00;&#x59CB;&#x4F9D;&#x6B21;&#x68C0;&#x67E5;&#x8BE5;&#x89C4;&#x5219;&#x6240;&#x5B9A;&#x4E49;&#x7684;&#x6240;&#x6709; ipt_entry_match &#x5BF9;&#x8C61;&#xFF0C;&#x4E0E;&#x5BF9;&#x8C61;&#x5173;&#x8054;&#x7684;&#x5339;&#x914D;&#x51FD;&#x6570;&#x5C06;&#x88AB;&#x8C03;&#x7528;&#xFF0C;&#x6839;&#x636E;&#x8C03;&#x7528;&#x8FD4;&#x56DE;&#x503C;&#x6709;&#x8FD4;&#x56DE;&#x5230;&#x56DE;&#x8C03;&#x51FD;&#x6570;&#xFF08;&#x4EE5;&#x53CA;&#x662F;&#x5426;&#x4E22;&#x5F03;&#x6570;&#x636E;&#x5305;&#xFF09;&#x3001;&#x8DF3;&#x8F6C;&#x5230;&#x4E0B;&#x4E00;&#x89C4;&#x5219;&#x6216;&#x7EE7;&#x7EED;&#x68C0;&#x67E5;&#x7B49;&#x7ED3;&#x679C;&#x3002;</li>
+<li>&#x6240;&#x6709;&#x68C0;&#x67E5;&#x901A;&#x8FC7;&#x540E;&#x8BFB;&#x53D6; ipt_entry_target&#xFF0C;&#x6839;&#x636E;&#x5176;&#x5C5E;&#x6027;&#x8FD4;&#x56DE; netfilter &#x5411;&#x91CF;&#x5230;&#x56DE;&#x8C03;&#x51FD;&#x6570;&#x3001;&#x7EE7;&#x7EED;&#x4E0B;&#x4E00;&#x89C4;&#x5219;&#x6216;&#x8DF3;&#x8F6C;&#x5230;&#x6307;&#x5B9A;&#x5185;&#x5B58;&#x5730;&#x5740;&#x7684;&#x5176;&#x4ED6;&#x89C4;&#x5219;&#xFF0C;&#x975E;&#x6807;&#x51C6; ipt_entry_target &#x8FD8;&#x4F1A;&#x8C03;&#x7528;&#x88AB;&#x7ED1;&#x5B9A;&#x7684;&#x51FD;&#x6570;&#xFF0C;&#x4F46;&#x53EA;&#x80FD;&#x8FD4;&#x56DE;&#x5411;&#x91CF;&#x503C;&#x4E0D;&#x80FD;&#x8DF3;&#x8F6C;&#x5176;&#x4ED6;&#x89C4;&#x5219;&#x3002;</li>
+</ul>
+<p><strong>iptables &#x66F4;&#x65B0;&#x5EF6;&#x8FDF;&#x7684;&#x95EE;&#x9898;</strong></p>
+<p>&#x7531;&#x4E8E;&#x6BCF;&#x6761;&#x89C4;&#x5219;&#x957F;&#x5EA6;&#x4E0D;&#x7B49;&#x3001;&#x5185;&#x90E8;&#x7ED3;&#x6784;&#x590D;&#x6742;&#xFF0C;&#x4E14;&#x540C;&#x4E00;&#x89C4;&#x5219;&#x96C6;&#x4F4D;&#x4E8E;&#x8FDE;&#x7EED;&#x7684;&#x5185;&#x5B58;&#x7A7A;&#x95F4;&#xFF0C;iptables &#x4F7F;&#x7528;&#x5168;&#x91CF;&#x66FF;&#x6362;&#x7684;&#x65B9;&#x5F0F;&#x6765;&#x66F4;&#x65B0;&#x89C4;&#x5219;&#xFF0C;&#x8FD9;&#x4F7F;&#x5F97;&#x6211;&#x4EEC;&#x80FD;&#x591F;&#x4ECE;&#x7528;&#x6237;&#x7A7A;&#x95F4;&#x4EE5;&#x539F;&#x5B50;&#x64CD;&#x4F5C;&#x6765;&#x6DFB;&#x52A0;/&#x5220;&#x9664;&#x89C4;&#x5219;&#xFF0C;&#x4F46;&#x975E;&#x589E;&#x91CF;&#x5F0F;&#x7684;&#x89C4;&#x5219;&#x66F4;&#x65B0;&#x4F1A;&#x5728;&#x89C4;&#x5219;&#x6570;&#x91CF;&#x7EA7;&#x8F83;&#x5927;&#x65F6;&#x5E26;&#x6765;&#x4E25;&#x91CD;&#x7684;&#x6027;&#x80FD;&#x95EE;&#x9898;&#x3002;</p>
+<p>&#x5047;&#x5982;&#x5728;&#x4E00;&#x4E2A;&#x5927;&#x89C4;&#x6A21; Kubernetes &#x96C6;&#x7FA4;&#x4E2D;&#x4F7F;&#x7528; iptables &#x65B9;&#x5F0F;&#x5B9E;&#x73B0; Service&#xFF0C;&#x5F53; service &#x6570;&#x91CF;&#x8F83;&#x591A;&#x65F6;&#xFF0C;&#x54EA;&#x6015;&#x66F4;&#x65B0;&#x4E00;&#x4E2A; service &#x4E5F;&#x4F1A;&#x6574;&#x4F53;&#x4FEE;&#x6539; iptables &#x89C4;&#x5219;&#x8868;&#x3002;&#x5168;&#x91CF;&#x63D0;&#x4EA4;&#x7684;&#x8FC7;&#x7A0B;&#x4F1A; kernel lock &#x8FDB;&#x884C;&#x4FDD;&#x62A4;&#xFF0C;&#x56E0;&#x6B64;&#x4F1A;&#x6709;&#x5F88;&#x5927;&#x7684;&#x66F4;&#x65B0;&#x65F6;&#x5EF6;&#x3002;</p>
+<h2 id="iptables&#x7528;&#x6237;&#x7A7A;&#x95F4;">iptables&#x7528;&#x6237;&#x7A7A;&#x95F4;</h2>
+<p>&#x7528;&#x6237;&#x7A7A;&#x95F4;&#x7684; iptables &#x547D;&#x4EE4;&#x884C;&#x53EF;&#x4EE5;&#x8BFB;&#x53D6;&#x6307;&#x5B9A;&#x8868;&#x7684;&#x6570;&#x636E;&#x5E76;&#x6E32;&#x67D3;&#x5230;&#x7EC8;&#x7AEF;&#xFF0C;&#x6DFB;&#x52A0;&#x65B0;&#x7684;&#x89C4;&#x5219;&#xFF08;&#x5B9E;&#x9645;&#x4E0A;&#x662F;&#x66FF;&#x6362;&#x6574;&#x4E2A; table &#x7684;&#x89C4;&#x5219;&#x8868;&#xFF09;&#x7B49;&#x3002;</p>
+<p>iptables &#x4E3B;&#x8981;&#x64CD;&#x4F5C;&#x4EE5;&#x4E0B;&#x51E0;&#x79CD;&#x5BF9;&#x8C61;&#xFF1A;</p>
+<ul>
+<li>table&#xFF1A;&#x5BF9;&#x5E94;&#x5185;&#x6838;&#x7A7A;&#x95F4;&#x7684; xt_table &#x7ED3;&#x6784;&#xFF0C;iptable &#x7684;&#x6240;&#x6709;&#x64CD;&#x4F5C;&#x90FD;&#x5BF9;&#x6307;&#x5B9A;&#x7684; table &#x6267;&#x884C;&#xFF0C;&#x9ED8;&#x8BA4;&#x4E3A; filter&#x3002;</li>
+<li>chain&#xFF1A;&#x5BF9;&#x5E94;&#x6307;&#x5B9A; table &#x901A;&#x8FC7;&#x7279;&#x5B9A; netfilter hook &#x8C03;&#x7528;&#x7684;&#x89C4;&#x5219;&#x96C6;&#xFF0C;&#x6B64;&#x5916;&#x8FD8;&#x53EF;&#x4EE5;&#x81EA;&#x5B9A;&#x4E49;&#x89C4;&#x5219;&#x96C6;&#xFF0C;&#x7136;&#x540E;&#x4ECE; hook &#x89C4;&#x5219;&#x96C6;&#x4E2D;&#x8DF3;&#x8F6C;&#x8FC7;&#x53BB;&#x3002;</li>
+<li>rule&#xFF1A;&#x5BF9;&#x5E94;&#x4E0A;&#x6587;&#x4E2D; ipt_entry&#x3001;ipt_entry_match &#x548C; ipt_entry_target&#xFF0C;&#x5B9A;&#x4E49;&#x4E86;&#x5BF9;&#x6570;&#x636E;&#x5305;&#x7684;&#x5339;&#x914D;&#x89C4;&#x5219;&#x4EE5;&#x53CA;&#x5339;&#x914D;&#x540E;&#x6267;&#x884C;&#x7684;&#x884C;&#x4E3A;&#x3002;</li>
+<li>match&#xFF1A;&#x5177;&#x6709;&#x5F88;&#x5F3A;&#x6269;&#x5C55;&#x6027;&#x7684;&#x81EA;&#x5B9A;&#x4E49;&#x5339;&#x914D;&#x89C4;&#x5219;&#x3002;</li>
+<li>target&#xFF1A;&#x5177;&#x6709;&#x5F88;&#x5F3A;&#x6269;&#x5C55;&#x6027;&#x7684;&#x81EA;&#x5B9A;&#x4E49;&#x5339;&#x914D;&#x540E;&#x884C;&#x4E3A;&#x3002;</li>
+</ul>
+<p>&#x57FA;&#x4E8E;&#x4E0A;&#x6587;&#x4ECB;&#x7ECD;&#x7684;&#x4EE3;&#x7801;&#x8C03;&#x7528;&#x8FC7;&#x7A0B;&#x6D41;&#x7A0B;&#xFF0C;chain &#x548C; rule &#x6309;&#x5982;&#x4E0B;&#x793A;&#x610F;&#x56FE;&#x6267;&#x884C;&#xFF1A;</p>
+<div align="center">
+    <img src="../assets/chapter3/iptables-chain.png" width="500" align="center">
+</div>
+
+
+
+
+<footer class="page-footer"><span class="copyright">Copyright &#xA9; wang 2023 all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">&#x8BE5;&#x6587;&#x4EF6;&#x4FEE;&#x8BA2;&#x65F6;&#x95F4;&#xFF1A;
+2023-01-16 07:19:47
+</span></footer>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="load-balancing.html" class="navigation navigation-prev " aria-label="Previous page: 负载均衡概述">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="iptables-example.html" class="navigation navigation-next " aria-label="Next page: iptables命令示例">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Netfilter与iptables","level":"1.4.2","depth":2,"next":{"title":"iptables命令示例","level":"1.4.2.1","depth":3,"path":"chapter3/iptables-example.md","ref":"chapter3/iptables-example.md","articles":[]},"previous":{"title":"负载均衡概述","level":"1.4.1","depth":2,"path":"chapter3/load-balancing.md","ref":"chapter3/load-balancing.md","articles":[]},"dir":"ltr"},"config":{"plugins":["expandable-chapters","katex","code","github","tbfed-pagefooter","back-to-top-button"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy wang 2023","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"github":{"url":"https://github.com/isno/isno.github.io"},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"katex":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":true},"expandable-chapters":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"互联网基础架构设计原理和实践","gitbook":"*"},"file":{"path":"chapter3/netfilter.md","mtime":"2023-01-16T07:19:47.318Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-03-10T02:30:56.875Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-expandable-chapters/expandable-chapters.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-code/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

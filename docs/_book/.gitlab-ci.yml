@@ -1,0 +1,17 @@
+cache:
+  paths:
+    - node_modules/ # Node modules and dependencies
+ 
+# pages is an internal reserved job which used by gitlab to build gitlab pages
+pages:
+  image: docker-registry.qiyi.virtual/library/gitbook:2021-06-15
+  script:
+    - gitbook install # install plugins required from book.json
+    - gitbook build . public # build to public path
+  artifacts:
+    paths:
+      - public
+  only:
+    # this job will affect only the 'master' branch, since there is only one site,
+    # to avoid overwritten by other branch's contents.
+    - main
