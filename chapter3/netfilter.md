@@ -1,19 +1,20 @@
-# Netfilter与iptables
+# iptables与netfilter
 
-我们配置LVS以及在第四章讲解云原生时，安装Docker或者Kubernetes，首先会执行两条命令:
+iptables 在SLB、Docker和Kubernetes 网络应用中非常广泛。
 
-```
-systemctl stop firewalld  // 相当于iptables的升级
-echo 1 > /proc/sys/net/ipv4/ip_forward
-```
+比如容器和宿主机端口映射、Kubernetes Service的默认模式、kube-proxy中的 iptables和IPVS模式、CNI的 portmap 插件等等都是通过iptables实现的。
 
-这两条一个是关闭网络数据包控制，一个是开启本机开启数据包转发功能。
+因为了解iptables，对后续理解SLB、云原生网络等概念大有裨益。
 
-再从应用上讲：实现四层负载均衡的LVS有个核心模块IPVS，以及Kubernetes中kube-proxy iptables模式，实际上都是在Netfilter上层构建的应用，从而实现数据包的转发和控制。
 
-从这两方面，要了解负载均衡或者云原生网络，得先清楚一个数据包在Linux内核途经，以及Netfilter和iptables的机制。
+## netFilter 
 
-Netfilter的定义是一个工作在Linux内核的网络数据包处理框架，为了理解netfilter的工作方式，我们首先需要对数据包在Linux内核中的处理路径建立基本认识。
+iptables的底层实现是netFilter。
+
+netFilter是 Linux内核 2.4 引入的一个通用、抽象的网络框架，它提供一整套hook函数的管理机制，使得数据包过滤、包处理（设置标志位、修改TTL）、地址伪装、网络地址转化、访问控制、协议连接跟踪等成为可能。
+
+现在构建在netFilter hook之上的用户态程序有 ebtables、arptables、iptables、iptables-nftables、conntrack（连接跟踪）。可有说整个Linux系统网络都是构建在 netFilter 之上。
+
 
 ## 数据包的内核路径
 
