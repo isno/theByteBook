@@ -28,7 +28,7 @@
 
 <div  align="center">
 	<p>图1：Internet链路</p>
-	<img src="/assets/chapter1/internet.png" width = "700"  align=center />
+	<img src="../assets/chapter1/internet.png" width = "700"  align=center />
 </div>
 <br/>
 笔者在上图中，简单描述了网络的连接结构：这其中包含 移动网络、AS自治域、路由(OSPF、BGP)、传输层、网络自治ICMP，正是这些基础的Underlay承载网络实现了全局的互联网，局部计算机集群SDN网络。
@@ -38,6 +38,6 @@
 <br/>
 <div  align="center">
 	<p>图: 本章知识结构分解</p>
-	<img src="/assets/net.png" width = "600"  align=center />
+	<img src="../assets/net.png" width = "600"  align=center />
 </div>
 

@@ -18,7 +18,7 @@ export default defineUserConfig({
             title: '网络',
             collapsable: false,
             children: [
-                '/docs/chapter1/intro.md'
+                '/content/chapter1/intro.md'
             ]
         }]
     })
