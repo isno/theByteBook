@@ -14,18 +14,6 @@
 
 - **在线阅读**：本文档在线阅读地址为：[https://www.thebyte.com.cn](https://www.thebyte.com.cn)
 
-## 📖 目录
-
-###  [网络原理与优化指南](chapter1/intro.md)
-
-* [理解网络通信](chapter1/internet.md)
-	* [理解移动网络](chapter1/wireless.md)
-	* [理解各类延迟](chapter1/latency.md)
-	* [iptables 和 netFilter ](chapter3/netfilter.md)
-* [网络性能观测](chapter1/net-observe.md)
-	* [使用MTR探测网络质量](chapter1/mtr.md)
-
-
 
 ## 勘误
 
