@@ -24,7 +24,7 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
 
           ARGS: "-rlgoDzvc -i"
-          SOURCE: "dist/"
+          SOURCE: ".vuepress/dist/"
           REMOTE_HOST: "49.234.156.163"
           REMOTE_USER: "root"
           TARGET: "/root/"
