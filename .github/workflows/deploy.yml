@@ -16,7 +16,7 @@ jobs:
       - name: npm install
         run: npm install
       - name: npm build
-        run: npm run build
+        run: yarn build
       # 部署到阿里云
       - name: Deploy to Aliyun
         uses: easingthemes/ssh-deploy@v2.1.1
