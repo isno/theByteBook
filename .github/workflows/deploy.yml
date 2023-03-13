@@ -19,11 +19,15 @@ jobs:
         run: yarn build
       # 部署到阿里云
       - name: Deploy to Aliyun
-        uses: easingthemes/ssh-deploy@v2.1.1
+        uses: easingthemes/ssh-deploy@v4.1.8
         env:
           SSH_PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-          ARGS: "-avzr --delete"
-          SOURCE: "./dist"
+
+          ARGS: "-rlgoDzvc -i"
+          SOURCE: "dist/"
           REMOTE_HOST: "49.234.156.163"
           REMOTE_USER: "root"
           TARGET: "/root/"
+          SCRIPT_BEFORE: |
+            whoami
+            ls -al
