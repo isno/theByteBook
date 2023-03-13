@@ -1,47 +1,25 @@
-# Netfilter与iptables
+# iptables与netfilter
 
-我们配置LVS以及在第四章讲解云原生时，安装Docker或者Kubernetes，首先会执行两条命令:
+iptables 在SLB、Docker和Kubernetes 网络应用中非常广泛。
 
-```
-systemctl stop firewalld  // 相当于iptables的升级
-echo 1 > /proc/sys/net/ipv4/ip_forward
-```
+比如容器和宿主机端口映射、Kubernetes Service的默认模式、kube-proxy中的 iptables和IPVS模式、CNI的 portmap 插件等等都是通过iptables实现的。
 
-这两条一个是关闭网络数据包控制，一个是开启本机开启数据包转发功能。
-
-再从应用上讲：实现四层负载均衡的LVS有个核心模块IPVS，以及Kubernetes中kube-proxy iptables模式，实际上都是在Netfilter上层构建的应用，从而实现数据包的转发和控制。
-
-从这两方面，要了解负载均衡或者云原生网络，得先清楚一个数据包在Linux内核途经，以及Netfilter和iptables的机制。
-
-Netfilter的定义是一个工作在Linux内核的网络数据包处理框架，为了理解netfilter的工作方式，我们首先需要对数据包在Linux内核中的处理路径建立基本认识。
-
-## 数据包的内核路径
-
-数据包在内核中的处理路径，也就是处理网络数据包的内核代码调用链，大体上也可按 TCP/IP 模型分为多个层级，以接收一个 IPv4 的 TCP 数据包为例，大致有三个步骤：
+因此了解iptables，对后续理解SLB、云原生网络等概念大有裨益。
 
 
-一: 在物理网络设备层，网卡通过 DMA 将接收到的数据包写入内存中的环形缓冲区(Circular buffer), 经过一些列的中断调度后，Linux kernel 调用 skb_dequeue 将数据包加入对应设备的处理队列中，并转换成 sk_buffer 类型（Socket buffer），最后调用 netif_receive_skb 函数按协议类型对数据包进行分类，并跳转到对应的处理函数。
+## netfilter 
 
-如下图所示：
+iptables的底层实现是netfilter。
 
-<div  align="center">
-	<img src="../assets/chapter3/network-path.png" width = "450"  align=center />
-</div>
+netfilter是 Linux内核 2.4 引入的一个通用、抽象的网络框架，它提供一整套hook函数的管理机制，使得数据包过滤、包处理（设置标志位、修改TTL）、地址伪装、网络地址转化、访问控制、协议连接跟踪等成为可能。
 
-二: 假设数据包为 IP 协议包，对应的接收包处理函数 ip_rcv 将被调用，数据包处理进入网络IP层。经过对IP包检查、聚合等后进行路由查询并决定是将数据包交付本机还是转发其他主机，
+现在构建在netFilter hook之上的用户态程序有 ebtables、arptables、iptables、iptables-nftables、conntrack（连接跟踪）。
 
-假设数据包的目的地址是本主机，接着执行的 dst_input 函数将调用 ip_local_deliver 函数。ip_local_deliver 函数中将根据 IP 首部中的协议号判断载荷数据的协议类型，最后调用对应类型的包处理函数。本例中将调用 TCP 协议对应的 tcp_v4_rcv 函数，之后数据包处理进入传输层。
+可以说整个Linux系统网络都是构建在 netfilter 之上。
 
-三：tcp_v4_rcv 函数同样读取数据包的 TCP 首部并计算校验和，然后在数据包对应的 TCP control buffer 中维护一些必要状态包括 TCP 序列号以及 SACK 号等。该函数下一步将调用 tcp_v4_lookup 查询数据包对应的 socket，如果没找到或 socket 的连接状态处于 TCP_TIME_WAIT，数据包将被丢弃。如果 socket 处于未加锁状态，数据包将通过调用 tcp_prequeue 函数进入 prequeue 队列，之后数据包将可被用户态的用户程序所处理。
+netfilter架构就是在网络数据包流经的位置放置钩子函数，并进行相应的处理。 IP蹭的5个钩子位置，对应iptables 就是5条内置链，分别是PREROUTING、POSTROUTING、INPUT、OUTPUT、FORWARD。
 
-
-### Netfilter hooks
-
-Netfilter 的首要组成部分是 netfilter hooks。hooks是数据包经过经过协议栈时netfilter注册的处理函数。
-
-**hook 触发点**
-
-对于不同的协议IPv4、IPv6 或 ARP 等，Linux 内核网络栈会在该协议栈数据包处理路径上的预设位置触发对应的 hook。在不同协议处理流程中的触发点位置以及对应的 hook，本文仅关注 IPv4 协议：
+netFilter的原理如下。
 
 <div  align="center">
 	<img src="/assets/chapter3/netfilter-hook.jpeg" width = "500"  align=center />

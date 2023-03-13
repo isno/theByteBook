@@ -1,15 +1,10 @@
-# 使用MTR探测网络质量
+# 使用mtr探测网络质量
 
 ping一个节点延迟很大，这极有可能是中间链路出现问题，该怎么排查问题呢？
 
-这时候我们可以使用 `mtr` 工具。mtr的全称是 my traceroute，结合了ping,traceroute,nslookup 的相关特性，让我们能够更直观地查看分析网络状态，是一款强大的网络诊断工具。
+这时候我们可以使用 `mtr` 工具。
 
-
-如果您没有安装过，先进行安装使用
-
-```
-yum install -y mtr
-```
+mtr的全称是 my traceroute，结合了ping,traceroute,nslookup 的相关特性，让我们能够更直观地查看分析网络状态，是一款强大的网络诊断工具。
 
 ## mtr 使用示例
 
@@ -23,7 +18,7 @@ mtr -z www.iq.com
 
 <div  align="center">
 	<p>图: MTR</p>
-	<img src="/assets/mtr.png" width = "600"  align=center />
+	<img src="../assets/mtr.png" width = "600"  align=center />
 </div>
 
 具体输出的列参数含义为：
@@ -39,7 +34,7 @@ mtr -z www.iq.com
 - 最差延迟 Wrst
 - 稳定性 StDev
 
-## MTR 报告分析
+## mtr 报告分析
 
 在MTR报告中查看除了两个服务器之间的路径、AS外，在它的结果中也提供了很多有价值的数据统计报告。
 

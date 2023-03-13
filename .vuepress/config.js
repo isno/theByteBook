@@ -20,12 +20,24 @@ export default defineUserConfig({
         sidebar: [{
             text: '网络原理与优化指南',
             collapsable: false,
-            children: [
-                '/content/chapter1/intro.md',
-                '/content/chapter1/wireless.md',
-                '/content/chapter1/latency.md',
-                '/content/chapter1/netfilter.md',
-            ]
+            sidebarDepth: 1,
+            children: [{
+                text: "理解篇",
+                path: '/content/chapter1/intro.md',
+                children: [
+                    '/content/chapter1/wireless.md',
+                    '/content/chapter1/latency.md',
+                    '/content/chapter3/netfilter.md',
+                ]
+            },
+            {
+                text: "观测篇",
+                link: '/content/chapter1/intro.md',
+                children: [
+                    '/content/chapter1/net-observe.md',
+                    '/content/chapter1/mtr.md'
+                ]
+            }]
         }]
     })
 });
