@@ -25,7 +25,7 @@ jobs:
 
           ARGS: "-rlgoDzvc -i"
           SOURCE: ".vuepress/dist/"
-          REMOTE_HOST: "49.234.156.163"
+          REMOTE_HOST: "110.40.229.45"
           REMOTE_USER: "root"
           TARGET: "/home/www/thebyte.com.cn"
           SCRIPT_BEFORE: |
