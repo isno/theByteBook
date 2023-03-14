@@ -14,6 +14,21 @@
 
 - **在线阅读**：本文档在线阅读地址为：[https://www.thebyte.com.cn](https://www.thebyte.com.cn)
 
+- **离线阅读**：
+
+  - 部署离线站点：文档基于 [Vuepress 2](https://v2.vuepress.vuejs.org/zh/) 构建，如你希望在本地搭建文档站点，请使用如下命令：
+
+    ```bash
+    # 克隆获取源码
+    $ git clone https://github.com/isno/theByteBook.git && cd theByteBook
+
+    # 安装工程依赖
+    $ yarn install
+
+    # 运行网站，地址默认为http://localhost:8080
+    $ yarn dev
+    ```
+
 
 ## 勘误
 
