@@ -40,7 +40,7 @@ iptables则是netfilter的操作接口，iptables 在用户空间管理应用于
 
 <div  align="center">
 	<p>图：iptables与netfilter的关系</p>
-	<img src="../assets/iptables.png" width = "450"  align=center />
+	<img src="../assets/iptables.png" width = "500"  align=center />
 </div>
 
 iptables 分为两部分：
@@ -50,10 +50,39 @@ iptables 分为两部分：
 
 iptables 有个`四表五链`的概念。每一个链挂相应的表对IP数据包进行流经处理判断。 
 
-五链是对应 netfilter的5个hook的内置链。四表如下：
+五链是对应 netfilter的5个hook的内置链（除这五链之外，用户也可以自定义链））。 四表如下：
 
 - **raw表**: 负责去除数据包上的连接追踪机制（iptables默认开启对数据包的连接追踪）
 - **mangle表**： 负责数据包的拆解、修改、再封装
 - **nat表** 负责数据包的网络地址转换
 - **filter表** 负责数据包过滤功能，drop 或者 reject。
 
+
+我们扩充一下图1. 一个IP包经过 iptables 的处理流程如下
+
+<div  align="center">
+	<img src="../assets/iptables-chain.png" width = "450"  align=center />
+</div>
+
+实际上 iptables的规则就是挂在netfilter钩子上的函数，用来修改IP数据包的内容或者过滤数据包，iptables的表就是所有规则的逻辑集合。
+
+一般情况下一条iptables的规则包含两个部分：`匹配条件`和`动作`。匹配条件比如协议类型、源ip、目的ip、源端口号等，匹配条件可以组合，匹配之后动作有如下几种：
+
+- `DROP`：直接将数据包丢弃
+- `REJECT` 给客户端返回 `connection refused` 或 `destination unreachable`报文。
+- `QUEUE` 将数据包放入用户空间队列，供用户空间程序使用
+- `RETURN` 跳出当前链，后续规则不再处理
+- `ACCEPT` 允许数据包通过
+- `JUMP` 跳转到用户自定义的其他链继续执行
+
+理解iptables的链、表、规则的概念之后，我们来介绍一下iptables的命令用法。
+
+## iptables 规则用法
+
+
+
+**iptables 更新延迟的问题**
+
+由于每条规则长度不等、内部结构复杂，且同一规则集位于连续的内存空间，iptables 使用全量替换的方式来更新规则，这使得我们能够从用户空间以原子操作来添加/删除规则，但非增量式的规则更新会在规则数量级较大时带来严重的性能问题。
+
+假如在一个大规模 Kubernetes 集群中使用 iptables 方式实现 Service，当 service 数量较多时，哪怕更新一个 service 也会整体修改 iptables 规则表。全量提交的过程会 kernel lock 进行保护，因此会有很大的更新时延。
