@@ -26,6 +26,7 @@ export default defineUserConfig({
                     path: '/content/chapter1/intro.md',
                     children: [
                         '/content/chapter1/wireless.md',
+                        '/content/chapter1/bgp.md',
                         '/content/chapter1/latency.md',
                         '/content/chapter1/netfilter.md',
                     ]

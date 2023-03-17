@@ -18,7 +18,7 @@ netfilter是 Linux内核 2.4 引入的一个通用、抽象的网络框架，它
 netfilter的原理如下：
 
 <div  align="center">
-	<img src="../assets/netfilter.png" width = "520"  align=center />
+	<img src="../assets/netfilter.png" width = "550"  align=center />
 </div>
 
 当网卡收到一个包送达协议栈时，会在这几个关键 hook 处，判断是否有相应的钩子函数，然后进行处理。
@@ -40,7 +40,7 @@ iptables则是netfilter的操作接口，iptables 在用户空间管理应用于
 
 <div  align="center">
 	<p>图：iptables与netfilter的关系</p>
-	<img src="../assets/iptables.png" width = "500"  align=center />
+	<img src="../assets/iptables.png" width = "420"  align=center />
 </div>
 
 iptables 分为两部分：
