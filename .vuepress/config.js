@@ -28,7 +28,7 @@ export default defineUserConfig({
                         '/content/chapter1/latency.md',
                         '/content/chapter1/wireless.md',
                         '/content/chapter1/bgp.md',
-                        '/content/chapter1/transfer-control.md',
+                        '/content/chapter1/congestion-control.md',
                         '/content/chapter1/netfilter.md',
                         '/content/chapter1/overlay.md'
                     ]
