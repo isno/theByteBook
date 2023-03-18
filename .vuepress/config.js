@@ -29,13 +29,19 @@ export default defineUserConfig({
                         '/content/chapter1/wireless.md',
                         '/content/chapter1/bgp.md',
                         '/content/chapter1/transfer-control.md',
-                        
                         '/content/chapter1/netfilter.md',
+                        '/content/chapter1/overlay.md'
                     ]
                 },
                 {
                     text: "观测篇",
-                    link: '/content/chapter1/intro.md',
+                    children: [
+                        '/content/chapter1/net-observe.md',
+                        '/content/chapter1/mtr.md'
+                    ]
+                },
+                {
+                    text: "实践篇",
                     children: [
                         '/content/chapter1/net-observe.md',
                         '/content/chapter1/mtr.md'
