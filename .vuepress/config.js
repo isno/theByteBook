@@ -26,7 +26,6 @@ export default defineUserConfig({
                     path: '/content/chapter1/intro.md',
                     children: [
                         '/content/chapter1/latency.md',
-                        '/content/chapter1/wireless.md',
                         '/content/chapter1/bgp.md',
                         '/content/chapter1/congestion-control.md',
                         '/content/chapter1/netfilter.md',
@@ -39,15 +38,17 @@ export default defineUserConfig({
                         '/content/chapter1/net-observe.md',
                         '/content/chapter1/mtr.md'
                     ]
-                },
-                {
-                    text: "实践篇",
-                    children: [
-                        '/content/chapter1/net-observe.md',
-                        '/content/chapter1/mtr.md'
-                    ]
                 }
             ]
-        }]
+        },
+        {
+            text: '优化网络性能',
+            collapsable: false,
+            sidebarDepth: 1,
+            children: [{
+
+            }]}
+
+        ]
     })
 });
