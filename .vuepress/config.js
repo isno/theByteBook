@@ -45,9 +45,9 @@ export default defineUserConfig({
             text: '优化网络性能',
             collapsable: false,
             sidebarDepth: 1,
-            children: [{
-
-            }]}
+            children: [
+                '/content/http/latency.md'
+            ]}
 
         ]
     })
