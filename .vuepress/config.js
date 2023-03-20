@@ -18,11 +18,11 @@ export default defineUserConfig({
             }
         ],
         sidebar: [{
-            text: 'underlay网络',
-            collapsable: false,
-            sidebarDepth: 1,
+            text: '理解underlay网络',
+            collapsable: true,
+            sidebarDepth: 0,
             children: [{
-                    text: "理解篇",
+                    text: "理解",
                     path: '/content/chapter1/intro.md',
                     children: [
                         '/content/chapter1/latency.md',
@@ -33,7 +33,7 @@ export default defineUserConfig({
                     ]
                 },
                 {
-                    text: "观测篇",
+                    text: "观测",
                     children: [
                         '/content/chapter1/net-observe.md',
                         '/content/chapter1/mtr.md'
@@ -42,12 +42,14 @@ export default defineUserConfig({
             ]
         },
         {
-            text: '优化网络性能',
+            text: '优化应用协议性能',
             collapsable: false,
             sidebarDepth: 1,
             children: [
                 '/content/http/latency.md',
-                '/content/http/http-dns.md'
+                '/content/http/http-dns.md',
+                '/content/http/http.md',
+                '/content/http/ssl.md'
             ]}
 
         ]
