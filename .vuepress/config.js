@@ -18,7 +18,7 @@ export default defineUserConfig({
             }
         ],
         sidebar: [{
-            text: '网络原理与优化指南',
+            text: 'underlay网络',
             collapsable: false,
             sidebarDepth: 1,
             children: [{
@@ -46,7 +46,8 @@ export default defineUserConfig({
             collapsable: false,
             sidebarDepth: 1,
             children: [
-                '/content/http/latency.md'
+                '/content/http/latency.md',
+                '/content/http/http-dns.md'
             ]}
 
         ]
