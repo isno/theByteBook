@@ -67,7 +67,6 @@ export default defineUserConfig({
                         {
                             text: "观测",
                             children: [
-                                '/content/chapter1/net-observe.md',
                                 '/content/chapter1/mtr.md'
                             ]
                         }
