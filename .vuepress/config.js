@@ -45,7 +45,13 @@ export default defineUserConfig({
             }],
             "/": [
                 {
-                    text: '理解underlay网络',
+                    children: [
+                        '/content/chapter1/index.md',
+                          '/content/chapter1/latency.md',
+                    ]
+                },
+                {
+                    text: 'underlay网络',
                     collapsable: true,
                     path: '/',
                     sidebarDepth: 0,
@@ -53,11 +59,9 @@ export default defineUserConfig({
                             text: "理解",
                             path: '/content/chapter1/intro.md',
                             children: [
-                                '/content/chapter1/latency.md',
                                 '/content/chapter1/bgp.md',
                                 '/content/chapter1/congestion-control.md',
                                 '/content/chapter1/netfilter.md',
-                                '/content/chapter1/overlay.md'
                             ]
                         },
                         {
