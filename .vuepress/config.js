@@ -51,7 +51,7 @@ export default defineUserConfig({
                     ]
                 },
                 {
-                    text: 'underlay网络',
+                    text: '基础网络优化',
                     collapsable: true,
                     path: '/',
                     sidebarDepth: 0,
