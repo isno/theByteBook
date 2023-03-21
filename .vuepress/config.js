@@ -24,7 +24,6 @@ export default defineUserConfig({
         sidebar: {
             "/english-for-pupil/": [
             {
-                text:"语法",
                 collapsable: true,
                 sidebarDepth: 0,
                 children: [
@@ -32,7 +31,16 @@ export default defineUserConfig({
                     '/english-for-pupil/noun.md',
                     '/english-for-pupil/article.md',
                     '/english-for-pupil/pronoun.md',
-                    '/english-for-pupil/possesive-nouns.md'
+                    '/english-for-pupil/possesive-nouns.md',
+                    {
+                        "text":"句子结构",
+                        children:[
+                            '/english-for-pupil/sentence-struct-1.md',
+                            '/english-for-pupil/sentence-struct-2.md',
+                            '/english-for-pupil/sentence-struct-3.md',
+                            '/english-for-pupil/sentence-struct-4.md',
+                        ]
+                    }
                 ]
             }],
             "/": [
