@@ -82,6 +82,14 @@ export default defineUserConfig({
                         '/content/http/http.md',
                         '/content/http/ssl.md'
                     ]
+                },
+                {
+                    text: 'API网关设计',
+                    collapsable: false,
+                    sidebarDepth: 1,
+                    children: [
+                        '/content/api-gateway/intro.md',
+                    ]
                 }
             ]
         }
