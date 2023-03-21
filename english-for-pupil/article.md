@@ -1,6 +1,10 @@
 # 冠词
 
-冠词分为 不定冠词 `a`、`an` 和 定冠词 `the` 。
+冠词分为：不定冠词 `a`、`an` 和 定冠词 `the` 。
+
+一般情况下 第一次提到某物用 `a/an`, 再次提及用 `the`。
+
+例：he told me `a` secret, `the` secret was about her sister。
 
 ## 不定冠词
 
@@ -26,3 +30,22 @@
 | `ai`| 哎|
 | `əu`| 欧 |
 | `au`| 凹 |
+
+## 定冠词
+
+定冠词有 `the` 两个读音, 分别为 `/ðə/` 和  `/ði/`.
+
+- 读音规则：当 the 后方第一个单词音标为辅音时， the 读音为 `/ðə/`
+- 读音规则：当 the 后方第一个单词音标为元音时， the 读音为 `/ði/`
+
+示例：
+
+- the `/ðə/` university 
+- the `/ði/` ugly coat
+- the `/ði/` honest body
+
+### 定冠词的使用规则
+
+- 当特指某物 如： give me `the phone`
+- 独一无二的物体： `The moon` goes around `the sun`
+- 形容某一类人：the + 形容词 `the rich` `the young`

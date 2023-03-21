@@ -22,15 +22,17 @@ export default defineUserConfig({
             }
         ],
         sidebar: {
-            "/english-for-pupil/": [{
-
-                path: '/english-for-pupil/readme.md',
+            "/english-for-pupil/": [
+            {
+                text:"语法",
                 collapsable: true,
                 sidebarDepth: 0,
                 children: [
                     '/english-for-pupil/readme.md',
                     '/english-for-pupil/noun.md',
                     '/english-for-pupil/article.md',
+                    '/english-for-pupil/pronoun.md',
+                    '/english-for-pupil/possesive-nouns.md'
                 ]
             }],
             "/": [
