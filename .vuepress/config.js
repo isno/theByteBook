@@ -55,21 +55,11 @@ export default defineUserConfig({
                     collapsable: true,
                     path: '/',
                     sidebarDepth: 0,
-                    children: [{
-                            text: "理解",
-                            path: '/content/chapter1/intro.md',
-                            children: [
-                                '/content/chapter1/bgp.md',
-                                '/content/chapter1/congestion-control.md',
-                                '/content/chapter1/netfilter.md',
-                            ]
-                        },
-                        {
-                            text: "观测",
-                            children: [
-                                '/content/chapter1/mtr.md'
-                            ]
-                        }
+                    children: [
+                        '/content/chapter1/bgp.md',
+                        '/content/chapter1/congestion-control.md',
+                        '/content/chapter1/netfilter.md',
+                        '/content/chapter1/mtr.md'
                     ]
                 },
                 {
@@ -89,6 +79,7 @@ export default defineUserConfig({
                     sidebarDepth: 1,
                     children: [
                         '/content/api-gateway/intro.md',
+                        '/content/api-gateway/OpenResty.md',
                     ]
                 }
             ]

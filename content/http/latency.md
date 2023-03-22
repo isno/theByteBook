@@ -54,3 +54,22 @@ curl 是一种命令行工具，作用是发出网络请求。像爱奇艺的核
 ```
 curl -w '\ntime_namelookup=%{time_namelookup}\ntime_connect=%{time_connect}\ntime_appconnect=%{time_appconnect}\ntime_redirect=%{time_redirect}\ntime_pretransfer=%{time_pretransfer}\ntime_starttransfer=%{time_starttransfer}\ntime_total=%{time_total}\n\n' -o /dev/null -s -L 'https://www.thebyte.com.cn/'
 ```
+
+分析以下的执行结果，有几个关键的耗时阶段：
+
+- DNS 耗时约占 28%
+- TCP 连接 9% 
+- SSL 约占 50% 
+
+从这几个指标也可以看出，我们着手优化的手段就在 DNS、HTTP和 SSL层优化处理。
+
+```
+time_namelookup=0.025021
+time_connect=0.033326
+time_appconnect=0.071539
+time_redirect=0.000000
+time_pretransfer=0.071622
+time_starttransfer=0.088528
+time_total=0.088744
+```
+
