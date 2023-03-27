@@ -1,4 +1,4 @@
-# 解决不同network namespace之间的通信：Bridge
+# 不同netns之间通信解决：Linux Bridge
 
 在上文中提到了利用Veth连接两个不同的ns，但在现在的环境下，一台宿主机通常有几十个、几百个容器服务，这也就意味着有几百个ns，这种情况下 veth 就显得捉襟见肘了。这个时候就需要 Linux Bridge登场了。
 

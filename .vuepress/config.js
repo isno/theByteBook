@@ -98,8 +98,7 @@ export default defineUserConfig({
                     children: [
                         '/content/api-gateway/intro.md',
                         '/content/api-gateway/OpenResty.md',
-                        '/content/product/idempotent.md',
-                        '/content/product/finops.md'
+                        '/content/product/idempotent.md'
                     ]
                 }
             ]
