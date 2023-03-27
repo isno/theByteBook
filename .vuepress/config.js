@@ -57,16 +57,24 @@ export default defineUserConfig({
                     sidebarDepth: 0,
                     children: [
                         {
+                            text: 'Underlay网络基础',
+                            children: [
+                                '/content/chapter1/bgp.md',
+                                 '/content/chapter1/congestion-control.md',
+                                 '/content/chapter1/netfilter.md',
+                            ]
+                        },
+                        {
                             text: 'Linux 网络虚拟化',
                             children: [
+                                '/content/chapter1/network-namespace.md',
                                 '/content/chapter1/vxlan.md',
-                                '/content/chapter1/vxlan-action.md',
                             ]
                         },
                        
-                        '/content/chapter1/bgp.md',
-                        '/content/chapter1/congestion-control.md',
-                        '/content/chapter1/netfilter.md',
+                        
+                       
+            
                         '/content/chapter1/mtr.md'
                     ]
                 },

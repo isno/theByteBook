@@ -46,7 +46,7 @@
 3. 容器化与云原生架构
 	- 理解容器化
 		- 理解 Linux namespace 资源分配
-		- 理解 cgroup
+		- 理解 CNI
 		- 镜像与容器 
 		- 容器技术选型
 	- Docker的应用指南
