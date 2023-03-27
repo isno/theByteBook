@@ -47,15 +47,23 @@ export default defineUserConfig({
                 {
                     children: [
                         '/content/chapter1/index.md',
-                          '/content/chapter1/latency.md',
+                        '/content/chapter1/latency.md',
                     ]
                 },
                 {
-                    text: '基础网络优化',
+                    text: '网络的原理与优化实践',
                     collapsable: true,
                     path: '/',
                     sidebarDepth: 0,
                     children: [
+                        {
+                            text: 'Linux 网络虚拟化',
+                            children: [
+                                '/content/chapter1/vxlan.md',
+                                '/content/chapter1/vxlan-action.md',
+                            ]
+                        },
+                       
                         '/content/chapter1/bgp.md',
                         '/content/chapter1/congestion-control.md',
                         '/content/chapter1/netfilter.md',
@@ -80,7 +88,8 @@ export default defineUserConfig({
                     children: [
                         '/content/api-gateway/intro.md',
                         '/content/api-gateway/OpenResty.md',
-                        '/content/product/idempotent.md'
+                        '/content/product/idempotent.md',
+                        '/content/product/finops.md'
                     ]
                 }
             ]
