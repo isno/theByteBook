@@ -68,6 +68,8 @@ export default defineUserConfig({
                             text: 'Linux 网络虚拟化',
                             children: [
                                 '/content/chapter1/network-namespace.md',
+                                '/content/chapter1/veth-pair.md',
+                                '/content/chapter1/bridge.md',
                                 '/content/chapter1/vxlan.md',
                             ]
                         },
