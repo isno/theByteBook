@@ -45,12 +45,6 @@ export default defineUserConfig({
             }],
             "/": [
                 {
-                    children: [
-                        '/content/chapter1/index.md',
-                        '/content/chapter1/latency.md',
-                    ]
-                },
-                {
                     text: '网络的原理与优化实践',
                     collapsable: true,
                     path: '/',
@@ -73,11 +67,16 @@ export default defineUserConfig({
                                 '/content/chapter1/vxlan.md',
                             ]
                         },
+                        {
+                            text: '网络可用性观测指南',
+                            children: [
+                                '/content/chapter1/index.md',
+                                '/content/chapter1/latency.md',
+                                '/content/chapter1/mtr.md'
+                            ]
+                        },
+                    
                        
-                        
-                       
-            
-                        '/content/chapter1/mtr.md'
                     ]
                 },
                 {
