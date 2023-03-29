@@ -72,7 +72,8 @@ export default defineUserConfig({
                             children: [
                                 '/content/chapter1/index.md',
                                 '/content/chapter1/latency.md',
-                                '/content/chapter1/mtr.md'
+                                '/content/chapter1/mtr.md',
+                                '/content/chapter1/tcpdump.md'
                             ]
                         },
                     

@@ -24,3 +24,22 @@ Veth 的两头都直接连着网络协议栈，所以你创建一个Veth对，�
 实际上这种虚拟设备我们并不陌生，我们本机网络 IO 里的 lo 回环设备(127.0.0.1)也是这样一个虚拟设备。唯一的区别就是 veth 总是成对地出现。
 
 因为Veth这个特性，它常常充当着一个桥梁，连接着各种虚拟网络设备，典型的例子像“两个namespace之间的连接”，“Bridge、OVS 之间的连接”，“Docker 容器之间的连接” 等等，以此构建出非常复杂的虚拟网络结构。
+
+## 容器与 veth pair
+
+docker中经典的容器组网模型就是 veth pair + bridge的模式。容器中的 `eth0` 实际上就是Host上某个veth成对(pair)关系。如何知道 容器与Host的veth pair关系呢？
+
+在目标容器内执行以下命令
+
+```
+$ ip link show eth0
+13: eth0@if14: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default 
+    link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+```
+从上面可以看到 `eth0@if15` ，其中 `15` 是 eth0 成对的 veth index。
+
+在Host中通过查看 对应的index为15的网卡接口是哪一个 , 从而得到成对的veth pair关系。
+
+```
+ip link show | grep 15
+```
