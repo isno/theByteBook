@@ -36,10 +36,14 @@ $ ip link show eth0
 13: eth0@if14: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default 
     link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff link-netnsid 0
 ```
-从上面可以看到 `eth0@if15` ，其中 `15` 是 eth0 成对的 veth index。
+从上面可以看到 `eth0@if14` ，其中 `14` 是 eth0 成对的 veth index。
 
 在Host中通过查看 对应的index为15的网卡接口是哪一个 , 从而得到成对的veth pair关系。
 
 ```
-ip link show | grep 15
+$ ip link show | grep 14
+
+14: veth7a8d55e4@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue master cni0 state UP group default 
+    link/ether a6:7b:18:83:25:db brd ff:ff:ff:ff:ff:ff link-netnsid 1
+    inet6 fe80::a47b:18ff:fe83:25db/64 scope link  
 ```

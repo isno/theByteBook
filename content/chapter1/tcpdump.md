@@ -1,6 +1,11 @@
 # 网络问题排查利器：tcpdump 
 
-tcpdump 是一款强大的网络分析工具，它基于libpcap利用内核中的 AF_PACKET 套接字，抓取网络接口中传输的网络包，并提供了强大的过滤规则，帮我们从大量的网络包中，挑出最想关注的信息。
+tcpdump 是一款强大的网络分析工具，它可以抓取网络接口中传输的网络包，并提供了强大的过滤规则，帮我们从大量的网络包中，挑出最想关注的信息。
+
+
+> 有一个小问题，iptables规则会影响tcpdump抓包吗？
+> 答案是不会，tcpdump抓包是libpcap实现的，libpcap是用bpf（Berkeley Packet Filter）实现的，bpf位于netfilter前，所以不会影响抓包。
+
 
 tcpdump虽然功能强大，但输出确不直观，我们可以通过 tcpdump和wireshark组合的方式来排查问题。我们可以在linux中先通过tcpdump 抓包，并保存至.pcap格式文件中，再将文件拷贝至本地，通过wireshark打开文件进行可视化地包的过滤和分析。
 

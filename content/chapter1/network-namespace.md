@@ -46,7 +46,7 @@ $ ip netns exec netns1 ip link list
 
 由于不同的网络命名空间之间是相互隔离的，所以不同的网络命名空间之间并不能直接通信。如果想想与外界（其他netns、或者主机网卡）进行通信，就需要在namespace里面再创建一对虚拟的以太网卡，也就是 veth pair。（关于veth pair的介绍，参加下一节，本篇不再赘述）。
 
-下面的命令创建一对虚拟以太网卡，然后把 veth pair的一端放入 netns1 中, 另外一端放入 netns1中。
+下面的命令创建一对虚拟以太网卡，然后把 veth pair的一端放入 netns1 中, 另外一端放入 netns2中。
 
 ```
 $ ip netns add netns1

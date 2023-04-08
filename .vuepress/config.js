@@ -54,8 +54,9 @@ export default defineUserConfig({
                             text: 'Underlay网络基础',
                             children: [
                                 '/content/chapter1/bgp.md',
-                                 '/content/chapter1/congestion-control.md',
-                                 '/content/chapter1/netfilter.md',
+                                '/content/chapter1/anycast.md',
+                                '/content/chapter1/congestion-control.md',
+                                '/content/chapter1/netfilter.md',
                             ]
                         },
                         {
