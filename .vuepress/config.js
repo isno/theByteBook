@@ -51,7 +51,7 @@ export default defineUserConfig({
                     sidebarDepth: 0,
                     children: [
                         {
-                            text: 'Underlay网络基础',
+                            text: '理解网络基础',
                             children: [
                                 '/content/chapter1/bgp.md',
                                 '/content/chapter1/anycast.md',
