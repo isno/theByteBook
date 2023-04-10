@@ -58,6 +58,7 @@ export default defineUserConfig({
                     path: '/',
                     sidebarDepth: 0,
                     children: [
+                        '/content/chapter1/latency.md',
                         {
                             text: '理解网络基础',
                             children: [
@@ -68,19 +69,21 @@ export default defineUserConfig({
                             ]
                         },
                         {
-                            text: 'Linux 网络虚拟化',
+                            text: '云计算的基础：网络虚拟化',
                             children: [
                                 '/content/chapter1/network-namespace.md',
                                 '/content/chapter1/veth-pair.md',
                                 '/content/chapter1/bridge.md',
-                                '/content/chapter1/vxlan.md',
+                                '/content/chapter1/tun.md',
+                                
                             ]
                         },
+                        '/content/chapter1/vxlan.md',
                         {
-                            text: '网络可用性观测指南',
+                            text: '网络可用性观测',
                             children: [
                                 '/content/chapter1/index.md',
-                                '/content/chapter1/latency.md',
+                                
                                 '/content/chapter1/mtr.md',
                                 '/content/chapter1/tcpdump.md'
                             ]
