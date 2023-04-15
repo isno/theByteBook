@@ -10,7 +10,7 @@ ECC算法的数学理论非常深奥和复杂，在工程应用中比较难于�
 
 <div  align="center">
 	<p>图：ECC vs RSA</p>
-	<img src="../assets/chapter2/ecc.png" width = "350"  align=center />
+	
 </div>
 
 ECC与RSA相比，拥有突出优势：
