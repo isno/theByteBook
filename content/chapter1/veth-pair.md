@@ -1,6 +1,10 @@
 # Veth Pair
 
-如果读者安装过docker或者k8s，查看网络设备信息，总能看到一堆veth开头的网卡设备信息，这些就是docker、k8s 为不同ns之间通信而创建的虚拟网卡。 
+Veth（Virtual Ethernet devices）是 Linux 中一种用软件虚拟出来的模拟硬件网卡的设备，Veth 总是成对出现，所以一般也叫 Veth-Pair。
+
+其作用非常简单：如果 veth0 和 veth1 是一对 veth 设备，veth0 发送的数据会由 veth1收到。反之亦然，其实说白了，Veth就是一根“网线”，你从一头发数据，自然可以从另一头收到数据。
+
+如果读者安装过Docker或者Kubernetes，查看网络设备信息总能看到一堆 veth 开头的网卡设备信息，这些就是Docker、Kubernetes 为不同ns之间通信而创建的虚拟网卡。
 
 ```
 $ ip addr
@@ -9,11 +13,6 @@ $ ip addr
     inet6 fe80::e07c:c8ff:fe36:d714/64 scope link 
        valid_lft forever preferred_lft forever
 ```
-
-## 什么是 Veth
-Veth（Virtual Ethernet devices）是 Linux 中一种用软件虚拟出来的模拟硬件网卡的设备。
-
-veth 总是成对出现，所以一般也叫 veth-pair。其作用非常简单：如果 veth0 和 veth1 是一对 veth 设备，veth0 发送的数据会由 veth1收到。反之亦然，其实说白了，Veth就是一根“网线”，你从一头发数据，自然可以从另一头收到数据。
 
 <div  align="center">
 	<img src="../assets/veth.png" width = "450"  align=center />
@@ -25,9 +24,13 @@ Veth 的两头都直接连着网络协议栈，所以你创建一个Veth对，�
 
 因为Veth这个特性，它常常充当着一个桥梁，连接着各种虚拟网络设备，典型的例子像“两个namespace之间的连接”，“Bridge、OVS 之间的连接”，“Docker 容器之间的连接” 等等，以此构建出非常复杂的虚拟网络结构。
 
-## 容器与 veth pair
+##  Veth Pair与容器网络
 
-docker中经典的容器组网模型就是 veth pair + bridge的模式。容器中的 `eth0` 实际上就是Host上某个veth成对(pair)关系。如何知道 容器与Host的veth pair关系呢？
+在Network namespace篇节，笔者创建两个ns，并使之通信。就是利用Veth连接两个network namespace，将两端的网卡（Veth）分别放入两个不同的network namespace，就可以把这两个network namespace连起来，形成一个点对点的二层网络。
+
+Docker中经典的容器组网模型就是 veth pair + bridge的模式。
+
+容器中的 `eth0` 实际上就是Host上某个veth成对(pair)关系。如何知道 容器与Host的veth pair关系呢？
 
 在目标容器内执行以下命令
 

@@ -60,7 +60,7 @@ export default defineUserConfig({
                     children: [
                         '/content/chapter1/latency.md',
                         {
-                            text: '理解网络基础',
+                            text: 'Underlay网络',
                             children: [
                                 '/content/chapter1/bgp.md',
                                 '/content/chapter1/anycast.md',
@@ -69,11 +69,13 @@ export default defineUserConfig({
                             ]
                         },
                         {
-                            text: '云计算的基础：网络虚拟化',
+                            text: '网络虚拟化',
+                            link: "/content/chapter1/SDN.md", 
                             children: [
                                 '/content/chapter1/network-namespace.md',
                                 '/content/chapter1/veth-pair.md',
                                 '/content/chapter1/bridge.md',
+                                '/content/chapter1/route.md',
                                 '/content/chapter1/tun.md',
                                 
                             ]
@@ -81,9 +83,8 @@ export default defineUserConfig({
                         '/content/chapter1/vxlan.md',
                         {
                             text: '网络可用性观测',
-                            children: [
-                                '/content/chapter1/index.md',
-                                
+                            link: "/content/chapter1/index.md",
+                            children: [                                
                                 '/content/chapter1/mtr.md',
                                 '/content/chapter1/tcpdump.md'
                             ]
@@ -93,14 +94,15 @@ export default defineUserConfig({
                     ]
                 },
                 {
-                    text: '优化应用协议性能',
+                    text: '移动端网络架构指南',
+                    link: "/http/intro.md", 
                     collapsable: false,
                     sidebarDepth: 1,
                     children: [
-                        '/content/http/latency.md',
-                        '/content/http/http-dns.md',
-                        '/content/http/http.md',
-                        '/content/http/ssl.md'
+                        '/http/latency.md',
+                        '/http/http-dns.md',
+                        '/http/http.md',
+                        '/http/ssl.md'
                     ]
                 },
                 {

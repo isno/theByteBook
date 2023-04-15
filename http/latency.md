@@ -2,21 +2,14 @@
 
 应用层面最重要的网络协议是HTTP，搞明白HTTP的流程以及延迟过程也基本掌握了应用层的网络优化方法。
 
-
-
-
-## 请求流程分析
-
 一个完整的HTTPS请求流程涵盖：DNS、TCP、SSL握手、服务器处理、内容传输等流程，我们用流程图看一下HTTP请求的完整过程：
 
 <div  align="center">
 	<p>图：HTTP请求流程</p>
-	<img src="../assets/http-process.png" width = "500"  align=center />
+	<img src="../content/assets/http-process.png" width = "500"  align=center />
 </div>
 
-
-
-## 各阶段耗时统计
+## 耗时分析
 
 通常HTTP的性能分析是通过浏览器的开发者工具进行查看，但这种方式只能通过图形页面进行查看，如果想做性能监控或者在命令行下分析，可以通过curl命令来统计各阶段的耗时。
 
