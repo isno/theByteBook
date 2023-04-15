@@ -1,8 +1,6 @@
 # 网络虚拟化
 
-Container技术、Kubernetes等各类云原生应用是以虚拟化为基础，通过软硬件解耦及功能抽象从而实现按需、弹性和可扩展的计算服务。
-
-而虚拟化的底层技术是Linux namespace，了解 namespace 以及网络虚拟化技术，对解决云原生架构的疑难杂陈方能知其理得其法。
+Container技术、Kubernetes等各类云原生应用是以虚拟化为基础，通过软硬件解耦及功能抽象从而实现按需、弹性和可扩展的计算服务。而虚拟化的底层是Linux namespace，了解 namespace 以及网络虚拟化技术，面对容器网络、云原生架构等疑难杂陈方能知其理得其法。
 
 
 ## Linux namespace 
