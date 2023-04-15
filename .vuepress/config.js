@@ -70,6 +70,7 @@ export default defineUserConfig({
                                 ]
                             },
                             '/content/chapter1/dpdk.md',
+                            '/content/chapter1/edge.md',
                         ]
                     },
 
