@@ -122,6 +122,7 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
+                    '/distributed-system/cap.md',
                     '/distributed-system/tracing.md'
                 ]
             }
