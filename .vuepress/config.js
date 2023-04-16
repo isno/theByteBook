@@ -36,6 +36,7 @@ export default defineUserConfig({
                     '/content/chapter1/latency.md',
                     {
                         text: 'Underlay网络',
+                        link: "/content/chapter1/underlay.md",
                         children: [
                             '/content/chapter1/bgp.md',
                             '/content/chapter1/anycast.md',
@@ -104,9 +105,24 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
+                    {
+                        text:"七层负载均衡", 
+                        link: '/api-gateway/balance7.md',
+                        children: [
+                             '/api-gateway/nginx-conf.md'
+                        ]
+                    },
                     '/api-gateway/api-gateway.md',
                     '/api-gateway/OpenResty.md',
                     '/product/idempotent.md'
+                ]
+            },
+            {
+                text: '分布式与微服务系统',
+                collapsable: false,
+                sidebarDepth: 1,
+                children: [
+                    '/distributed-system/tracing.md'
                 ]
             }
         ]
