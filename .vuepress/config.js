@@ -106,6 +106,13 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     {
+                        text:"四层负载均衡", 
+                        link: '/api-gateway/balance4.md',
+                        children: [
+                             '/api-gateway/LVS.md'
+                        ]
+                    },
+                    {
                         text:"七层负载均衡", 
                         link: '/api-gateway/balance7.md',
                         children: [
