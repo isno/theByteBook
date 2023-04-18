@@ -139,7 +139,8 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
-                    '/CloudNative/define-cloud-native.md'
+                    '/CloudNative/define-cloud-native.md',
+                    '/CloudNative/k8s-docker.md'
                 ]
             },
             {
