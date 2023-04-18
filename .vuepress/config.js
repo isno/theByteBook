@@ -132,6 +132,23 @@ export default defineUserConfig({
                     '/distributed-system/cap.md',
                     '/distributed-system/tracing.md'
                 ]
+            },
+            {
+                text: '容器与服务编排',
+                link: '/CloudNative/intro.md',
+                collapsable: false,
+                sidebarDepth: 1,
+                children: [
+                    '/CloudNative/define-cloud-native.md'
+                ]
+            },
+            {
+                text: 'FinOps云成本管理',
+                link: '/FinOps/intro.md',
+                collapsable: false,
+                sidebarDepth: 1,
+                children: [
+                ]
             }
         ]
     })
