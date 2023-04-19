@@ -46,6 +46,4 @@ Kernel-Bypass或者说是内核旁路，主要的思想是：
 
 - 使用内核自带的 XDP 技术，在网络包进入内核协议栈前，就对其进行处理，这样也可以实现很好的性能
 
-很多企业如Facebook的Katran、美团的MGW、爱奇艺的DPVS等都使用Intel 提供的DPDK套件进行kernel bypass，直接全部在用户态进行流量的处理。
-
-正是基于内核旁路的技术得以实现单机千万并发的性能指标。
+很多企业如Facebook的Katran、美团的MGW、爱奇艺的DPVS等使用DPDK、ebpf 技术进行kernel bypass，直接全部在用户态进行流量的处理，也正是基于此，才得以实现单机千万并发的性能指标。
