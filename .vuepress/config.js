@@ -11,9 +11,7 @@ export default defineUserConfig({
         ['link', { rel: "shortcut icon", href: "/assets/favicon.ico" }],
     ],
     plugins: [
-        readingTimePlugin({
-            // 你的选项
-        })
+    
     ],
     theme: defaultTheme({
         navbar: [{
