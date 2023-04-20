@@ -118,8 +118,7 @@ export default defineUserConfig({
                         ]
                     },
                     '/api-gateway/api-gateway.md',
-                    '/api-gateway/OpenResty.md',
-                    '/product/idempotent.md'
+                    '/api-gateway/OpenResty.md'
                 ]
             },
             {
@@ -128,6 +127,7 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/distributed-system/cap.md',
+                    '/content/product/idempotent.md',
                     '/distributed-system/tracing.md'
                 ]
             },
