@@ -12,7 +12,7 @@ Nginx的工作模式是Master-Worker模式。
 在这种工作模式下，Master进程的作用读取并验证配置文件nginx.conf、管理worker进程。而Worker进程维护一个线程（避免线程切换）处理连接和请求。（Worker进程的个数由配置文件决定，一般和CPU个数相关（降低进程之间上下文切换带来的损耗，配置几个就有几个Worker进程），当求到来时，每个Worker工作进程都会监听到，通过争抢机制最终只会有一个Worker进程会接受并处理。
 
 <div  align="center">
-	<img src="../assets/nginx-process-model.png" width = "450"  align=center />
+	<img src="../assets/nginx.png" width = "450"  align=center />
 </div>
 
 ## Nginx配置指导

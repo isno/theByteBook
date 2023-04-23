@@ -136,12 +136,12 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/distributed-system/cap.md',
-                    '/content/product/idempotent.md',
+                    '/distributed-system/idempotent.md',
                     '/distributed-system/tracing.md'
                 ]
             },
             {
-                text: '容器与服务编排',
+                text: '云原生与服务治理',
                 link: '/CloudNative/intro.md',
                 collapsable: false,
                 sidebarDepth: 1,
