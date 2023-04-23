@@ -102,7 +102,7 @@ export default defineUserConfig({
                 children: [
                     '/http/latency.md',
                     '/http/http-dns.md',
-                    '/http/http.md',
+                    '/http/compress.md',
                     '/http/ssl.md'
                 ]
             },
