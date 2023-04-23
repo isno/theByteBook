@@ -1,7 +1,8 @@
-import { defineUserConfig, defaultTheme } from 'vuepress';
+import { defineUserConfig } from "vuepress";
 
 import { readingTimePlugin } from "vuepress-plugin-reading-time2";
 
+import MyTheme from "./theme";
 
 export default defineUserConfig({
     lang: 'zh-CN',
@@ -11,9 +12,11 @@ export default defineUserConfig({
         ['link', { rel: "shortcut icon", href: "/assets/favicon.ico" }],
     ],
     plugins: [
-    
+        readingTimePlugin({
+          wordPerMinute: 300
+        })
     ],
-    theme: defaultTheme({
+    theme: MyTheme({
         navbar: [{
                 text: '首页',
                 link: '/'
