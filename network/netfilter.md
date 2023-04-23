@@ -1,21 +1,18 @@
-# iptables与netfilter
+# Netfilter 与 iptables 
 
-iptables 在SLB、Docker和Kubernetes 等网络应用中非常广泛。
+iptables 在 SLB、Docker 以及 Kubernetes 等服务中中应用非常广泛，比如容器和宿主机端口映射、Kubernetes 核心组件 kube-proxy 的 IPVS 模式、CNI 插件 portmap 等等都是通过 iptables 实现的。
 
-比如容器和宿主机端口映射、Kubernetes Service的默认模式、kube-proxy中的 iptables和IPVS模式、CNI的 portmap 插件等等都是通过iptables实现的。
+因此了解iptables的原理与机制，对后续理解SLB、云原生网络等应用大有裨益。
 
-因为了解iptables，对后续理解SLB、云原生网络等概念大有裨益。
+## Netfilter 
 
+iptables 的底层实现是 Netfilter。
 
-## netfilter 
-
-iptables的底层实现是netfilter。
-
-netfilter是 Linux内核 2.4 引入的一个通用、抽象的网络框架，它提供一整套hook函数的管理机制，使得数据包过滤、包处理（设置标志位、修改TTL）、地址伪装、网络地址转化、访问控制、协议连接跟踪等成为可能。
+Netfilter 是 Linux内核 2.4 引入的一个通用、抽象的网络框架，它提供一整套hook函数的管理机制，使得数据包过滤、包处理（设置标志位、修改TTL）、地址伪装、网络地址转化、访问控制、协议连接跟踪等成为可能。
 
 在IPv4的数据包流程中，有五个重要的hook，分别是 PRE_ROUTING、LOCAL_IN、IP_FORWARD、LOCAL_OUT、POST_ROUTING。
 
-netfilter的原理如下：
+Netfilter的原理如下：
 
 <div  align="center">
 	<img src="../assets/netfilter.png" width = "550"  align=center />
@@ -30,9 +27,9 @@ netfilter的原理如下：
 - **POST_ROUTING:** 本机产生准备发出的包或者转发的包，在经过路由判断后到达此hook触发点
 
 
-现在构建在netfilter hook之上的用户态程序有 ebtables、arptables、iptables、iptables-nftables、conntrack（连接跟踪）。
+现在构建在Netfilter hook之上的用户态程序有 ebtables、arptables、iptables、iptables-nftables、conntrack（连接跟踪）。
 
-可有说整个Linux系统网络都是构建在 netfilter 之上。
+可有说整个Linux系统网络都是构建在 Netfilter 之上。
 
 ## iptables
 
@@ -78,8 +75,6 @@ iptables 有个`四表五链`的概念。每一个链挂相应的表对IP数据�
 理解iptables的链、表、规则的概念之后，我们来介绍一下iptables的命令用法。
 
 ## iptables 规则用法
-
-
 
 **iptables 更新延迟的问题**
 

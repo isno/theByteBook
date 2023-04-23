@@ -1,8 +1,7 @@
-import { defineUserConfig } from "vuepress";
+import { defineUserConfig, defaultTheme } from 'vuepress';
 
 import { readingTimePlugin } from "vuepress-plugin-reading-time2";
 
-import MyTheme from "./theme";
 
 export default defineUserConfig({
     lang: 'zh-CN',
@@ -12,11 +11,9 @@ export default defineUserConfig({
         ['link', { rel: "shortcut icon", href: "/assets/favicon.ico" }],
     ],
     plugins: [
-        readingTimePlugin({
-          wordPerMinute: 300
-        })
+    
     ],
-    theme: MyTheme({
+    theme: defaultTheme({
         navbar: [{
                 text: '首页',
                 link: '/'
@@ -29,20 +26,20 @@ export default defineUserConfig({
         sidebar: [
             '/intro.md',
             {
-                text: '网络的原理与优化实践',
+                text: '网络的原理与应用',
                 collapsable: true,
                 link: '/content/chapter1/intro.md',
                 sidebarDepth: 0,
                 children: [
                     '/content/chapter1/latency.md',
                     {
-                        text: 'Underlay网络',
+                        text: '基础网络',
                         link: "/content/chapter1/underlay.md",
                         children: [
                             '/content/chapter1/bgp.md',
                             '/content/chapter1/anycast.md',
                             '/content/chapter1/congestion-control.md',
-                            '/content/chapter1/netfilter.md',
+                           
                         ]
                     },
                     {
@@ -54,10 +51,19 @@ export default defineUserConfig({
                             '/content/chapter1/bridge.md',
                             '/content/chapter1/route.md',
                             '/content/chapter1/tun.md',
+                            '/content/chapter1/vxlan.md',
 
                         ]
                     },
-                    '/content/chapter1/vxlan.md',
+                    {
+                        text: '内核网络以及内核旁路技术',
+                        link: "/network/kernel.md",
+                        children: [
+                          '/network/netfilter.md',
+                          '/content/chapter1/dpdk.md'
+                        ]
+                    },
+                   
                     {
                         text: '网络优化指南',
                         link: "/content/chapter1/net-optimize-intro.md",
@@ -71,7 +77,7 @@ export default defineUserConfig({
                                     '/content/chapter1/tcp-handwave.md',
                                 ]
                             },
-                            '/content/chapter1/dpdk.md',
+                           
                             '/content/chapter1/edge.md',
                         ]
                     },
