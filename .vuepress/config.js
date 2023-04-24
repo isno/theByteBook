@@ -127,6 +127,7 @@ export default defineUserConfig({
                         ]
                     },
                     '/api-gateway/api-gateway.md',
+                    '/api-gateway/limit.md',
                     '/api-gateway/OpenResty.md'
                 ]
             },
