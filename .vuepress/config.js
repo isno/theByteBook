@@ -1,8 +1,5 @@
 import { defineUserConfig, defaultTheme } from 'vuepress';
 
-import { readingTimePlugin } from "vuepress-plugin-reading-time2";
-
-
 export default defineUserConfig({
     lang: 'zh-CN',
     title: '深入架构原理与实践',

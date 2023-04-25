@@ -1,22 +1,10 @@
 {
-  "name": "thebyte",
-  "version": "1.0.0",
-  "main": "index.js",
-  "author": "isno <caxcn@qq.com>",
-  "license": "MIT",
+	
   "scripts": {
     "dev": "vuepress dev .",
     "build": "vuepress build ."
   },
   "devDependencies": {
-    "@vuepress/plugin-back-to-top": "^1.4.0",
-    "github-buttons": "^2.13.0",
-    "vuepress": "2.0.0-beta.61",
-    "vuepress-plugin-reading-time2": "^2.0.0-beta.206"
-  },
-  "dependencies": {
-    "markdown-it": "^13.0.1",
-    "markdown-it-katex": "^2.0.3",
-    "markdown-it-mathjax3": "^4.3.2"
+    "vuepress": "^2.0.0-beta.61"
   }
 }
