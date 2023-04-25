@@ -38,7 +38,8 @@ export default defineUserConfig({
                         children: [
                             '/content/chapter1/bgp.md',
                             '/content/chapter1/anycast.md',
-                            '/content/chapter1/congestion-control.md',
+                            '/network/tcp.md',
+                            '/content/chapter1/congestion-control.md'
                            
                         ]
                     },
@@ -51,8 +52,7 @@ export default defineUserConfig({
                             '/content/chapter1/bridge.md',
                             '/content/chapter1/route.md',
                             '/content/chapter1/tun.md',
-                            '/content/chapter1/vxlan.md',
-
+                            '/content/chapter1/vxlan.md'
                         ]
                     },
                     {
@@ -139,6 +139,14 @@ export default defineUserConfig({
                     '/distributed-system/cap.md',
                     '/distributed-system/idempotent.md',
                     '/distributed-system/tracing.md'
+                ]
+            },
+            {
+                text: '消息中间件',
+                link: '/MessageQueue/intro.md',
+                collapsable: false,
+                sidebarDepth: 1,
+                children: [
                 ]
             },
             {
