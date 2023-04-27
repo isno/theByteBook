@@ -123,9 +123,16 @@ export default defineUserConfig({
                              '/api-gateway/nginx-conf.md'
                         ]
                     },
-                    '/api-gateway/api-gateway.md',
-                    '/api-gateway/limit.md',
-                    '/api-gateway/OpenResty.md'
+                     {
+                        text:"网关的理解与实践", 
+                        link: '/api-gateway/api-gateway.md',
+                        children: [
+                            '/api-gateway/OpenResty.md',
+                            '/api-gateway/limit.md'
+                            
+                        ]
+                    },
+                    
                 ]
             },
             {
@@ -153,7 +160,9 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/CloudNative/define-cloud-native.md',
-                    '/CloudNative/k8s-docker.md'
+                    '/CloudNative/container.md',
+                    '/CloudNative/k8s-docker.md',
+                    '/CloudNative/container-diff.md',
                 ]
             },
             {

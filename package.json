@@ -1,5 +1,10 @@
 {
-	
+  "name": "thebyte",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "isno <caxcn@qq.com>",
+  "license": "MIT",
+
   "scripts": {
     "dev": "vuepress dev .",
     "build": "vuepress build ."
