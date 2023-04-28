@@ -151,6 +151,7 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
+                    '/MessageQueue/mq-diff.md'
                 ]
             },
             {
