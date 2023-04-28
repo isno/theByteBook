@@ -9,9 +9,8 @@
     "build": "vuepress build ."
   },
   "devDependencies": {
-    "vuepress": "^2.0.0-beta.61"
-  },
-  "dependencies": {
-    "vuepress-vite": "^2.0.0-beta.45"
+    "@vuepress/plugin-docsearch": "^2.0.0-beta.50",
+    "@vuepress/plugin-theme-data": "^2.0.0-beta.50",
+    "vuepress": "^2.0.0-beta.50"
   }
 }
