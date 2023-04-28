@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: 18.9.1
       - name: npm install
-        run: npm install
+        run: yarn install
       - name: npm build
         run: yarn build
       # 部署到阿里云
