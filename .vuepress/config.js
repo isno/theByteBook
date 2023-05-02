@@ -141,6 +141,8 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/distributed-system/cap.md',
+                    '/distributed-system/micro-service.md',
+                    '/distributed-system/micro-service-arc.md',
                     '/distributed-system/idempotent.md',
                     '/distributed-system/tracing.md'
                 ]
