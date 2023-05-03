@@ -146,11 +146,13 @@ export default defineUserConfig({
                         children: [
                             '/distributed-system/cap.md',
                             '/distributed-system/BASE.md',
+                            '/distributed-system/TCC.md',
+                            '/distributed-system/idempotent.md',
                         ]
                     },
                     '/distributed-system/micro-service.md',
                     '/distributed-system/micro-service-arc.md',
-                    '/distributed-system/idempotent.md',
+                    '/distributed-system/ServiceMesh.md',
                     '/distributed-system/tracing.md'
                 ]
             },
