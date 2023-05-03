@@ -140,7 +140,14 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
-                    '/distributed-system/cap.md',
+                    {
+                        text:"分布式事务", 
+                        link: '/distributed-system/distributed-transaction.md',
+                        children: [
+                            '/distributed-system/cap.md',
+                            '/distributed-system/BASE.md',
+                        ]
+                    },
                     '/distributed-system/micro-service.md',
                     '/distributed-system/micro-service-arc.md',
                     '/distributed-system/idempotent.md',
