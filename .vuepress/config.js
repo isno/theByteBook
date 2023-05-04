@@ -153,7 +153,7 @@ export default defineUserConfig({
                     '/distributed-system/micro-service-arc.md',
                     {
                         text:"ServiceMesh", 
-                        link: '/distributed-system/ServiceMesh.md',,
+                        link: '/distributed-system/ServiceMesh.md',
                         children: [
                             '/distributed-system/Istio.md',
                         ]
