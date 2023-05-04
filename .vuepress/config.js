@@ -161,6 +161,7 @@ export default defineUserConfig({
                         text:"ServiceMesh", 
                         link: '/distributed-system/ServiceMesh.md',
                         children: [
+                            '/distributed-system/ServiceMesh-implement.md',
                             '/distributed-system/Istio.md',
                         ]
                     },
