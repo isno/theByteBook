@@ -175,6 +175,7 @@ export default defineUserConfig({
                     '/CloudNative/container.md',
                     '/CloudNative/k8s-docker.md',
                     '/CloudNative/container-diff.md',
+                    '/CloudNative/Serverless.md',
                 ]
             },
             {
