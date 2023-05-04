@@ -7,8 +7,7 @@ export default defineUserConfig({
     head: [
         ['link', { rel: "shortcut icon", href: "/assets/favicon.ico" }],
     ],
-    plugins: [
-    ],
+    plugins: [],
     theme: defaultTheme({
         navbar: [{
                 text: '首页',
@@ -36,7 +35,7 @@ export default defineUserConfig({
                             '/content/chapter1/anycast.md',
                             '/network/tcp.md',
                             '/content/chapter1/congestion-control.md'
-                           
+
                         ]
                     },
                     {
@@ -55,11 +54,11 @@ export default defineUserConfig({
                         text: '内核网络以及内核旁路技术',
                         link: "/network/kernel.md",
                         children: [
-                          '/network/netfilter.md',
-                          '/content/chapter1/dpdk.md'
+                            '/network/netfilter.md',
+                            '/content/chapter1/dpdk.md'
                         ]
                     },
-                   
+
                     {
                         text: '网络优化指南',
                         link: "/content/chapter1/net-optimize-intro.md",
@@ -73,7 +72,7 @@ export default defineUserConfig({
                                     '/content/chapter1/tcp-handwave.md',
                                 ]
                             },
-                           
+
                             '/content/chapter1/edge.md',
                         ]
                     },
@@ -106,68 +105,63 @@ export default defineUserConfig({
                 link: '/api-gateway/intro.md',
                 collapsable: false,
                 sidebarDepth: 1,
-                children: [
-                    {
-                        text:"四层负载均衡", 
+                children: [{
+                        text: "四层负载均衡",
                         link: '/api-gateway/balance4.md',
                         children: [
-                             '/api-gateway/LVS.md'
+                            '/api-gateway/LVS.md'
                         ]
                     },
                     {
-                        text:"七层负载均衡", 
+                        text: "七层负载均衡",
                         link: '/api-gateway/balance7.md',
                         children: [
-                             '/api-gateway/nginx-conf.md'
+                            '/api-gateway/nginx-conf.md'
                         ]
                     },
-                     {
-                        text:"网关的理解与实践", 
+                    {
+                        text: "网关的理解与实践",
                         link: '/api-gateway/api-gateway.md',
                         children: [
                             '/api-gateway/OpenResty.md',
                             '/api-gateway/limit.md'
-                            
-                        ]
-                    },
-                    
-                ]
-            },
-            {
-                text: '分布式与微服务系统',
-                collapsable: false,
-                sidebarDepth: 1,
-                children: [
-                    {
-                        text:"分布式事务", 
-                        link: '/distributed-system/distributed-transaction.md',
-                        children: [
-                            '/distributed-system/cap.md',
-                            '/distributed-system/BASE.md',
-                            '/distributed-system/TCC.md',
-                            '/distributed-system/Saga.md',
-                            '/distributed-system/idempotent.md',
-                        ]
-                    },
-                    {
-                        text:"理解微服务", 
-                        link: '/distributed-system/micro-service.md',
-                        children: [
-                            '/distributed-system/micro-service-principle.md',
-                            '/distributed-system/micro-service-arc.md',
-                        ]
-                    },
-                    {
-                        text:"ServiceMesh", 
-                        link: '/distributed-system/ServiceMesh.md',
-                        children: [
-                            '/distributed-system/ServiceMesh-implement.md',
-                            '/distributed-system/Istio.md',
+
                         ]
                     },
 
-                    
-                    '/distributed-system/tracing.md'
+                ]
+            },
+            {
+                text: "分布式事务",
+                link: '/distributed-system/distributed-transaction.md',
+                children: [
+                    '/distributed-system/cap.md',
+                    '/distributed-system/BASE.md',
+                    '/distributed-system/TCC.md',
+                    '/distributed-system/Saga.md',
+                    '/distributed-system/idempotent.md',
+                ]
+            },
+            {
+                text: '微服务与服务治理',
+                collapsable: false,
+                sidebarDepth: 1,
+                link: '/MicroService/micro-service.md',
+                children: [
+
+                    '/MicroService/micro-service-principle.md',
+                    '/MicroService/micro-service-arc.md',
+
+                    {
+                        text: "ServiceMesh",
+                        link: 'MicroService/ServiceMesh.md',
+                        children: [
+                            '/MicroService/ServiceMesh-implement.md',
+                            '/MicroService/Istio.md',
+                        ]
+                    },
+
+                    '/MicroService/tracing.md'
                 ]
             },
             {
