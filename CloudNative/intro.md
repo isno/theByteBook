@@ -1,4 +1,4 @@
-# 云原生与服务治理
+# 云原生架构
 
 云原生（Cloud Native）可分解为云（Cloud）、原生（Native）两个词。这里还隐藏了一个词 - 计算（Computing）。云原生本质上是一种与云计算（Cloud Computing）相同的计算方式。因此，通常我们在说云原生的时候，实际上暗指云原生计算（Cloud Native Computing）。
 
