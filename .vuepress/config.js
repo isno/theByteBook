@@ -86,8 +86,6 @@ export default defineUserConfig({
                             '/content/chapter1/tcpdump.md'
                         ]
                     },
-
-
                 ]
             },
             {
@@ -99,6 +97,7 @@ export default defineUserConfig({
                     '/http/latency.md',
                     '/http/http-dns.md',
                     '/http/compress.md',
+                    '/http/HTTP3.md',
                     '/http/ssl.md'
                 ]
             },
@@ -146,6 +145,7 @@ export default defineUserConfig({
                             '/distributed-system/cap.md',
                             '/distributed-system/BASE.md',
                             '/distributed-system/TCC.md',
+                            '/distributed-system/Saga.md',
                             '/distributed-system/idempotent.md',
                         ]
                     },
