@@ -184,6 +184,7 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
+                    '/FinOps/finops-define.md',
                 ]
             }
         ]
