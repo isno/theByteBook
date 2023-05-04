@@ -8,7 +8,6 @@ export default defineUserConfig({
         ['link', { rel: "shortcut icon", href: "/assets/favicon.ico" }],
     ],
     plugins: [
-    
     ],
     theme: defaultTheme({
         navbar: [{
