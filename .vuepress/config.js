@@ -166,7 +166,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '云原生与服务治理',
+                text: '云原生架构',
                 link: '/CloudNative/intro.md',
                 collapsable: false,
                 sidebarDepth: 1,
