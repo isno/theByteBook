@@ -149,8 +149,14 @@ export default defineUserConfig({
                             '/distributed-system/idempotent.md',
                         ]
                     },
-                    '/distributed-system/micro-service.md',
-                    '/distributed-system/micro-service-arc.md',
+                    {
+                        text:"理解微服务", 
+                        link: '/distributed-system/micro-service.md',
+                        children: [
+                            '/distributed-system/micro-service-principle.md',
+                            '/distributed-system/micro-service-arc.md',
+                        ]
+                    },
                     {
                         text:"ServiceMesh", 
                         link: '/distributed-system/ServiceMesh.md',
