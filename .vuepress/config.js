@@ -185,7 +185,17 @@ export default defineUserConfig({
                     '/CloudNative/container.md',
                     '/CloudNative/k8s-docker.md',
                     '/CloudNative/container-diff.md',
-                    '/CloudNative/Serverless.md',
+                    {
+                        text: 'Serverless架构',
+                        link: '/CloudNative/Serverless.md',
+                        collapsable: false,
+                        sidebarDepth: 1,
+                        children: [
+                            '/CloudNative/Knative.md',
+                        ]
+                    },
+
+                    
                 ]
             },
             {
