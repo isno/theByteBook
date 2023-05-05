@@ -1,4 +1,4 @@
-# Kubernetes 与 Docker 与 CRI
+# Kubernetes 与 Docker
 
 Kubernetes v1.20版本 的 release note 里说 deprecated docker。并且在后续版本 v1.24 正式删除了 dockershim 组件，这对我们有什么影响呢？
 

@@ -180,6 +180,8 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/CloudNative/define-cloud-native.md',
+                    '/CloudNative/arc.md',
+                    '/CloudNative/arc-guide.md',
                     '/CloudNative/container.md',
                     '/CloudNative/k8s-docker.md',
                     '/CloudNative/container-diff.md',
