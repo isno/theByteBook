@@ -41,8 +41,6 @@ CRI（Container Runtime Interface，容器运行时接口）是 K8s 定义的一
 </div>
 
 
-
-
 ## RuntimeClass
 
 RuntimeClass 是 v1.12 引入的新 API 对象，用来支持多个容器运行时，可通过 Pod 字段直接指定。 定义一个 RuntimeClass 如下，对应的 CRI handler 即为目标容器运行时，比如 containerd、crio：
