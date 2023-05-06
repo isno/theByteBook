@@ -182,9 +182,17 @@ export default defineUserConfig({
                     '/CloudNative/define-cloud-native.md',
                     '/CloudNative/arc.md',
                     '/CloudNative/arc-guide.md',
-                    '/CloudNative/container.md',
-                    '/CloudNative/k8s-docker.md',
-                    '/CloudNative/container-diff.md',
+                    {
+                        text: '容器技术',
+                        link:  '/CloudNative/container.md',
+                        collapsable: false,
+                        sidebarDepth: 1,
+                        children: [
+                            '/CloudNative/container-normalize.md',
+                            '/CloudNative/container-diff.md',
+                            '/CloudNative/k8s-docker.md',
+                        ]
+                    },
                     {
                         text: 'Serverless架构',
                         link: '/CloudNative/Serverless.md',

@@ -1,65 +1,64 @@
-# 理解容器：从 Docker 讲起
+# 容器技术
 
-容器无疑是近年来云计算中最火热的关键词，随着docker的大热，docker、oci、runc、containerd 等等概念也扑之而来，这么多名词，让我们在云原生的开始阶段，总是云里雾里。
+容器是轻量级应用代码包，它还包含依赖项，例如编程语言运行时的特定版本和运行软件服务所需的库。
 
+容器作为标准化软件单元，可用于将应用以及依赖整体打包，使应用不再受到环境限制，简化应用构建、测试、部署流程，实现 build once，run anywhere 目标。
 
-## container
-
-那么，什么是容器？ 容器本质上是受到资源限制，彼此间相互隔离的若干个linux进程的集合。一般来说，容器技术主要指代用于资源限制的cgroup，用于隔离的namespace，以及基础的linux kernel等。
-
-## OCI（Open Container Initiative，开放容器计划）
-
-OCI（Open Container Initiative，开放容器计划），是在 2015 年由 Docker、CoreOS 等公司共同成立的项目，并由 Linux 基金会进行管理，致力于 container runtime 标准的制定和 runc 的开发等工作。
-
-所谓 container runtime，主要负责的是容器的生命周期的管理。OCI 主要分为容器运行时规范(runtime-spec) 和镜像规范(image-spec) 两部分，runtime-spec 标准对容器的创建、删除、查看、状态等操作进行了定义，image-spec 对镜像格式、打包(Bundle)、存储等进行了定义。
-
-<div  align="center">
-	<img src="../assets/docker-arc.png" width = "550"  align=center />
-</div>
+容器本质上是受到资源限制，彼此间相互隔离的若干个linux进程的集合，容器技术主要指代用于资源限制的cgroup，用于隔离的namespace，以及基础的linux kernel等，借助他们，应用可以在沙箱环境中独立运行，从而避免之间的冲突和影响。其实容器技术也并不是什么新鲜事务，早在 Docker 之前与容器相关的首批技术就已经出现了很久，特别是 2008 年 Linux 内核中实现了 Linux Containers (LXC)，但直到 Docker 容器引擎出现，才真正意义上降低了容器技术的复杂性，加快了容器技术发展。
 
 
-## runC
+## 容器与虚拟机 (VM)
 
-runc，是由 Docker 贡献的对于 OCI 标准的一个参考实现，是一个可以用于创建和运行容器的 CLI(command-line interface) 工具。runc 直接与容器所依赖的 Cgroup/OS 等进行交互，负责为容器配置 Cgroup/namespace 等启动容器所需的环境，创建启动容器的相关进程。
+需更好地理解容器， 一个方法是了解它与传统 虚拟机  (VM) 的不同之处
 
+在传统的 虚拟化中，无论是在本地还是在云端，都使用 管理器 来虚拟化物理硬件。 在此环境中，每个虚拟机都必须在其中包含自己的子操作系统，以及相关的二进制文件、库和应用程序文件。这会消耗大量系统资源和开销，尤其是当多个虚拟机在同一物理服务器上运行时，每个虚拟机都有自己的子操作系统。
 
-为了兼容 OCI 标准，docker 也做了架构调整。将容器运行时相关的程序从docker daemon剥离出来，形成了containerd。Containerd 向 docker 提供运行容器的API，二者通过 grpc 进行交互。containerd 最后会通过runc来实际运行容器。
+相比之下，每个容器均共享同一主机操作系统或系统内核，容器的虚拟化对象是 操作系统（通常是 Linux），因此每个单独的容器只包含应用及其库和依赖项。容器技术使其 开发所需的灵活性和开放性，运维专注的标准化和自动化达成平衡，容器镜像因为迅速成为应用分发的标准。
 
 
 <div  align="center">
-	<img src="../assets/docker-shim.png" width = "380"  align=center />
+	<img src="../assets/container.png" width = "550"  align=center />
 </div>
 
-## CRI
+## 容器的镜像
 
-CRI（Container Runtime Interface，容器运行时接口）是 K8s 定义的一组与容器运行时进行交互的接口，用于将 K8s 平台与特定的容器实现解耦。在 K8s 早期的版本中，对于容器环境的支持是通过 Dockershim(hard code) 方式直接调用 Docker API 的，后来为了支持更多的容器运行时和更精简的容器运行时，K8s 在遵循 OCI 基础上提出了CRI。
+Docker 一个核心创新是容器镜像（Docker Image），这是一种利用联合文件系统UnionFS实现的分层文件系统，再结合Layer Docker由此实现了一种新型的应用打包、分发和运行机制。
 
-## CRI shim
 
-当前实现了 CRI 的 remote shim 有如下：
+Docker把应用和相关依赖打包成为一个镜像，并且采用类似多次快照的存储技术，例如aufs/device mapper/btrfs/zfs等，可以实现：
 
-- containerd：由 Docker 公司创建，并且在 2017 年捐赠给了 CNCF，2019 年毕业。
-- CRI-O：基于 OCI 规范的作为 CRI 和 OCI 之间的一座桥梁。
-- Docker Engine：Docker 运行时的支持，由 cri-dockerd 进行实现。
-- Mirantis Container Runtime：Docker 企业版(Enterprise Edition) 运行时的支持，由 Mirantis Container Runtime(MCR) 进行实现。
+- 多个应用可以共用相同的底层镜像（初始的操作系统镜像）
+- 应用运行时的IO操作和镜像文件隔离
+- 通过挂载包含不同配置/数据文件的目录或者卷（Volume），单个App镜像可以同时用来运行无数个不同业务的容器。
 
 <div  align="center">
-	<img src="../assets/K8s-CRI-shim.png" width = "380"  align=center />
+	<img src="../assets/container-image.png" width = "500"  align=center />
 </div>
 
+上图是基于一个Alpine Linux的镜像，分别建立了Nginx和Redis的镜像，并且挂载不同的配置/数据同时运行3个网站应用2个Redis应用的示意图。
+
+此外，Docker公司提供公共的镜像仓库（Docker称之为Repository），Github connect，自动构建镜像，大大简化了应用分发、部署、升级流程。加上Docker可以非常方便的建立各种自定义的镜像文件，这些都是Docker成为最流行的容器技术的重要因素。
+
+通过以上这些技术的组合，最后的结果就是，绝大部分应用，开发者都可以通过docker build创建镜像，通过docker push上传镜像，用户通过docker pull下载镜像，用docker run运行应用。用户不需要再去关心如何搭建环境，如何安装，如何解决不同发行版的库冲突等问题， 这也是Docker大行其道的原因。
+
+## 容器的优点
+
+容器的主要优点，尤其是与虚拟机相比，是提供一种抽象级别，使其轻量且可移植。
+
+- **轻量**： 容器共享计算机操作系统内核，无需为每个应用程序提供完整的操作系统实例，容器文件小并且资源易于使用。 它们的体积更小，尤其是与虚拟机相比，这意味着可以快速运行，更好地支持横向扩展的 云原生 应用程序。  
+- **可移植且平台独立**： 容器包含所有的依赖关系，这意味着软件在一次编写后即可运行，无需在笔记本电脑、云环境和本地计算环境中重新配置。
+支持现代开发与架构： 由于融入跨平台部署的可移植性/一致性以及体积小，容器非常适用于现代开发和应用模式，如 DevOps、 无服务器 和 微服务，它们都基于小增量常规代码部署而构建。
+- **利用率高**：与之前的虚拟机相同，容器可使开发人员和操作人员提高物理机的 CPU 和内存利用率。 容器的进步之处在于，它们还支持微服务 架构，因此可以更精细地部署和扩展应用组件，相较于由于单个组件难以负载而必须扩展整个单体应用程序，这种解决方案更具吸引力。
 
 
+## 容器用例
 
-## RuntimeClass
+容器提供了一种逻辑打包机制，以这种机制打包的应用可以脱离其实际运行的环境。利用这种脱离，不管目标环境是私有数据中心、公有云，还是开发者的个人笔记本电脑，您都可以轻松、一致地部署基于容器的应用。
 
-RuntimeClass 是 v1.12 引入的新 API 对象，用来支持多个容器运行时，可通过 Pod 字段直接指定。 定义一个 RuntimeClass 如下，对应的 CRI handler 即为目标容器运行时，比如 containerd、crio：
+但在这个大范围内，有一些与容器特别相关的关键用例。
 
-```
-apiVersion: node.k8s.io/v1  # RuntimeClass is defined in the node.k8s.io API group
-kind: RuntimeClass
-metadata:
-  name: myclass  # The name the RuntimeClass will be referenced by
-  # RuntimeClass is a non-namespaced resource
-handler: myconfiguration  # The name of the corresponding CRI configuration
+- **微服务**：容器体积小且轻量，因此非常适用于微服务架构，其中的应用程序由许多松散耦合且可独立部署的较小服务而构建。
+- **DevOps**：微服务即架构和容器即平台的结合是许多团队的常见基础，他们采用 DevOps 来构建、交付和运行软件。
+- **混合多云**：由于容器可以在任何地方（跨笔记本电脑、本地和云环境）以一致方式运行，因此是 混合云 和 多云 场景的理想底层架构，这种架构下的企业可结合自己的数据中心，在多个公有云中运行。
+- **应用现代化与迁移**：最常见的 应用现代化 方法是从容器化开始，便于它们之后 迁移 至云端。
 
-```
