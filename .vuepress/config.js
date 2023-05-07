@@ -189,8 +189,9 @@ export default defineUserConfig({
                         sidebarDepth: 1,
                         children: [
                             '/CloudNative/container-normalize.md',
+                            '/CloudNative/OCI-in-Kubernetes.md',
                             '/CloudNative/container-diff.md',
-                            '/CloudNative/k8s-docker.md',
+                            
                         ]
                     },
                     {
