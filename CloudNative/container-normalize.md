@@ -4,57 +4,56 @@
 
 后续随着IaaS、PaaS和SaaS等云平台逐渐成熟，用户对云端应用开发、部署和运维的效率不断重视, 2015年，OCI(Open Container Initiative)作为Linux基金会项目成立，旨在推动开源技术社区制定容器镜像和运行时规范，使不同厂家的容器解决方案具备互操作能力。同年还成立了CNCF，目的是促进容器技术在云原生领域的应用，降低用户开发云原生应用门槛
 
-## 从 Docker 说起
-
-从 Docker 1.11 版本开始，Docker 容器运行就不是简单通过 Docker Daemon 来启动了, 而是被分成了多个模块以适应 OCI 标准，现阶段的 Docker 通过集成 Containerd、containerd-shim、runC 等多个组件共同完成。
-
-<div  align="center">
-	<img src="../assets/docker-arc.png" width = "550"  align=center />
-</div>
-
-其中 containerd 是 CRI（contianer runtime interface：容器管理操作标准） 的一种实现，containerd 是一个工业标准的容器运行时，注重简单、 健壮性、可移植性。 containerd-shim 是 containerd 和 runC 之间的中间层， 而 runC 则是 OCI（开放容器计划）参考实现。
-
 
 ## OCI
 
-OCI（Open Container Initiative，开放容器计划），是在 2015 年由 Docker、CoreOS 等公司共同成立的项目，并由 Linux 基金会进行管理，致力于 container runtime 标准的制定和 runc 的开发等工作。
+OCI（Open Container Initiative，开放容器计划），是在 2015 年由 Docker、CoreOS 等公司共同成立的项目，并由 Linux 基金会进行管理，致力于围绕容器格式和运行时创建开放的行业标准。
 
-所谓 container runtime，主要负责的是容器的生命周期的管理。OCI 主要分为容器运行时规范(runtime-spec) 和镜像规范(image-spec) 两部分，runtime-spec 标准对容器的创建、删除、查看、状态等操作进行了定义，image-spec 标准对镜像格式、打包(Bundle)、存储等进行了定义。
+OCI 目前提出的规范有如下这些：
+
+- Runtime Specification	
+- Image Format	
+- Distribution Specification	
+
+image 规范对镜像格式、打包(Bundle)、存储等进行了定义。runtime 是对镜像运行时的规范，它定义了利用镜像的Artifact在不同的平台上运行容器的标准流程。在 OCI 标准下，运行一个容器的过程就是下载一个 OCI 的镜像，将其解压到某个 Filesystem Bundle 中，然后某个 OCI Runtime 就会运行这个 Bundle。
+
+而 Distribution Specification 则是镜像分发的规范，该规范用于标准化镜像的分发标准，使 OCI 的生态覆盖镜像的全生态链路，从而成为一种跨平台的容器镜像分发标准。例如，Docker的官方镜像仓库distribution就是一个符合分发规范的Registry，同理，腾讯软件源所使用的Harbor也是符合分发规范的仓库。
+
+
+##  OCI in docker
+
+自从 2013 年 docker 发布之后，docker 项目本身逐渐成为了一个庞然大物。为了能够降低项目维护的成本，促进行业发展，docker 公司提出了 “基础设施管道宣言” (Infrastructure Plumbing Manifesto)，并分成了多个模块以适应 OCI 标准。
+
+从 Docker 1.11 版本开始，Docker 容器运行就不是简单通过 Docker Daemon 来启动了, 而是被分成了多个模块以适应 OCI 标准。现阶段的 Docker 通过集成 Containerd、containerd-shim、runC 等多个组件共同完成。
+
+其中 containerd 是 CRI 的一种实现，是一个工业标准的容器运行时，几乎囊括了单机运行一个容器运行时所需要的一切：执行，分发，监控，网络，构建，日志等。 而 runC 则是 OCI 参考实现，是一个轻量可移植的容器运行时，包括了所有之前 docker 所使用的容器相关的与系统特性的代码，它的目标是：make standard containers available everywhere。
+
+containerd-shim 是 containerd 和 runC 之间的中间层， 每启动一个容器都会创建一个新的 containerd-shim 进程，指定容器 ID，Bundle 目录，运行时的二进制（比如 runc）
+
+
+于是，现代 docker 的架构流程图，已如下所示：
 
 <div  align="center">
 	<img src="../assets/docker-arc.png" width = "550"  align=center />
 </div>
-
-
-## runC
-
-runC 是标准化的产物，由 Docker 贡献给 OCI 作为OCI 容器运行时标准的参考实现。
-
-runc 直接与容器所依赖的 Cgroup/OS 等进行交互，负责为容器配置 Cgroup/namespace 等启动容器所需的环境，创建启动容器的相关进程。是一个可以用于创建和运行容器的 CLI(command-line interface) 工具。
-
-有了 runC 后, OCI 对容器 runtime 的标准所定义的指定容器的运行状态和 runtime 需要提供的命令得以打通.
-
-runC 有以下特性:
-
-- 构建出的二进制直接调用
-- 用于更新 dockerd 配置文件 config.v2.json, hostconfig.json 文件
-- 提供了 k8s runtime class
-- 与 OCI 交互标准化
 
 
 ## Container Runtime
 
-Container Runtime （容器运行时），对于广义的runtimes，基本有两种观点，其一：runtime是“程序运行时的生命周期状态”，其二：“为了运行特定语言而提供的特定实现和设计”，一个例子就是java hotspot runtime。
+对于 runtime 其中一个理解是：“为了运行特定语言而提供的特定实现和设计”，再具体到 container runtime ，就是容器整个生命周期的设计和实现。以 docker 为例，其作为一个整体的container runtime 系统，主要提供的功能如下：
 
-而对 container runtime 而言，“为了运行特定语言而提供的特定实现和设计”的这种理解方式无疑是更恰当的。Container runtime 容器运行时顾名思义就是要掌控容器运行的整个生命周期。
+- 制定容器镜像格式
+- 构建容器镜像
+- 运行容器
+- ..
 
-容器运行时相当复杂，每个运行时都涵盖了从低级到高级的不同部分，如下图所示：
+目前较为流行的说法是将容器运行时分成了 low-level 和 high-level 两类，容器运行时相当复杂，每个运行时都涵盖了从低级到高级的不同部分，如下图所示：
 
 <div  align="center">
 	<img src="../assets/container-runtime.png" width = "350"  align=center />
 </div>
 
-通常只关注正在运行的容器的实际Container Runtime通常称为“low-level container runtimes”。支持更多高级功能（如镜像管理和gRPC/Web API）的运行时通常称为“high-level container runtimes”。
+通常只关注正在运行的容器的实际Container Runtime通常称为“low-level container runtime”。支持更多高级功能（如镜像管理和gRPC/Web API）的运行时通常称为“high-level container runtimes”。
 
 实际应用中，low-level container runtimes和high-level container runtimes如下图所示，按照各自的分工，协作完成容器管理的工作。
 
@@ -83,6 +82,25 @@ High-level runtimes相较于low-level runtimes位于堆栈的上层。low-level 
 - docker
 - containerd
 - rkt
+
+
+
+## runC
+
+runC 是标准化的产物，由 Docker 贡献给 OCI 作为OCI 容器运行时标准的参考实现。
+
+runc 直接与容器所依赖的 Cgroup/OS 等进行交互，负责为容器配置 Cgroup/namespace 等启动容器所需的环境，创建启动容器的相关进程。是一个可以用于创建和运行容器的 CLI(command-line interface) 工具。
+
+有了 runC 后, OCI 对容器 runtime 的标准所定义的指定容器的运行状态和 runtime 需要提供的命令得以打通.
+
+runC 有以下特性:
+
+- 构建出的二进制直接调用
+- 用于更新 dockerd 配置文件 config.v2.json, hostconfig.json 文件
+- 提供了 k8s runtime class
+- 与 OCI 交互标准化
+
+
 
 
 ## CRI
