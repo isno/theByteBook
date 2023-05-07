@@ -40,27 +40,26 @@ containerd-shim 是 containerd 和 runC 之间的中间层， 每启动一个容
 
 ## Container Runtime
 
-对于 runtime 其中一个理解是：“为了运行特定语言而提供的特定实现和设计”，再具体到 container runtime ，就是容器整个生命周期的设计和实现。以 docker 为例，其作为一个整体的container runtime 系统，主要提供的功能如下：
-
-- 制定容器镜像格式
-- 构建容器镜像
-- 运行容器
-- ..
-
-目前较为流行的说法是将容器运行时分成了 low-level 和 high-level 两类，容器运行时相当复杂，每个运行时都涵盖了从低级到高级的不同部分，如下图所示：
+对于 runtime 其中一个理解是：“为了运行特定语言而提供的特定实现和设计”，再具体到 container runtime ，就是容器整个生命周期的设计和实现。容器运行时相当复杂，每个运行时都涵盖了从低级到高级的不同部分，如下图所示：
 
 <div  align="center">
 	<img src="../assets/container-runtime.png" width = "350"  align=center />
 </div>
 
-通常只关注正在运行的容器的实际Container Runtime通常称为“low-level container runtime”。支持更多高级功能（如镜像管理和gRPC/Web API）的运行时通常称为“high-level container runtimes”。
+以 docker 为例，其作为一个整体的container runtime 系统，主要提供的功能如下：
 
-实际应用中，low-level container runtimes和high-level container runtimes如下图所示，按照各自的分工，协作完成容器管理的工作。
+- 制定容器镜像格式
+- 构建容器镜像
+- 运行容器
+- ...
+
+目前较为流行的说法是将容器运行时分成了 low-level 和 high-level 两类，通常只关注正在运行的容器的实际Container Runtime通常称为“low-level container runtime”。支持更多高级功能（如镜像管理和gRPC/Web API）的运行时通常称为“high-level container runtimes”。
+
+实际应用中，low-level container runtime 和high-level container runtime 如下图所示，按照各自的分工，协作完成容器管理的工作。
 
 <div  align="center">
 	<img src="../assets/container-runtime-relative.png" width = "350"  align=center />
 </div>
-
 
 其实high-level container runtime 是通过不同 shim 对接不同的low-level container runtime。比如 containerd 对接 kata-runtime：
 
@@ -69,38 +68,32 @@ containerd-shim 是 containerd 和 runC 之间的中间层， 每启动一个容
 </div>
 
 
-### low-level runtime
+### Low-level runtime
 
-low-level runtime 关注如何与操作系统交互，创建并运行容器。目前常见的 low-level runtime有：
+low-level container runtime 从原理上来讲是用linux namespace实现命名空间的隔离、资源的虚拟化和用cgroup来实现资源的使用控制。
+所以一个最基本的low-level容器运行时需要做的包括：
+
+- Create cgroup
+- Run command(s) in cgroup
+- Unshare to move to its own namespaces
+- Clean up cgroup after command completes (namespaces are deleted automatically when not referenced by a running process)
+
+最最简单的一个运行时就是把容器文件放到一个文件夹里面，用chroot控制文件访问，再把cgroups，还有namespace创建好，就算是实现隔离了。
+
+典型的low level runtime实现有：lmctfy，runc，rkt
 
 
+### High-level runtime
 
-### High-level runtimes
+low-level container runtime负责实际运行容器，而high-level container runtime负责容器映像的传输和管理，解压缩映像，然后传递到低级运行时以运行容器。
 
-High-level runtimes相较于low-level runtimes位于堆栈的上层。low-level runtimes负责实际运行容器，而High-level runtimes负责传输和管理容器镜像，解压镜像，并传递给low-level runtimes来运行容器。目前主流的 high-level runtime 有：
+高级运行时提供了守护程序应用程序和API，远程应用程序可使用它们来逻辑运行容器并对其进行监视，但是它们位于底层并委托低级运行时或其他高级运行时进行实际工作。
 
-- docker
+目前主流的 high-level runtime 有：
+
+- docker  (docker 亦可称为 high-high-level runtime)
 - containerd
-- rkt
-
-
-
-## runC
-
-runC 是标准化的产物，由 Docker 贡献给 OCI 作为OCI 容器运行时标准的参考实现。
-
-runc 直接与容器所依赖的 Cgroup/OS 等进行交互，负责为容器配置 Cgroup/namespace 等启动容器所需的环境，创建启动容器的相关进程。是一个可以用于创建和运行容器的 CLI(command-line interface) 工具。
-
-有了 runC 后, OCI 对容器 runtime 的标准所定义的指定容器的运行状态和 runtime 需要提供的命令得以打通.
-
-runC 有以下特性:
-
-- 构建出的二进制直接调用
-- 用于更新 dockerd 配置文件 config.v2.json, hostconfig.json 文件
-- 提供了 k8s runtime class
-- 与 OCI 交互标准化
-
-
+- podman
 
 
 ## CRI
