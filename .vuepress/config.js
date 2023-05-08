@@ -132,13 +132,14 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: "分布式事务",
+                text: "分布式及事务",
                 link: '/distributed-system/distributed-transaction.md',
                 children: [
                     '/distributed-system/cap.md',
                     '/distributed-system/BASE.md',
                     '/distributed-system/TCC.md',
                     '/distributed-system/Saga.md',
+                    '/distributed-system/raft.md',
                     '/distributed-system/idempotent.md',
                 ]
             },
