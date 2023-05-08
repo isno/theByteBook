@@ -154,7 +154,7 @@ export default defineUserConfig({
 
                     {
                         text: "ServiceMesh",
-                        link: 'MicroService/ServiceMesh.md',
+                        link: '/MicroService/ServiceMesh.md',
                         children: [
                             '/MicroService/ServiceMesh-implement.md',
                             '/MicroService/Istio.md',
