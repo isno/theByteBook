@@ -167,7 +167,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '消息中间件',
+                text: '从消息到事件流',
                 link: '/MessageQueue/intro.md',
                 collapsable: false,
                 sidebarDepth: 1,
