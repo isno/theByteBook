@@ -97,6 +97,7 @@ export default defineUserConfig({
                     '/http/http-dns.md',
                     '/http/compress.md',
                     '/http/HTTP3.md',
+                    '/http/https.md',
                     '/http/ssl.md'
                 ]
             },
