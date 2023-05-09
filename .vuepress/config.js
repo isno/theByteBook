@@ -1,4 +1,5 @@
 import { defineUserConfig, defaultTheme } from 'vuepress';
+import { commentPlugin } from "vuepress-plugin-comment2";
 
 export default defineUserConfig({
     lang: 'zh-CN',
@@ -7,7 +8,16 @@ export default defineUserConfig({
     head: [
         ['link', { rel: "shortcut icon", href: "/assets/favicon.ico" }],
     ],
-    plugins: [],
+    plugins: [
+        commentPlugin({
+          provider: "Giscus", 
+          comment: true, 
+          repo: "isno/thebytebook", //远程仓库
+          repoId: "R_kgDOIKTmzQ", //对应自己的仓库Id
+          category: "Announcements",
+          categoryId: "DIC_kwDOIKTmzc4CV4OK" //对应自己的分类Id
+        }),
+    ],
     theme: defaultTheme({
         navbar: [{
                 text: '首页',
@@ -21,14 +31,14 @@ export default defineUserConfig({
         sidebar: [
             '/intro.md',
             {
-                text: '网络的原理与应用',
+                text: '第二章 网络的原理与应用',
                 collapsable: true,
                 link: '/content/chapter1/intro.md',
-                sidebarDepth: 0,
+                sidebarDepth: 2,
                 children: [
                     '/content/chapter1/latency.md',
                     {
-                        text: '基础网络',
+                        text: '2.2 基础网络',
                         link: "/content/chapter1/underlay.md",
                         children: [
                             '/content/chapter1/bgp.md',
@@ -97,7 +107,7 @@ export default defineUserConfig({
                     '/http/latency.md',
                     '/http/http-dns.md',
                     '/http/compress.md',
-                    '/http/HTTP3.md',
+                    '/http/quic.md',
                     '/http/ssl.md'
                 ]
             },
