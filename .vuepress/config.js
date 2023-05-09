@@ -93,11 +93,11 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
+                    '/http/https.md',
                     '/http/latency.md',
                     '/http/http-dns.md',
                     '/http/compress.md',
                     '/http/HTTP3.md',
-                    '/http/https.md',
                     '/http/ssl.md'
                 ]
             },
@@ -177,7 +177,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '云原生及架构实践',
+                text: '容器技术及容器编排',
                 link: '/CloudNative/intro.md',
                 collapsable: false,
                 sidebarDepth: 1,
@@ -207,6 +207,24 @@ export default defineUserConfig({
                         ]
                     },
 
+                    
+                ]
+            },
+            {
+                text: 'CI/CD 持续集成',
+                link: '/CI-CD/intro.md',
+                collapsable: false,
+                sidebarDepth: 1,
+                children: [
+                    
+                ]
+            },
+            {
+                text: '架构可观测性',
+                link: '/Observability/intro.md',
+                collapsable: false,
+                sidebarDepth: 1,
+                children: [
                     
                 ]
             },

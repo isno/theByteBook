@@ -1,4 +1,4 @@
-# 理解 QUIC 与实践
+# 引入 QUIC 及实践
 
 QUIC (Quick UDP Internet Connections) 是一种基于 UDP 封装的的安全、可靠传输协议，他的目标是取代 TCP 并自包含 TLS 成为标准的安全传输协议。下图是 QUIC 在协议栈中的位置，基于 QUIC 承载的 HTTP 协议进一步被标准化为 HTTP3
 
@@ -15,6 +15,7 @@ QUIC (Quick UDP Internet Connections) 是一种基于 UDP 封装的的安全、�
 - 有序字节流引出的 队头阻塞（Head-of-line blocking），使得HTTP2的多路复用能力大打折扣
 - 基于TCP四元组确定一个连接，这种诞生于有线网络的设计，并不适合移动状态下的无线网络，这意味着IP地址的频繁变动会导致TCP连接、TLS会话反复握手
 
+## QUIC 与 TCP 对比
 
 QUIC协议的产生与今天的互联网应用场景和传输性能密切相关。在互联网和HTTP发展的过程中，HTTP底层协议大体上来说基本没变。但是，随着海量移动设备推高互联网流量，越来越多的应用场景需要低延迟、高吞吐、应用QoS感知的网络传输等，原来的HTTP协议在提供流畅、高效的Web访问方面越来越难以满足应用需求。
 
