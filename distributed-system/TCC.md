@@ -1,6 +1,8 @@
 # TCC
 
-TCC是Try、Confirm、Cancel三个词语的缩写，TCC要求每个分支事务实现三个操作 ：预处理Try、确认Confirm、撤销Cancel。Try操作做业务检查及资源预留，Confirm做业务确认操作，Cancel实现一个与Try相反的操作既回滚操作。
+TCC是Try、Confirm、Cancel三个词语的缩写，TCC要求每个分支事务实现三个操作 ：预处理Try、确认Confirm、撤销Cancel。
+
+Try操作做业务检查及资源预留，Confirm做业务确认操作，Cancel实现一个与Try相反的操作既回滚操作。
 
 TCC事务机制相比于2PC、3PC，不会锁定整个资源，而是通过引入补偿机制，将资源转换为业务逻辑形式，锁的粒度变小。
 
