@@ -1,5 +1,4 @@
 import { defineUserConfig, defaultTheme } from 'vuepress';
-import { commentPlugin } from "vuepress-plugin-comment2";
 
 export default defineUserConfig({
     lang: 'zh-CN',
@@ -9,14 +8,6 @@ export default defineUserConfig({
         ['link', { rel: "shortcut icon", href: "/assets/favicon.ico" }],
     ],
     plugins: [
-        commentPlugin({
-          provider: "Giscus", 
-          comment: true, 
-          repo: "isno/thebytebook", //远程仓库
-          repoId: "R_kgDOIKTmzQ", //对应自己的仓库Id
-          category: "Announcements",
-          categoryId: "DIC_kwDOIKTmzc4CV4OK" //对应自己的分类Id
-        }),
     ],
     theme: defaultTheme({
         navbar: [{
