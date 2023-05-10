@@ -10,6 +10,6 @@
   },
   "devDependencies": {
     "vuepress": "2.0.0-beta.61",
-    "vuepress-plugin-comment2": "^2.0.0-beta.208"
+    //"vuepress-plugin-comment2": "^2.0.0-beta.208"
   }
 }
