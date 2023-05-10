@@ -15,6 +15,7 @@ jobs:
           node-version: 20.0.0  
       - name: Install and Build   
         run: |
+          yarn self-update
           yarn install
           yarn build
       # 部署到阿里云
