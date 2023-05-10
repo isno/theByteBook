@@ -98,7 +98,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '移动端网络架构指南',
+                text: '应用层网络架构指南',
                 link: "/http/intro.md",
                 collapsable: false,
                 sidebarDepth: 1,
@@ -216,8 +216,6 @@ export default defineUserConfig({
                             '/CloudNative/Knative.md',
                         ]
                     },
-
-                    
                 ]
             },
             {
