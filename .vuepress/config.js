@@ -7,8 +7,7 @@ export default defineUserConfig({
     head: [
         ['link', { rel: "shortcut icon", href: "/assets/favicon.ico" }],
     ],
-    plugins: [
-    ],
+    plugins: [],
     theme: defaultTheme({
         navbar: [{
                 text: '首页',
@@ -22,14 +21,25 @@ export default defineUserConfig({
         sidebar: [
             '/intro.md',
             {
-                text: '第二章 网络的原理与应用',
+                text: '架构的演进',
+                link: "/architecture/intro.md",
+                collapsable: false,
+                sidebarDepth: 1,
+                children: [
+                    '/architecture/define-cloud-native.md',
+                    '/architecture/arc.md',
+                    '/architecture/arc-guide.md'
+                ]
+            },
+            {
+                text: '网络架构基础与实践',
                 collapsable: true,
                 link: '/content/chapter1/intro.md',
                 sidebarDepth: 2,
                 children: [
                     '/content/chapter1/latency.md',
                     {
-                        text: '2.2 基础网络',
+                        text: '基础网络',
                         link: "/content/chapter1/underlay.md",
                         children: [
                             '/content/chapter1/bgp.md',
@@ -89,7 +99,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '应用层网络架构指南',
+                text: '应用层网络架构实践',
                 link: "/http/intro.md",
                 collapsable: false,
                 sidebarDepth: 1,
@@ -182,31 +192,26 @@ export default defineUserConfig({
                 link: '/CloudNative/intro.md',
                 collapsable: false,
                 sidebarDepth: 1,
+                children: [{
+                    text: '容器技术',
+                    link: '/CloudNative/container.md',
+                    collapsable: false,
+                    sidebarDepth: 1,
+                    children: [
+                        '/CloudNative/container-normalize.md',
+                        '/CloudNative/OCI-in-Kubernetes.md',
+                        '/CloudNative/container-diff.md',
+
+                    ]
+                }]
+            },
+            {
+                text: 'Serverless架构',
+                link: '/CloudNative/Serverless.md',
+                collapsable: false,
+                sidebarDepth: 1,
                 children: [
-                    '/CloudNative/define-cloud-native.md',
-                    '/CloudNative/arc.md',
-                    '/CloudNative/arc-guide.md',
-                    {
-                        text: '容器技术',
-                        link:  '/CloudNative/container.md',
-                        collapsable: false,
-                        sidebarDepth: 1,
-                        children: [
-                            '/CloudNative/container-normalize.md',
-                            '/CloudNative/OCI-in-Kubernetes.md',
-                            '/CloudNative/container-diff.md',
-                            
-                        ]
-                    },
-                    {
-                        text: 'Serverless架构',
-                        link: '/CloudNative/Serverless.md',
-                        collapsable: false,
-                        sidebarDepth: 1,
-                        children: [
-                            '/CloudNative/Knative.md',
-                        ]
-                    },
+                    '/CloudNative/Knative.md',
                 ]
             },
             {
@@ -215,7 +220,7 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
-                    
+
                 ]
             },
             {
@@ -224,7 +229,7 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
-                    
+
                 ]
             },
             {

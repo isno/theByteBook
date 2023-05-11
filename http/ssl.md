@@ -1,6 +1,30 @@
 # 优化SSL层
 
-## 使用ecc算法
+在 TCP 建连之后，正式数据传输之前，HTTPS 比 HTTP 增加了一个 TLS 握手的步骤，这个步骤最长可以花费两个消息往返，也就是 2-RTT。而且在握手消息的网络耗时之外，还会有其他的一些「隐形」消耗，比如
+
+- 产生用于密钥交换的临时公私钥对（ECDHE）；
+- 验证证书时访问 CA 获取 CRL 或者 OCSP；
+- 非对称加密解密处理 Pre-Master
+
+
+在最差的情况下，也就是不做任何的优化措施，HTTPS 建立连接可能会比 HTTP 慢上几百毫秒甚至几秒，这其中既有网络耗时，也有计算耗时，就会让人产生“打开一个 HTTPS 网站好慢啊”的感觉
+
+
+## 使用 TLS1.3 协议
+
+优化SSL层，最好的方式就是升级最新的 TLS1.3 协议。TLS 1.3 放弃了对较旧、安全性较低的加密功能的支持，并加快了 TLS 握手 ，以及其他方面的改进。
+
+TLS 1.3 比 TLS 1.2 更快、更安全。使 TLS 1.3 更快的一处更改是对 TLS 握手工作方式的更新：TLS 1.3 中的 TLS 握手只需要一次 RTT 而不是两次，从而将过程缩短了几毫秒。如果客户端之前连接到网站，TLS 握手的往返次数为零。这使 HTTPS 连接更快，减少延迟并改善整体用户体验。
+
+在 Nginx 里可以用 ssl_ciphers、ssl_ecdh_curve 等指令配置服务器使用的密码套件和椭圆曲线，把优先使用的放在前面，例如：
+
+```
+ssl_ciphers   TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:EECDH+CHACHA20；
+ssl_ecdh_curve  X25519:P-256;
+
+```
+
+## 使用 ECC 证书
 
 ECC(Elliptic curve cryptography), 意为椭圆曲线密码编码学，和RSA算法一样，ECC算法也属于公开密钥算法。最初由Koblitz和Miller两人于1985年提出，其数学基础是利用椭圆曲线上的有理点构成Abel加法群上椭圆离散对数的计算困难性。
 
@@ -10,7 +34,7 @@ ECC算法的数学理论非常深奥和复杂，在工程应用中比较难于�
 
 <div  align="center">
 	<p>图：ECC vs RSA</p>
-	
+	<img src="../assets/ecc.png" width = "420"  align=center />
 </div>
 
 ECC与RSA相比，拥有突出优势：
