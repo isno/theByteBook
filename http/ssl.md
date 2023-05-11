@@ -1,36 +1,59 @@
-# 优化SSL层
+# 优化 SSL 层
 
-在 TCP 建连之后，正式数据传输之前，HTTPS 比 HTTP 增加了一个 TLS 握手的步骤，这个步骤最长可以花费两个消息往返，也就是 2-RTT。而且在握手消息的网络耗时之外，还会有其他的一些「隐形」消耗，比如
+在 `HTTPS的请求阶段分析` 文章示例中，HTTPS请求耗时 SSL 层约占了 50%。
+
+这主要是由于：在 TCP 建连之后，正式数据传输之前，HTTPS 比 HTTP 增加了一个 TLS 握手流程，这个阶段最长可以花费2-RTT，除去握手的延迟外，SSL层 还会有其他的一些「隐形」消耗，比如
 
 - 产生用于密钥交换的临时公私钥对（ECDHE）；
 - 验证证书时访问 CA 获取 CRL 或者 OCSP；
 - 非对称加密解密处理 Pre-Master
 
+不做任何优化措施情况下，HTTPS 建立连接可能会比 HTTP 慢上几百毫秒甚至几秒，这其中既有网络耗时，也有计算耗时，在高延迟的网络环境下，HTTPS 请求延迟的问题会更加明显。
 
-在最差的情况下，也就是不做任何的优化措施，HTTPS 建立连接可能会比 HTTP 慢上几百毫秒甚至几秒，这其中既有网络耗时，也有计算耗时，就会让人产生“打开一个 HTTPS 网站好慢啊”的感觉
+对于 SSL 层的优化，笔者建议针对以下几个主题：**协议升级、证书优化**。
 
 
-## 使用 TLS1.3 协议
+## 协议升级
 
-优化SSL层，最好的方式就是升级最新的 TLS1.3 协议。TLS 1.3 放弃了对较旧、安全性较低的加密功能的支持，并加快了 TLS 握手 ，以及其他方面的改进。
+优化 SSL 层，最好的方式就是升级最新 TLS1.3 协议。
 
-TLS 1.3 比 TLS 1.2 更快、更安全。使 TLS 1.3 更快的一处更改是对 TLS 握手工作方式的更新：TLS 1.3 中的 TLS 握手只需要一次 RTT 而不是两次，从而将过程缩短了几毫秒。如果客户端之前连接到网站，TLS 握手的往返次数为零。这使 HTTPS 连接更快，减少延迟并改善整体用户体验。
+TLS 1.3 放弃了对较旧、安全性较低的加密功能的支持，并加快了 TLS 握手 ，以及其他方面的改进。TLS 1.3 中的 TLS 握手只需要一次 RTT 而不是两次。如果客户端复用之前连接，TLS 握手的往返次数可以为零。这使 HTTPS 连接更快，减少延迟并改善整体用户体验。
 
-在 Nginx 里可以用 ssl_ciphers、ssl_ecdh_curve 等指令配置服务器使用的密码套件和椭圆曲线，把优先使用的放在前面，例如：
+<div  align="center">
+	<p>图：TLS1.2 握手流程</p>
+	<img src="../assets/tls1.2.png" width = "350"  align=center />
+</div>
 
-```
-ssl_ciphers   TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:EECDH+CHACHA20；
-ssl_ecdh_curve  X25519:P-256;
+从上图可以看出，使用 TLS 1.2 需要两次往返（ 2-RTT ）才能完成握手，然后才能发送请求。
 
-```
+<div  align="center">
+	<p>图：TLS1.3 握手流程</p>
+	<img src="../assets/tls1.3.png" width = "350"  align=center />
+</div>
 
-## 使用 ECC 证书
+相比 TLS 1.2，TLS 1.3 的握手时间减半。这意味着访问一个移动端网站，使用 TLS 1.3 协议，可能会减少将近 100ms 的时间
+
+
+## 证书优化
+
+除了密钥交换，握手过程中的证书验证也是一个比较耗时的操作，服务器需要把 自己的证书链 全发给客户端，然后客户端接收后再逐一验证。
+
+这里就有两个优化点：**证书传输** 、 **证书验证** 。
+
+###  使用 ECDSA 证书
+
+在使用 ECDSA 证书之前，我们先了解几个概念
+
+- **ECC**：Elliptic Curves Cryptography，椭圆曲线密码编码学
+- **ECDSA**：用于数字签名，是ECC与DSA的结合，整个签名过程与DSA类似，所不一样的是签名中采取的算法为ECC，最后签名出来的值也是分为R,S。在使用ECC进行数字签名的时候，需要构造一条曲线，也可以选择标准曲线，例如：prime256v1、secp256r1、nistp256、secp256k1（比特币中使用了该曲线）等等
+- **ECDH**：是基于ECC 和 DH（ Diffie-Hellman）密钥交换算法
+
+
+### 为什么要使用 ECC
 
 ECC(Elliptic curve cryptography), 意为椭圆曲线密码编码学，和RSA算法一样，ECC算法也属于公开密钥算法。最初由Koblitz和Miller两人于1985年提出，其数学基础是利用椭圆曲线上的有理点构成Abel加法群上椭圆离散对数的计算困难性。
 
-
-ECC算法的数学理论非常深奥和复杂，在工程应用中比较难于实现，但它的单位安全强度相对较高，它的破译或求解难度基本上是指数级的，黑客很难用通常使用的暴力破解的方法来破解。RSA算法的特点之一是数学原理相对简单，在工程应用中比较易于实现，但它的单位安全强度相对较低。因此，ECC 算法可以用较少的计算能力提供比RSA加密算法更高的安全强度，有效地解决了“提高安全强度必须增加密钥长度”的工程实现问题。
-
+ECC 算法可以用较少的计算能力提供比RSA加密算法更高的安全强度，有效地解决了“提高安全强度必须增加密钥长度”的工程实现问题。
 
 <div  align="center">
 	<p>图：ECC vs RSA</p>
@@ -41,6 +64,19 @@ ECC与RSA相比，拥有突出优势：
 * 更适用于移动互联网， ECC 加密算法的密钥长度很短，意味着占用更少的存储空间，更低的CPU开销和占用更少的带宽
 * 更好的安全性,ECC 加密算法提供更强的保护，比目前其他加密算法能更好的防止攻击.
 * 计算量小，处理速度更快，在私钥的处理速度上（解密和签名），ECC 远比 RSA、DSA 快得多。
+
+
+椭圆曲线也要选择高性能的曲线，最好是 x25519，次优选择是 P-256。对称加密算法方面，也可以选用 AES_128_GCM ，它能比 AES_256_GCM 略快。
+
+
+在 Nginx 里可以用 ssl_ciphers、ssl_ecdh_curve 等指令配置服务器使用的密码套件和椭圆曲线，把优先使用的放在前面，例如：
+
+```
+ssl_ciphers   TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:EECDH+CHACHA20；
+ssl_ecdh_curve  X25519:P-256;
+```
+
+
 
 ### 算法安全性比较
 
@@ -66,3 +102,46 @@ Red Hat Enterprise| 6.5
 iOS| iOS7.x
 Android OS|3.7
 Microsoft Windows Phone | 7.x
+
+
+## OCSP Stapling
+
+客户端的证书验证其实是个很复杂的操作，除了要公钥解密验证多个证书签名外，因为证书还有可能会被撤销失效，客户端有时还会再去访问 CA，下载 CRL 或者 OCSP 数据，这又会产生 DNS 查询、建立连接、收发数据等一系列网络通信，增加多个 RTT。
+
+OCSP stapling 是 证书校验优化方案之一，将原本需要客户端实时发起的 OCSP 请求转嫁给服务端，它可以让服务器预先访问 CA 获取 OCSP 响应，然后在握手时随着证书一起发给客户端，免去了客户端连接 CA 服务器查询的时间。
+
+在 Nginx 中配置 OCSP stapling 服务
+```
+server {
+    listen 443 ssl;
+    server_name  xx.xx.com;
+    index index.html;
+
+    ssl_certificate         server.pem;#证书的.cer文件路径
+    ssl_certificate_key     server-key.pem;#证书的.key文件
+
+    # 开启 OCSP Stapling 当客户端访问时 NginX 将去指定的证书中查找 OCSP 服务的地址，获得响应内容后通过证书链下发给客户端。
+    ssl_stapling on;
+    ssl_stapling_verify on;# 启用OCSP响应验证，OCSP信息响应适用的证书
+    ssl_trusted_certificate /path/to/xxx.pem;# 若 ssl_certificate 指令指定了完整的证书链，则 ssl_trusted_certificate 可省略。
+    resolver 8.8.8.8 valid=60s;#添加resolver解析OSCP响应服务器的主机名，valid表示缓存。
+    resolver_timeout 2s；# resolver_timeout表示网络超时时间
+```
+
+
+### 检查证书是否已开启 OCSP Stapling
+
+通过命令 
+
+``` 
+openssl s_client -connect sofineday.com:443 -servername sofineday.com -status -tlsextdebug < /dev/null 2>&1 | grep "OCSP" 
+```
+
+若显示如下结果，则表示已开启
+
+```
+OCSP response:
+OCSP Response Data:
+    OCSP Response Status: successful (0x0)
+    Response Type: Basic OCSP Response
+```

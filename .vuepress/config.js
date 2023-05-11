@@ -109,7 +109,8 @@ export default defineUserConfig({
                     '/http/http-dns.md',
                     '/http/compress.md',
                     '/http/quic.md',
-                    '/http/ssl.md'
+                    '/http/ssl.md',
+                    '/http/ssl-optmize.md'
                 ]
             },
             {
