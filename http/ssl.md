@@ -72,8 +72,15 @@ ECC与RSA相比，拥有突出优势：
 在 Nginx 里可以用 ssl_ciphers、ssl_ecdh_curve 等指令配置服务器使用的密码套件和椭圆曲线，把优先使用的放在前面，例如：
 
 ```
-ssl_ciphers   TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:EECDH+CHACHA20；
-ssl_ecdh_curve  X25519:P-256;
+ssl_dyn_rec_enable on;
+ssl_protocols TLSv1.2 TLSv1.3;
+ssl_ecdh_curve X25519:P-256;
+ssl_ciphers [ECDHE-ECDSA-CHACHA20-POLY1305|ECDHE-RSA-CHACHA20-POLY1305|ECDHE-ECDSA-AES256-GCM-SHA384|ECDHE-RSA-AES256-GCM-SHA384]:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256;
+ssl_prefer_server_ciphers on;
+ssl_session_cache shared:SSL:20m;
+ssl_session_timeout 15m;
+ssl_session_tickets off;
+
 ```
 
 
