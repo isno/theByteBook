@@ -1,4 +1,4 @@
-# 引入 QUIC 及实践
+# 引入 QUIC
 
 QUIC (Quick UDP Internet Connections) 是一种基于 UDP 封装的安全、可靠传输协议，他的目标是取代 TCP 并自包含 TLS 成为标准的安全传输协议。
 

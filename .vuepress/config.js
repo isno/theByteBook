@@ -108,9 +108,17 @@ export default defineUserConfig({
                     '/http/latency.md',
                     '/http/http-dns.md',
                     '/http/compress.md',
-                    '/http/quic.md',
+                    {
+                        text: "引入 QUIC",
+                        link: '/http/quic.md',
+                        children: [
+                            '/http/nginx-quic.md',
+                            '/http/quic-performance.md',
+                        ]
+                    },
+                    
                     '/http/ssl.md',
-                    '/http/ssl-optmize.md'
+                    '/http/ssl-performance.md'
                 ]
             },
             {
