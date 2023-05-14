@@ -74,7 +74,7 @@ export default defineUserConfig({
                         text: '网络优化指南',
                         link: "/content/chapter1/net-optimize-intro.md",
                         children: [
-                            '/content/chapter1/net-optimize.md',
+                            '/network/kernel.md',
                             {
                                 text: "传输层优化",
                                 link: "/content/chapter1/transport.md",
@@ -106,7 +106,16 @@ export default defineUserConfig({
                 children: [
                     '/http/https.md',
                     '/http/latency.md',
-                    '/http/http-dns.md',
+                    
+                    {
+                        text: "DNS 解析原理",
+                        link: '/http/dns.md',
+                        children: [
+                            '/http/http-dns.md',
+                            '/http/dns-ha.md',
+                            //'/http/quic-performance.md',
+                        ]
+                    },
                     '/http/compress.md',
                     {
                         text: "引入 QUIC",

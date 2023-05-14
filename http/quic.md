@@ -96,6 +96,8 @@ QUIC 的多路复用类似于 HTTP/2。可以在单个 QUIC 连接上同时发�
 	<img src="../assets/quic-head-block.png" width = "480"  align=center />
 </div>
 
-此外，作为 QUIC 的一项新功能，HPACK 标头压缩格式的变体 QPACK 旨在减少通过网络传输的冗余数据量，从而有助于缓解 Head-of-Line Blocking。这样QUIC在弱网场景下可以接收到比TCP更多的数据。
+此外，作为 QUIC 的一项新功能，HPACK 标头压缩格式的变体 QPACK 旨在减少通过网络传输的冗余数据量，从而有助于缓解 Head-of-Line Blocking。
+
+这样 QUIC 在弱网场景下可以接收到比 TCP 更多的数据。
 
 
