@@ -128,7 +128,9 @@ export default defineUserConfig({
                     },
                     
                     '/http/ssl.md',
-                    '/http/ssl-performance.md'
+                    '/http/ssl-performance.md',
+                    '/http/protobuf.md',
+
                 ]
             },
             {

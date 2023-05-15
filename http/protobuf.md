@@ -1,4 +1,4 @@
-# 序列化数据 Protobuf
+# 序列化数据 Protocol buffers
 
 Protocol buffers 是一种语言中立，平台无关，可扩展的序列化数据的格式，可用于通信协议，数据存储等。
 
@@ -116,7 +116,7 @@ protocol buffer 中 message 是一系列键值对。message 的二进制版本�
 
 
 <div  align="center">
-	<img src="/assets/chapter2/protobuf_example.png" width = "650"  align=center />
+	<img src="../assets/protobuf_example.png" width = "650"  align=center />
 </div> 
 
 由于采用了 tag-value 的形式，所以 option 的 field 如果有，就存在在这个 message buffer 中，如果没有，就不会在这里，这一点也算是压缩了 message 的大小了。
