@@ -1,6 +1,8 @@
 # LVS 理解
 
-LVS是Linux Virtual Server的简写，意即Linux虚拟服务器，是一个虚拟的服务器集群系统 。之所以是虚拟服务器，是因为 LVS 自身是个负载均衡器(director)，不直接处理请求，而是将请求转发至位于它后端真正的服务器 realserver 上
+LVS是Linux Virtual Server的简写，意即Linux虚拟服务器。之所以是虚拟服务器，是因为 LVS 自身是个负载均衡器(Director Server)，不直接处理请求，而是将请求转发至位于它后端真正的服务器 Real Server 上
+
+负载均衡(LB) 集群的架构和原理很简单，就是当用户的请求过来时，会直接分发到 Director Server 上，然后它把用户的请求根据设置好的调度算法，智能均衡地分发到后端真正服务器 (real server) 上。为了避免不同机器上用户请求得到的数据不一样，需要用到了共享存储，这样保证所有用户请求的数据是一样的。
 
 
 LVS由两部分组成：ipvs和ipvsadm
@@ -28,6 +30,12 @@ Server相关
 ## LVS的工作原理
 
 LVS 主要是基于 Netfilter 实现的四层负载均衡集群系统，可在传输层将一组服务器构成一个实现可伸缩、高可用网络服务的虚拟服务群集。
+
+
+LVS的IP负载均衡技术是通过IPVS模块来实现的，IPVS是LVS集群系统的核心软件，它的主要作用是：安装在Director Server上，同时在Director Server上虚拟出一个IP地址，用户必须通过这个虚拟的IP地址访问服务。这个虚拟IP一般称为LVS的VIP，即Virtual IP。访问的请求首先经过VIP到达负载调度器，然后由负载调度器从Real Server列表中选取一个服务节点响应用户的请求。
+
+当用户的请求到达负载调度器后，调度器如何将请求发送到提供服务的Real Server节点，而Real Server节点如何返回数据给用户，是IPVS实现的重点技术，这其中有三种方式：分别是 NAT、TUN 和 DR
+
 
 LVS 主要通过向 Netfilter 的3个阶段注册钩子函数来对数据包进行处理，如下图
 

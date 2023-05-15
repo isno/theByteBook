@@ -142,7 +142,9 @@ export default defineUserConfig({
                         text: "四层负载均衡",
                         link: '/api-gateway/balance4.md',
                         children: [
-                            '/api-gateway/LVS.md'
+                            '/api-gateway/LVS.md',
+                            '/api-gateway/lvs-mod.md',
+                            '/api-gateway/lvs-balance.md'
                         ]
                     },
                     {
@@ -230,11 +232,11 @@ export default defineUserConfig({
             },
             {
                 text: 'Serverless架构',
-                link: '/CloudNative/Serverless.md',
+                link: '/serverless/Serverless.md',
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
-                    '/CloudNative/Knative.md',
+                    '/serverless/Knative.md',
                 ]
             },
             {
