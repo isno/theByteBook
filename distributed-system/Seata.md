@@ -1,5 +1,7 @@
-# Seata
+# 分布式解决方案：Seata
 
-实现分布式事务的方案比较多，常见的比如基于 XA 协议的 2PC、3PC，基于业务层的 TCC，还有应用消息队列 + 消息表实现的最终一致性方案等。
+Seata（Simple Extensible Autonomous Transaction Architecture，简单可扩展自治事务框架），是蚂蚁金服和阿里巴巴共同开源的分布式事务解决方案
 
-Seata 是一款开源的分布式事务解决方案，致力于提供高性能和简单易用的分布式事务服务。Seata 将为用户提供了 AT、TCC、SAGA 和 XA 事务模式，为用户打造一站式的分布式解决方案。
+## Seata的优势
+
+- 微服务框架支持

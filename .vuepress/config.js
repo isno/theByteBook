@@ -172,6 +172,7 @@ export default defineUserConfig({
                     '/distributed-system/Saga.md',
                     '/distributed-system/raft.md',
                     '/distributed-system/idempotent.md',
+                    '/distributed-system/Seata.md'
                 ]
             },
             {
