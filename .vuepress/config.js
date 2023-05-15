@@ -226,6 +226,7 @@ export default defineUserConfig({
                         '/CloudNative/container-normalize.md',
                         '/CloudNative/OCI-in-Kubernetes.md',
                         '/CloudNative/container-diff.md',
+                        '/CloudNative/kata-container.md',
 
                     ]
                 }]
