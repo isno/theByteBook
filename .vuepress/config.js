@@ -225,11 +225,11 @@ export default defineUserConfig({
                     sidebarDepth: 1,
                     children: [
                         '/container/container-normalize.md',
-                        '/container/OCI-in-Kubernetes.md',
                         '/container/image.md',
+                        '/container/Nydus-image.md',
+                        '/container/CRI-in-Kubernetes.md',
                         '/container/container-diff.md',
-                        '/container/kata-container.md',
-                        '/container/RuntimeClass.md'
+                        '/container/kata-container.md'
                     ]
                 },
                 {
@@ -238,6 +238,8 @@ export default defineUserConfig({
                     collapsable: false,
                     sidebarDepth: 1,
                     children: [
+                        '/container/pod.md',
+                        '/container/RuntimeClass.md'
                     ]
                 }
                 ]

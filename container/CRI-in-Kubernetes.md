@@ -1,4 +1,4 @@
-# OCI in Kubernetes
+# CRI in Kubernetes
 
 Kubernetes 是当今主流的容器编排平台，为了适应不同场景的需求，Kubernetes需要有使用不同容器运行时的能力。
 
