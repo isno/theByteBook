@@ -20,6 +20,7 @@ export default defineUserConfig({
         ],
         sidebar: [
             '/intro.md',
+            '/plan.md',
             '/recommend.md',
             {
                 text: '架构的演进',
