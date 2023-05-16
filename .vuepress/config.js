@@ -215,26 +215,26 @@ export default defineUserConfig({
             },
             {
                 text: '容器技术及容器编排',
-                link: '/CloudNative/intro.md',
+                link: '/container/intro.md',
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [{
                     text: '容器技术',
-                    link: '/CloudNative/container.md',
+                    link: '/container/container.md',
                     collapsable: false,
                     sidebarDepth: 1,
                     children: [
-                        '/CloudNative/container-normalize.md',
-                        '/CloudNative/OCI-in-Kubernetes.md',
-                        '/CloudNative/image.md',
-                        '/CloudNative/container-diff.md',
-                        '/CloudNative/kata-container.md',
-                        '/CloudNative/RuntimeClass.md'
+                        '/container/container-normalize.md',
+                        '/container/OCI-in-Kubernetes.md',
+                        '/container/image.md',
+                        '/container/container-diff.md',
+                        '/container/kata-container.md',
+                        '/container/RuntimeClass.md'
                     ]
                 },
                 {
                     text: '容器编排',
-                    link: '/CloudNative/container-orchestration.md',
+                    link: '/container/container-orchestration.md',
                     collapsable: false,
                     sidebarDepth: 1,
                     children: [
