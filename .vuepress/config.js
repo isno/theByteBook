@@ -160,7 +160,8 @@ export default defineUserConfig({
                         children: [
                             '/api-gateway/OpenResty.md',
                             '/api-gateway/limit.md',
-                            '/api-gateway/openresty-module.md'
+                            '/api-gateway/openresty-module.md',
+                            '/api-gateway/openresty-fire.md'
                         ]
                     },
 
@@ -225,6 +226,7 @@ export default defineUserConfig({
                     children: [
                         '/CloudNative/container-normalize.md',
                         '/CloudNative/OCI-in-Kubernetes.md',
+                        '/CloudNative/image.md',
                         '/CloudNative/container-diff.md',
                         '/CloudNative/kata-container.md',
                         '/CloudNative/RuntimeClass.md'
@@ -264,7 +266,7 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
-
+                    '/Observability/monitor-upgrade.md',
                 ]
             },
             {
