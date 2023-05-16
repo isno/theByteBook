@@ -159,8 +159,8 @@ export default defineUserConfig({
                         link: '/api-gateway/api-gateway.md',
                         children: [
                             '/api-gateway/OpenResty.md',
-                            '/api-gateway/limit.md'
-
+                            '/api-gateway/limit.md',
+                            '/api-gateway/openresty-module.md'
                         ]
                     },
 
@@ -227,9 +227,18 @@ export default defineUserConfig({
                         '/CloudNative/OCI-in-Kubernetes.md',
                         '/CloudNative/container-diff.md',
                         '/CloudNative/kata-container.md',
-
+                        '/CloudNative/RuntimeClass.md'
                     ]
-                }]
+                },
+                {
+                    text: '容器编排',
+                    link: '/CloudNative/container-orchestration.md',
+                    collapsable: false,
+                    sidebarDepth: 1,
+                    children: [
+                    ]
+                }
+                ]
             },
             {
                 text: 'Serverless架构',
