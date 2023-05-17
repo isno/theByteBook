@@ -68,15 +68,7 @@ export default defineUserConfig({
                             '/content/chapter1/vxlan.md'
                         ]
                     },
-                    {
-                        text: '内核网络以及内核旁路技术',
-                        link: "/network/kernel.md",
-                        children: [
-                            '/network/netfilter.md',
-                            '/content/chapter1/dpdk.md'
-                        ]
-                    },
-
+                    '/network/netfilter.md',
                     {
                         text: '网络优化指南',
                         link: "/content/chapter1/net-optimize-intro.md",

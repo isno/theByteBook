@@ -56,6 +56,10 @@ DPDK 的网卡驱动程序运行在用户态，屏蔽了网卡硬件发起的大
 
 ## XDP
 
-XPP 是一种把 BPF 技术应用到网络中的解决方案，也就是说 BPF 是 XDP 的基础。
+DPDK 内核旁路技术现在也逐渐成为网络处理加速的一种成熟方案，然而这种方案在 Linux 看来有它的缺陷：独立于 Linux 内核。在 2016 年 Linux Netdev 会议上，David S. Miller 更是让观众和他一起念 “DPDK is not Linux”。
+
+同年，伴随着eBPF技术的成熟，Linux 也终于合入了属于自己的网络处理高速公路：XDP。
+
+XDP 是一种把 BPF 技术应用到网络中的解决方案，也就是说 BPF 是 XDP 的基础。
 
 BPF 是 Berkeley Packet Filter的缩写，原本是一个很冷门的技术，作用主要是提供网络数据包过滤功能的性能。
