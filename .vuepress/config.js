@@ -14,6 +14,11 @@ export default defineUserConfig({
                 link: '/'
             },
             {
+                text: '讨论',
+                link: 'https://github.com/isno/theByteBook/discussions'
+            },
+            
+            {
                 text: 'GitHub仓库',
                 link: 'https://github.com/isno/theByteBook'
             }
@@ -85,8 +90,8 @@ export default defineUserConfig({
                                     '/content/chapter1/tcp-handwave.md',
                                 ]
                             },
-
                             '/content/chapter1/edge.md',
+                            '/network/kernel-bypass.md'
                         ]
                     },
 
