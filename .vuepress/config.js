@@ -88,6 +88,7 @@ export default defineUserConfig({
                                 children: [
                                     '/content/chapter1/tcp-handshake.md',
                                     '/content/chapter1/tcp-handwave.md',
+                                    '/network/bbr.md',
                                 ]
                             },
                             '/content/chapter1/edge.md',
@@ -245,6 +246,7 @@ export default defineUserConfig({
                     sidebarDepth: 1,
                     children: [
                         '/container/pod.md',
+                        '/container/declarative-api.md',
                         '/container/RuntimeClass.md'
                     ]
                 }
