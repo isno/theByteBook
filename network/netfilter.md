@@ -1,8 +1,8 @@
-# Linux内核网络之 Netfilter
+# Linux内核网络之 iptables 与 Netfilter
 
-iptables 在 SLB、Docker 以及 Kubernetes 等服务中中应用非常广泛，比如容器和宿主机端口映射、Kubernetes 核心组件 kube-proxy 的 IPVS 模式、CNI 插件 portmap 等等都是通过 iptables 实现的。
+iptables 在 SLB、Container、Istio 以及 Kubernetes 等服务中应用非常广泛，比如容器和宿主机端口映射、Istio中的透明流量劫持、Kubernetes 核心组件 kube-proxy 的 IPVS 模式等等都是通过 iptables 实现的。
 
-因此了解iptables的原理与机制，对后续理解SLB、云原生网络等应用大有裨益。
+因此了解 iptables 以及其内在机制，对于理解这些上层应用的运作有十分重要的作用。本文将为大家介绍 iptables 以及 Netfilter。
 
 ## Netfilter 
 
