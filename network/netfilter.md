@@ -2,7 +2,7 @@
 
 iptables 在 SLB、Container、Istio 以及 Kubernetes 等服务中应用非常广泛，比如容器和宿主机端口映射、Istio中的透明流量劫持、Kubernetes 核心组件 kube-proxy 的 IPVS 模式等等都是通过 iptables 实现的。
 
-因此了解 iptables 以及其内在机制，对于理解这些上层应用的运作有十分重要的作用。本文将为大家介绍 iptables 以及 Netfilter。
+因此了解 iptables 以及其内在机制，对于理解这些上层服务运作有十分重要的作用。本文将为大家介绍 iptables 以及 Netfilter。
 
 ## Netfilter 
 
