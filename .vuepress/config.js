@@ -167,7 +167,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: "分布式及事务",
+                text: "分布式事务理论及实践",
                 link: '/distributed-system/distributed-transaction.md',
                 children: [
                     '/distributed-system/cap.md',
@@ -195,11 +195,11 @@ export default defineUserConfig({
                         link: '/MicroService/ServiceMesh.md',
                         children: [
                             '/MicroService/ServiceMesh-implement.md',
-                            '/MicroService/Istio.md',
+                           
                         ]
                     },
-
-                    '/MicroService/tracing.md'
+                    '/MicroService/Envoy.md',
+                    '/MicroService/Istio.md'
                 ]
             },
             {
@@ -269,6 +269,7 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/Observability/monitor-upgrade.md',
+                    '/MicroService/tracing.md'
                 ]
             },
             {
