@@ -195,6 +195,7 @@ export default defineUserConfig({
                         link: '/MicroService/ServiceMesh.md',
                         children: [
                             '/MicroService/ServiceMesh-implement.md',
+                            '/MicroService/ServiceMesh-Kubernetes.md',
                            
                         ]
                     },

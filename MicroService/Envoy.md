@@ -1,13 +1,12 @@
 # Envoy
 
-先介绍 Envoy 主要是由于 Istio 本身依赖于 Envoy。
+先介绍 Envoy 主要是由于 Istio 本身依赖于 Envoy。Envoy 是 Istio Service Mesh 默认的数据平面，专为云原生应用程序设计。
 
-Envoy 是一个由 C++ 开发的高性能七层代理，和 Nginx 的技术架构相似，也采用了 多线程 + 非阻塞 + 异步IO（Libevent） 的架构。
 
-Envoy 是 Istio Service Mesh 默认的数据平面，专为云原生应用程序设计。Envoy 通常以 sidecar 的方式和应用服务并行运行，透明地代理应用服务发出/接收的流量。在这种机制下，应用服务只需要和 Envoy 通信，无需知道其他微服务应用在哪里。
 
-现在 Envoy 的功能已经非常完善，核心是一个 L3/L4 代理，以 NetFilter hook 的形式执行 TCP/UDP 的相关任务，例如 TCP 转发，TLS 认证等。在 L3/L4 之上，Envoy 实现了 HTTP L7 代理、HTTP/2、gRPC、服务发现、负载均衡、Tracing、动态配置等等高级功能。	
+Envoy 是一个由 C++ 开发的高性能七层代理，和 Nginx 的技术架构相似，也采用了 多线程 + 非阻塞 + 异步IO（Libevent） 的架构。Envoy 核心是一个 L3/L4 代理，以 NetFilter hook 的形式执行 TCP/UDP 的相关任务，例如 TCP 转发，TLS 认证等。现在 Envoy 的功能已经非常完善 在 L3/L4 之上，Envoy 实现了 HTTP L7 代理、HTTP/2、gRPC、服务发现、负载均衡、Tracing、动态配置等等高级功能。	
 
+Envoy 通常以 sidecar 的方式和应用服务并行运行，透明地代理应用服务发出/接收的流量。在这种机制下，应用服务只需要和 Envoy 通信，无需知道其他微服务应用在哪里。
 
 ## Envoy 关键组件
 
@@ -33,11 +32,10 @@ static_resources:
 一个 Envoy 可以启动多个监听器，下面的配置项将创建一个新的监听器并将其绑定到 8080 端口。
 
 ```
-static_resources:
-  listeners:
-  - name: listener_0
-    address:
-      socket_address: { address: 0.0.0.0, port_value: 8000 }
+listeners:
+- name: listener_0
+  address:
+   	socket_address: { address: 0.0.0.0, port_value: 8000 }
 ```
 
 这里不需要定义 server_name，域名将会交给过滤器来处理。
