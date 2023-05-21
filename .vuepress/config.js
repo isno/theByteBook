@@ -181,7 +181,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '微服务与服务治理',
+                text: '应用体系变革ServiceMesh',
                 collapsable: false,
                 sidebarDepth: 1,
                 link: '/MicroService/micro-service.md',
@@ -238,13 +238,26 @@ export default defineUserConfig({
                     collapsable: false,
                     sidebarDepth: 1,
                     children: [
-                        '/container/pod.md',
+                        
                         '/container/declarative-api.md',
                         '/container/RuntimeClass.md'
                     ]
                 }
                 ]
             },
+            {
+                    text: '容器编排系统 Kubernetes',
+                    link: '/kubernetes/index.md',
+                    collapsable: false,
+                    sidebarDepth: 1,
+                    children: [
+                        '/kubernetes/resource.md',
+                        '/kubernetes/pod.md',
+                        '/kubernetes/replica.md',
+                        '/kubernetes/deployment.md',
+                        '/kubernetes/service.md',
+                    ]
+                },
             {
                 text: 'Serverless架构',
                 link: '/serverless/Serverless.md',

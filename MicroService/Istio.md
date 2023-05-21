@@ -31,16 +31,6 @@ Istio 架构体系中，流控(Traffic Management)虽然是数据平面的 Envoy
 
 
 
-
-当在Kubernetes中使用Istio的时候，其作用主要有如下几点：
-
-监控服务注册中心（如 Kubernetes）的服务注册情况。在 Kubernetes 环境下，会监控 service、endpoint、pod、node 等资源信息。
-监控 Istio 控制面信息变化，在 Kubernetes 环境下，会监控包括 RouteRule、 VirtualService、Gateway、EgressRule、ServiceEntry 等以 Kubernetes CRD（K8s自定义资源） 形式存在的 Istio 控制面配置信息。
-将上述两类信息合并组合为 sidecar 可以理解的（遵循 Envoy data plane api 的）配置信息，并将这些信息以 gRPC 协议提供给 sidecar。
-由以上几点看出，pilot起到了连接Kubernetes和数据平面的作用，它将由kubernetes产生的配置信息转化成数据平面可以识别的格式然后下发给数据平面。
-
-
-
 ## Istio 工作流程
 
 数据平面是业务之间的通信平面。如果没有一个服务网格，网络就无法理解正在发送的流量，也无法根据它是哪种类型的流量，或者它从谁那里来，到谁那里去做出任何决定。
