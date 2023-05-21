@@ -12,6 +12,16 @@ Kubernetes 创新地将多个容器组合到一起，产生一个新的，也是
 
 ## Pod 生命周期
 
+| 阶段| 说明|
+|:-|:-|
+|Pending| Pod 已经被 Kubernetes 接受（存在 etcd 中），等待 scheduler 调度 或者 调度成功拉取镜像|
+| Running| Pod 中所有的容器都已创建，并且至少有一个容器正在运行|
+| Succeeded | Pod 中所有的容器都被成功终止，并且不会重启，这个主要是执行 job 任务|
+| Failed | Pod 中所有的容器都已经终止，并且至少有一个容器是非正常终止|
+|Unknown| 无法获取 pod状态，通常是由于 Pod 节点通信出错，或者 kubelet 宕机所致|
+
+
+
 ## Pod 的网络
 
 以 Calico 为例，Kubernetes会默认为每个pod分配一个IP地址，所有的Pod IP地址在同一个网段， kubeadm 在初始化时指定网段参数

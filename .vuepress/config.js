@@ -253,7 +253,6 @@ export default defineUserConfig({
                     children: [
                         '/kubernetes/resource.md',
                         '/kubernetes/pod.md',
-                        '/kubernetes/replica.md',
                         '/kubernetes/deployment.md',
                         '/kubernetes/service.md',
                     ]
