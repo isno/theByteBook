@@ -221,12 +221,30 @@ export default defineUserConfig({
                 children: [
                     '/container/container-normalize.md',
                     '/container/image.md',
-                    
+
                     '/container/CRI-in-Kubernetes.md',
-                    '/container/container-diff.md',
-                    '/container/kata-container.md',
-                    '/container/Nydus-image.md',
-                    '/container/dragonfly.md'
+                    {
+                        text: '容器运行时',
+                        link: '/container/runtime.md',
+                        collapsable: false,
+                        sidebarDepth: 1,
+                        children: [
+                            '/container/low-level-runtime.md',
+                            '/container/high-level-runtime.md',
+                            '/container/kata-container.md',
+                        ]
+                    },
+                    {
+                        text: '容器镜像优化',
+                        link: '/container/image-optimize.md',
+                        collapsable: false,
+                        sidebarDepth: 1,
+                        children: [
+                            '/container/Rafs.md',
+                            '/container/Nydus-image.md',
+                            '/container/dragonfly.md'
+                        ]
+                    },
                 ]
             },
             {

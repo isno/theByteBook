@@ -21,9 +21,9 @@ API Gateway在业内已经有非常多的成熟开源方案，如果按实现语
 
 |语言|网关|特点|
 |:--|:--|:--|
-|Nginx + Lua|OpenResty| 原始Web开发平台 |
+|Nginx + LuaJIT|OpenResty| 原始Web开发平台 |
 |Nginx + Lua| Kong| 社区活跃、成熟度高、Postgres存储、二次开发成本高 |
-|Nginx + Lua| Apache/Apisix| 借鉴Kong、使用etcd存储、性能更高、二次开发成本低|
+|Nginx + Lua| Apache/APISIX | 云原生化、使用 etcd 存储、性能高、二次开发成本低|
 |Java|Spring Cloud Alibaba| Spring Cloud生态、社区成熟度高、国内应用广泛|
 
 因为作者接触的都为Nginx + Lua方案的网关方案，在后面章节中将通过讲解Nginx、Lua、OpenResty相关的原理概念，最后再讲解及实践Apache/Apisix方面的应用。
