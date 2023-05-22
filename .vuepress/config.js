@@ -220,6 +220,7 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/container/container-normalize.md',
+                    '/container/OCI-in-Docker.md',
                     '/container/image.md',
 
                     '/container/CRI-in-Kubernetes.md',
@@ -240,7 +241,6 @@ export default defineUserConfig({
                         collapsable: false,
                         sidebarDepth: 1,
                         children: [
-                            '/container/Rafs.md',
                             '/container/Nydus-image.md',
                             '/container/dragonfly.md'
                         ]
