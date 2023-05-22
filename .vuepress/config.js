@@ -17,7 +17,7 @@ export default defineUserConfig({
                 text: '讨论',
                 link: 'https://github.com/isno/theByteBook/discussions'
             },
-            
+
             {
                 text: 'GitHub仓库',
                 link: 'https://github.com/isno/theByteBook'
@@ -106,7 +106,7 @@ export default defineUserConfig({
                 children: [
                     '/http/https.md',
                     '/http/latency.md',
-                    
+
                     {
                         text: "DNS 解析原理",
                         link: '/http/dns.md',
@@ -125,7 +125,7 @@ export default defineUserConfig({
                             //'/http/quic-performance.md',
                         ]
                     },
-                    
+
                     '/http/ssl.md',
                     '/http/ssl-performance.md',
                     '/http/protobuf.md',
@@ -196,7 +196,7 @@ export default defineUserConfig({
                         children: [
                             '/MicroService/ServiceMesh-implement.md',
                             '/MicroService/ServiceMesh-Kubernetes.md',
-                           
+
                         ]
                     },
                     '/MicroService/Envoy.md',
@@ -214,49 +214,36 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '容器技术及容器编排',
-                link: '/container/intro.md',
+                text: '容器技术',
+                link: '/container/container.md',
                 collapsable: false,
                 sidebarDepth: 1,
-                children: [{
-                    text: '容器技术',
-                    link: '/container/container.md',
-                    collapsable: false,
-                    sidebarDepth: 1,
-                    children: [
-                        '/container/container-normalize.md',
-                        '/container/image.md',
-                        '/container/Nydus-image.md',
-                        '/container/CRI-in-Kubernetes.md',
-                        '/container/container-diff.md',
-                        '/container/kata-container.md'
-                    ]
-                },
-                {
-                    text: '容器编排',
-                    link: '/container/container-orchestration.md',
-                    collapsable: false,
-                    sidebarDepth: 1,
-                    children: [
-                        
-                        '/container/declarative-api.md',
-                        '/container/RuntimeClass.md'
-                    ]
-                }
+                children: [
+                    '/container/container-normalize.md',
+                    '/container/image.md',
+                    
+                    '/container/CRI-in-Kubernetes.md',
+                    '/container/container-diff.md',
+                    '/container/kata-container.md',
+                    '/container/Nydus-image.md',
+                    '/container/dragonfly.md'
                 ]
             },
             {
-                    text: '容器编排系统 Kubernetes',
-                    link: '/kubernetes/index.md',
-                    collapsable: false,
-                    sidebarDepth: 1,
-                    children: [
-                        '/kubernetes/resource.md',
-                        '/kubernetes/pod.md',
-                        '/kubernetes/deployment.md',
-                        '/kubernetes/service.md',
-                    ]
-                },
+                text: '容器编排系统 Kubernetes',
+                link: '/kubernetes/index.md',
+                collapsable: false,
+                sidebarDepth: 1,
+                children: [
+                    '/container/declarative-api.md',
+                    '/container/RuntimeClass.md',
+
+                    '/kubernetes/resource.md',
+                    '/kubernetes/pod.md',
+                    '/kubernetes/deployment.md',
+                    '/kubernetes/service.md',
+                ]
+            },
             {
                 text: 'Serverless架构',
                 link: '/serverless/Serverless.md',
