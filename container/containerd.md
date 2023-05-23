@@ -8,7 +8,13 @@
 	<img src="../assets/containerd-built-in-plugin.png" width = "600"  align=center />
 </div>
 
-最终的结果是 Kubernetes 的 Pod 启动延迟得到了降低，CPU 和内存占用率都有不同程度的降低。
+Containerd 内置的 CRI 插件实现了 Kubelet CRI 接口中的 Image Service 和 Runtime Service，通过内部接口管理容器和镜像，并通过 CNI 插件给 Pod 配置网络。最终的结果是 Kubernetes 的 Pod 启动延迟得到了降低，CPU 和内存占用率都有不同程度的降低。
+
+<div  align="center">
+	<img src="../assets/containerd-cri-plugin.png" width = "600"  align=center />
+</div>
+
+
 
 但是这还不是终点，为了能够直接对接 OCI 的 runtime 而不是 containerd，社区孵化了 CRI-O 并加入了 CNCF。
 
