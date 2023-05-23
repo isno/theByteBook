@@ -222,8 +222,8 @@ export default defineUserConfig({
                     '/container/container-normalize.md',
                     '/container/OCI-in-Docker.md',
                     '/container/image.md',
-
-                    '/container/CRI-in-Kubernetes.md',
+                    '/container/Nydus-image.md',
+                    
                     {
                         text: '容器运行时',
                         link: '/container/runtime.md',
@@ -233,15 +233,19 @@ export default defineUserConfig({
                             '/container/low-level-runtime.md',
                             '/container/high-level-runtime.md',
                             '/container/kata-container.md',
+                            '/container/CRI-in-Kubernetes.md',
+                            '/container/Docker-Kubernetes.md',
+                            '/container/containerd.md'
+
                         ]
                     },
                     {
-                        text: '容器镜像优化',
-                        link: '/container/image-optimize.md',
+                        text: '镜像仓库',
+                        link: '/container/registry.md',
                         collapsable: false,
                         sidebarDepth: 1,
                         children: [
-                            '/container/Nydus-image.md',
+                            '/container/harbor.md',
                             '/container/dragonfly.md'
                         ]
                     },
