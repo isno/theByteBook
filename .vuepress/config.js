@@ -236,8 +236,8 @@ export default defineUserConfig({
                             '/container/CRI-in-Kubernetes.md',
                             '/container/Docker-Kubernetes.md',
                             '/container/containerd.md',
+                            '/container/CRI-O.md',
                             '/container/RuntimeClass.md'
-
                         ]
                     },
                     {
