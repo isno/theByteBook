@@ -181,7 +181,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '应用体系变革ServiceMesh',
+                text: '服务治理变革ServiceMesh',
                 collapsable: false,
                 sidebarDepth: 1,
                 link: '/MicroService/micro-service.md',
