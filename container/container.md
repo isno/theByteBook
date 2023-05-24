@@ -25,10 +25,7 @@
 
 ## 容器的镜像
 
-Docker 一个核心创新是容器镜像（Docker Image），这是一种利用联合文件系统UnionFS实现的分层文件系统，再结合Layer 
-
-
-Docker 把应用和相关依赖打包成为一个镜像，并且采用类似多次快照的存储技术，例如aufs/device mapper/btrfs/zfs等，可以实现：
+Docker 一个核心创新是容器镜像（Docker Image），这是一种利用联合文件系统 UnionFS 实现的分层文件系统，再结合 Layer（镜像层），Docker 把应用和相关依赖打包成为一个镜像，并且采用类似多次快照的存储技术，例如aufs/device mapper/btrfs/zfs等，可以实现：
 
 - 多个应用可以共用相同的底层镜像（初始的操作系统镜像）
 - 应用运行时的IO操作和镜像文件隔离
