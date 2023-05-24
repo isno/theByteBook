@@ -233,7 +233,7 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
-                    '/container/container-normalize.md',
+                    '/container/OCI.md',
                     '/container/OCI-in-Docker.md',
                     '/container/image.md',
                     '/container/Nydus-image.md',
