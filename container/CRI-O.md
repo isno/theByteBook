@@ -1,4 +1,4 @@
-# CRI-O
+# Kubernetes专用运行时：CRI-O
 
 当容器运行时的标准被提出以后，Red Hat 的一些人开始想他们可以构建一个更简单的运行时，而且这个运行时仅仅为 Kubernetes 所用，这就是 CRI-O。
 
