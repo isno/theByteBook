@@ -14,8 +14,6 @@ Containerd 内置的 CRI 插件实现了 Kubelet CRI 接口中的 Image Service 
 	<img src="../assets/containerd-cri-plugin.png" width = "600"  align=center />
 </div>
 
-
-
 但是这还不是终点，为了能够直接对接 OCI 的 runtime 而不是 containerd，社区孵化了 CRI-O 并加入了 CNCF。
 
 CRI-O 的目标是让 kubelet 与运行时直接对接，减少任何不必要的中间层开销。CRI-O 运行时可以替换为任意 OCI 兼容的 Runtime，镜像管理，存储管理和网络均使用标准化的实现

@@ -20,7 +20,3 @@
 <div  align="center">
 	<img src="../assets/container-runtime-relative.png" width = "280"  align=center />
 </div>
-
-
-
-
