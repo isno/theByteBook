@@ -234,10 +234,17 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/container/OCI.md',
-                    '/container/OCI-in-Docker.md',
-                    '/container/image.md',
-                    '/container/Nydus-image.md',
-                    
+                    '/container/OCI-in-Docker.md',    
+                    {
+                        text: '镜像',
+                        link: '/container/image.md',
+                        collapsable: false,
+                        sidebarDepth: 1,
+                        children: [
+                            '/container/Nydus-image.md',
+                            '/container/image-build.md'
+                        ]
+                    },
                     {
                         text: '容器运行时',
                         link: '/container/runtime.md',
