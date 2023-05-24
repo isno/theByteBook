@@ -6,16 +6,18 @@ export default defineUserConfig({
     description: '高可用服务体系原理与实践',
     head: [
         ['link', { rel: "shortcut icon", href: "/assets/favicon.ico" }],
-        [ 'script', {},
 
-               var _hmt = _hmt || [];
-            (function() {
-              var hm = document.createElement("script");
+        [ 'script', {}, `
+     var _hmt = _hmt || [];
+   (function() {
+ var hm = document.createElement("script");
               hm.src = "https://hm.baidu.com/hm.js?e84cbf587012e6a1376a6d69805d5aa2";
               var s = document.getElementsByTagName("script")[0]; 
               s.parentNode.insertBefore(hm, s);
-            })();
-        ]
+            })(); 
+     `
+ ]
+
     
 
     ],
