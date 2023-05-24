@@ -28,7 +28,7 @@
 Docker 一个核心创新是容器镜像（Docker Image），这是一种利用联合文件系统UnionFS实现的分层文件系统，再结合Layer 
 
 
-Docker把应用和相关依赖打包成为一个镜像，并且采用类似多次快照的存储技术，例如aufs/device mapper/btrfs/zfs等，可以实现：
+Docker 把应用和相关依赖打包成为一个镜像，并且采用类似多次快照的存储技术，例如aufs/device mapper/btrfs/zfs等，可以实现：
 
 - 多个应用可以共用相同的底层镜像（初始的操作系统镜像）
 - 应用运行时的IO操作和镜像文件隔离
@@ -40,9 +40,6 @@ Docker把应用和相关依赖打包成为一个镜像，并且采用类似多�
 
 上图是基于一个Alpine Linux的镜像，分别建立了Nginx和Redis的镜像，并且挂载不同的配置/数据同时运行3个网站应用2个Redis应用的示意图。
 
-此外，Docker公司提供公共的镜像仓库（Docker称之为Repository），Github connect，自动构建镜像，大大简化了应用分发、部署、升级流程。加上Docker可以非常方便的建立各种自定义的镜像文件，这些都是Docker成为最流行的容器技术的重要因素。
-
-通过以上这些技术的组合，最后的结果就是，绝大部分应用，开发者都可以通过docker build创建镜像，通过docker push上传镜像，用户通过docker pull下载镜像，用docker run运行应用。用户不需要再去关心如何搭建环境，如何安装，如何解决不同发行版的库冲突等问题， 这也是Docker大行其道的原因。
 
 ## 容器的技术性优点
 
