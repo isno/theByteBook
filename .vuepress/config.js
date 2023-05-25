@@ -195,7 +195,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '服务治理变革ServiceMesh',
+                text: '微服务变革之 ServiceMesh',
                 collapsable: false,
                 sidebarDepth: 1,
                 link: '/MicroService/micro-service.md',
@@ -280,8 +280,6 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/container/declarative-api.md',
-                    '/container/RuntimeClass.md',
-
                     '/kubernetes/resource.md',
                     '/kubernetes/pod.md',
                     '/kubernetes/deployment.md',

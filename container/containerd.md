@@ -1,4 +1,4 @@
-# 目前流行的运行时 Containerd
+# 目前流行的运行时 containerd
 
 ## CRI plugin
 
@@ -8,7 +8,7 @@
 	<img src="../assets/containerd-built-in-plugin.png" width = "600"  align=center />
 </div>
 
-Containerd 内置的 CRI 插件实现了 Kubelet CRI 接口中的 Image Service 和 Runtime Service，通过内部接口管理容器和镜像，并通过 CNI 插件给 Pod 配置网络。最终的结果是 Kubernetes 的 Pod 启动延迟得到了降低，CPU 和内存占用率都有不同程度的降低。
+containerd 内置的 CRI 插件实现了 Kubelet CRI 接口中的 Image Service 和 Runtime Service，通过内部接口管理容器和镜像，并通过 CNI 插件给 Pod 配置网络。最终的结果是 Kubernetes 的 Pod 启动延迟得到了降低，CPU 和内存占用率都有不同程度的降低。
 
 <div  align="center">
 	<img src="../assets/containerd-cri-plugin.png" width = "600"  align=center />
