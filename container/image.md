@@ -1,7 +1,6 @@
 # OCI 镜像
 
-镜像的本质是利用联合文件系统（Union File System）实现的分层文件系统，容器运行时配合 OCI 规范解包成一个 runtime bundle，再从中可以根据运行时标准运行容器。此外，结合镜像仓库（Repository ），以及自动构建技术，极大简化了应用分发、部署、升级流程。
-
+镜像本质是利用 UnionFS （Union File System，联合文件系统）实现的分层文件系统，其内部根据 OCI  规范了镜像的构建系统需要输出的内容和格式。输出的容器镜像可以被解包成一个 runtime bundle 从中可以根据 OCI 运行时标准运行容器。
 
 在 OCI 标准镜像规范出台之前，有两套广泛使用的镜像规范，分别是 appc 和 docker v2，OCI 组织在 docker v2 的基础上推出了 OCI image spec，规定了对于符合规范的镜像，允许开发者只要对容器打包和签名一次，就可以在所有的容器引擎上运行该镜像。
 
@@ -15,10 +14,12 @@
 
 OCIv1 镜像主要包括以下几块内容：
 
-- **文件系统**：以 layer 保存的文件系统，每个 layer 保存了和上层之间变化的部分，layer 应该保存哪些文件，怎么表示增加、修改和删除的文件等
-- **config 文件**：保存了文件系统的层级信息（每个层级的 hash 值，以及历史信息），以及容器运行时需要的一些信息（比如环境变量、工作目录、命令参数、mount 列表），指定了镜像在某个特定平台和系统的配置。比较接近我们使用 `docker inspect <image_id>` 看到的内容
-- **manifest 文件**：镜像的 config 文件索引，有哪些 layer，额外的 annotation 信息，manifest 文件中保存了很多和当前平台有关的信息
-- **index 文件**：可选的文件，指向不同平台的 manifest 文件，这个文件能保证一个镜像可以跨平台使用，每个平台拥有不同的 manifest 文件，使用 index 作为索引
+- Image Manifest：提供了镜像的配置和文件系统层定位信息，可以看作是镜像的目录，文件格式为 json 。
+- Image Layer Filesystem Changeset：序列化之后的文件系统和文件系统变更，它们可按顺序一层层应用为一个容器的 rootfs，因此通常也被称为一个 layer（与下文提到的镜像层同义），文件格式可以是 tar ，gzip 等存档或压缩格式。
+- Image Configuration：包含了镜像在运行时所使用的执行参数以及有序的 rootfs 变更信息，文件类型为 json。
+
+
+rootfs (root file system)即 / 根挂载点所挂载的文件系统，是一个操作系统所包含的文件、配置和目录，但并不包括操作系统内核，同一台机器上的所有容器都共享宿主机操作系统的内核。
 
 
 ## layer 的实现基础 UnionFS
