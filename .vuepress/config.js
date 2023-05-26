@@ -236,7 +236,7 @@ export default defineUserConfig({
                     '/container/OCI.md',
                     '/container/OCI-in-Docker.md',    
                     {
-                        text: '镜像',
+                        text: 'OCI 镜像',
                         link: '/container/image.md',
                         collapsable: false,
                         sidebarDepth: 1,
@@ -246,7 +246,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '容器运行时',
+                        text: 'OCI 容器运行时',
                         link: '/container/runtime.md',
                         collapsable: false,
                         sidebarDepth: 1,

@@ -1,14 +1,9 @@
 # OCI 镜像
 
-镜像本质是利用 UnionFS （Union File System，联合文件系统）实现的分层文件系统，其内部根据 OCI  规范了镜像的构建系统需要输出的内容和格式。输出的容器镜像可以被解包成一个 runtime bundle 从中可以根据 OCI 运行时标准运行容器。
+在 OCI 标准镜像规范出台之前，有两套广泛使用的镜像规范，分别是 appc 和 docker v2，OCI 组织在 docker v2 的基础上推出了 OCI image spec。
 
-在 OCI 标准镜像规范出台之前，有两套广泛使用的镜像规范，分别是 appc 和 docker v2，OCI 组织在 docker v2 的基础上推出了 OCI image spec，规定了对于符合规范的镜像，允许开发者只要对容器打包和签名一次，就可以在所有的容器引擎上运行该镜像。
+OCI image spec 标准的宗旨概括来说就是不受上层结构的绑定，如特定的客户端、编排栈等，同时也不受特定的供应商或项目的绑定，即不限于某种特定操作系统、硬件、CPU 架构、公有云等。runtime-spec 和 image-spec 两个规范通过 OCI runtime filesytem bundle 的标准格式连接在一起，OCI 镜像通过工具转换成 bundle，然后 OCI 容器引擎能够识别这个 bundle 来运行容器
 
-一个典型的容器工作流程是从由开发者制作容器镜像开始的(build)，然后上传到镜像存储中心(ship)，最后部署在集群中(run)。
-
-<div  align="center">
-	<img src="../assets/image-work.png" width = "550"  align=center />
-</div>
 
 ## OCI 镜像标准规范
 
@@ -19,59 +14,123 @@ OCIv1 镜像主要包括以下几块内容：
 - Image Configuration：包含了镜像在运行时所使用的执行参数以及有序的 rootfs 变更信息，文件类型为 json。
 
 
-rootfs (root file system)即 / 根挂载点所挂载的文件系统，是一个操作系统所包含的文件、配置和目录，但并不包括操作系统内核，同一台机器上的所有容器都共享宿主机操作系统的内核。
+<div  align="center">
+	<img src="../assets/oci-image.webp" width = "400"  align=center />
+</div>
 
 
-## layer 的实现基础 UnionFS
-
-镜像中有个概念 Layer，layer 的实现基础是 UnionFS （Union File System，联合文件系统）。例如把一张 CD/DVD 和一个硬盘目录给联合挂载在一起，这样就可以对只读的 CD/DVD 上的文件进行修改，当然修改的文件是存于硬盘上目录中。UnionFS 的核心原理有两个：
-
-- 分支管理：它使用 branch 形式把不同文件系统的文件和目录"透明地"覆盖，形成一个单一一致的文件系统。这些 branch 或者是 read-only，或者是 read-write ，所以当对这个虚拟后的联合文件系统进行写操作的时候，系统是真正写到了一个新的文件中。
-
-- 写时复制：copy-on-write，简写 CoW。它的思想是如果一个资源是重复的，在没有对资源做出修改前，并不需要立即复制出一个新的资源实例，这个资源被不同的所有者共享使用。当任何一个所有者要对该资源做出修改时，复制出一个新的资源实例给该所有者进行修改，修改后的资源成为其所有者的私有资源。
-
-
-
-下面以 overlay 实现为例演示联合挂载效果
+使用 skopeo 工具，将 Docker 中 redis 镜像转换为 OCI 镜像
 
 ```
-$ tree .
+skopeo --override-os linux copy docker://redis oci:redis
+```
+
+我们查看 redis 的OCI 镜像目录
+
+```
+$ tree redis
 .
-├── lower
-│   ├── b
-│   └── c
-├── merged
-├── upper
-│   ├── a
-│   └── b
-└── work
+├── blobs
+│   └── sha256
+│       ├── 08769906aa59a6b44a9adc62fc0e0679e3448eaab13317401034f390435c14bf
+│       ├── 376e1ba47d221972f7eb9dd659c50d8e42bcfd0e58382d755794a23a8b80976a
+│       ├── 37e84c7a626f560a60b27167c9fa9e6c983d3edf548d84419ab018191dc37ae1
+│       ├── 635073d8ccd5742db583464e12fc522108ebbe64081f03326fcdf1d6afd1ce5b
+│       ├── 806c192e03757340ba67f7ba9b03152f70324d86b62f0d691f53d16438a5f6cf
+│       ├── 8db26c5e84351f9ea1f32f57b0c6073bd96d345f3f21574b64e787a725d50f72
+│       ├── 94e8d834f31956b2a827b6abb6631bc43c5a3c3402a59f509a30e6762e83deb3
+│       └── f03b40093957615593f2ed142961afb6b540507e0b47e3f7626ba5e02efbbbf1
+├── index.json
+└── oci-layout
 ```
 
-在 OverlayFS 中，存在 Lower 和 Upper 的概念，overlay 是“覆盖…上面”的意思，表示一个文件系统覆盖在另一个文件系统上面，也就是将 upperdir 参数指定的目录覆盖到 lowerdir 参数指定的目录之上，并且挂载到 merged 目录里面.
+OCI 镜像的规范是在 Docker image 基础上建立的，相似性很大，我们查看具体的内容。
 
-使用 mount 命令把 lowerdir 和 upperdir 目录合并挂载到 merged 目录中
+### oci-layout
 
-```
-$ mount -t overlay overlay -o lowerdir=lower,upperdir=upper,workdir=work merged
-$ cd merged && tree .
-.
-├── a
-├── b
-└── c
-```
+oci-layout 是 OCI image的布局文件，主要说明它所遵循的镜像规范标准。
 
 ```
-$ echo hi >> c
-$ echo hello >> b
+$ cat oci-layout | jq
+{
+  "imageLayoutVersion": "1.0.0"
+}
+```
+此处可以看到，该镜像遵循的标准为 OCI 1.0.0 布局规范。
+
+### index.json
+
+```
+$ cat index.json | jq 
+{
+  "schemaVersion": 2,
+  "manifests": [
+    {
+      "mediaType": "application/vnd.oci.image.manifest.v1+json",
+      "digest": "sha256:376e1ba47d221972f7eb9dd659c50d8e42bcfd0e58382d755794a23a8b80976a",
+      "size": 1186
+    }
+  ]
+}
+```
+从它的内容可以看到 mediaType 和 Docker image 类型形式相似，只不过 docker 换成了 oci。 从这个配置中，看到第一个 blob 是 sha256:376e1ba47d221972f7eb9dd659c50d8e42bcfd0e58382d755794a23a8b80976a。
+
+
+这个入口文件描述了 OCI 镜像的实际配置和其中 Layer的 信息，如果有多层，那么layers 也会相应增加，我们看看它的内容
+
+```
+$ cat blobs/sha256/376e1ba47d221972f7eb9dd659c50d8e42bcfd0e58382d755794a23a8b80976a | jq
+{
+  "schemaVersion": 2,
+  "mediaType": "application/vnd.oci.image.manifest.v1+json",
+  "config": {
+    "mediaType": "application/vnd.oci.image.config.v1+json",
+    "digest": "sha256:94e8d834f31956b2a827b6abb6631bc43c5a3c3402a59f509a30e6762e83deb3",
+    "size": 6587
+  },
+  "layers": [
+    {
+      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+      "digest": "sha256:f03b40093957615593f2ed142961afb6b540507e0b47e3f7626ba5e02efbbbf1",
+      "size": 31403586
+    },
+    {
+      "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+      "digest": "sha256:8db26c5e84351f9ea1f32f57b0c6073bd96d345f3f21574b64e787a725d50f72",
+      "size": 1733
+    },
+    ...
+  ]
+}
 ```
 
-从上面可以看出 merged 目录就是合并的结果，对 b 文件修改, 生效的是 upper 目录中 b 文件, 而对 c 文件进行修改，则会在 upper 目录中进行 CoW 操作，lower 目录中 c 文件并不进行修改。这是因为 B 在挂载时位于更上层。
+其中，layers mediaType 使用了 application/vnd.oci.image.layer.v1.tar+gzip，说明内容经过可 gzip 压缩。
+
+我们解压第一层，我们会发现是一个 rootfs，这也印证了我们前面所说 镜像的本质。
+
+```
+$ tar xzvf f03b40093957615593f2ed142961afb6b540507e0b47e3f7626ba5e02efbbbf1 -C test
+
+$ cd test && ls 
+bin	dev	home	lib64	mnt	proc	run	srv	tmp	var
+boot	etc	lib	media	opt	root	sbin	sys	usr
+```
+
+<div  align="center">
+	<img src="../assets/union-mount.png" width = "500"  align=center />
+</div>
 
 
-## 容器的读写效率问题
+镜像 layer 机制可以体现在以下方面：
 
-为了最小化 I/O 以及缩减镜像体积，容器的联合文件系统在读写文件时会采取CoW 操作，如果一个文件或目录存在于镜像中较低层，而另一个层（包括可写层）需要对其进行读取访问时，会直接访问较低层的文件。
+- 拉取更快：因为分层了，只需拉取本地不存在的层即可！
+- 存储更少：因为共同的层只需存储一份即可！
+- 运行时存储更少：容器运行时可以共享相同的层！
 
-当另一个层第一次需要写入该文件时（在构建镜像或运行容器时），该文件会被复制到该层并被修改。这一举措大大减少了容器的启动时间（启动时新建的可写层只有很少的文件写入），但容器运行后每次第一次修改某个文件都需要先将整个文件复制到 container layer 中。
 
-以上原因导致容器运行时的读写效率不如原生文件系统（尤其是写入效率），在 container layer 中不适合进行大量的文件读写，通常建议将频繁写入的数据库、日志文件或目录等单独挂载出去，如使用 Docker 提供的 Volume，此时目录将通过绑定挂载（Bind Mount）直接挂载在可读写层中，绕过了写时复制带来的性能损耗。
+
+
+
+
+
+

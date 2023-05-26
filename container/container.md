@@ -9,6 +9,14 @@
 其实容器技术也并不是什么新鲜事务，早在 Docker 之前与容器相关的首批技术就已经出现了很久，特别是 2008 年 Linux 内核中实现了 Linux Containers (LXC)，但直到 Docker 容器引擎出现，才真正意义上降低了容器技术复杂性，加快了容器技术发展。
 
 
+一个典型的容器工作流程是从由开发者制作容器镜像开始的(build)，然后上传到镜像存储中心(ship)，最后部署在集群中(run)。
+
+<div  align="center">
+	<img src="../assets/image-work.png" width = "550"  align=center />
+</div>
+
+
+
 ## 容器与虚拟机 (VM)的区别
 
 我们可以从与传统 虚拟机  (VM) 的不同之处比较，来更好地理解容器。
