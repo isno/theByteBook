@@ -2,7 +2,7 @@ import { defineUserConfig, defaultTheme } from 'vuepress';
 
 export default defineUserConfig({
     lang: 'zh-CN',
-    title: '云原生架构原理与落地实践',
+    title: '深入架构原理与实践',
     description: '高可用服务体系原理与实践',
     head: [
         ['link', { rel: "shortcut icon", href: "/assets/favicon.ico" }],
