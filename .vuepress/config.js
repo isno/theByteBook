@@ -195,29 +195,6 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '微服务变革之 ServiceMesh',
-                collapsable: false,
-                sidebarDepth: 1,
-                link: '/MicroService/micro-service.md',
-                children: [
-
-                    '/MicroService/micro-service-principle.md',
-                    '/MicroService/micro-service-arc.md',
-
-                    {
-                        text: "ServiceMesh",
-                        link: '/MicroService/ServiceMesh.md',
-                        children: [
-                            '/MicroService/ServiceMesh-implement.md',
-                            '/MicroService/ServiceMesh-Kubernetes.md',
-
-                        ]
-                    },
-                    '/MicroService/Envoy.md',
-                    '/MicroService/Istio.md'
-                ]
-            },
-            {
                 text: '从消息到事件流',
                 link: '/MessageQueue/intro.md',
                 collapsable: false,
@@ -241,8 +218,9 @@ export default defineUserConfig({
                         collapsable: false,
                         sidebarDepth: 1,
                         children: [
+                            '/container/rootfs.md',
+                            '/container/image-build.md',
                             '/container/Nydus-image.md',
-                            '/container/image-build.md'
                         ]
                     },
                     {
@@ -280,10 +258,48 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/container/declarative-api.md',
-                    '/kubernetes/resource.md',
-                    '/kubernetes/pod.md',
-                    '/kubernetes/deployment.md',
-                    '/kubernetes/service.md',
+                    {
+                        text: 'Kubernetes 核心资源',
+                        link: '/kubernetes/resource.md',
+                        collapsable: false,
+                        sidebarDepth: 1,
+                        children: [
+                            '/kubernetes/pod.md',
+                            '/kubernetes/deployment.md',
+                            '/kubernetes/service.md',
+                        ]
+                    },
+                    {
+                        text: 'Kubernetes 资源弹性伸缩',
+                        link: '/kubernetes/AutoScaling.md',
+                        collapsable: false,
+                        sidebarDepth: 1,
+                        children: [
+                        ]
+                    },
+                ]
+            },
+            {
+                text: '微服务变革之 ServiceMesh',
+                collapsable: false,
+                sidebarDepth: 1,
+                link: '/MicroService/micro-service.md',
+                children: [
+
+                    '/MicroService/micro-service-principle.md',
+                    '/MicroService/micro-service-arc.md',
+
+                    {
+                        text: "ServiceMesh",
+                        link: '/MicroService/ServiceMesh.md',
+                        children: [
+                            '/MicroService/ServiceMesh-implement.md',
+                            '/MicroService/ServiceMesh-Kubernetes.md',
+
+                        ]
+                    },
+                    '/MicroService/Envoy.md',
+                    '/MicroService/Istio.md'
                 ]
             },
             {

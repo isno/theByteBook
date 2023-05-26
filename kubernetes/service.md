@@ -1,4 +1,4 @@
-# 统一方式对外提供服务：Service
+# Pod 统一方式对外提供服务：Service
 
 容器的地址并不是固定的，为了以一种固定的方式访问Pod，Kubernetes 提供了一种负载均衡和服务发现的机制： Service。
 
