@@ -8,7 +8,38 @@ Kubernetes 创新地将多个容器组合到一起，产生一个新的，也是
 
 每个 Pod 由一组容器构建，这些容器在集群同一个节点运行，共享相同的内部网络和存储等资源，他们之间相互协作，共同完成某一类特定的服务。这个设计思想最经典的体现在于 Service Mesh的实现，比如一个常规的服务，通过部署一个 Sidecar 代理容器，从来无缝地实现熔断限流、服务发现、负载均衡等功能。这种方式在监控、数据指标采集 Prometheus 等也大量采用，通过对每类对象开发相应的 export 完成数据指标的采集。
 
-总而言之，就是通过Pod的设计方式，将一组紧密相关的进程共享网络、存储等资源，通过对Pod生命周期的管理，从而完成这一组容器的生命周期管理。
+总而言之，就是通过 Pod 的设计方式，将一组紧密相关的进程共享网络、存储等资源，通过对 Pod 生命周期的管理，从而完成这一组容器的生命周期管理。
+
+
+## 创建一个 Pod
+
+```
+apiVersion: v1                      # Kubernetes的API Version
+kind: Pod                           # Kubernetes的资源类型
+metadata:
+  name: nginx                       # Pod的名称
+spec:                               # Pod的具体规格（specification）
+  containers:
+  - image: nginx:alpine             # 使用的镜像为 nginx:alpine
+    name: container-0               # 容器的名称
+    resources:                      # 申请容器所需的资源
+      limits:
+        cpu: 100m
+        memory: 200Mi
+      requests:
+        cpu: 100m
+        memory: 200Mi
+  imagePullSecrets:                 # 拉取镜像使用的证书，在CCE上必须为default-secret
+  - name: default-secret
+```
+
+Pod创建完成后，可以使用kubectl get pods命令查询Pod的状态，如下所示。
+```
+$ kubectl get pods
+
+NAME           READY   STATUS    RESTARTS   AGE
+nginx          1/1     Running   0          40s
+```
 
 ## Pod 生命周期
 

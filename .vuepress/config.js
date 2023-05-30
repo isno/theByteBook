@@ -267,6 +267,7 @@ export default defineUserConfig({
                             '/kubernetes/pod.md',
                             '/kubernetes/deployment.md',
                             '/kubernetes/service.md',
+                            '/kubernetes/ingress.md',
                         ]
                     },
                     {
@@ -275,6 +276,16 @@ export default defineUserConfig({
                         collapsable: false,
                         sidebarDepth: 1,
                         children: [
+                        ]
+                    },
+                    {
+                        text: 'Kubernetes 进阶',
+                        link: '/kubernetes/AutoScaling.md',
+                        collapsable: false,
+                        sidebarDepth: 1,
+                        children: [
+                            '/kubernetes/CNI.md',
+                            '/kubernetes/CRI.md',
                         ]
                     },
                 ]

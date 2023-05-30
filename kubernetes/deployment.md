@@ -1,6 +1,6 @@
 # Pod部署：Deployment 和 ReplicaSet
 
-根据 Kubernetes 的官方建议，用户应尽量避免直接创建 Pod 和 RS，而是应该使用 Deployment 来完成 Pod 和 RS 的创建和使用。
+根据 Kubernetes 官方建议：用户应尽量避免直接创建 Pod 和 RS，而是应该使用 Deployment 来完成 Pod 和 RS 的创建和使用。
 
 本文介绍一下 Deployment 和 RS的运作方式。
 

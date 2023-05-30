@@ -1,11 +1,161 @@
 # Pod 统一方式对外提供服务：Service
 
-容器的地址并不是固定的，为了以一种固定的方式访问Pod，Kubernetes 提供了一种负载均衡和服务发现的机制： Service。
+## Pod 访问问题
 
-Service 是 Kubernetes 提供的一种负载均衡器，Service 创建后会提供一个固定的虚拟IP(以 ClusterIP 类型的 Service 为例)，这个虚拟IP 通过iptables 或者 ipvs 实现，并不直接绑定到某个网卡，所以无法ping。 虚拟IP 在结合 coreDNS 实现服务发现。coreDNS提供格式如 `<service-name>.<namespace-name>.svs.cluster.local` 的服务，集群内的域名解析解析服务器会返回该服务所对应的 A记录。
+Pod 被创建之后，该如何访问呢？直接访问 Pod 会有以下几个问题：
 
-这样，用户无需关心 Pod 在哪个节点上， 通过集群内部的域名解析即可实现对 Pod 的访问。
+- Pod 的 IP 地址是在 Pod 启动后才被分配，在启动前并不知道 Pod 的 IP 地址。
+- Pod 的 IP 存在变化的可能性，被 Deployment 重建 IP 就会发生变化。
+- 应用服务往往是一组 Pod 组成，逐个访问 Pod 也不现实。
 
-一个 Service 对应一组Pod服务, 每个Pod服务由该Pod 的IP+端口号标识, Kubernetes 把这个标签成为一个 Endpoint(端点)，Endpoint 是 Service的具体提供者，一组 Endpoint 称之为 Endpoints。 Endpoints 也是  Kubernetes 中的资源。
+为了以一种固定的方式访问 Pod，Kubernetes 提供了一种负载均衡和服务发现的机制： Service。Service 创建后会提供一个固定的虚拟IP(以 ClusterIP 类型的 Service 为例), 这样，用户无需关心 Pod 在哪个节点，通过固定 Service IP 即可实现对 Pod 地访问，并且 Service 可以对访问进行负载均衡。
 
-用户访问 Service，最终由该 Service 所对应的 Endpoints 中某个 Endpoint 来提供服务。Kubernetes 创建 Service 时，会根据配置中的 Selector 自动来创建 Endpoints。
+
+示例：创建一个 Service
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx        # Service的名称
+spec:
+  selector:          # Label Selector，选择包含app=nginx标签的Pod
+    app: nginx
+  ports:
+  - name: service0
+    targetPort: 80   # Pod的端口
+    port: 8080       # Service对外暴露的端口
+    protocol: TCP    # 转发协议类型，支持TCP和UDP
+  type: ClusterIP    # Service的类型
+```
+
+<div  align="center">
+	<img src="../assets/k8s-service.png" width = "400"  align=center />
+</div>
+
+### 使用 ServiceName 访问 Service
+
+使用 IP 直连有一个问题，如果 Service 被删除，相应的 Cluster IP 也会被回收。域名发现
+
+为此 Kubernetes 结合 DNS 的。CoreDNS 安装成功后会成为 DNS 服务器，当创建 Service 后，CoreDNS 会将Service 的名称与 IP 记录起来，这样 Pod 就可以通过向 CoreDNS 查询 Service 的名称获得 Service 的IP地址。
+
+
+coreDNS 提供格式如 `<service-name>.<namespace-name>.svs.cluster.local` 的服务，访问改地址，集群内的域名解析解析服务器会返回该服务所对应的 A 记录。实际使用中，同一个命名空间下可以省略`<namespace>.svc.cluster.local`，直接使用 ServiceName 即可。
+
+例如上面创建的名为 nginx 的 Service，直接通过 `nginx:8080` 就可以访问到 Service，进而访问 Pod， 这样无需感知具体 Service 的 IP 地址。
+
+## Service 类型
+
+Service 的类型除了 ClusterIP 还有 NodePort、LoadBalancer 和 Headless Service，这几种类型的Service有着不同的用途。
+
+- ClusterIP：用于在集群内部互相访问的场景，通过 ClusterIP 访问 Service。
+- NodePort：用于从集群外部访问的场景，通过节点上的端口访问 Service，详细介绍请参见 NodePort 类型的 Service。
+- LoadBalancer：用于从集群外部访问的场景，其实是 NodePort 的扩展，通过一个特定的 LoadBalancer 访问 Service，这个 LoadBalancer 将请求转发到节点的 NodePort，而外部只需要访问 LoadBalancer。
+- Headless Service：用于 Pod 间互相发现，该类型的 Service 并不会分配单独的 ClusterIP， 而且集群也不会为它们进行负载均衡和路由。您可通过指定 spec.clusterIP 字段的值为 “None” 来创建 Headless Service。
+
+### NodePort 类型的 Service
+
+NodePort类型的Service可以让Kubernetes集群每个节点上保留一个相同的端口， 外部访问连接首先访问节点IP:Port，然后将这些连接转发给服务对应的Pod。如下图所示。
+
+下面是一个创建 NodePort 类型的 Service。创建完成后，可以通过节点的IP:Port访问到后台Pod
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodeport-service
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 80
+    nodePort: 3030
+  selector:
+    app: nginx
+```
+
+### LoadBalancer 类型的 Service
+
+LoadBalancer 类型的 Service其实是 NodePort 类型 Service 的扩展，通过一个特定的 LoadBalancer 访问 Service，这个 LoadBalancer 将请求转发到节点的 NodePort。
+
+LoadBalancer 本身不是属于 Kubernetes 的组件，这部分通常是由具体厂商（云服务提供商）提供，不同厂商的 Kubernetes 集群与 LoadBalancer 的 对接实现各不相同，例如 CCE 对接了 ELB。这就导致了创建LoadBalancer类型的 Service 有不同的实现。
+
+<div  align="center">
+	<img src="../assets/loadbalancer.png" width = "400"  align=center />
+</div>
+
+
+下面是一个创建 LoadBalancer 类型的Service。创建完成后，可以通过ELB的IP:Port访问到后台Pod
+
+```
+apiVersion: v1 
+kind: Service 
+metadata: 
+  annotations:   
+    kubernetes.io/elb.id: 3c7caa5a-a641-4bff-801a-feace27424b6
+  labels: 
+    app: nginx 
+  name: nginx 
+spec: 
+  loadBalancerIP: 10.28.12.100     # ELB实例的IP地址
+  ports: 
+  - name: service0 
+    port: 80
+    protocol: TCP 
+    targetPort: 80
+    nodePort: 3030
+  selector: 
+    app: nginx 
+  type: LoadBalancer    # 类型为LoadBalancer 
+```
+
+### Headless Service
+
+前面讲的Service解决了Pod的内外部访问问题，允许客户端连接到Service关联的某个Pod。但还有下面这些问题没解决。
+
+- 同时访问所有Pod
+- 一个Service内部的Pod互相访问
+
+为了解决以上问题，Kubernetes提供了另一种较为特殊的Service类型，称为Headless Service。
+
+对于其他Service来说，客户端在访问服务时，DNS查询时只会返回Service的ClusterIP地址，具体访问到哪个Pod是由集群转发规则（IPVS或iptables）决定的。而Headless Service并不会分配单独的ClusterIP，在进行DNS查询时会返回所有Pod的DNS记录，这样就可查询到每个Pod的IP地址。StatefulSet中StatefulSet正是使用Headless Service解决Pod间互相访问的问题
+
+```
+apiVersion: v1
+kind: Service       # 对象类型为Service
+metadata:
+  name: nginx-headless
+  labels:
+    app: nginx
+spec:
+  ports:
+    - name: nginx     # Pod间通信的端口名称
+      port: 80        # Pod间通信的端口号
+  selector:
+    app: nginx        # 选择标签为app:nginx的Pod
+  clusterIP: None     # 必须设置为None，表示Headless Service
+```
+创建完成后可以查询Service。
+
+```
+# kubectl get svc
+NAME             TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+nginx-headless   ClusterIP   None         <none>        80/TCP    5s
+```
+
+创建一个Pod来查询DNS，可以看到能返回所有Pod的记录，这就解决了访问所有Pod的问题了。
+
+```
+$ kubectl run -i --tty --image tutum/dnsutils dnsutils --restart=Never --rm /bin/sh
+If you don't see a command prompt, try pressing enter.
+/ # nslookup nginx-headless
+Server:         10.247.3.10
+Address:        10.247.3.10#53
+
+Name:   nginx-headless.default.svc.cluster.local
+Address: 172.16.0.31
+Name:   nginx-headless.default.svc.cluster.local
+Address: 172.16.0.18
+Name:   nginx-headless.default.svc.cluster.local
+Address: 172.16.0.19
+```
