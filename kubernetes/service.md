@@ -1,4 +1,4 @@
-# Pod 统一方式对外提供服务：Service
+# Service
 
 ## Pod 访问问题
 

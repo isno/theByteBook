@@ -17,9 +17,6 @@ export default defineUserConfig({
             })(); 
      `
  ]
-
-    
-
     ],
     plugins: [],
     theme: defaultTheme({
@@ -258,6 +255,8 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/container/declarative-api.md',
+                    '/kubernetes/label.md',
+                    '/kubernetes/namespace.md',
                     {
                         text: 'Kubernetes 核心资源',
                         link: '/kubernetes/resource.md',
@@ -276,6 +275,15 @@ export default defineUserConfig({
                         collapsable: false,
                         sidebarDepth: 1,
                         children: [
+                        ]
+                    },
+                    {
+                        text: 'Kubernetes 架构与组件',
+                        link: '/kubernetes/AutoScaling.md',
+                        collapsable: false,
+                        sidebarDepth: 1,
+                        children: [
+                            '/kubernetes/kube-proxy.md',
                         ]
                     },
                     {
