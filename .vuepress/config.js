@@ -267,6 +267,7 @@ export default defineUserConfig({
                             '/kubernetes/deployment.md',
                             '/kubernetes/service.md',
                             '/kubernetes/ingress.md',
+                            '/kubernetes/pv.md',
                         ]
                     },
                     {
