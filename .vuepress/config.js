@@ -282,7 +282,7 @@ export default defineUserConfig({
                     },
                     {
                         text: 'Kubernetes 架构与组件',
-                        link: '/kubernetes/AutoScaling.md',
+                        link: '/kubernetes/component.md',
                         collapsable: false,
                         sidebarDepth: 1,
                         children: [
@@ -302,7 +302,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '微服务变革之 ServiceMesh',
+                text: '服务治理变革 ServiceMesh',
                 collapsable: false,
                 sidebarDepth: 1,
                 link: '/MicroService/micro-service.md',
