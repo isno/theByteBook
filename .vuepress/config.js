@@ -334,7 +334,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: 'CI/CD 持续集成',
+                text: '基于云原生技术的 CI/CD 设计与开发',
                 link: '/CI-CD/intro.md',
                 collapsable: false,
                 sidebarDepth: 1,
