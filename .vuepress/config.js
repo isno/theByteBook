@@ -339,7 +339,7 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
-
+                    '/CI-CD/tools.md',
                 ]
             },
             {

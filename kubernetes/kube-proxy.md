@@ -4,7 +4,9 @@ Kube-proxy 是 kubernetes 工作节点上的一个网络代理组件，运行在
 
 ## Kube-proxy 的工作模式
 
-目前 Kube-proxy 支持两种代理模式
+目前 Kube-proxy 支持两种代理模式：iptables、ipvs。
+
+
 
 
 从iptables 的分析来看，集群内 iptables 规则的数量和集群内Pod数据成正比。 不难想象，当集群Pod数量很大的情况下，iptables规则数量很大，而 Linux 系统不断地刷新成百上千条iptables 规则会大量消耗 CPU 资源，甚至引起宿主机的卡死。
