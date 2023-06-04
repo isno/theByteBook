@@ -1,11 +1,8 @@
 # Ingress
 
-ingress 是英文 入口 的意思。
+在 Kubernetes 中，为了使外部的应用能够访问集群内的 service，最为常用的是使用 NodePort 和 LoadBalancer 两种类型的 service，但它们在使用上还是有一些限制，譬如对外提供访问时，NodePort 类型需要在外部搭建额外的负载均衡，其次 NodePort 会占用很多集群机器的端口。而 LoadBalancer 要求 Kubernetes 必须跑在支持的 Cloud Provider 上，由云厂商提供公网 IP 地址，当同时当存在多个 LoadBalancer 的类型 Service 时，会占用大量公网 ip 地址。 以上的问题有没有解决方案呢？ 答案是使用 Ingress。
 
-在 Kubernetes 中，为了使外部的应用能够访问集群内的 service，最为常用的是使用 NodePort 和 LoadBalancer 两种类型的 service，但它们在使用上还是有一些限制：如，对外提供访问时，NodePort 类型需要在外部搭建额外的负载均衡，比如 Nginx 反向代理，NodePort 方式最大的缺点是会占用很多集群机器的端口。而 LoadBalancer 要求 Kubernetes 必须跑在支持的 Cloud Provider 上，由云厂商提供公网IP地址，同时当存在多个 LoadBalancer 的类型 service 时，就会占用大量公网 ip 地址，而 ingress 正是为解决以上这种问题而存在的。
-
-
-Ingress 可以基于七层的 HTTP 和 HTTPS 协议转发，可以通过域名和路径做到更细粒度的划分，如下图所示：
+Ingress 是英文入口的意思，在 Kubernetes 中，Ingress 用于定义如何从集群外部访问 Kubernetes 内部服务，是对集群中服务的外部访问进行管理的API对象。典型的访问方式，譬如 HTTP 和 HTTPS，另外也可提供负载均衡、SSL 卸载和基于名称的虚拟托管服务等功能。
 
 <div  align="center">
 	<img src="../assets/ingress.png" width = "600"  align=center />
