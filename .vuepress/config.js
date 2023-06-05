@@ -254,7 +254,6 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/container/declarative-api.md',
-                    '/kubernetes/label.md',
                     '/kubernetes/namespace.md',
                     {
                         text: 'Kubernetes 核心资源',
