@@ -22,7 +22,7 @@ XA规范主要涉及到以下三个角色：
 
 - MySQL: 支持 XA 事务，并实现了XA接口。
 - PostgreSQL: 从版本8.0开始支持XA事务，通过插件接口实现。
-- Oracle: 支持XA事务，使用 OracleXADataSource 提供XA接口。
-- SQL Server: 支持XA事务，使用 MSDTC 提供 XA 接口。
-- DB2: 支持XA事务，使用 DB2 Universal JDBC 驱动器提供XA接口。
-- Sybase ASE: 支持XA事务，使用 JConnect 提供 XA 接口。
+- Oracle: 支持 XA 事务，使用 OracleXADataSource 提供XA接口。
+- SQL Server: 支持 XA 事务，使用 MSDTC 提供 XA 接口。
+- DB2: 支持 XA 事务，使用 DB2 Universal JDBC 驱动器提供XA接口。
+- Sybase ASE: 支持 XA 事务，使用 JConnect 提供 XA 接口。

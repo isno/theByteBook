@@ -1,4 +1,4 @@
-# 分布式补偿事务协议 TCC
+# 业务场景中分布式事务解决协议： TCC
 
 TCC（Try-Confirm/Cancel）是一种基于补偿事务的分布式事务协议，TCC 和 2PC 有很大的相似性，不过两者面向的场景不同，2PC 是在数据库层面实现的分布式事务协议，TCC 则是应用层面实现的分布式事务协议。
 
@@ -41,10 +41,11 @@ public class PayService {
 	// 如果一阶段的工作都顺利进行完了，则进行二阶段的事务提交
 	Boolean confirm() {
 		Account account = accountService.get(uid = 10000);
-		// 进行扣款操作
-		account.setAmount(100);
 		// 释放冻结的金额
 		account.setFreezedAmount(100);
+		// 进行扣款操作
+		account.setAmount(100);
+		
 		return True;
 	}
 	// 如果一阶段的方法执行出问题了，二阶段就要回滚，进行各类反向补偿操作
@@ -63,10 +64,10 @@ public class OrderService {
 			PayService.prepareOrder()
 		} catch {
 			// 回滚补偿操作
-			PayServiceImpl.cancel()
+			PayService.cancel()
 			throw new Exception("error")
 		}
-		// 第一阶段正常
+		// 第一阶段正常，进行 confirm 操作
 		PayService.confirm()
 	}
 }
