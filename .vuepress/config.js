@@ -182,6 +182,7 @@ export default defineUserConfig({
                 children: [
                     '/distributed-system/cap.md',
                     '/distributed-system/BASE.md',
+                    '/distributed-system/compensate.md',
                     '/distributed-system/2PC.md',
                     '/distributed-system/TCC.md',
                     '/distributed-system/Saga.md',
