@@ -183,12 +183,12 @@ export default defineUserConfig({
                     '/distributed-system/cap.md',
                     '/distributed-system/BASE.md',
                     '/distributed-system/compensate.md',
+                    '/distributed-system/idempotent.md',
                     '/distributed-system/2PC.md',
                     '/distributed-system/XA.md',
                     '/distributed-system/TCC.md',
                     '/distributed-system/Saga.md',
                     '/distributed-system/raft.md',
-                    '/distributed-system/idempotent.md',
                     '/distributed-system/Seata.md'
                 ]
             },

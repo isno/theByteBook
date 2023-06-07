@@ -1,6 +1,6 @@
 # 基于 2PC 的分布式事务标准规范： XA 协议
 
-2PC 是一种分布式一致性协议，是一种理论，而 XA （eXtended Architecture）则是X/Open组织基于 2PC 制定的分布式事务一个标准协议规范。
+2PC 是一种分布式一致性协议，是一种理论，而 XA （eXtended Architecture）则是X/Open组织基于 2PC 制定的分布式事务一个行业标准规范。
 
 ## XA 协议概述
 
