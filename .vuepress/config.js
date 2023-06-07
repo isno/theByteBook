@@ -207,7 +207,6 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/container/OCI.md',
-                    '/container/OCI-in-Docker.md',    
                     {
                         text: 'OCI 镜像',
                         link: '/container/image.md',

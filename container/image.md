@@ -1,8 +1,8 @@
 # OCI 镜像
 
-在 OCI 标准镜像规范出台之前，有两套广泛使用的镜像规范，分别是 appc 和 docker v2，OCI 组织在 docker v2 的基础上推出了 OCI image spec。
+在 OCI 标准镜像规范出台之前，有两套广泛使用的镜像规范，分别是 appc 和 docker v2，OCI 组织在 docker v2 的基础上推出了 OCI image spec。OCI image spec 标准的宗旨概括来说就是不受上层结构的绑定，如特定的客户端、编排栈等，同时也不受特定的供应商或项目的绑定，即不限于某种特定操作系统、硬件、CPU 架构、公有云等。
 
-OCI image spec 标准的宗旨概括来说就是不受上层结构的绑定，如特定的客户端、编排栈等，同时也不受特定的供应商或项目的绑定，即不限于某种特定操作系统、硬件、CPU 架构、公有云等。runtime-spec 和 image-spec 两个规范通过 OCI runtime filesytem bundle 的标准格式连接在一起，OCI 镜像通过工具转换成 bundle，然后 OCI 容器引擎能够识别这个 bundle 来运行容器
+runtime-spec 和 image-spec 两个规范通过 OCI runtime filesytem bundle 的标准格式连接在一起，OCI 镜像通过工具转换成 bundle，然后 OCI 容器引擎能够识别这个 bundle 来运行容器
 
 
 ## OCI 镜像标准规范
