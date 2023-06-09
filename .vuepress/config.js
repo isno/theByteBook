@@ -182,14 +182,22 @@ export default defineUserConfig({
                 children: [
                     '/distributed-system/cap.md',
                     '/distributed-system/BASE.md',
-                    '/distributed-system/compensate.md',
-                    '/distributed-system/idempotent.md',
-                    '/distributed-system/2PC.md',
-                    '/distributed-system/XA.md',
-                    '/distributed-system/TCC.md',
-                    '/distributed-system/Saga.md',
+                     {
+                        text: "分布式事务",
+                        link: '/distributed-system/transaction.md',
+                        children: [
+                            '/distributed-system/compensate.md',
+                            '/distributed-system/idempotent.md',
+                            '/distributed-system/2PC.md',
+                            '/distributed-system/XA.md',
+                            '/distributed-system/TCC.md',
+                            '/distributed-system/Saga.md',
+                            '/distributed-system/Seata.md'
+                        ]
+                    },
+                   
                     '/distributed-system/raft.md',
-                    '/distributed-system/Seata.md'
+                    
                 ]
             },
             {
