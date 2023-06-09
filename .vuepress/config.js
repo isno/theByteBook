@@ -180,8 +180,8 @@ export default defineUserConfig({
                 text: "分布式系统理论及实践",
                 link: '/distributed-system/distributed-transaction.md',
                 children: [
-                    '/distributed-system/cap.md',
                     '/distributed-system/BASE.md',
+                    '/distributed-system/cap.md',
                      {
                         text: "分布式事务",
                         link: '/distributed-system/transaction.md',
@@ -203,8 +203,6 @@ export default defineUserConfig({
                             '/distributed-system/raft.md',
                         ]
                     },
-                   
-                    
                 ]
             },
             {
