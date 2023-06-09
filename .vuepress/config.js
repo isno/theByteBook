@@ -195,8 +195,15 @@ export default defineUserConfig({
                             '/distributed-system/Seata.md'
                         ]
                     },
+                    {
+                        text: "分布式数据一致性",
+                        link: '/distributed-system/consistency.md',
+                        children: [
+                            '/distributed-system/consensus.md',
+                            '/distributed-system/raft.md',
+                        ]
+                    },
                    
-                    '/distributed-system/raft.md',
                     
                 ]
             },
