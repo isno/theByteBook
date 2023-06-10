@@ -182,6 +182,7 @@ export default defineUserConfig({
                 children: [
                     '/distributed-system/BASE.md',
                     '/distributed-system/cap.md',
+                    '/distributed-system/ACID.md',
                      {
                         text: "分布式事务",
                         link: '/distributed-system/transaction.md',
