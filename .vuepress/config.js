@@ -197,7 +197,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: "分布式数据一致性",
+                        text: "分布式集群高可用",
                         link: '/distributed-system/consistency.md',
                         children: [
                             '/distributed-system/consensus.md',
