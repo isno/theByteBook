@@ -177,7 +177,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: "分布式系统理论及实践",
+                text: "分布式集群理论与实践",
                 link: '/distributed-system/distributed-transaction.md',
                 children: [
                     '/distributed-system/BASE.md',
