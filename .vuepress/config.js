@@ -229,7 +229,6 @@ export default defineUserConfig({
                         collapsable: false,
                         sidebarDepth: 1,
                         children: [
-                            '/container/rootfs.md',
                             '/container/image-build.md',
                             '/container/Nydus-image.md',
                         ]

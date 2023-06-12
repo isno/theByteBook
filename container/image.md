@@ -2,15 +2,33 @@
 
 容器镜像是云原生的基础设施之一，作为容器运行时文件系统视图基础，从它诞生到现在，衍生出了镜像构建、存储、分发到运行时的整个镜像生命周期的各种生态。
 
-在本篇文章，
+容器提供给了应用一个快速、轻量且有着基本隔离环境的运行时，而镜像提供给了容器 RootFS，也就是容器内能看到的整个 Filesystem 视图，其中至少包括了文件目录树结构、文件元数据以及数据部分。镜像的特点如下：
 
-- 容器镜像的基本原理，以及它的组成格式
-- 目前镜像设计存在的问题
-- 容器镜像的改进 Nydus
+- 易于传输，例如通过网络以 HTTP 的方式从 Registry 上传或下载。
+- 易于存储，例如可以打包成 Tar Gzip 格式，存储在 Registry 上。
+- 具备不可变特性，整个镜像有一个唯一 Hash，只要镜像内容发生变化，镜像 Hash 也会被改变。
 
-在 OCI 标准镜像规范出台之前，有两套广泛使用的镜像规范，分别是 appc 和 docker v2，OCI 组织在 docker v2 的基础上推出了 OCI image spec。OCI image spec 标准的宗旨概括来说就是不受上层结构的绑定，如特定的客户端、编排栈等，同时也不受特定的供应商或项目的绑定，即不限于某种特定操作系统、硬件、CPU 架构、公有云等。
 
-runtime-spec 和 image-spec 两个规范通过 OCI runtime filesytem bundle 的标准格式连接在一起，OCI 镜像通过工具转换成 bundle，然后 OCI 容器引擎能够识别这个 bundle 来运行容器
+早期的镜像格式是由 Docker 设计的，经历了从 Image Manifest V1、V2 Scheme 1到 V2 Scheme 2的演进。后来出现了诸如 CoreOS 推出的其他容器运行时后，为了避免竞争和生态混乱，OCI 标准化社区成立。它定义了容器在运行时、镜像以及分发相关的实现标准，我们目前用的镜像格式基本都是 OCI 兼容。
+
+## 容器镜像的组成
+
+镜像主要是由镜像层和容器配置两大部分组成。
+
+<div  align="center">
+  <img src="../assets/oci-image.png" width = "200"  align=center />
+</div>
+
+
+什么是镜像层呢？可以回想下平时写的 Dockerfile 文件：每条 ADD、COPY、RUN 指令都可能会产生新的镜像层，新层包含的是在旧层的基础上，新增加或修改的文件 （包含元数据和数据） ，或被删除的文件 。
+
+简单来说镜像的每一层存储的是 Lower 与 Upper 之间的 Diff，非常类似 Git Commit。这层 Diff 通常会被压缩成 Tar Gzip 格式后上传到 Registry。
+
+在运行时，所有 Diff 堆叠起来后，就组成了提供给容器的整个文件系统视图，也就是 RootFS。
+
+镜像的另外一部分是容器运行时配置，这部分包含了命令、环境变量、端口等信息。
+
+镜像层和运行时配置各自有一个唯一 Hash （通常是 SHA256），这些 Hash 会被写进一个叫 Manifest的 JSON 文件里，在 Pull 镜像时实际就是先拉取 Manifest 文件，然后再根据 Hash 去 Registry 拉取对应的镜像层/容器运行时配置。
 
 
 ## OCI 镜像标准规范
@@ -20,11 +38,6 @@ OCIv1 镜像主要包括以下几块内容：
 - Image Manifest：提供了镜像的配置和文件系统层定位信息，可以看作是镜像的目录，文件格式为 json 。
 - Image Layer Filesystem Changeset：序列化之后的文件系统和文件系统变更，它们可按顺序一层层应用为一个容器的 rootfs，因此通常也被称为一个 layer（与下文提到的镜像层同义），文件格式可以是 tar ，gzip 等存档或压缩格式。
 - Image Configuration：包含了镜像在运行时所使用的执行参数以及有序的 rootfs 变更信息，文件类型为 json。
-
-
-<div  align="center">
-	<img src="../assets/oci-image.webp" width = "400"  align=center />
-</div>
 
 
 使用 skopeo 工具，将 Docker 中 redis 镜像转换为 OCI 镜像
@@ -123,18 +136,6 @@ $ cd test && ls
 bin	dev	home	lib64	mnt	proc	run	srv	tmp	var
 boot	etc	lib	media	opt	root	sbin	sys	usr
 ```
-
-<div  align="center">
-	<img src="../assets/union-mount.png" width = "500"  align=center />
-</div>
-
-
-镜像 layer 机制可以体现在以下方面：
-
-- 拉取更快：因为分层了，只需拉取本地不存在的层即可！
-- 存储更少：因为共同的层只需存储一份即可！
-- 运行时存储更少：容器运行时可以共享相同的层！
-
 
 
 
