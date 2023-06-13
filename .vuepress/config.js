@@ -352,6 +352,13 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/CI-CD/tools.md',
+                    {
+                        text: "持续集成",
+                        link: '/CI-CD/CI.md',
+                        children: [
+
+                        ]
+                    },
                 ]
             },
             {
