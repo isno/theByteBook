@@ -356,7 +356,7 @@ export default defineUserConfig({
                         text: "持续集成",
                         link: '/CI-CD/CI.md',
                         children: [
-
+                            '/CI-CD/SonarQube.md'
                         ]
                     },
                 ]
