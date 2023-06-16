@@ -359,6 +359,16 @@ export default defineUserConfig({
                             '/CI-CD/SonarQube.md'
                         ]
                     },
+                    {
+                        text: "持续交付",
+                        link: '/CI-CD/CD.md',
+                        children: [
+                            '/CI-CD/Helm.md',
+                            '/CI-CD/Kunstomize',
+                           '/CI-CD/ArgoCD.md',
+                           '/CI-CD/Flagger.md'
+                        ]
+                    },
                 ]
             },
             {
