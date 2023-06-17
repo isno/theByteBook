@@ -363,8 +363,9 @@ export default defineUserConfig({
                         text: "持续交付",
                         link: '/CI-CD/CD.md',
                         children: [
+                            '/CI-CD/Kustomize.md',
                             '/CI-CD/Helm.md',
-                            '/CI-CD/Kunstomize',
+                            
                            '/CI-CD/ArgoCD.md',
                            '/CI-CD/Flagger.md'
                         ]

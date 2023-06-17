@@ -6,14 +6,14 @@
 
 ## Helm 是什么？
 
-很多读者应该都使用过 Ubuntu 下的 ap-get 或者 CentOS 下的 yum, 这两者是 Linux 系统下的包管理工具。采用 apt-get/yum，应用开发者可以管理应用包之间的依赖关系，发布应用；用户则可以以简单的方式查找、安装、升级、卸载应用程序。
+Helm 是由 Deis 公司开发的一种系统性管理和封装 Kubernetes 应用的解决方案，它参考了各大 Linux 发行版管理应用的思路，应用格式是 Chart。（相较于 yum 之 Centos， apt-get 之 Ubunut）。Helm 本质就是 Kubernetes 的包管理器。 对于使用者而言，使用 Helm 后不用需要了解 Kubernetes 的 yaml 语法并编写应用部署文件，可以通过 Helm 下载并在 kubernetes 上安装需要的应用。
+
+Helm 一开始的目标就很明确：如果说 Kubernetes 是云原生操作系统的话，那 Helm 就是要成为这个操作系统之上的应用商店和包管理工具。
 
 
-我们可以将 Helm 看作 Kubernetes 下的 apt-get/yum，对于应用发布者而言，可以通过 Helm 打包应用，管理应用依赖关系，管理应用版本并发布应用到软件仓库。使用Helm后不用需要了解Kubernetes的Yaml语法并编写应用部署文件，可以通过 Helm 下载并在kubernetes上安装需要的应用。
+相信读者朋友们知道 Linux下的包管理工具和封装格式， 如 Debian 系的 apt-get命令和 dpkg 格式，RHEL 洗的 yum 命令和 rpm 格式。在 Linux 系统中，有了包管理工具，我们只要知道应用的名称，就可以很方便地从应用仓库中下载、安装、升级、回滚等，而且包管理工具掌握着应用的依赖信息和版本变更情况，具备完整的自管理能力，每个应用依赖哪些前置的第三方库，在安装时都会一并处理好。
 
-对于应用发布者而言，可以通过 Helm 打包应用，管理应用依赖关系，管理应用版本并发布应用到软件仓库。
-
-Helm 本质就是 Kubernetes 的包管理器。 对于使用者而言，使用 Helm 后不用需要了解 Kubernetes 的 yaml 语法并编写应用部署文件，可以通过 Helm 下载并在 kubernetes 上安装需要的应用。
+Helm 模拟的就是这种做法，它提出了与 Linux 包管理直接对应的 Chart 格式 和 Repoistory 应用仓库，另外针对 Kubernetes 中特有的一个应用要部署多个版本的特点，又提出了 Release 的专有观念。
 
 
 总结使用 Helm 可以帮我们解决下面这些问题：
@@ -47,3 +47,40 @@ Helm 本质就是 Kubernetes 的包管理器。 对于使用者而言，使用 H
 <div  align="center">
 	<img src="../assets/helm.webp" width = "500"  align=center />
 </div>
+
+
+## Chart 应用示例
+
+```
+WordPress
+.
+├── Chart.lock
+├── Chart.yaml
+├── README.md
+├── templates
+│   ├── NOTES.txt
+│   ├── _helpers.tpl
+│   ├── config-secret.yaml
+│   ├── deployment.yaml
+│   ├── externaldb-secrets.yaml
+│   ├── extra-list.yaml
+│   ├── hpa.yaml
+│   ├── httpd-configmap.yaml
+│   ├── ingress.yaml
+│   ├── metrics-svc.yaml
+│   ├── networkpolicy-backend-ingress.yaml
+│   ├── networkpolicy-egress.yaml
+│   ├── networkpolicy-ingress.yaml
+│   ├── pdb.yaml
+│   ├── postinit-configmap.yaml
+│   ├── pvc.yaml
+│   ├── secrets.yaml
+│   ├── serviceaccount.yaml
+│   ├── servicemonitor.yaml
+│   ├── svc.yaml
+│   └── tls-secrets.yaml
+├── values.schema.json
+└── values.yaml
+```
+
+Chart 包内有几个固定的配置文件： Chart.yaml 给出了 应用自身的详细信息（名称、版本、许可证、自述、说明等）， values.yaml 给出了所有可配置项目的预定义值。
