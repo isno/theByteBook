@@ -1,12 +1,6 @@
 # Helm
 
-## 为什么需要 Helm
-
-利用 Kubernetes 部署应用时，会配置大量的资源声明，例如 deployment、RC、HPA、Service 等等，对于一个稍具规模的微服务系统，如果仅使用 kubectl 进行资源管理，就需要修改和维护大量的配置，那么有没有一种便捷的资源管理方式呢？
-
-## Helm 是什么？
-
-Helm 是由 Deis 公司开发的一种系统性管理和封装 Kubernetes 应用的解决方案，它参考了各大 Linux 发行版管理应用的思路，应用格式是 Chart。（相较于 yum 之 Centos， apt-get 之 Ubunut）。Helm 本质就是 Kubernetes 的包管理器。 对于使用者而言，使用 Helm 后不用需要了解 Kubernetes 的 yaml 语法并编写应用部署文件，可以通过 Helm 下载并在 kubernetes 上安装需要的应用。
+Helm 是由 Deis 公司开发的一种系统性管理和封装 Kubernetes 应用的解决方案，它参考了各大 Linux 发行版管理应用的思路，应用格式是 Chart。（相较于 yum 之 Centos， apt-get 之 Ubunut）。Helm 本质就是 Kubernetes 的包管理器，对于使用者而言，使用 Helm 后不用需要了解 Kubernetes 的 yaml 语法并编写应用部署文件，可以通过 Helm 一行命令下载并在 kubernetes 上安装需要的应用。
 
 Helm 一开始的目标就很明确：如果说 Kubernetes 是云原生操作系统的话，那 Helm 就是要成为这个操作系统之上的应用商店和包管理工具。
 
@@ -48,7 +42,6 @@ Helm 模拟的就是这种做法，它提出了与 Linux 包管理直接对应�
 	<img src="../assets/helm.webp" width = "500"  align=center />
 </div>
 
-
 ## Chart 应用示例
 
 ```
@@ -62,25 +55,18 @@ WordPress
 │   ├── _helpers.tpl
 │   ├── config-secret.yaml
 │   ├── deployment.yaml
-│   ├── externaldb-secrets.yaml
-│   ├── extra-list.yaml
 │   ├── hpa.yaml
-│   ├── httpd-configmap.yaml
-│   ├── ingress.yaml
-│   ├── metrics-svc.yaml
-│   ├── networkpolicy-backend-ingress.yaml
-│   ├── networkpolicy-egress.yaml
-│   ├── networkpolicy-ingress.yaml
-│   ├── pdb.yaml
-│   ├── postinit-configmap.yaml
-│   ├── pvc.yaml
-│   ├── secrets.yaml
-│   ├── serviceaccount.yaml
-│   ├── servicemonitor.yaml
 │   ├── svc.yaml
-│   └── tls-secrets.yaml
+│   └── ...
 ├── values.schema.json
 └── values.yaml
 ```
 
 Chart 包内有几个固定的配置文件： Chart.yaml 给出了 应用自身的详细信息（名称、版本、许可证、自述、说明等）， values.yaml 给出了所有可配置项目的预定义值。
+
+从整体来说， Helm 提供了应用生命周期、版本、依赖项的管理功能，同时 Helm 还支持额外的插件扩展，能加加入 CI/CD 或者其他方面的辅助功能。
+
+
+## 小结
+
+对于有状态的服务而言，服务会与特定的资源或者服务产生依赖关系，比如要部署数据库，通常要依赖特定的存储来持久化数据，这样事情就变得复杂起来，这一来的问题就要靠 Operator 来解决了。
