@@ -6,11 +6,10 @@
 - 可以进行版本控制，所有的变更都会被记录下来，方便溯源。
 - 可以将基础设施划分为若干个模块化组件，并通过自动化以不同的方式进行组合。
 
-广义上的 IaC 不仅仅只关于基础设施，还包含了网络、安全、配置等等，所以广义上的 IaC 又叫 X as Code。
+广义上的 IaC 不仅仅只关于基础设施，还包含了网络、安全、配置等等，所以 IaC 又叫 X as Code。
 
 <div  align="center">
 	<img src="../assets/x-as-code.png" width = "450"  align=center />
 </div>
-
 
 比如你想在 AWS 中创建服务器，配置网络，部署 Kubernetes 集群以及各种工作负载，你只需要定义好 Terraform 或 Ansible 的声明式配置，以及 Kubernetes 的配置清单即可，免去一切繁杂的手动操作。

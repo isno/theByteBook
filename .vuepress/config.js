@@ -45,6 +45,7 @@ export default defineUserConfig({
                 children: [
                     '/architecture/define-cloud-native.md',
                     '/architecture/arc.md',
+                    '/CI-CD/IaC.md',
                     '/architecture/arc-guide.md'
                 ]
             },
