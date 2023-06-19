@@ -23,7 +23,7 @@ Linux ip 工具的子命令 netns 集成了 network namespace 的增删查改功
 ip netns add ns1
 ```
 
-当 ip 命令创建一个 network namespace 时，系统会在 /var/run/netns 生成一个挂载点。挂载点的作用是方便对 namespace 进行管理，另一方面也使得 namespace 即使没有进程运行也能继续存在。
+当 ip 命令创建一个 network namespace 时，系统会在 /var/run/netns 生成一个挂载点。挂载点的作用是方便对 namespace 进行管理，另一方面也使得 namespace 即使没有进程运行也能持续存在。
 
 查询该 netns 的基本信息
 
