@@ -10,17 +10,19 @@ Linux 内核实现 namespace 一个主要目是用来隔离内核资源，实现
 
 毫不夸张地说 namespace 是整个 Linux 网络虚拟化，甚至更进一步也可以说是前云计算潮流的基石。
 
-Linux通过对内核资源进行封装抽象，提供了七类系统资源的隔离机制（namespace）：
+Linux 通过对内核资源进行封装抽象，提供了八类系统资源的隔离机制（namespace）：
 
 |  类型   | 用途  |
 |  ----  | ----  |
-| Cgroup  | Cgroup root directory |
-| IPC  | System V IPC, POSIX message queues |
-| Network  | Network devices, stacks, ports, etc. |
-| Mount  | Mount points |
-| PID  | Process IDs |
-| User  | User and group IDs |
-| UTS  | Hostname and NIS domain name |
+| Cgroup  | Cgroup root directory cgroup 根目录 |
+| IPC  | System V IPC, POSIX message queues信号量，消息队列 |
+| Network  | Network devices, stacks, ports, etc.网络设备，协议栈，端口等等 |
+| Mount  | Mount points挂载点 |
+| PID  | Process IDs进程号 |
+| User  | 用户和组 ID |
+| UTS  | 系统主机名和 NIS(Network Information Service) 主机名（有时称为域名） |
+| Time  | 时钟 |
+
 
 网络虚拟化主要技术是 Network namespace，以及各类虚拟设备：Veth（虚拟网卡）、Linux Bridge（虚拟网桥）、tap/tun（隧道通信）。他们之间彼此协作，将独立的 namespace 连接起来形成一个虚拟网络。
 

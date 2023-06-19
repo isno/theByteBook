@@ -365,6 +365,7 @@ export default defineUserConfig({
                         children: [
                             '/CI-CD/Kustomize.md',
                             '/CI-CD/Helm.md',
+                            '/CI-CD/Operator.md',
                             
                            '/CI-CD/ArgoCD.md',
                            '/CI-CD/Flagger.md'
