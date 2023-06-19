@@ -346,7 +346,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '基于云原生技术的 CI/CD 设计与开发',
+                text: 'GitOps 设计与实施',
                 link: '/CI-CD/intro.md',
                 collapsable: false,
                 sidebarDepth: 1,
