@@ -106,7 +106,7 @@ Argo CD 中的项目（Project）可以用来对 Application 进行分组，不�
 ## ArgoCD 工作流程
 
 <div  align="center">
-	<img src="../assets/ArgoCD.png" width = "400"  align=center />
+	
 </div>
 
 ### 创建 git 仓库
