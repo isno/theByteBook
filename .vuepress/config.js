@@ -347,7 +347,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: 'GitOps 设计与实施',
+                text: 'GitOps 的流程设计与实施',
                 link: '/CI-CD/intro.md',
                 collapsable: false,
                 sidebarDepth: 1,
