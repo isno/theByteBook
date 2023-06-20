@@ -45,7 +45,6 @@ export default defineUserConfig({
                 children: [
                     '/architecture/define-cloud-native.md',
                     '/architecture/arc.md',
-                    '/CI-CD/IaC.md',
                     '/architecture/arc-guide.md'
                 ]
             },
@@ -352,6 +351,7 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
+                    '/GitOps/IaC.md',
                     '/GitOps/tools.md',
                     {
                         text: "持续集成",
