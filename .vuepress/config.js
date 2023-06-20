@@ -348,26 +348,26 @@ export default defineUserConfig({
             },
             {
                 text: 'GitOps 的流程设计与实施',
-                link: '/CI-CD/intro.md',
+                link: '/GitOps/intro.md',
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
-                    '/CI-CD/tools.md',
+                    '/GitOps/tools.md',
                     {
                         text: "持续集成",
-                        link: '/CI-CD/CI.md',
+                        link: '/GitOps/CI.md',
                         children: [
-                            '/CI-CD/SonarQube.md'
+                            '/GitOps/SonarQube.md'
                         ]
                     },
                     {
                         text: "持续交付",
-                        link: '/CI-CD/CD.md',
+                        link: '/GitOps/CD.md',
                         children: [
-                            '/CI-CD/Kustomize.md',
-                            '/CI-CD/Helm.md',                            
-                           '/CI-CD/ArgoCD.md',
-                           '/CI-CD/Flagger.md'
+                            '/GitOps/Kustomize.md',
+                            '/GitOps/Helm.md',                            
+                           '/GitOps/ArgoCD.md',
+                           '/GitOps/Flagger.md'
                         ]
                     },
                 ]
