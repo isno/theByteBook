@@ -1,9 +1,11 @@
 # Flagger
 
 
-Istio 而我们需要的更多是进行金丝雀发布之后指标的监控，流量的调整以及出现问题后的及时回滚。而 Flagger 就是这样一个帮助我们解决上面这些问题的开源工具
+Flagger 是一种渐进式交付工具，也是一个 Kubernetes Operator ，它可以基于多种 ingress 实现金丝雀升级， Flagger 使用 Prometheus 指标对流量进行分析。Flagger 中的 canary 分析器可以通过 webhooks 进行扩展，
+
+Flagger 实现了一个控制环路，该环路逐渐将流量转移到金丝雀，同时测量关键性指标，例如 HTTP请求成功率、请求延迟、Pod 运行状态等。基于对 KPI的分享，Flagger  控制金丝雀规模或者终止。
 
 
-Flagger 是一种渐进式交付工具，可自动控制 Kubernetes 上应用程序的发布过程。通过指标监控和运行一致性测试，将流量逐渐切换到新版本，降低在生产环境中发布新软件版本导致的风险。
-
-Flagger 使用 Service Mesh（App Mesh，Istio，Linkerd）或 Ingress Controller（Contour，Gloo，NGINX）来实现多种部署策略（金丝雀发布，A/B 测试，蓝绿发布）。对于发布分析，Flagger 可以查询 Prometheus、Datadog 或 CloudWatch，并使用 Slack、MS Teams、Discord 和 Rocket 来发出告警通知。
+<div  align="center">
+	<img src="../assets/flagger.png" width = "600"  align=center />
+</div>
