@@ -351,6 +351,7 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
+                    '/GitOps/GitOps.md',
                     '/GitOps/IaC.md',
                     '/GitOps/tools.md',
                     {
