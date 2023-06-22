@@ -2,7 +2,7 @@ import { defineUserConfig, defaultTheme } from 'vuepress';
 
 export default defineUserConfig({
     lang: 'zh-CN',
-    title: '深入云原生架构原理与落地实践',
+    title: '云原生架构原理与落地实践',
     description: '高可用服务体系原理与实践',
     head: [
         ['link', { rel: "shortcut icon", href: "/assets/favicon.ico" }],
@@ -352,7 +352,15 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/GitOps/GitOps.md',
-                    '/GitOps/IaC.md',
+                    
+                    {
+                        text: "基础设施即代码",
+                        link: '/GitOps/IaC.md',
+                        children: [
+                            '/GitOps/Kustomize.md',
+                            '/GitOps/Helm.md',
+                        ]
+                    },
                     '/GitOps/tools.md',
                     {
                         text: "持续集成",
@@ -364,9 +372,7 @@ export default defineUserConfig({
                     {
                         text: "持续交付",
                         link: '/GitOps/CD.md',
-                        children: [
-                            '/GitOps/Kustomize.md',
-                            '/GitOps/Helm.md',                            
+                        children: [                         
                            '/GitOps/ArgoCD.md',
                            '/GitOps/Flagger.md'
                         ]
