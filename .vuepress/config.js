@@ -357,10 +357,12 @@ export default defineUserConfig({
                         text: "基础设施即代码",
                         link: '/GitOps/IaC.md',
                         children: [
+                            '/GitOps/Crossplane.md',
                             '/GitOps/Kustomize.md',
                             '/GitOps/Helm.md',
                         ]
                     },
+                    '/GitOps/CICD.md',
                     '/GitOps/tools.md',
                     {
                         text: "持续集成",
