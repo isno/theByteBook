@@ -1,4 +1,4 @@
-# GitOps 下的 CI/CD
+# GitOps 下的 CI/CD 流程
 
 CI（Continuous Intergration，持续集成），强调开发人员不断进行代码提交、单元测试、性能测试、代码扫描等操作，根据测试结果，发现问题及时回滚，并进行反馈。
 
