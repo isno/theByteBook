@@ -26,19 +26,14 @@ GitOps 一个最基础的工作是基础设施代码化。
 
 ## IaC 工具选型
 
-大部分的公有云已经提供了良好的 API 和相应的 IaC 生态，而对于使用混合云的企业，是需要一些资源和时间实现底层基础设施的 IaC 能力。
+大部分的公有云已经提供了良好的 API 和相应的 IaC 生态，而对于使用混合云的企业，还是需要一些投入将底层基础设施 IaC 化。
 
-GitOps 核心的关键就是要先找到合适的 IaC 工具。
+云上资源 IaC 化，比较典型的工具是 Terraform。Terraform 可以说是 IaC 概念最早期的奠基项目，生态最为完善，社区也非常活跃，背后也有非常成熟的商业上市公司 HashiCorp 进行支持。Terraform 抽象了 HCL 这门相对简单易学的 DSL 作为资源描述语言，实践中配合 Terragrunt 这个工具（底层基于 Terraform 进行封装）能更好地写出相对紧凑简洁的代码。
 
-将云商资源 IaC 化，比较典型的工具是 Terraform。Terraform 可以说是 IaC 概念最早期的奠基项目，生态最为完善，社区也非常活跃，背后也有非常成熟的商业上市公司 HashiCorp 进行支持。Terraform 抽象了 HCL 这门相对简单易学的 DSL 作为资源描述语言。
+另外一个  Crossplane 。基于 Kubernetes 并通过封装好的形形色色的 CRDs 来操作多云资源。
 
-另外一个  Crossplane 。
+除以上云资源 IaC 化外，还有应用配置的 IaC，现在大部分企业选择 Kubernetes 作为 PaaS 的基座，行于 Kubernetes 之上的所有资源天然就已经被代码化了，其形式就是资源声明式 YAML 配置，但这种方式，过于简单，局限性过大。 从组织的角度来看，需要有对 yaml 更抽象的部署封装，这就是 Kustomize 和 Helm 。
 
+这两个工具本质上就是客户端 YAML 渲染引擎，用以更好的管理 YAML。从易用性的角度来看 Kustomize 更容易，但从功能性和生态来看 Helm 无疑是现在 Kubernetes 上的事实标准。
 
-### 应用层的 IaC
-
-在云原生的大趋势下，很多公司选择了 Kubernetes 作为 PaaS 的基座，因此应用最终都是容器化运行于 Kubernetes 之上。
-
-运行于 Kubernetes 之上的所有资源天然就已经被代码化了，其形式就是 YAML。YAML 是一种比较简单的配置语言，很适合用来描述声明式的资源对象。但也因为它的简单，局限性非常大。Kustomize 和 Helm 。
-
-这两个工具本质上就是客户端 YAML 渲染引擎，用以更好的管理 YAML。从易用性的角度来看，Kustomize 更容易；而从功能性和生态来看，Helm 无疑是现在 Kubernetes 上的事实标准。但是，Helm 实在太难用了，有一定的学习门槛。Helm 的难用是由于其采用的渲染模版机制的难用。Helm 虽然没有提供任何 DSL，但是各种渲染模版的使用本质上就构成了一种 DSL，而且是一种相对不直观的 DSL。尽管如此，Helm 的功能性非常的完善，基本可以满足绝大多数的 YAML 生成需求。而且，Helm 还有相应的包管理机制 Helm Chart，几乎每一个流行的 Kubernetes 应用都会提供相应的 Helm Chart 供用户安装。
+Helm 有一定的学习门槛。但是它的功能性非常的完善，基本可以满足绝大多数的 YAML 生成需求。而且，Helm 还有相应的包管理机制 Helm Chart，几乎每一个流行的 Kubernetes 应用都会提供相应的 Helm Chart 供用户安装。
