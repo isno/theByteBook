@@ -363,7 +363,6 @@ export default defineUserConfig({
                         ]
                     },
                     '/GitOps/CICD.md',
-                    '/GitOps/tools.md',
                     {
                         text: "持续集成",
                         link: '/GitOps/CI.md',
