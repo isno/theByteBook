@@ -218,10 +218,11 @@ export default defineUserConfig({
             },
             {
                 text: '第七章：容器技术',
-                link: '/container/container.md',
+                link: '/container/intro.md',
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
+                    '/container/container.md',
                     '/container/OCI.md',
                     {
                         text: '容器镜像',
