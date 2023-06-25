@@ -49,7 +49,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '网络架构基础与实践',
+                text: '第二章：网络架构基础与实践',
                 collapsable: true,
                 link: '/content/chapter1/intro.md',
                 sidebarDepth: 2,
@@ -109,7 +109,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '应用层网络架构实践',
+                text: '第三章：应用层网络架构实践',
                 link: "/http/intro.md",
                 collapsable: false,
                 sidebarDepth: 1,
@@ -143,7 +143,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '负载均衡与网关架构实践',
+                text: '第四章：负载均衡与网关架构实践',
                 link: '/api-gateway/intro.md',
                 collapsable: false,
                 sidebarDepth: 1,
@@ -177,7 +177,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: "分布式集群理论与实践",
+                text: "第五章：分布式集群理论与实践",
                 link: '/distributed-system/distributed-transaction.md',
                 children: [
                     '/distributed-system/BASE.md',
@@ -207,7 +207,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '从消息到事件流',
+                text: '第六章：从消息到事件流',
                 link: '/MessageQueue/intro.md',
                 collapsable: false,
                 sidebarDepth: 1,
@@ -217,7 +217,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '容器技术',
+                text: '第七章：容器技术',
                 link: '/container/container.md',
                 collapsable: false,
                 sidebarDepth: 1,
@@ -262,7 +262,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '容器编排系统 Kubernetes',
+                text: '第八章：容器编排系统 Kubernetes',
                 link: '/kubernetes/index.md',
                 collapsable: false,
                 sidebarDepth: 1,
@@ -314,7 +314,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '服务治理变革 ServiceMesh',
+                text: '第九章：服务治理变革 ServiceMesh',
                 collapsable: false,
                 sidebarDepth: 1,
                 link: '/MicroService/micro-service.md',
@@ -346,7 +346,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: 'GitOps 的流程设计与实施',
+                text: '第十章：GitOps 的流程设计与实施',
                 link: '/GitOps/intro.md',
                 collapsable: false,
                 sidebarDepth: 1,
@@ -382,7 +382,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '架构可观测性',
+                text: '第十一章：架构可观测性',
                 link: '/Observability/intro.md',
                 collapsable: false,
                 sidebarDepth: 1,
@@ -392,7 +392,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: 'FinOps云成本管理',
+                text: '第十二章：FinOps云成本管理',
                 link: '/FinOps/intro.md',
                 collapsable: false,
                 sidebarDepth: 1,
