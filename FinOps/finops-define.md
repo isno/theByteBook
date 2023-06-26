@@ -17,7 +17,7 @@ FinOps基金会对FinOps定义：
 - FinOps的特点是将问责制引入云支出，FinOps是财务责任文化变革带入云的可变支出模型的实践，使分布式工程和业务团队能够在其云架构和投资决策中的速度、成本和质量之间进行权衡。
 
 <div  align="center">
-	<img src="../assets/finops.png" width = "620"  align=center />
+	<img src="../assets/finops.jpg" width = "620"  align=center />
 </div>
 
 ## FinOps成熟度模型
