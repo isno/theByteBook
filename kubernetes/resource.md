@@ -22,6 +22,15 @@ limitranges                       limits       v1                    true       
 以上即为 整个 Kubernetes 的API，和一页又一页的API接口函数比较，实在简洁太多。 这就是基于 REST 风格来设计架构所带来的好处。
 
 
+## Kubernetes 常用的资源
+
+|类型|对象|
+|:--|:--|
+|资源资源| Pod、RS、Deployment、StatefulSet、DaemonSet、Job、CronJob、Node、Namespace、Service、Ingress、Label|
+|存储资源| Volume、PersistentVolume、Secret、ConfigMap|
+|策略资源| SecurityContext、RsourceQuota、LimitRange|
+|身份资源|  ServiveAccount、Role、ClusterRole |
+
 ## API object
 
 RESTful 架构下，Kubernetes 中所有内容都被抽象为“资源”，如 Pod、Service、Node 等都是资源，对象则资源的实例，是持久化的实体。在 “REST API” 的调用过程中会用 API Object 来表示 resource。
