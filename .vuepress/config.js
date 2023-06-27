@@ -398,6 +398,7 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/FinOps/finops-define.md',
+                    '/FinOps/Why-Need-FinOps.md',
                 ]
             }
         ]
