@@ -338,16 +338,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: 'Serverless架构',
-                link: '/serverless/Serverless.md',
-                collapsable: false,
-                sidebarDepth: 1,
-                children: [
-                    '/serverless/Knative.md',
-                ]
-            },
-            {
-                text: '第十章：GitOps 的流程设计与实施',
+                text: '第十章：GitOps 的落地与实施',
                 link: '/GitOps/intro.md',
                 collapsable: false,
                 sidebarDepth: 1,
@@ -392,7 +383,16 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第十二章：FinOps云成本管理',
+                text: '第十二章：Serverless 架构',
+                link: '/serverless/Serverless.md',
+                collapsable: false,
+                sidebarDepth: 1,
+                children: [
+                    '/serverless/Knative.md',
+                ]
+            },
+            {
+                text: '第十三章：FinOps云成本管理',
                 link: '/FinOps/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
