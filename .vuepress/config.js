@@ -393,12 +393,13 @@ export default defineUserConfig({
             },
             {
                 text: '第十二章：FinOps云成本管理',
-                link: '/FinOps/intro.md',
+                link: '/FinOps/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
                     '/FinOps/finops-define.md',
-                    '/FinOps/Why-Need-FinOps.md',
+                    '/FinOps/framework.md',
+                    '/FinOps/conclusion.md'
                 ]
             }
         ]
