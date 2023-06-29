@@ -384,7 +384,7 @@ export default defineUserConfig({
             },
             {
                 text: '第十二章：Serverless 架构',
-                link: '/serverless/Serverless.md',
+                link: '/serverless/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
