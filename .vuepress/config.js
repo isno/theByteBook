@@ -36,7 +36,6 @@ export default defineUserConfig({
         ],
         sidebar: [
             '/intro.md',
-            '/recommend.md',
             {
                 text: '第一章：架构的演进',
                 link: "/architecture/intro.md",
