@@ -37,12 +37,23 @@ export default defineUserConfig({
         sidebar: [
             '/intro.md',
             {
-                text: '第一章：架构的演进',
+                text: '第一章：云技术概论',
                 link: "/architecture/intro.md",
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
                     '/architecture/define-cloud-native.md',
+                 
+                    {
+                        text: '1.2 云技术方案选型',
+                        link: '/architecture/selection.md',
+                        children: [
+                           '/architecture/aliyun.md',
+                           '/architecture/tencent.md',
+                           '/architecture/rancher.md'
+                        ]
+                    },
+
                     '/architecture/arc.md',
                     '/architecture/arc-guide.md'
                 ]
