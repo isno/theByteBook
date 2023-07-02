@@ -359,7 +359,6 @@ export default defineUserConfig({
                         text: "基础设施即代码",
                         link: '/GitOps/IaC.md',
                         children: [
-                            '/GitOps/Crossplane.md',
                             '/GitOps/Kustomize.md',
                             '/GitOps/Helm.md',
                         ]
