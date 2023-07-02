@@ -399,6 +399,7 @@ export default defineUserConfig({
                     '/FinOps/finops-define.md',
                     '/FinOps/framework.md',
                     '/FinOps/finops-for-kubernetes.md',
+                    '/FinOps/kubecost.md',
                     '/FinOps/conclusion.md'
                 ]
             }

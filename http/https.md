@@ -1,4 +1,4 @@
-# 理解HTTPS流程
+# 3.1 理解HTTPS流程
 
 HTTPS (HTTP Secure) 并不是新协议，而是 HTTP 先和 SSL（Secure Sockets Layer 安全套接层）/ TLS (Transport Layer Security 安全层传输协议) 通信，再由 SSL/TLS 和 TCP 通信。也就是说 HTTPS 使用了隧道进行通信。
 
@@ -10,7 +10,7 @@ HTTPS (HTTP Secure) 并不是新协议，而是 HTTP 先和 SSL（Secure Sockets
 	<img src="../assets/https-1.png" width = "450"  align=center />
 </div>
 
-### HTTP 1vN 的问题
+## 3.1.1 HTTP 1vN 的问题
 
 使用对称加密的方式，在 HTTP 服务模式就有问题了，HTTP的服务模型是 1 v N, 使用对称加密的核心是如何保证秘钥的安全性，在 1 v N 的模型下，这种方式等同没有加密。 
 
@@ -30,7 +30,7 @@ HTTPS (HTTP Secure) 并不是新协议，而是 HTTP 先和 SSL（Secure Sockets
 
 具体则是：在协商流程中，通过随机数确定一个加密算法，然后使用公钥加密算法、密文等，服务器用私钥解密。
 
-### 公钥如何传输给客户端
+## 3.1.2 公钥如何传输给客户端
 
 公钥由服务端下发给客户端，但又出现了上面的问题，如何保证公钥不被中间人截获？
 
@@ -38,7 +38,7 @@ HTTPS (HTTP Secure) 并不是新协议，而是 HTTP 先和 SSL（Secure Sockets
 	<img src="../assets/https-4.png" width = "400"  align=center />
 </div>
 
-### 引入 CA
+## 3.1.3 引入 CA
 
 CA 是 Certificate Authority 的缩写，意为证书认证机构。
 
@@ -46,7 +46,7 @@ CA 是 Certificate Authority 的缩写，意为证书认证机构。
 
 服务端的证书是由 CA 签名，为制作成数字证书。 数字证书一般包括 公钥、持有者信息、证书认证机构（CA）的信息、过期信息...
 
-## 证书验证链
+## 3.1.4 证书验证链
 
 证书的验证过程中还存在一个证书信任链的问题，因为我们向 CA 申请的证书一般不是根证书签发的，而是由中间证书签发。比如 thebyte.com.cn 证书，从下图可以看到，证书的层级有三级：
 
