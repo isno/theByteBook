@@ -67,6 +67,34 @@ Chart 包内有几个固定的配置文件： Chart.yaml 给出了 应用自身�
 从整体来说， Helm 提供了应用生命周期、版本、依赖项的管理功能，同时 Helm 还支持额外的插件扩展，能加加入 CI/CD 或者其他方面的辅助功能。
 
 
-## 小结
+## Helm 项目安装
 
-对于有状态的服务而言，服务会与特定的资源或者服务产生依赖关系，比如要部署数据库，通常要依赖特定的存储来持久化数据，这样事情就变得复杂起来，这一来的问题就要靠 Operator 来解决了。
+Helm 提供了二进制以及脚本安装，我们这里使用二进制的方式安装。国内 Helm 镜像地址：https://mirrors.huaweicloud.com/helm/
+
+
+- 下载 需要的版本
+- 解压 tar -zxvf helm-v3.0.0-linux-amd64.tar.gz 
+- 在解压目录中找到 helm 程序，移动到需要的目录中 mv linux-amd64/helm /usr/local/bin/helm 
+
+添加一个 chart 仓库。
+
+```
+helm repo add azure https://mirror.azure.cn/kubernetes/charts
+```
+搜索chart
+
+```
+$ helm search repo redis
+NAME                           	CHART VERSION	APP VERSION	DESCRIPTION                                       
+azure/prometheus-redis-exporter	3.5.1        	1.3.4      	DEPRECATED Prometheus exporter for Redis metrics  
+azure/redis                    	10.5.7       	5.0.7      	DEPRECATED Open source, advanced key-value stor...
+```
+
+```
+# 拉取chart包到本地
+$ helm pull bitnami/redis-cluster --version 8.1.2
+# 安装redis-ha集群，取名redis-ha，需要指定持存储类
+$ helm install redis-cluster bitnami/redis-cluster --set global.storageClass=nfs,global.redis.password=xiagao --version 8.1.2
+# 卸载
+$ helm uninstall redis-cluste
+```
