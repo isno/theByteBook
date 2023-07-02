@@ -50,7 +50,8 @@ export default defineUserConfig({
                         children: [
                            '/architecture/aliyun.md',
                            '/architecture/tencent.md',
-                           '/architecture/rancher.md'
+                           '/architecture/rancher.md',
+                           '/architecture/cloud-contrast.md'
                         ]
                     },
 
