@@ -8,4 +8,9 @@
 一众云计算服务商（阿里云、AWS、Azure...）也开始统一行业标准，对各类资源进行规范封装，并提供完善的 PaaS 层供业务层对接，这个时候，充分利用云的特性，助力企业商业价值增长，对于理解云原生、拥抱云原生就是最强的驱动力。
 
 
+<div  align="center">
+	<p>本章内容导读</p>
+	<img src="../assets/cloud-summary.png" width = "500"  align=center />
+</div>
+
 
