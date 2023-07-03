@@ -38,10 +38,11 @@ export default defineUserConfig({
             '/intro.md',
             {
                 text: '第一章：云技术概论',
-                link: "/architecture/intro.md",
+                link: "/architecture/summary.md",
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
+                    '/architecture/migrate-cloud.md',
                     '/architecture/define-cloud-native.md',
                  
                     {
