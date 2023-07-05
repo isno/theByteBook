@@ -235,6 +235,18 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/container/container.md',
+                    {
+                        text: '7.2 容器技术的核心原理',
+                        link: '/container/principle.md',
+                        collapsable: false,
+                        sidebarDepth: 1,
+                        children: [
+                            '/container/namespace.md',
+                            '/container/cgroups.md',
+                            '/container/unionfs.md'
+                        ]
+                    },
+
                     '/container/OCI.md',
                     {
                         text: '容器镜像',
