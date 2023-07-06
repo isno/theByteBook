@@ -1,4 +1,4 @@
-# 7.2.1 Namespace
+# 7.2.1 Namespace 资源隔离
 
 Namespace 是 Linux 内核中实现的特性，本质上是一种资源隔离方案。
 
