@@ -27,3 +27,22 @@
 
 而构建镜像最有挑战性之一的就是使用镜像尽可能小，小的镜像不论在大规模集群部署、故障转移、存储成本方面都有巨大的优势。
 
+```
+# 基础镜像
+ROM centos
+# 工作目录
+WORKDIR /usr/local
+RUN yum install gcc gcc-c++ make automake autoconf libtool openssl openssl-devel -y \
+	 && RUN wget -O redis.tar.gz "http://download.redis.io/redis-stable.tar.gz" \
+	 && RUN tar -xvf redis.tar.gz
+
+WORKDIR /usr/local/redis-7.0.5/src
+RUN make && make install
+# 修改绑定ip地址
+RUN sed -i 's/bind 127.0.0.1/bind 0.0.0.0/g' /usr/local/redis-7.0.5/redis.conf
+
+# 暴露 redis 端口
+EXPOSE 6379
+# 容器运行后启动 redis 的指令
+CMD ["/usr/local/redis-7.0.5/bin/redis-server", "/usr/local/redis-7.0.5/redis.conf"]
+```
