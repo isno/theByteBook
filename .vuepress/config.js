@@ -249,7 +249,7 @@ export default defineUserConfig({
 
                     '/container/OCI.md',
                     {
-                        text: '容器镜像',
+                        text: '7.4 容器镜像',
                         link: '/container/image.md',
                         collapsable: false,
                         sidebarDepth: 1,

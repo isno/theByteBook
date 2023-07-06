@@ -1,30 +1,22 @@
-# 容器标准化项目 OCI
+# 7.3 容器标准化项目 OCI
 
-2013年，Docker 公司发布 Docker 开源项目，提供了一系列简便的工具链来使用容器。
+Docker 公司的出现可以说是容器技术的重要里程碑，它率先推动了容器技术的普及，并拉开了云原生应用变革的序幕。
 
-毫不夸张地说，Docker 公司率先点燃了容器技术的火焰，拉开了云原生应用变革的帷幕，促进容器生态圈一日千里地发展。
+随着时间的推移，云计算和云平台的成熟，越来越多的用户开始重视在云端开发、部署和运维应用的效率。为了确保不同容器运行时都能够运行任何构建工具生成的镜像，Linux 基金会与一些顶级科技公司如 Google、华为、惠普、IBM、Docker、Red Hat 和 VMware 共同成立了开放容器倡议 OCI（Open Container Initiative，开放容器计划）。
 
-后续随着 IaaS、PaaS 和 SaaS 等云平台逐渐成熟，用户对云端应用开发、部署和运维的效率提升不断重视, 为了确保所有的容器运行时都能运行任何构建工具生成的镜像，Linux 基金会与 Google，华为，惠普，IBM，Docker，Red Hat，VMware 等公司共同宣布成立开放容器项目（OCP），后更名为开放容器倡议（OCI）。OCI 定义了围绕容器镜像格式和运行时的行业标准，给定一个 OCI 镜像，任何实现 OCI 运行时标准的容器运行时都可以使用该镜像运行容器。
-
-同年还成立了 CNCF，目的是促进容器技术在云原生领域的应用，降低用户开发云原生应用门槛，容器技术已经进入了百花齐放的时代。
+OCI 的目标是制定容器镜像格式和运行时的行业标准，使得任何支持 OCI 运行时标准的容器运行时都可以使用 OCI 镜像来运行容器，促进了容器技术的互操作性和可移植性。
 
 
-## OCI
-
-OCI（Open Container Initiative，开放容器计划），是在 2015 年由 Docker、CoreOS 等公司共同成立的项目，并由 Linux 基金会进行管理，致力于围绕容器格式和运行时创建开放的行业标准。
+## 7.3.1 OCI
 
 OCI 目前提出的规范有如下：
 
-- Runtime Specification	
-- Image Format	
-- Distribution Specification	
-
-Image Format（镜像规范）对镜像格式、打包(Bundle)、存储等进行了定义。Runtime Specification（运行时规范）对镜像运行时的规范，它定义了利用镜像的Artifact在不同的平台上运行容器的标准流程。在 OCI 标准下，运行一个容器的过程就是下载一个 OCI 的镜像，将其解压到某个 Filesystem Bundle 中，然后某个 OCI Runtime 就会运行这个 Bundle。
-
-而 Distribution Specification 则是镜像分发的规范，该规范用于标准化镜像的分发标准，使 OCI 的生态覆盖镜像的全生态链路，从而成为一种跨平台的容器镜像分发标准。例如，Docker官方镜像仓库、开源仓库方案 Harbor 等都是符合分发规范的 Registry。
+- Runtime Specification	：运行时规范，主要定义了在不同平台上运行容器的标准流程
+- Image Format 镜像规范， 对镜像格式、打包(Bundle)、存储等进行了定义
+- Distribution Specification 镜像分发的规范，该规范用于标准化镜像的分发标准，使 OCI 的生态覆盖镜像的全生态链路，从而成为一种跨平台的容器镜像分发标准。
 
 
-## OCI in Docker
+## 7.3.2 OCI in Docker
 
 自从 Docker 发布之后，Docker 项目逐渐成为了一个庞然大物。为了能够降低项目维护的成本，促进行业发展，Docker 公司提出了 “基础设施管道宣言” (Infrastructure Plumbing Manifesto)，并分成了多个模块以适应 OCI 标准。
 
@@ -42,8 +34,7 @@ containerd-shim 是 containerd 和 runC 之间的中间层， 每启动一个容
 </div>
 
 
-
-## Docker 镜像 与 OCI 镜像的区别
+### 1. Docker 镜像 与 OCI 镜像的区别
 
 如果要问 Docker 镜像与 OCI 镜像之间有什么区别，如今的答案是：几乎没有区别。
 
