@@ -1,9 +1,8 @@
-# 安全容器时：Kata Containers 
+# 7.5.3 安全容器时：Kata Containers 
 
-## 为什么需要 Kata Containers 
-尽管容器有许多技术优势，然而传统的以 runC 为代表的容器方案基于共享内核技术，通过Linux提供的 namespace、Cgroups 等技术进行隔离和控制，如果某个容器中的恶意程序利用系统缺陷从容器中逃逸，则会对宿主机造成严重的威胁，尤其是公有云环境，安全威胁很可能会波及到其他用户的数据和业务。
+尽管容器有许多技术优势，然而传统以 runC 为代表的容器方案基于共享内核技术进行的软隔离和控制，如果某个容器中的恶意程序利用系统缺陷从容器中逃逸，则会对宿主机造成严重的威胁，尤其是公有云环境，安全威胁很可能会波及到其他用户的数据和业务。
 
-## Kata Containers 介绍
+## 1. Kata Containers 介绍
 
 如果将不同容器再嵌套放入到不同的虚拟机，通过增加一层相对安全、成熟的隔离技术，就能大大提高系统的安全性，减少系统被攻破的可能。基于这种思想的开源技术也随之出现，代表性的两个项目为 Intel 开源技术中心的 Clear Containers 和 Hyper.sh 的 runV。
 
@@ -17,10 +16,9 @@ Kata Containers 安全容器的诞生解决了许多普通容器场景无法解�
 </div>
 
 
-## Kata Containers in  Kubernetes
+## 2. Kata Containers in  Kubernetes
 
 Kata Containers  运行符合 OCI 规范，这也意味着 Kata Containers 可以直接运行 Docker 制作的镜像，同时 Kata Containers  还兼容 Kubernetes CRI 规范
-
 
 Kata Containers  通过虚拟机作为进程隔离环境之后，原生就带有 Kubernetes Pod， 也就是说 Kata Containers  启用的虚拟机就是一个 Pod，虚拟机里面的进程共享网络空间。
 
