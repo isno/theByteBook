@@ -1,8 +1,8 @@
 # 7.6.1 私有镜像仓库 Harbor
 
-Pod 在启动之前需要先用镜像仓库拉取镜像，如果是企业私有化部署 Kubernetes，为了更好的性能和安全，都会自建私有镜像仓库。自建仓库一般要求多租户、访问控制、活动审计等功能，VMwar 开源的 Harbor 是最常用的镜像仓库，Harbor 也是 CNCF 的孵化项目。
+为了更好的性能和安全，企业内部都会自建私有镜像仓库，自建仓库一般要求多租户、访问控制、活动审计等功能，VMwar 开源的 Harbor 是最常用的镜像仓库，Harbor 也是 CNCF 的孵化项目。
 
-Harbor 以 Docker 公司开源的 registry 为基础，包括了权限管理 (RBAC)、LDAP、审计、管理界面、自我注册、HA 等企业必需的功能。
+Harbor 以 Docker 公司开源的 Registry 为基础，包括了权限管理 (RBAC)、LDAP、审计、管理界面、自我注册、HA 等企业必需的功能。
 
 ## 1. Harbor 高可用部署
 
