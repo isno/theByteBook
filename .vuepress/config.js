@@ -282,7 +282,7 @@ export default defineUserConfig({
                     },
                     {
                         text: '7.7 容器与kubernetes',
-                        link: '/container-in-kubernetes.md',
+                        link: '/container/container-in-kubernetes.md',
                         collapsable: false,
                         sidebarDepth: 1,
                         children: [

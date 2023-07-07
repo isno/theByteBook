@@ -1,10 +1,10 @@
-# 加速镜像分发：Dragonfly
+# 7.6.2 镜像分发加速 Dragonfly
 
 容器技术虽然通过镜像统一的业务的构建、分发和运行，但是当容器云平台达到一定规模之后，镜像的分发可能成为整个平台的性能瓶颈。 例如:在生产实践中，较大尺寸的容器镜像既影响容器启动，又存在较高的本地存储成本。在应对瞬时高峰，启动几百、几千 Pod 时，受带宽、镜像仓库服务瓶颈等影响，会存在较长的耗时，有时候甚至流量高峰已过，集群还没有扩展完毕。
 
 Dragonfly 则是解决此类问题的方案。
 
-## Dragonfly 介绍
+## 1. Dragonfly 介绍
 
 Dragonfly 是阿里巴巴开源的基于 P2P 的镜像和文件分发系统。 它主要通过最大限度地利用网络带宽，提高文件传输的速率和效率，来解决大量数据分发的问题，例如：文件分发、镜像分发等。现在为云原生计算机基金会（CNCF）托管作为孵化级项目。
 
@@ -19,14 +19,13 @@ Dragonfly 是阿里巴巴开源的基于 P2P 的镜像和文件分发系统。 �
 - 自动隔离异常：Dragonfly 会自动隔离异常节点（对等节点或 SuperNode）来提高下载稳定性。
 
 
-## Dragonfly 运作流程
+## 2. Dragonfly 运作流程
 
 Dragonfly 是一种无侵入的解决方案，并不需要修改 Docker 等源码，上图为 Dragonfly 的架构图，在每一个节点上会启动一个 dfdaemon 和 dfget, dfdaemon 是一个代理程序，他会截获 dockerd 上传或者下载镜像的请求， dfget 是一个下载客户端工具。每个 dfget 启动后 将自己注册到 supernode 上。 supernode 超级节点以被动 CDN的方式产生种子数据块，并调度数据块分布。
 
 <div  align="center">
 	<img src="../assets/dragonfly.png" width = "550"  align=center />
 </div>
-
 
 通过镜像加速下载的场景，解析其中运作原理：
 
