@@ -267,13 +267,11 @@ export default defineUserConfig({
                             '/container/low-level-runtime.md',
                             '/container/high-level-runtime.md',
                             '/container/kata-container.md',
-                            '/container/CRI-in-Kubernetes.md',
-                            '/container/Docker-Kubernetes.md',
-                            '/container/RuntimeClass.md'
+                           
                         ]
                     },
                     {
-                        text: '镜像仓库',
+                        text: '7.6 镜像仓库',
                         link: '/container/registry.md',
                         collapsable: false,
                         sidebarDepth: 1,
@@ -282,6 +280,18 @@ export default defineUserConfig({
                             '/container/dragonfly.md'
                         ]
                     },
+                    {
+                        text: '7.7 容器与kubernetes',
+                        link: '/container-in-kubernetes.md',
+                        collapsable: false,
+                        sidebarDepth: 1,
+                        children: [
+                            '/container/CRI-in-Kubernetes.md',
+                            '/container/Docker-Kubernetes.md',
+                            '/container/RuntimeClass.md'
+                        ]
+                    },
+                    
                 ]
             },
             {

@@ -1,14 +1,10 @@
-# CRI in Kubernetes
+# 7.7.1 CRI in Kubernetes
 
-在前面部分，我们介绍了容器运行原理和常见的运行时实现，Kubernetes 作为今主流的容器编排平台，就需要有使用不同容器运行时的能力 。
-
-在早期 Kubernetes 利用 Docker 作为容器运行时实现，直接调用 Docker API 来创建和管理容器。在 Docker 盛行之后，CoreOS 推出了 rkt 运行时实现，Kubernetes 又实现了对 rkt 的支持，随着容器技术的蓬勃发展，越来越多运行时实现出现，Kubernetes 要重新考虑对所有容器运行时的兼容适配问题了。 
-
-为此 Kubernetes 从 1.5 版本开始，在遵循 OCI 基础上，将容器操作抽象为一个接口，该接口作为 Kubelet 与运行时实现对接的桥梁，Kubelet 通过发送接口请求对容器进行启动和管理，各个容器运行时只要实现这个接口就可以接入 Kubernetes。
+Kubernetes 从 1.5 版本开始，在遵循 OCI 基础上，将容器操作抽象为一个接口，该接口作为 Kubelet 与运行时实现对接的桥梁，Kubelet 通过发送接口请求对容器进行启动和管理，各个容器运行时只要实现这个接口就可以接入 Kubernetes。
 
 这个接口就是 Kubernetes 容器运行时接口： CRI(Container Runtime Interface)。
 
-## 容器运行时交互接口 CRI 
+## 1. 容器运行时交互接口 CRI 
 
 CRI（Container Runtime Interface，容器运行时接口）是 Kubernetes 定义的一组与容器运行时进行交互的接口，用于将 Kubernetes 平台与特定容器实现解耦，建立业界容器编排对接的标准规范。
 
