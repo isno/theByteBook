@@ -6,7 +6,6 @@ Docker 公司的出现可以说是容器技术的重要里程碑，它率先推�
 
 OCI 的目标是制定容器镜像格式和运行时的行业标准，使得任何支持 OCI 运行时标准的容器运行时都可以使用 OCI 镜像来运行容器，促进了容器技术的互操作性和可移植性。
 
-
 ## 7.3.1 OCI
 
 OCI 目前提出的规范有如下：
@@ -18,9 +17,9 @@ OCI 目前提出的规范有如下：
 
 ## 7.3.2 OCI in Docker
 
-自从 Docker 发布之后，Docker 项目逐渐成为了一个庞然大物。为了能够降低项目维护的成本，促进行业发展，Docker 公司提出了 “基础设施管道宣言” (Infrastructure Plumbing Manifesto)，并分成了多个模块以适应 OCI 标准。从 Docker 1.11 版本开始，Docker 容器运行就不是简单通过 Docker Daemon 来启动了, 而是被分成了多个模块，现阶段的 Docker 通过集成 containerd、containerd-shim、runc 等多个组件共同完成。
+自从 Docker 发布之后，Docker 项目逐渐成为了一个庞然大物。为了能够降低项目维护的成本，促进行业发展，Docker 公司提出了 “基础设施管道宣言” (Infrastructure Plumbing Manifesto)，并分成了多个模块以适应 OCI 标准。
 
-于是，现代 Docker 架构流程图，已如下所示：
+从 Docker 1.11 版本开始，Docker 运行就不是简单通过 Docker Daemon 来启动了, 而是被分成了多个模块。现阶段的 Docker 通过集成 containerd、containerd-shim、runc 等多个组件共同完成。于是，现代 Docker 架构流程图，已如下所示：
 
 <div  align="center">
 	<img src="../assets/docker-arc.png" width = "550"  align=center />

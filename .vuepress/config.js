@@ -128,16 +128,10 @@ export default defineUserConfig({
                 children: [
                     '/http/https.md',
                     '/http/latency.md',
-
-                    {
-                        text: "DNS 解析原理",
-                        link: '/http/dns.md',
-                        children: [
-                            '/http/http-dns.md',
-                            '/http/dns-ha.md',
-                            //'/http/quic-performance.md',
-                        ]
-                    },
+                    '/http/dns.md',
+                    '/http/http-dns.md',
+                    '/http/dns-ha.md',
+                  
                     '/http/compress.md',
                     {
                         text: "引入 QUIC",
