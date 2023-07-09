@@ -346,8 +346,7 @@ export default defineUserConfig({
                         children: [
                             '/kubernetes/api-server-ha.md',
                             '/kubernetes/controller-manager-scheduler.md',
-                            '/kubernetes/etcd-ha.md',
-                        ]
+                            '/kubernetes/etcd-ha.md'                        ]
                     },
 
                 ]
