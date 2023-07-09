@@ -296,6 +296,7 @@ export default defineUserConfig({
                 children: [
                     '/kubernetes/declarative-api.md',
                     '/kubernetes/namespace.md',
+                    '/kubernetes/virtual.md',
                     {
                         text: 'Kubernetes 核心资源',
                         link: '/kubernetes/resource.md',
@@ -310,12 +311,12 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: 'Kubernetes 资源限制及弹性伸缩',
+                        text: 'Kubernetes 弹性伸缩',
                         link: '/kubernetes/AutoScaling.md',
                         collapsable: false,
                         sidebarDepth: 1,
                         children: [
-                            '/kubernetes/virtual.md',
+                            
                             '/kubernetes/requests-limits.md',
                         ]
                     },
