@@ -31,6 +31,11 @@ limitranges                       limits       v1                    true       
 |策略资源| SecurityContext、RsourceQuota、LimitRange|
 |身份资源|  ServiveAccount、Role、ClusterRole |
 
+<div  align="center">
+	<img src="../assets/k8s-runtime.png" width = "600"  align=center />
+</div>
+
+
 ## API object
 
 RESTful 架构下，Kubernetes 中所有内容都被抽象为“资源”，如 Pod、Service、Node 等都是资源，对象则资源的实例，是持久化的实体。在 “REST API” 的调用过程中会用 API Object 来表示 resource。
