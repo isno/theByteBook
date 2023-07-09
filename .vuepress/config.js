@@ -294,7 +294,7 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
-                    '/container/declarative-api.md',
+                    '/kubernetes/declarative-api.md',
                     '/kubernetes/namespace.md',
                     {
                         text: 'Kubernetes 核心资源',
@@ -338,6 +338,18 @@ export default defineUserConfig({
                             '/kubernetes/CRI.md',
                         ]
                     },
+                    {
+                        text: '生产级 Kubernetes 高可用部署方案',
+                        link: '/kubernetes/install.md',
+                        collapsable: false,
+                        sidebarDepth: 1,
+                        children: [
+                            '/kubernetes/api-server-ha.md',
+                            '/kubernetes/controller-manager-scheduler.md',
+                            '/kubernetes/etcd-ha.md',
+                        ]
+                    },
+
                 ]
             },
             {
