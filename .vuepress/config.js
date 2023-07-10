@@ -298,6 +298,15 @@ export default defineUserConfig({
                     '/kubernetes/namespace.md',
                     '/kubernetes/virtual.md',
                     {
+                        text: 'Kubernetes 架构与组件',
+                        link: '/kubernetes/component.md',
+                        collapsable: false,
+                        sidebarDepth: 1,
+                        children: [
+                            '/kubernetes/kube-proxy.md',
+                        ]
+                    },
+                    {
                         text: 'Kubernetes 核心资源',
                         link: '/kubernetes/resource.md',
                         collapsable: false,
@@ -320,15 +329,7 @@ export default defineUserConfig({
                             '/kubernetes/requests-limits.md',
                         ]
                     },
-                    {
-                        text: 'Kubernetes 架构与组件',
-                        link: '/kubernetes/component.md',
-                        collapsable: false,
-                        sidebarDepth: 1,
-                        children: [
-                            '/kubernetes/kube-proxy.md',
-                        ]
-                    },
+                   
                     {
                         text: 'Kubernetes 进阶',
                         link: '/kubernetes/AutoScaling.md',
@@ -382,6 +383,7 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/GitOps/GitOps.md',
+                    '/GitOps/AoneFlow.md',
                     
                     {
                         text: "基础设施即代码",
