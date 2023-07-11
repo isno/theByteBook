@@ -7,7 +7,7 @@
 Kata Containers 安全容器的诞生解决了许多普通容器场景无法解决的问题，例如多租户安全保障、不同 SLO 混部容器混合部署、可信/不可信容器混合部署等等。在这些优势的基础上，Kata Containers 也在虚拟化上也追求极致的轻薄，从而让整体资源消耗和弹性能力接近 runc 容器方案，以此达到 Secure as VM、Fast as Container 的技术目标
 
 
-Kata Containers的特点包括：
+Kata Containers 的特点包括：
 
 - 容器和虚拟机二合一：Kata Containers结合了容器和虚拟机的优点，既具有高性能和高效管理的特点，又拥有独立隔离性和安全性；
 - 安全性：Kata Containers使用轻量级虚拟化技术，为每个容器创建一个轻量级虚拟机，可以实现容器级别的隔离和安全；
