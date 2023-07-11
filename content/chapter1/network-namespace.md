@@ -9,7 +9,49 @@ network namespace 是 Linux 内核提供的用于实现网络虚拟化的重要�
 	<img src="../assets/net-namespace.png" width = "450"  align=center />
 </div>
 
-由于每个容器都有自己的网络服务, 一个比较直观的例子是：在 network namespace 的作用下，这就使得一个主机内运行两个同时监听80端口的 Nginx 服务能为可能。
+由于每个容器都有自己的网络服务, 一个比较直观的例子是：在 network namespace 的作用下，这就使得一个主机内运行两个同时监听80端口的 Nginx 服务成为可能。
+```
+# 在宿主机上运行两个nginx容器
+# docker run -d --name ngxin_1 nginx:latest
+root@thebytebook:/# docker ps
+CONTAINER ID   IMAGE              COMMAND        CREATED             STATUS           NAMES
+aa016f3a2534   nginx:latest     "/bin/bash"    About an hour ago   Up About an hour   nginx_1
+e8311d38158f   nginx:latest     "/bin/bash"    About an hour ago   Up About an hour   nginx_2  
+#查看容器nginx_1的进程ID
+root@thebytebook:/# docker inspect --format='{{.State.Pid}}' aa016f3a2534
+93984 
+#查看容器nginx_2的进程ID
+root@thebytebook:/# docker inspect --format='{{.State.Pid}}' e8311d38158f
+91942 
+#进入nginx_1容器的网络命名空间
+root@thebytebook:/# nsenter -n -t 93984
+#查看nginx_1容器网络信息
+root@thebytebook:/# ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+36: eth0@if37: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 02:42:ac:11:00:03 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0
+       valid_lft forever preferred_lft forever
+# 退出网络命名空间
+root@thebytebook:/# logout
+#进入nginx_2容器的网络命名空间
+root@thebytebook:/# nsenter -n -t 91942
+#查看nginx_2容器网络信息
+root@thebytebook:/# ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+34: eth0@if35: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 172.17.0.3/16 brd 172.17.255.255 scope global eth0
+       valid_lft forever preferred_lft forever
+# 退出网络命名空间
+root@thebytebook:/# logout
+```
 
 ### network namespace 实践
 
