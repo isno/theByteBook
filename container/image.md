@@ -4,7 +4,7 @@
 
 ## 7.4.1 容器镜像的组成
 
-镜像主要是由镜像层和运行时配置两大部分组成。镜像层和运行时配置各自有一个唯一 Hash （通常是 SHA256），这些 Hash 会被写进一个叫 Manifest的 JSON 文件里，在 Pull 镜像时实际就是先拉取 Manifest 文件，然后再根据 Hash 去 Registry 拉取对应的镜像层/容器运行时配置。
+镜像主要是由镜像层和运行时配置两大部分组成。镜像层和运行时配置各自有一个唯一 Hash，这些 Hash 会被写进一个叫 Manifest的 JSON 文件里，在 Pull 镜像时实际就是先拉取 Manifest 文件，然后再根据 Hash 去 Registry 拉取对应的镜像层/容器运行时配置。
 
 <div  align="center">
   <img src="../assets/oci-image.png" width = "200"  align=center />
