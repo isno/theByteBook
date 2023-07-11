@@ -66,5 +66,5 @@ BGP 常应用于大型和复杂的网络，比如容器网络方案中的Calico�
 
 在使用多线、或者单线的机房网络时候，我们常常会申请多个VIP（Virtual IP），当时某个线路出现问题时，再手动从DNS中摘除，相当麻烦。而使用上面的这种数据中心（BGP机房），只要一个VIP，当某个运营商至数据中心连通出现问题，其用户自动切换至其他线路。
 
-
+参考文献: https://www.cloudflare.com/learning/network-layer/what-is-an-autonomous-system (支持中文)
 

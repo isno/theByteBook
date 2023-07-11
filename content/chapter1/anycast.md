@@ -49,3 +49,8 @@ AnyCast 主要应用于大范围的 DNS 部署、CDN 数据缓存、数据中心
 **多个 IP 发布地，实现了多路径，增加了网络的容错能力**
 
 此外，就近接入后走的是专线传输，比公网传输更可靠、更低延时，提升了用户的播放体验。
+
+参考文献: 
+- https://www.cloudflare.com/learning/cdn/glossary/anycast-network
+- https://www.alibabacloud.com/help/zh/anycast-eip/latest/169284
+- https://aws.amazon.com/cn/blogs/china/use-aws-global-accelerator-global-visit
