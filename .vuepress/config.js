@@ -224,7 +224,7 @@ export default defineUserConfig({
             },
             {
                 text: '第七章：容器技术',
-                link: '/container/intro.md',
+                link: '/container/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
@@ -260,7 +260,7 @@ export default defineUserConfig({
                         children: [
                             '/container/low-level-runtime.md',
                             '/container/high-level-runtime.md',
-                            '/container/kata-container.md',
+                            '/container/kata-containers.md',
                            
                         ]
                     },
