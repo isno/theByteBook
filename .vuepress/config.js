@@ -261,7 +261,6 @@ export default defineUserConfig({
                             '/container/low-level-runtime.md',
                             '/container/high-level-runtime.md',
                             '/container/kata-containers.md',
-                           
                         ]
                     },
                     {
