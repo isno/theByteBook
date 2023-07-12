@@ -121,7 +121,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第三章：应用层网络架构实践',
+                text: '第三章：应用层服务原理及优化指南',
                 link: "/http/intro.md",
                 collapsable: false,
                 sidebarDepth: 1,
