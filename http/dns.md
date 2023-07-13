@@ -1,12 +1,8 @@
 # 3.3 DNS 的原理与应用
 
-DNS（Domain Name System）本质是一个分布式的树状命名系统，就像一个去中心化的分布式数据库，存储着从域名到 IP 地址的映射。
+DNS（Domain Name System）本质是一个分布式树状命名系统，从 NS（nameserver）到各级 LocalDNS 就像一个去中心化的分布式数据库，存储着从域名到 IP 地址的映射。笔者从业经历中所见到的重量级故障大部分都跟 DNS 有关系 ，2021年，Facebook 大面积瘫痪、Aakamai Edge DNS 故障等，都是由 NS 服务提供服务引起，所以了解 DNS 解析原理，有助于我们在服务故障时尽快地进行排除分析。
 
-从 DNS 的定义来看，DNS 还是一种服务发现的手段，虽然服务器的 IP 地址可能会经常变动，但是通过相对不会变动的域名，我们总是可以找到提供对应服务的服务器。 在应用案例上如： Kubernetes 中做服务注册的 CoreDNS 也是一种 DNS 服务。
-
-移动场景下DNS解析开销是整个网络请求中不可忽略的一部分。 在弱网环境中，基于 UDP的 LocalDNS解析非常容易出现解析超时的问题，这将直接影响客户端的用户体验。
-
-## 1. 域名解析工作原理
+## 1. 域名解析流程说明
 
 在对DNS简单了解之后，我们继续进入 DNS 工作原理的部分。
 
@@ -16,18 +12,17 @@ DNS（Domain Name System）本质是一个分布式的树状命名系统，就�
 </div>
 
 
-- 本地的 DNS 客户端向 DNS 解析器发出解析 thebyte.com.cn 域名的请求；
-- DNS 解析器首先会向就近的根 DNS 服务器 . 请求顶级域名 DNS 服务的地址；
-- 拿到顶级域名 DNS 服务 com.cn. 的地址之后会向顶级域名服务请求负责 thebyte.com.cn. 域名解析的命名服务；
-得到授权的 DNS 命名服务时，就可以根据请求的具体的主机记录直接向该服务请求域名对应的 IP 地址
+1. 用户向 `DNS 解析器`（如 Local DNS、代理用户 DNS 请求过程）发出解析 thebyte.com.cn 域名请求。
+2. `DNS解析器` 判断是否存在解析缓存，如存在返回缓存结果。如无则向就近的 `Root DNS Server` (根域名服务器)，请求所属 `TLD 域名服务器`。
+3. 获取  com.cn.域的 `TLD 域名服务器`后， 向该地址请求 thebyte.com.cn. 的 `权威解析服务器`（Name Server）。
+4. 得到`权威解析服务器`（Name Server）后，向该服务请求域名对应的 IP 地址。 
 
-对于 DNS 解析器，这里使用的 DNS 查询方式是迭代查询，DNS 服务并不会直接返回 DNS 信息，而是会返回另一台 DNS 服务器的位置，由客户端依次询问不同级别的 DNS 服务直到查询得到了预期的结果；另一种查询方式叫做递归查询，也就是 DNS 服务器收到客户端的请求之后会直接返回准确的结果，如果当前服务器没有存储 DNS 信息，就会访问其他的服务器并将结果返回给客户端。
+从上面解析流程看出，有两个易出问题的环节。 第一个是 Local DNS 出错，会产生局部用户无法访问服务，第二个是 Name Server 解析出现问题，会产生严重的整体服务不可用。一些重量级应用的 Name Server 宕机甚至会影响到整个互联网的稳定（如 facebook 挂掉，用户疯狂重试，引起部分公共 DNS 超负荷宕机，继而产生二次故障）。
 
-## 2. 域名信息查询
 
-DNS 是互联网一个最重要的服务，如果 DNS 解析失败，任何高可用、负载均衡等等设计都不会起到作用。Meta 2021年10月产生了一个大范围的宕机就是 Meta的 BGP 撤销了 DNS 权威 DNS 服务器 IP。导致 外界无法获取 Meta 域名解析信息。 
+## 2. 域名故障排查
 
-如果碰到网络故障、 DNS 解析错误时，第一步，我们可以用 nslookup 命令查询域名解析的基本信息。
+如果碰到网络故障、 DNS 解析错误时，第一步，我们可以用 nslookup 命令查询域名解析的基本信息，进行快速故障判断。
 
 命令格式：nslookup domain [dns-server] ，解析示例：
 
@@ -40,16 +35,13 @@ Non-authoritative answer:
 Name:	thebyte.com.cn
 Address: 110.40.229.45
 ```
+返回信息说明
 
-### 2.1 返回信息说明
-
-- 第一行的Server 为负责此次解析的 LocalDNS
-- Non-authoritative answer 为缓存中获取域名解析结果。非实际存储 DNS Server中 域名解析，所以为非权威应答
+- 第一行的 Server 为负责此次解析 LocalDNS
+- Non-authoritative answer 为缓存中获取域名解析结果。非实际存储 DNS Server中 域名解析，所以为非权威应答。
 - Address 为域名所对应的IP，上面的解析可以看到是一个 A记录的 110.40.229.45
 
-## 3. 使用 dig 查询域名解析
-
-我们使用dig命令可以查询更具体的信息， 如果判断 Local DNS 解析错误，可以指定 DNS解析服务器 如: dig @1.1.1.1 thebyte.com.cn
+如果 nslookup 无法判断出结果，我们可以使用 dig 命令进一步查询，如指定 DNS 解析服务器等 (dig @1.1.1.1 thebyte.com.cn)。
 
 ```
 $ dig thebyte.com.cn
@@ -74,11 +66,14 @@ thebyte.com.cn.		599	IN	A	110.40.229.45
 ;; MSG SIZE  rcvd: 59
 ```
 
-dig返回内容的第一部分，主要包括dig的版本信息，以及本次命令执行结果的摘要。其中 opcode：QUERY，表示执行查询操作。status：NOERROR。解析成功。
+dig 结果说明：
 
-**QUESTION SECTION部分** 展示发起的 DNS 请求参数。其中 A 表示我们默认查询 A 类型的记录。**ANSWER SECTION 部分** 为DNS的查询结果，以上显示 thebyte.com.cn. 的解析结果为  110.40.229.45。
+opcode：QUERY，表示执行查询操作，status：NOERROR，表示解析成功。
 
-Meta 2021年10月 宕机故障时，运维人员使用 dig 查询 各个公共 DNS服务器解析 Facebook相关的域名， 全部出现 SERVFAIL 错误。
+- **QUESTION SECTION部分** 展示发起的 DNS 请求参数，A 表示我们默认查询 A 类型记录。
+- **ANSWER SECTION 部分** 为 DNS 查询结果。 thebyte.com.cn. 的解析结果为  110.40.229.45。
+
+Facebook 2021年10月宕机故障中，使用 dig 排查各个公共DNS服务器，全部出现 SERVFAIL 错误，排查结果说明是 Facebook Name Server 服务出现故障。
 
 ```
 ➜  ~ dig @1.1.1.1 facebook.com
