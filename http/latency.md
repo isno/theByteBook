@@ -22,41 +22,23 @@ HTTP 协议是程序员最常打交道的协议之一，一个完整 HTTPS 请�
 | time_total | 从请求开始到完成的总耗时 |
 
 
-我们常关注的HTTP性能指标有：
+业务常关注的性能指标有 DNS 请求耗时、TCP 建立耗时、TTFB （Time To First Byte）等，以下表格为计算方式及说明。
 
-- DNS请求耗时 ： 域名的NS及本地使用DNS的解析速度
-- TCP建立耗时 ： 服务器网络层面的速度
-- SSL握手耗时 ： 服务器处理HTTPS等协议的速度
-- 服务器处理请求时间 ： 服务器处理HTTP请求的速度
-- TTFB ： 服务器从接收请求到开始到收到第一个字节的耗时
-- 服务器响应耗时 ：服务器响应第一个字节到全部传输完成耗时
-- 请求完成总耗时
+| 耗时 | 说明 |
+|:--|:--|
+| DNS 请求耗时 = time_namelookup | 域名 NS 及本地 LocalDNS 解析耗时 |
+| TCP 握手耗时 = time_connect - time_namelookup | 用户端到服务端的网络耗时 |
+| SSL握手耗时 = time_appconnect - time_connect | SSL 层处理耗时 |
+| 服务器处理请求耗时 = time_starttransfer - time_pretransfer | 服务器响应第一个字节到全部传输完成耗时 |
+| TTFB  = time_starttransfer - time_appconnect | 服务器从接收请求到开始到收到第一个字节的耗时 |
+| 总耗时 = time_total ||
 
-其中的运算关系：
 
-- DNS请求耗时 = time_namelookup
-- TCP三次握手耗时 = time_connect - time_namelookup
-- SSL握手耗时 = time_appconnect - time_connect
-- 服务器处理请求耗时 = time_starttransfer - time_pretransfer
-- TTFB耗时 = time_starttransfer - time_appconnect
-- 服务器传输耗时 = time_total - time_starttransfer
-- 总耗时 = time_total
-
-用curl命令统计以上时间：
+用 curl 命令 请求 https://www.thebyte.com.cn 进行示例分析 
 
 ```
-curl -w '\ntime_namelookup=%{time_namelookup}\ntime_connect=%{time_connect}\ntime_appconnect=%{time_appconnect}\ntime_redirect=%{time_redirect}\ntime_pretransfer=%{time_pretransfer}\ntime_starttransfer=%{time_starttransfer}\ntime_total=%{time_total}\n\n' -o /dev/null -s -L 'https://www.thebyte.com.cn/'
-```
+$ curl -w '\n time_namelookup=%{time_namelookup}\n time_connect=%{time_connect}\n time_appconnect=%{time_appconnect}\n time_redirect=%{time_redirect}\n time_pretransfer=%{time_pretransfer}\n time_starttransfer=%{time_starttransfer}\n time_total=%{time_total}\n' -o /dev/null -s -L 'https://www.thebyte.com.cn/'
 
-分析以下的执行结果，有几个关键的耗时阶段：
-
-- DNS 耗时约占 28%
-- TCP 连接 9% 
-- SSL 约占 50% 
-
-从这几个指标也可以看出，我们着手优化的手段就在 DNS、HTTP和 SSL层优化处理。
-
-```
 time_namelookup=0.025021
 time_connect=0.033326
 time_appconnect=0.071539
@@ -65,4 +47,6 @@ time_pretransfer=0.071622
 time_starttransfer=0.088528
 time_total=0.088744
 ```
+
+分析上面的执行结果，有几个关键耗时阶段，其中 DNS 耗时约占 28%、TCP 连接 9% 、SSL 约占 50% 。从这几个指标也可以看出，如果要进行网络性能优化，DNS、TCP 和 SSL 层优化处理会有较大提升。
 
