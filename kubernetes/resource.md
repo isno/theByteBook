@@ -4,7 +4,7 @@ Kubernetes 是基于 REST （Representational State Transfer，表现层状态�
 
 因为 Kubernetes 遵循 REST 原则，每个 Resource 在 Kubernetes 中的位置用 REST 路径来表示，对于Resource的管理，Kubernetes 内部、外部之间交互都采用统一方式的接口， 称之为 REST API。
 
-kubctl 等命令调用使用的就是 REST API。我们也可以直接按照规范访问这些 API，实现企业内部平台。例如 Pod 资源的 REST 路径为 /api/v/pods, 使用 REST 路径，再加上 HTTP POST、GET、DELETE、PUT 等就可以完成指定资源的管理工作。
+kubectl 等命令调用使用的就是 REST API。我们也可以直接按照规范访问这些 API，实现企业内部平台。例如 Pod 资源的 REST 路径为 /api/v/pods, 使用 REST 路径，再加上 HTTP POST、GET、DELETE、PUT 等就可以完成指定资源的管理工作。
 
 查看 Kubernetes 支持的资源信息。
 ```

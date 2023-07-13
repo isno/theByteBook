@@ -1,10 +1,8 @@
 # 7.7.2 Docker 与 Kubernetes
 
-在 Kubernetes 提出 CRI 操作规范时，Docker刚拆出 containerd，并不支持 CRI 标准。
+Kubernetes 提出 CRI 操作规范时，Docker刚拆出 containerd，并不支持 CRI 标准。但由于 Docker 是当时容器技术主流存在，Kuberentes 虽然提出了 CRI 接口规范，仍然需要去适配 CRI 与 Docker 的对接，因此它需要一个中间层或 shim（垫片） 来对接 Kubelet 和 Docker 运行时实现。
 
-但由于当时 Docker 是容器技术最主流也是最权威的存在，Kuberentes 虽然提出了 CRI 接口规范，仍然需要去适配 CRI 与 Docker 的对接，因此它需要一个中间层或 shim 来对接 Kubelet 和 Docker 运行时实现。
-
-于是 kubelet 中加入了 Dockershim。使用 Docker 作为 runtime 时，启动一个容器的流程为：
+于是 kubelet 中加入了 Dockershim，当 Docker 作为容器运行时，Kubernetes 内启动一个容器流程如下图所示：
 
 <div  align="center">
 	<img src="../assets/dockershim.png" width = "600"  align=center />
@@ -25,4 +23,4 @@ Kubernetes1.24 版本正式删除和弃用 dockershim。
 	<img src="../assets/kubelet-cri.png" width = "550"  align=center />
 </div>
 
-从 Kubernetes 的角度看，选择 containerd 作为运行时的组件，它调用链更短，组件更少，更稳定，占用节点资源更少。
+从 Kubernetes 角度看，选择 containerd 作为运行时的组件，它调用链更短，组件更少，更稳定，占用节点资源更少。
