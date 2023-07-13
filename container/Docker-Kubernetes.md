@@ -23,4 +23,4 @@ Kubernetes1.24 版本正式删除和弃用 dockershim。
 	<img src="../assets/kubelet-cri.png" width = "550"  align=center />
 </div>
 
-从 Kubernetes 的角度看，选择 containerd 作为运行时的组件，它调用链更短，组件更少，更稳定，占用节点资源更少。
+从 Kubernetes 角度看，选择 containerd 作为运行时的组件，它调用链更短，组件更少，更稳定，占用节点资源更少。

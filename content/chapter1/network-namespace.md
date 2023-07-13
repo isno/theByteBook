@@ -9,7 +9,7 @@ network namespace 是 Linux 内核提供的用于实现网络虚拟化的重要�
 	<img src="../assets/net-namespace.png" width = "450"  align=center />
 </div>
 
-由于每个容器都有自己的网络服务, 一个比较直观的例子是：在 network namespace 的作用下，这就使得一个主机内运行两个同时监听80端口的 Nginx 服务能为可能。
+由于每个容器都有自己的网络服务, 在 network namespace 作用下，这就使得一个主机内运行两个同时监听 80 端口的 Nginx 服务成为可能（当然，要实现外部访问还是要进行端口转发）。
 
 ### network namespace 实践
 

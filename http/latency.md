@@ -1,28 +1,26 @@
 # 3.2 HTTPS请求阶段分析
 
-应用层面最重要的网络协议是HTTP，搞明白HTTP的流程以及延迟过程也基本掌握了应用层的网络优化方法。一个完整的HTTPS请求流程涵盖：DNS、TCP、SSL握手、服务器处理、内容传输等流程。
-
-我们用流程图看一下HTTP请求的完整过程：
+HTTP 协议是程序员最常打交道的协议之一，一个完整 HTTPS 请求流程涵盖：DNS 域名解析、TCP握手、SSL 握手、服务器处理、内容传输等流程。搞明白了这个流程，面对网络优化或者网络问题排障等也就得心应手。下面的流程图展示了 HTTPS 请求的各个阶段过程：
 
 <div  align="center">
-	<p>图：HTTP请求流程</p>
+	<p>图：HTTPS 请求流程</p>
 	<img src="../content/assets/http-process.png" width = "500"  align=center />
 </div>
 
 ## 3.2.1 耗时分析
 
-通常HTTP的性能分析是通过浏览器的开发者工具进行查看，但这种方式只能通过图形页面进行查看，如果想做性能监控或者在命令行下分析，可以通过curl命令来统计各阶段的耗时。
+如果想对 HTTP 性能监控或者在命令行下分析，可以通过 curl 工具来统计各阶段耗时情况。curl 命令支持以下阶段的耗时统计：
 
+| 请求阶段 | 释义 |
+|:--|:--|
+| time_namelookup | 从请求开始到 DNS 解析完成的耗时 |
+| time_connect | 从请求开始到 TCP 三次握手完成耗时 |
+| time_appconnect | 从请求开始到 TL S握手完成的耗时 |
+| time_pretransfer | 从请求开始到向服务器发送第一个 GET/POST 请求开始之前的耗时 |
+| time_redirect | 重定向时间，包括到内容传输前的重定向的 DNS 解析、TCP 连接、内容传输等时间 |
+| time_starttransfer | 从请求开始到内容传输前的时间 |
+| time_total | 从请求开始到完成的总耗时 |
 
-对于上面的流程延迟我们可以用curl命令分析，curl命令支持以下阶段的时间统计：
-
-- time_namelookup : 从请求开始到DNS解析完成的耗时
-- time_connect : 从请求开始到TCP三次握手完成耗时
-- time_appconnect : 从请求开始到TLS握手完成的耗时
-- time_pretransfer : 从请求开始到向服务器发送第一个GET请求开始之前的耗时
-- time_redirect : 重定向时间，包括到内容传输前的重定向的DNS解析、TCP连接、内容传输等时间
-- time_starttransfer : 从请求开始到内容传输前的时间
-- time_total : 从请求开始到完成的总耗时
 
 我们常关注的HTTP性能指标有：
 
