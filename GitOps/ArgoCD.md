@@ -35,7 +35,7 @@ Argo CD 首先会被部署在 Kubernetes 集群中，使用的是基于 Pull 的
 
 ### Git 作为应用唯一的真实来源
 
-所有 Kubernetes 声明式配置都保存在 Git 中么，并把Git作为应用的唯一来源，我们不再需要手动更新应用（例如执行 kubctl apply、helm install ...），只需要通过统一的接口（Git）来更新应用。
+所有 Kubernetes 声明式配置都保存在 Git 中么，并把Git作为应用的唯一来源，我们不再需要手动更新应用（例如执行 kubectl apply、helm install ...），只需要通过统一的接口（Git）来更新应用。
 
 此外 Argo CD 不仅监控 Git 仓库中声明的期望状态，还会监控集群中应用状态，并对两种状态进行比较、修正。这就保证了即使有人修改了集群中的应用状态，Argo CD 还是会将其恢复到之前的状态。 这也确保了 Git 仓库编排文件作为集群状态的唯一真实来源。
 
