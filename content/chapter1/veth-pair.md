@@ -26,7 +26,7 @@ Veth 的两头都直接连着网络协议栈，所以你创建一个Veth对，�
 
 ##  Veth Pair与容器网络
 
-在Network namespace篇节，笔者创建两个ns，并使之通信。就是利用Veth连接两个network namespace，将两端的网卡（Veth）分别放入两个不同的network namespace，就可以把这两个network namespace连起来，形成一个点对点的二层网络。
+在Network namespace篇节，笔者创建两个netns，并使之通信。就是利用Veth连接两个network namespace，将两端的网卡（Veth）分别放入两个不同的network namespace，就可以把这两个network namespace连起来，形成一个点对点的二层网络。
 
 Docker中经典的容器组网模型就是 veth pair + bridge的模式。
 
@@ -41,7 +41,7 @@ $ ip link show eth0
 ```
 从上面可以看到 `eth0@if14` ，其中 `14` 是 eth0 成对的 veth index。
 
-在Host中通过查看 对应的index为15的网卡接口是哪一个 , 从而得到成对的veth pair关系。
+在宿主机中通过查看 对应的index为14的网卡接口是哪一个 , 从而得到成对的veth pair关系。
 
 ```
 $ ip link show | grep 14
