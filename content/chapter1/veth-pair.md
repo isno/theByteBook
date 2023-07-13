@@ -41,7 +41,7 @@ $ ip link show eth0
 ```
 从上面可以看到 `eth0@if14` ，其中 `14` 是 eth0 成对的 veth index。
 
-在Host中通过查看 对应的index为15的网卡接口是哪一个 , 从而得到成对的veth pair关系。
+在Host中通过查看 对应的index为14的网卡接口是哪一个 , 从而得到成对的veth pair关系。
 
 ```
 $ ip link show | grep 14
