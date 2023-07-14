@@ -1,15 +1,13 @@
-# 部署 HTTP/3 服务
+# 使用 nginx-http3 部署 HTTP/3 服务
 
 对于 Nginx 来说，支持 HTTP/3 目前有两种方案可以选择：
 
 - 基于 Cloudflare 的分支版本 Nginx
 - Nginx官方 Nginx-quic 项目
 
-使用常规方式部署，需要安装 BoringSSL 等依赖，较为繁琐，这里我们直接使用 docker镜像 nginx-http3  来进行部署。
-
+使用常规方式部署，需要安装 BoringSSL 等依赖，较为繁琐，这里我们直接使用 docker 镜像 nginx-http3  来进行部署。
 
 拉取镜像
-
 ```
 $ docker pull macbre/nginx-http3:latest
 ```
@@ -30,10 +28,9 @@ configure arguments:
 ...
 ```
 
-以下为 测试 nginx conf 配置信息，开启 HTTP/3, 启用 early_data，并设置 alt-svc 信息。
+以下为测试 nginx conf 配置信息，开启 HTTP/3, 启用 early_data 特性，设置 alt-svc 用于 HTTP 协议选择。
 
 > Alt-Svc 全称为“Alternative-Service”，直译为“备选服务”。 该头部列举了当前站点备选的访问方式列表。 一般用于在提供“QUIC”等新兴协议支持的同时，实现向下兼容。
-
 
 ```
 server {
@@ -64,7 +61,7 @@ server {
 }
 ```
 
-运行容器 并查看 HTTP 返回信息，确认是否已经是 QUIC 协议。
+运行容器并查看 HTTP 返回信息，确认是否已经是 QUIC 协议。
 
 <div  align="center">
 	<img src="../assets/nginx-quic.png" width = "500"  align=center />
