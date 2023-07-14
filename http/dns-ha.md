@@ -1,6 +1,8 @@
-# 3.4 DNS服务高可用保障
+# 3.2.2 DNS NameServer 可用性设计指南
 
-Meta（Facebook 公司的更名）在2021年10月时发生过一次严重的宕机故障，故障绕过了所有的高活设计，让 Meta 下 facebook、instagram、whatsapp  等众多服务出现了长达接近 7 个小时宕机，影响范围之广以至于差点产生严重二次故障，搞崩半个互联网。
+互联网中多次重大故障均由 DNS NameServer 宕机引起，DNS NameServer 宕机影响大、故障范围广，一定要引起重视。在本节，我们以 Meta DNS 故障案例说明 DNS NameServer 可用性设计的必要性。
+
+Meta（即原 Facebook）在2021年10月时发生过一次严重的宕机故障，故障绕过了所有的高活设计，故障期间 Meta 下 facebook、instagram、whatsapp  等众多服务出现了长达接近 7 个小时宕机，影响范围之广以至于差点产生严重二次故障，搞崩半个互联网。
 
 Meta 官方在故障后续发布原因总结是：**运维人员发布 BGP 通告时，误将 Meta AS32934 自治域内的 DNS NameServer 给删除了**。直接后果就是所有请求 Facebook 域名的解析请求都会丢弃在 Meta 边界路由器上，世界各地 DNS 解析器都无法再解析 Facebook 的域名。
 
@@ -19,25 +21,30 @@ Meta 官方在故障后续发布原因总结是：**运维人员发布 BGP 通�
 
 <div  align="center">
 	<img src="../assets/cloudflare-dns.png" width = "450"  align=center />
+	<p>图：cloudflare 域名服务器 Facebook 故障时期的请求数 </p>
 </div>
 
 ## 1. 故障总结
 
-这次故障实际上 BGP 和 DNS 一系列设计缺陷叠加，从而放大了故障影响。BGP 发布了错误路由，恰巧 Meta 权威域名解析服务器IP 包含在这部分路由中，这就导致域名解析请求无法路由到 Meta 内部的服务器中。另外由于 DNS 出现问题，运维人员基本无法再通过远程的方式修复路由，而机房维护人员没有权限、也没能力去解决这个问题，只能是修复团队紧急`打飞的` 跑到数据中心修复，这就是此次故障范围、时长影响巨大的原因。
+这次故障实际上 BGP 和 DNS 一系列设计缺陷叠加，从而放大了故障影响。BGP 发布了错误路由，恰巧 Meta 权威域名解析服务器IP 包含在这部分路由中，这就导致域名解析请求无法路由到 Meta 内部的服务器中。
 
-Meta 这次故障带给我们的经验是 DNS 服务设计时，尽量避免采用单一化架构和技术，应从部署形式和部署位置等层面考虑技术多元性。
+由于 DNS 出现问题，运维人员基本无法再通过远程的方式修复路由，只能是修复团队紧急跑到数据中心修复，这就是此次故障范围、时长影响巨大的原因。
 
-在部署设计上可选择将 DNS 服务器节点全部放在 SLB 后方，或采用 OSPF Anycast 架构等部署形式，从而提高DNS系统的可靠性。在部署位置设计上可选择数据中心自建集群+公有云服务混合异构部署，利用云的分布式优势进一步增强 DNS系统健壮性，同时提升 DNS 系统在遭受 DDoS 攻击时的抵御能力。
+Meta 这次故障带给以下几点考虑：
 
-如下图所示，亚马逊 amazon.com 的权威域授权体系肯定要优于facebook.com （包括不同的AS域），所以它的抗风险能力肯要强于Facebook。
+- 部署形式考虑：可选择将 DNS 服务器节点全部放在 SLB 后方，或采用 OSPF Anycast 架构等部署形式，从而提高 DNS 系统的可靠性
+- 部署位置考虑：可选择数据中心自建集群 + 公有云服务混合异构部署，利用云的分布式优势进一步增强 DNS 系统健壮性，同时提升 DNS 系统在遭受 DDoS 攻击时的抵御能力。
+
+下图展示了 亚马逊 amazon.com 和 facebook.com 的权威域授权体系对比，amazon.com 的 NameServer 有权威域同时权威域分散在不同的 AS （Autonomous system，自治域）内，所以它的抗风险能力肯要强于 Facebook。
 
 <div  align="center">
 	<img src="../assets/dns-1.png" width = "220"  align=center />
 </div>
-
 <div  align="center">
 	<img src="../assets/dns-2.png" width = "350"  align=center />
+	<p>图：亚马逊与facebook.com 域名结构对比 </p>
 </div>
+
 
 ## 2. 核心功能运维操作
 

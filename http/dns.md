@@ -1,6 +1,8 @@
 # 3.3 DNS 的原理与应用
 
-DNS（Domain Name System）本质是一个分布式树状命名系统，从 NS（nameserver）到各级 LocalDNS 就像一个去中心化的分布式数据库，存储着从域名到 IP 地址的映射。笔者从业经历中所见到的重量级故障大部分都跟 DNS 有关系 ，2021年，Facebook 大面积瘫痪、Aakamai Edge DNS 故障等，都是由 NS 服务提供服务引起，所以了解 DNS 解析原理，有助于我们在服务故障时尽快地进行排除分析。
+DNS（Domain Name System）本质是一个分布式树状命名系统，从 NS（NameServer，域名权威解析服务）到各级 Local DNS（本地域名解析服务） 就像一个去中心化的分布式数据库，存储着从域名到 IP 地址的映射关系。
+
+笔者从业经历中所见到的重量级故障大部分都跟 DNS 有关系。例如 2021年 Facebook 大面积瘫痪、Aakamai Edge DNS 故障等，都是由 NameServer 宕机引起，所以了解 DNS 解析原理，才能在服务故障时尽快地进行排除分析。
 
 ## 1. 域名解析流程说明
 

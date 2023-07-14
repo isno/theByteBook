@@ -126,26 +126,32 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
-                    '/http/https.md',
+                   
                     '/http/latency.md',
-                    '/http/dns.md',
-                    '/http/http-dns.md',
-                    '/http/dns-ha.md',
-                  
-                    '/http/compress.md',
                     {
-                        text: "引入 QUIC",
-                        link: '/http/quic.md',
+                        text: '3.2 DNS 的原理与应用',
+                        link:  '/http/dns.md',
+       
                         children: [
-                            '/http/nginx-quic.md',
-                            //'/http/quic-performance.md',
+                            '/http/http-dns.md',
+                            '/http/dns-ha.md',
                         ]
                     },
-
+                    {
+                        text: '3.3 HTTP 服务优化指南',
+                        link:  '/http/http-performance.md',
+       
+                        children: [
+                            '/http/compress.md',
+                            '/http/quic.md',
+                            '/http/nginx-quic.md',
+                            //'/http/quic-performance.md'
+                        ]
+                    },
+                    '/http/https.md',
                     '/http/ssl.md',
                     '/http/ssl-performance.md',
                     '/http/protobuf.md',
-
                 ]
             },
             {
