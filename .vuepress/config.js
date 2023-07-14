@@ -148,10 +148,17 @@ export default defineUserConfig({
                             //'/http/quic-performance.md'
                         ]
                     },
-                    '/http/https.md',
-                    '/http/ssl.md',
-                    '/http/ssl-performance.md',
-                    '/http/protobuf.md',
+                    {
+                        text: '3.4 HTTPS 原理及 SSL 优化实践',
+                        link:  '/http/https.md',
+       
+                        children: [
+                            '/http/ssl.md',
+                            '/http/ssl-performance.md',
+                            //'/http/quic-performance.md'
+                        ]
+                    },
+                    '/http/protobuf.md'
                 ]
             },
             {
