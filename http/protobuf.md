@@ -1,17 +1,12 @@
-# 序列化数据 Protocol buffers
+# 3.4 使用 Protocol buffers 序列化数据
 
-Protocol buffers 是一种语言中立，平台无关，可扩展的序列化数据的格式，可用于通信协议，数据存储等。
-
+Protocol buffers 是一种语言中立，平台无关，可扩展的序列化数据的格式。
 Protocol buffers 在序列化数据方面相对 XML、JSON 来说，更加小巧、灵活、高效。一旦定义了要处理的数据的数据结构之后，就可以利用 Protocol buffers 的代码生成工具生成相关的代码。即可利用各种不同语言或从各种不同数据流中对你的结构化数据轻松读写。
 
-Protocol buffers 适合做数据存储或 RPC 数据交换格式。可用于通讯协议、数据存储等领域的语言无关、平台无关、可扩展的序列化结构数据格式。
 
+## 1. 为什么要有 protocol buffers ？
 
-### 为什么要有 protocol buffers ？
-
-大家可能会觉得 Google搞protocol buffers 是为了解决序列化速度，其实真正的需求并不是这样子的。
-
-protocol buffers 最先开始是 Google 用来解决索引服务器 request/response 协议的。没有 protocol buffers Google 已经存在了一种 request/response 格式，用于手动处理 request/response 的编组和反编组。它也能支持多版本协议，不过代码比较丑陋：
+开发人员如果要进行低版本、新旧协议兼容，可能会写如下类似逻辑的代码，虽然能实现多版本协议支持，不过代码比较丑陋。
 
 ```
 if (version == 1.0) {
@@ -20,32 +15,16 @@ if (version == 1.0) {
    if (version == 3.0) {
      ...
    }
-   ...
  }
 ```
 
-如果非常明确的格式化协议，会使新协议变得非常复杂。因为开发人员必须确保请求发起者与处理请求的实际服务器之间的所有服务器都能理解新协议，然后才能切换开关以开始使用新协议。
+服务器端新旧协议(高低版本)兼容性问题，如果使用明确的格式化协议，会使新协议的迭代变得非常复杂，开发人员必须确保历史版本都能被兼容、理解， 然后才能切换开关开启新协议。
 
-这也就是每个服务器开发人员都遇到过的低版本兼容、新旧协议兼容相关的问题。
+protocol buffers 的出现就是为了解决这些问题。
 
-protocol buffers 为了解决这些问题，于是就诞生了。protocol buffers 最初寄予以下 2 个特点：
 
-- 可以很容易地引入新的字段，并且不需要检查数据的中间服务器可以简单地解析并传递数据，而无需了解所有字段。
-- 数据格式更加具有自我描述性，可以用各种语言来处理(C++, Java 等各种语言)
-
-随着系统的发展和技术演进，现在Protobuf也被寄予了更多特性：
-
-- 自动生成的序列化和反序列化代码避免了手动解析的需要
-- 除了用于 RPC（远程过程调用）请求之外，人们开始将 protocol buffers 用作持久存储数据的便捷自描述格式（例如，在Bigtable中）
-- 服务器的 RPC 接口可以先声明为协议的一部分，然后用 protocol compiler 生成基类，用户可以使用服务器接口的实际实现来覆盖它们
-
-protocol buffers 诞生之初是为了解决服务器端新旧协议(高低版本)兼容性问题，名字也很体贴，“协议缓冲区”。只不过后期慢慢发展成用于传输数据。
-
-### proto3 定义 message
-
-目前 protocol buffers 最新版本是 proto3，与老的版本 proto2 还是有些区别的。这两个版本的 API 不完全兼容。
-
-在 proto 中，所有结构化的数据都被称为 message。
+## 2. proto 使用示例 
+目前 protocol buffers 最新版本是 proto3，在 proto 中，所有结构化的数据都被称为 message。
 
 ```
 syntax = "proto3";
@@ -60,14 +39,12 @@ message helloworld
 
 上面这几行语句，定义了一个消息 helloworld，该消息有三个成员，类型为 int32 的 id，另一个为类型为 string 的成员 str。opt 是一个可选的成员，即消息中可以不包含该成员。
 
-如果开头第一行不声明 syntax = "proto3"; 则默认使用 proto2 进行解析。
+如果开头第一行不声明 `syntax = "proto3";` 则默认使用 proto2 进行解析。
 
-** Protobuf 中的字段号 **
-
-每个消息定义中的每个字段都有唯一的编号。这些字段编号用于标识消息二进制格式中的字段，并且在使用消息类型后不应更改, 可以指定的最小字段编号为1，最大字段编号为2^29^-1 或 536,870,911。但注意不能使用数字 19000 到 19999，这是Protocol Buffers保留数字，使用时编译会报错。
+每个消息定义中的每个字段都有唯一的编号，这些字段编号用于标识消息二进制格式中的字段，并且在使用消息类型后不应更改, 可以指定的最小字段编号为1，最大字段编号为2^29^-1 或 536,870,911。但注意不能使用数字 19000 到 19999，这是 Protocol Buffers 保留数字，使用时编译会报错。
 
 
-### proto3 定义 Services
+### 2.1 proto3 定义 Services
 
 如果要使用 RPC（远程过程调用）系统的消息类型，可以在 .proto 文件中定义 RPC 服务接口，protocol buffer 编译器将使用所选语言生成服务接口代码和 stubs。所以，例如，如果你定义一个 RPC 服务，入参是 SearchRequest 返回值是 SearchResponse，你可以在你的 .proto 文件中定义它，如下所示：
 
@@ -75,18 +52,12 @@ message helloworld
 service SearchService {
   rpc Search (SearchRequest) returns (SearchResponse);
 }
-
 ```
+与 protocol buffer 一起使用的最直接的 RPC 系统是 gRPC。gRPC 允许通过使用特殊的 protocol buffer 编译插件，直接从 .proto 文件中生成 RPC 相关的代码。
 
-与 protocol buffer 一起使用的最直接的 RPC 系统是 gRPC：在谷歌开发的语言和平台中立的开源 RPC 系统。gRPC 在 protocol buffer 中工作得非常好，并且允许你通过使用特殊的 protocol buffer 编译插件，直接从 .proto 文件中生成 RPC 相关的代码。
+## 3. Protocol Buffer 编码原理
 
-如果你不想使用 gRPC，也可以在你自己的 RPC 实现中使用 protocol buffers。您可以在 Proto2 语言指南中找到更多关于这些相关的信息。
-
-还有一些正在进行的第三方项目为 Protocol Buffers 开发 RPC 实现。
-
-### Protocol Buffer 编码原理
-
-在讨论 Protocol Buffer 编码原理之前，必须先谈谈 Varints 编码。
+### 3.1 Varints 编码
 
 Varint 是一种紧凑的表示数字的方法。它用一个或多个字节来表示一个数字，值越小的数字使用越少的字节数。这能减少用来表示数字的字节数。
 
@@ -100,7 +71,6 @@ Varint 中的每个字节（最后一个字节除外）都设置了最高有效�
 如果需要多个字节表示，msb 就应该设置为 1 。例如 300，如果用 Varint 表示的话：
 ```
 1010 1100 0000 0010
-
 ```
 由于 300 超过了 7 位（Varint 一个字节只有 7 位能用来表示数字，最高位 msb 用来表示后面是否有更多字节），所以 300 需要用 2 个字节来表示。
 
@@ -111,7 +81,7 @@ Varint 确实是一种紧凑的表示数字的方法。它用一个或多个字�
 
 300 如果用 int32 表示，需要 4 个字节，现在用 Varint 表示，只需要 2 个字节了。缩小了一半！
 
-### Message Structure
+### 3.2 Message Structure
 protocol buffer 中 message 是一系列键值对。message 的二进制版本只是使用字段号(field's number 和 wire_type)作为 key。每个字段的名称和声明类型只能在解码端通过引用消息类型的定义（即 .proto 文件）来确定。这一点也是人们常常说的 protocol buffer 比 JSON，XML 安全一点的原因，如果没有数据结构描述 .proto 文件，拿到数据以后是无法解释成正常的数据的。
 
 
@@ -123,7 +93,7 @@ protocol buffer 中 message 是一系列键值对。message 的二进制版本�
 
 当消息编码时，键和值被连接成一个字节流。当消息被解码时，解析器需要能够跳过它无法识别的字段。这样，可以将新字段添加到消息中，而不会破坏不知道它们的旧程序。这就是所谓的 “向后”兼容性。
 
-### protocol buffers 的优缺点
+## 4. protocol buffers 的优缺点
 
 protocol buffers 在序列化方面，与 XML 相比，有诸多优点：
 - 更加简单
