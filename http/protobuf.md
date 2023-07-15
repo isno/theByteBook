@@ -82,8 +82,8 @@ Varint 确实是一种紧凑的表示数字的方法。它用一个或多个字�
 300 如果用 int32 表示，需要 4 个字节，现在用 Varint 表示，只需要 2 个字节了。缩小了一半！
 
 ### 3.2 Message Structure
-protocol buffer 中 message 是一系列键值对。message 的二进制版本只是使用字段号(field's number 和 wire_type)作为 key。每个字段的名称和声明类型只能在解码端通过引用消息类型的定义（即 .proto 文件）来确定。这一点也是人们常常说的 protocol buffer 比 JSON，XML 安全一点的原因，如果没有数据结构描述 .proto 文件，拿到数据以后是无法解释成正常的数据的。
 
+protocol buffer 中 message 是一系列键值对。message 的二进制版本只是使用字段号(field's number 和 wire_type)作为 key。每个字段的名称和声明类型只能在解码端通过引用消息类型的定义（即 .proto 文件）来确定。这一点也是人们常常说的 protocol buffer 比 JSON，XML 安全一点的原因，如果没有数据结构描述 .proto 文件，拿到数据以后是无法解释成正常的数据的。
 
 <div  align="center">
 	<img src="../assets/protobuf_example.png" width = "650"  align=center />
@@ -95,44 +95,10 @@ protocol buffer 中 message 是一系列键值对。message 的二进制版本�
 
 ## 4. protocol buffers 的优缺点
 
-protocol buffers 在序列化方面，与 XML 相比，有诸多优点：
-- 更加简单
-- 数据体积小 3- 10 倍
-- 更快的反序列化速度，提高 20 - 100 倍
-- 可以自动化生成更易于编码方式使用的数据访问类
+protocol buffers 在序列化方面，与 XML、JSON 相比，有诸多优点，例如更加简单、数据体积更小、更快的反序列速度等。protocol buffers 另外一个非常棒的特性是：`向后` 兼容性好。我们不必破坏已部署的、依靠“老”数据格式的程序就可以对数据结构进行升级。这样就不必担心因为消息结构的改变而造成的大规模的代码重构或者迁移的问题。
 
-举个例子：
+总结 protocol buffers 的特点如下
 
-如果要编码一个用户的名字和 email 信息，用 XML 的方式如下：
-
-```
-<person>
-    <name>John Doe</name>
-    <email>jdoe@example.com</email>
-  </person>
-```
-
-相同需求，如果换成 protocol buffers 来实现，定义文件如下：
-
-```
-person {
-  name: "John Doe"
-  email: "jdoe@example.com"
-}
-```
-
-protocol buffers 通过编码以后，以二进制的方式进行数据传输，最多只需要 28 bytes 空间和 100-200 ns 的反序列化时间。但是 XML 则至少需要 69 bytes 空间（经过压缩以后，去掉所有空格）和 5000-10000 的反序列化时间。
-
-protocol buffers 另外一个非常棒的特性是：“向后”兼容性好。
-
-人们不必破坏已部署的、依靠“老”数据格式的程序就可以对数据结构进行升级。这样您的程序就可以不必担心因为消息结构的改变而造成的大规模的代码重构或者迁移的问题。因为添加新的消息中的 field 并不会引起已经发布的程序的任何改变(因为存储方式本来就是无序的，k-v 形式)。
-
-
-### 总结Protobuf的特点
-
-- Protocol Buffer 利用 varint 原理压缩数据以后，二进制数据非常紧凑，option 也算是压缩体积的一个举措。所以 pb 体积更小，如果选用它作为网络数据传输，势必相同数据，消耗的网络流量更少。但是并没有压缩到极限，float、double 浮点型都没有压缩。
-- Protocol Buffer 比 JSON 和 XML 少了 {、}、: 这些符号，体积也减少一些。再加上 varint 压缩，gzip 压缩以后体积更小！
-- Protocol Buffer 是 Tag - Value (Tag - Length - Value)的编码方式的实现，减少了分隔符的使用，数据存储更加紧凑。
-- Protocol Buffer 另外一个核心价值在于提供了一套工具，一个编译工具，自动化生成 get/set 代码。简化了多语言交互的复杂度，使得编码解码工作有了生产力。
-- Protocol Buffer 不是自我描述的，离开了数据描述 .proto 文件，就无法理解二进制数据流。这点即是优点，使数据具有一定的“加密性”，也是缺点，数据可读性极差。所以 Protocol Buffer 非常适合内部服务之间 RPC 调用和传递数据。
-- Protocol Buffer 具有向后兼容的特性，更新数据结构以后，老版本依旧可以兼容，这也是 Protocol Buffer 诞生之初被寄予解决的问题。因为编译器对不识别的新增字段会跳过不处理。
+- Protocol Buffer 利用 varint 以及 Tag - Value (Tag - Length - Value)的 编码后，二进制数据非常紧凑。选用它作为网络数据传输，消耗的网络流量更少（varint 并没有对 float 类型进行压缩）。
+- Protocol Buffer 一个核心价值在于提供了一套工具自动化生成 get/set 代码，简化了多语言交互的复杂度，使得编码解码工作有了生产力。
+- Protocol Buffer 具有向后兼容的特性，更新数据结构以后，老版本依旧可以兼容，这也是 Protocol Buffer 诞生之初被寄予解决的问题。
