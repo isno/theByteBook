@@ -1,4 +1,4 @@
-# 3.4 使用 Protocol buffers 序列化数据
+# 3.6 使用 Protocol buffers 序列化数据
 
 Protocol buffers 是一种语言中立，平台无关，可扩展的序列化数据的格式。
 Protocol buffers 在序列化数据方面相对 XML、JSON 来说，更加小巧、灵活、高效。一旦定义了要处理的数据的数据结构之后，就可以利用 Protocol buffers 的代码生成工具生成相关的代码。即可利用各种不同语言或从各种不同数据流中对你的结构化数据轻松读写。

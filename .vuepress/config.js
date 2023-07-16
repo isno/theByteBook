@@ -105,7 +105,6 @@ export default defineUserConfig({
                                     '/network/bbr.md',
                                 ]
                             },
-                            '/content/chapter1/edge.md',
                             '/network/kernel-bypass.md'
                         ]
                     },
@@ -157,6 +156,7 @@ export default defineUserConfig({
                             '/http/ssl-performance.md',
                         ]
                     },
+                    '/http/Edge-Acceleration.md',
                     '/http/protobuf.md'
                 ]
             },
