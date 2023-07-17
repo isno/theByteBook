@@ -200,12 +200,12 @@ export default defineUserConfig({
                     '/distributed-system/BASE.md',
                     '/distributed-system/cap.md',
                     '/distributed-system/ACID.md',
+                    '/distributed-system/idempotent.md',
                      {
                         text: "分布式事务",
                         link: '/distributed-system/transaction.md',
                         children: [
                             '/distributed-system/compensate.md',
-                            '/distributed-system/idempotent.md',
                             '/distributed-system/2PC.md',
                             '/distributed-system/XA.md',
                             '/distributed-system/TCC.md',
