@@ -1,4 +1,4 @@
-# BASE 理论及应用
+# 5.1 BASE 理论及应用
 
 BASE 是 Bascically Available(基本可用)、Soft Stae（软状态）和 Eventually Consistent（最终一致性）三个短语的缩写。
 

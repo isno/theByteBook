@@ -61,9 +61,9 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第二章：网络架构基础与实践',
+                text: '第二章：基础网络与应用实践',
                 collapsable: true,
-                link: '/content/chapter1/intro.md',
+                link: '/network/summary.md',
                 sidebarDepth: 2,
                 children: [
                     '/content/chapter1/latency.md',
@@ -75,7 +75,6 @@ export default defineUserConfig({
                             '/content/chapter1/anycast.md',
                             '/network/tcp.md',
                             '/content/chapter1/congestion-control.md'
-
                         ]
                     },
                     {

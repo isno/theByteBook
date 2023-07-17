@@ -7,5 +7,5 @@
 
 <div  align="center">
 	<p>图1：本章内容导图 </p>
-	<img src="../../assets/guide.png" width = "500"  align=center />
+	<img src="../assets/guide.png" width = "500"  align=center />
 </div>
