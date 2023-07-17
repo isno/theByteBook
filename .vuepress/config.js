@@ -202,7 +202,7 @@ export default defineUserConfig({
                     '/distributed-system/ACID.md',
                     '/distributed-system/idempotent.md',
                      {
-                        text: "分布式事务",
+                        text: "5.5 分布式事务协议与解决",
                         link: '/distributed-system/transaction.md',
                         children: [
                             '/distributed-system/compensate.md',
