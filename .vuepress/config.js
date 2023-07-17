@@ -190,7 +190,6 @@ export default defineUserConfig({
                             '/api-gateway/openresty-fire.md'
                         ]
                     },
-
                 ]
             },
             {
