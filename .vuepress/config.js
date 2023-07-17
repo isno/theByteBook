@@ -214,7 +214,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: "分布式集群高可用",
+                        text: "5.6 分布式集群共识问题",
                         link: '/distributed-system/consistency.md',
                         children: [
                             '/distributed-system/consensus.md',
