@@ -112,8 +112,8 @@ export default defineUserConfig({
                         text: '网络关键指标及观测指南',
                         link: "/network/observation.md",
                         children: [
-                            '/content/chapter1/mtr.md',
-                            '/content/chapter1/tcpdump.md'
+                            '/network/mtr.md',
+                            '/network/tcpdump.md'
                         ]
                     },
                 ]
