@@ -234,7 +234,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第七章：容器技术',
+                text: '第七章：容器技术概括及应用',
                 link: '/container/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
