@@ -9,8 +9,8 @@ DNS（Domain Name System）本质是一个分布式树状命名系统，从 NS�
 在对DNS简单了解之后，我们继续进入 DNS 工作原理的部分。
 
 <div  align="center">
-	<p>图：DNS解析流程</p>
 	<img src="../assets/dns.png" width = "420"  align=center />
+	<p>图 3-2 DNS 解析流程</p>
 </div>
 
 

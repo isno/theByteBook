@@ -15,7 +15,7 @@ QUIC (Quick UDP Internet Connection, 快速 UDP 互联网连接) 是一种基于
 
 <div  align="center">
 	<img src="../assets/quic.png" width = "420"  align=center />
-	<p>图：HTTP2 与 HTTP3 协议对比</p>
+	<p>图 3-8 HTTP2 与 HTTP3 协议对比</p>
 </div>
 
 QUIC 采用 UDP 作为其传输协议，与 TCP 相比具有更低的延迟和更高的吞吐量，并且它还使 QUIC 能够绕过可能干扰 TCP 的网络中间件。 QUIC 包含基于 TLS 1.3 的内置加密协议，可在端点之间提供安全通信。总结，列举 QUIC 的重要特性，这些特性是 QUIC 得以被广泛应用的关键
@@ -26,6 +26,7 @@ QUIC 采用 UDP 作为其传输协议，与 TCP 相比具有更低的延迟和�
 
 <div  align="center">
 	<img src="../assets/quic-connection.png" width = "580"  align=center />
+	<p>图 3-9 QUIC 支持连接迁移</p>
 </div>
 
 ### 2.低延时连接
@@ -34,6 +35,7 @@ QUIC 采用 UDP 作为其传输协议，与 TCP 相比具有更低的延迟和�
 
 <div  align="center">
 	<img src="../assets/quic-handshake.png" width = "580"  align=center />
+	<p>图 3-10 QUIC 请求 RTT 示例</p>
 </div>
 
 ### 3. 可插拔拥塞控制
@@ -46,6 +48,7 @@ QUIC 为每个流设计和实现单独的流量控制，解决了影响整个连
 
 <div  align="center">
 	<img src="../assets/quic-head-block.png" width = "480"  align=center />
+	<p>图 3-11 QUIC 流</p>
 </div>
 
 

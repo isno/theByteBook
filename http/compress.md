@@ -10,7 +10,7 @@
 
 <div  align="center">
 	<img src="../assets/compress.png" width = "400"  align=center />
-	<p>图：HTTP压缩协商流程</p>
+	<p>图 3-6 HTTP 压缩协商流程</p>
 </div>
 
 ## 2. 使用 Brotli 压缩
@@ -23,5 +23,5 @@ Brotli 侧重于 HTTP应用类服务内容的压缩，可以帮我们高效的�
 
 <div  align="center">
 	<img src="../assets/brotli.jpeg" width = "480"  align=center />
-	<p>图：Brotli压缩效果对比</p>
+	<p>图 3-7 Brotli 压缩效果对比</p>
 </div>

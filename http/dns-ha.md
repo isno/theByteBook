@@ -21,7 +21,7 @@ Meta 官方在故障后续发布原因总结是：**运维人员发布 BGP 通�
 
 <div  align="center">
 	<img src="../assets/cloudflare-dns.png" width = "450"  align=center />
-	<p>图：cloudflare 域名服务器 Facebook 故障时期的请求数 </p>
+	<p>图 3-4 cloudflare 监控到 Facebook 故障时期的请求数 </p>
 </div>
 
 ## 1. 故障总结
@@ -42,7 +42,7 @@ Meta 这次故障带给以下几点考虑：
 </div>
 <div  align="center">
 	<img src="../assets/dns-2.png" width = "350"  align=center />
-	<p>图：亚马逊与facebook.com 域名结构对比 </p>
+	<p>图 3-5  amazon.co 与 facebook.com 域名结构对比</p>
 </div>
 
 

@@ -14,7 +14,7 @@ HTTPDNS 主要面向多端应用（移动端APP，PC客户端应用），用安�
 
 <div  align="center">
 	<img src="../assets/httpdns.png" width = "520"  align=center />
-	<p>图：HTTPDNS 模式下 DNS 解析流程</p>
+	<p>图 3-3 HTTPDNS 模式下 DNS 解析流程</p>
 </div>
 
 总结使用 HTTPDNS 进行域名解析有点，如下：
