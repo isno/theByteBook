@@ -109,8 +109,8 @@ export default defineUserConfig({
                     },
 
                     {
-                        text: '网络可用性观测',
-                        link: "/content/chapter1/index.md",
+                        text: '网络关键指标及观测指南',
+                        link: "/network/observation.md",
                         children: [
                             '/content/chapter1/mtr.md',
                             '/content/chapter1/tcpdump.md'
