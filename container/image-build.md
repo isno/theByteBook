@@ -4,13 +4,27 @@
 
 有了 Dockerfile 之后, 就可以制定自己的镜像规则，在 Dockerfile 上添加或者修改指令, 就可生成镜像产物。
 
+docker 镜像构建步骤如下：
+
+- 编写 Dockerfile 文件 
+- docker build 命令构建镜像 
+- docker run 按照镜像运行容器实例。如下图所示：
+
+<div  align="center">
+	<img src="../assets/dockerfile.png" width = "500"  align=center />
+</div>
+
+
+## 1. Dockerfile 常用指令
+
+通过 Dockerfile 构建镜像时，Docker 安装顺序读取 Dockerfile 内的指令，并解析出所有的指令。这些指令被分成多个层，每个层都对应着一个镜像层。
+
 <div  align="center">
 	<img src="../assets/docker-image.png" width = "500"  align=center />
 </div>
 
-## 1. Dockerfile 常用指令
 
-通过 Dockerfile 构建镜像时，Docker 安装顺序读取 Dockerfile 内的指令，每执行一条指令，叠加一层镜像，指令越多，叠加的镜像层越多。实践中，我们可以将重复的动作尽量合并到一条指令中实现。下表列举了常用的 Dockerfile 指令。
+下表列举了常用的 Dockerfile 指令。
 
 |指令|用途|
 |:--|:--|
@@ -25,6 +39,8 @@
 |WORKDIR| 指定运行 RUN、CMD、copy 指令的工作目录|
 |VOLUME| 设置挂载卷|
 |CMD| 启动后运行的指令|
+
+
 
 ## 2. 镜像构建
 
