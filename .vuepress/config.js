@@ -66,7 +66,7 @@ export default defineUserConfig({
                 link: '/network/summary.md',
                 sidebarDepth: 2,
                 children: [
-                    '/content/chapter1/latency.md',
+                    '/network/latency.md',
                     {
                         text: '基础网络',
                         link: "/content/chapter1/underlay.md",
