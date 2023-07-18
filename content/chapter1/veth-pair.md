@@ -4,7 +4,7 @@ Veth（Virtual Ethernet devices）是 Linux 中一种用软件虚拟出来的模
 
 其作用非常简单：如果 veth0 和 veth1 是一对 veth 设备，veth0 发送的数据会由 veth1收到。反之亦然，其实说白了，Veth就是一根“网线”，你从一头发数据，自然可以从另一头收到数据。
 
-如果读者安装过Docker或者Kubernetes，查看网络设备信息总能看到一堆 veth 开头的网卡设备信息，这些就是Docker、Kubernetes 为不同ns之间通信而创建的虚拟网卡。
+如果读者使用过Docker或者Kubernetes flannel网络框架，查看网络设备信息总能看到一堆 veth 开头的网卡设备信息，这些就是Docker、Kubernetes 为不同ns之间通信而创建的虚拟网卡。
 
 ```
 $ ip addr
@@ -26,7 +26,7 @@ Veth 的两头都直接连着网络协议栈，所以你创建一个Veth对，�
 
 ##  Veth Pair与容器网络
 
-在Network namespace篇节，笔者创建两个ns，并使之通信。就是利用Veth连接两个network namespace，将两端的网卡（Veth）分别放入两个不同的network namespace，就可以把这两个network namespace连起来，形成一个点对点的二层网络。
+在Network namespace篇节，笔者创建两个netns，并使之通信。就是利用Veth连接两个network namespace，将两端的网卡（Veth）分别放入两个不同的network namespace，就可以把这两个network namespace连起来，形成一个点对点的二层网络。
 
 Docker中经典的容器组网模型就是 veth pair + bridge的模式。
 

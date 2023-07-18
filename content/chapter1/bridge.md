@@ -1,6 +1,6 @@
 # Linux Bridge
 
-Veth实现了点对点的虚拟连接，可以通过Veth连接两个namespace，如果我们需要将三个或者多个namespace接入同一个二层网络时，就不能只使用veth了。
+Veth实现了点对点的虚拟连接，可以通过Veth连接两个network namespace，如果我们需要将三个或者多个network namespace接入同一个二层网络时，就不能只使用veth了。
 
 在物理网络中，如果需要连接多个主机，我们会使用网桥，或者又称为交换机。Linux也提供了网桥的虚拟实现：Linux Bridge。
 
@@ -22,7 +22,9 @@ Docker中支持bridge网络模式，就是Docker利用Bridge 再依靠 Veth-pair
 
 该实践的网络拓扑图如下：
 
-> 还没画图
+<div  align="center">
+    <img src="../assets/network_namespace_typology.png" width = "500"  align=center />
+</div>
 
 创建三个ns：
 

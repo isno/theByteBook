@@ -4,12 +4,16 @@
 
 然而Linux并未像提供虚拟网桥一样也提供一个虚拟路由器设备，原因是Linux自身就具备有路由器功能。
 
-路由器的工作原理是这样的：路由器上有2到多个网络接口，每个网络接口处于不同的三层子网上。路由器会根据内部的路由转发表将从一个网络接口中收到的数据包转发到另一个网络接口，这样就实现了不同三层子网之间的互通。Linux内核提供了IP Forwarding功能，启用IP Forwarding后，就可以在不同的网络接口中转发IP数据包，相当于实现了路由器的功能。
+路由器的工作原理是这样的：路由器上有2到多个网络接口，每个网络接口处于不同的三层子网上。
+
+路由器会根据内部的路由转发表将从一个网络接口中收到的数据包转发到另一个网络接口，这样就实现了不同三层子网之间的互通。
+
+Linux内核提供了IP Forwarding功能，启用IP Forwarding后，就可以在不同的网络接口中转发IP数据包，相当于实现了路由器的功能。
 
 备注：Linux的IP Forwarding功能并不是默认开启的，可以采用下面的方法开启：
 
 ```
-cat > /etc/sysctl.d/30-ipforward.conf<<EOL
+cat > /etc/sysctl.d/30-ipforward.conf << EOL
 net.ipv4.ip_forward=1
 net.ipv6.conf.default.forwarding=1
 net.ipv6.conf.all.forwarding=1
