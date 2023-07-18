@@ -67,6 +67,13 @@ export default defineUserConfig({
                 sidebarDepth: 2,
                 children: [
                     '/network/latency.md',
+                     {
+                        text: '2.2 Linux 内核网络',
+                        link: "/network/linux-kernel-networking.md",
+                        children: [
+                    
+                        ]
+                    },
                     {
                         text: '基础网络',
                         link: "/content/chapter1/underlay.md",
