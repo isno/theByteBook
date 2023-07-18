@@ -1,22 +1,5 @@
 # 云原生架构落地指南
 
-## ACNA 
-
-ACNA 是阿里巴巴根据企业核心关注点、企业组织、工程实施能力等多个方面和架构技术结合，形成独有的云原生架构设计方法
-
-云原生架构包含了 6 个关键架构维度(简写为 SESORA，Service + Elasticity + Serverless + Observability + Resilience + Automation)，因此我们先定义关键维度的成熟度级别
-
-| 指标维度 | ACAN-1（0分） | ACAN-2（1分） | ACAN-3（3分） | ACAN-4（4分）|
-| :---: | :---: | :---: |:---: |:---: |
-| 服务化能力（Service） | 无 <br><small>（单体应用）</small>| 部分服务化 & 缺乏治理<br><small> (自持技术，初步服务化) </small> | 全部服务化 & 有治理体系 <br><small> (自持技术，初步服务化) </small> | Mesh 化的服务体系 <br><small> (云技术、治理最佳实践) </small> |
-| 弹性能力（Elasticity） | 全人工扩缩容<br><small>（固定容量）</small> | 半闭环<br><small>（监控+人工扩缩容）</small> | 非全云方式闭环<br><small>（监控+代码伸缩，百节点规模）</small> | 基于云全闭环<br><small>（基于流量等多策略，万级节点规模）</small> |
-| 无服务器化程度（Serverless） | 未采用 BaaS | 无状态计算委托给云<br><small>（计算、网络、大数据）</small> | 有状态存储委托给云<br><small>（数据库、文件、对象存储等）</small> | 全无服务器方式运行<br><small>（Serverless/FaaS 运行全部业务）</small> |
-| 可观测性 （Observability）| 无 | 性能优化 & 错误处理 <br><small>（日志分析、应用级监控、APM）</small>| 360度 SLA 度量<br><small>（链路 Tracing、Metrics度量）</small> | 用户体验持续优化<br><small>（用观测大数据提升业务质量）</small> |
-| 韧性能力 （Resilience）| 无 | 十分钟切流<br><small>（主备HA、集群HA、冷备容灾）</small> | 分钟级切流<br><small>（熔断、限流、降级、多活容灾等）</small> | 秒级切流、业务无感 <br><small>（Serviceless、Service Mesh 等）</small>|
-| 自动化能力（Automation） | 无| 基于容器自动化 <br><small>（基于容器CI/CD）</small>| 具备自描述能力的自动化<br><small>（提升软件交付自动化）</small> | 基于 AI 的自动化<br><small>（自动化软件交付和运维）</small> |
-
-
-从自动化能力、无服务化能力、弹性能力、可观测性、韧性能力这五个维度，贯穿说明如何落地云原生架构
 
 
 ## 微服务化
@@ -26,6 +9,8 @@ ACNA 是阿里巴巴根据企业核心关注点、企业组织、工程实施能
 
 
 ## 将生产服务容器化
+
+实现云原生架构的前置条件是服务容器化，没有容器化技术，云原生下的弹性、服务韧性、资源成本节省将不具备任何优势。
 
 容器化云应用的基础是容器管理和编排服务。虽然存在各种各样的服务，但占据统治地位的显然是 Kubernetes，Kubernetes 建立了一个活跃的社区并获得了众多领先商业供应商的支持，已然成为行业中的容器编排标准。
 
