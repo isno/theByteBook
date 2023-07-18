@@ -328,6 +328,7 @@ export default defineUserConfig({
                             '/kubernetes/pv.md',
                         ]
                     },
+                     '/kubernetes/Qos.md',
                     {
                         text: 'Kubernetes 弹性伸缩',
                         link: '/kubernetes/AutoScaling.md',
