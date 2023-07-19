@@ -71,7 +71,7 @@ export default defineUserConfig({
                         text: '2.2 Linux 内核网络',
                         link: "/network/linux-kernel-networking.md",
                         children: [
-                    
+                            '/network/tcp.md',
                         ]
                     },
                     {
@@ -80,7 +80,6 @@ export default defineUserConfig({
                         children: [
                             '/content/chapter1/bgp.md',
                             '/content/chapter1/anycast.md',
-                            '/network/tcp.md',
                             '/content/chapter1/congestion-control.md'
                         ]
                     },
