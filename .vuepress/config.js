@@ -71,21 +71,16 @@ export default defineUserConfig({
                         text: '2.2 Linux 内核网络',
                         link: "/network/linux-kernel-networking.md",
                         children: [
+                            '/network/netfilter.md',
+                            '/network/kernel-bypass.md',
                             '/network/tcp.md',
-                            '/content/chapter1/congestion-control.md'
+                            '/network/congestion-control.md',
+                            '/network/bbr.md',
                         ]
                     },
+                   
                     {
-                        text: '基础网络',
-                        link: "/content/chapter1/underlay.md",
-                        children: [
-                            '/content/chapter1/bgp.md',
-                            '/content/chapter1/anycast.md',
-                            
-                        ]
-                    },
-                    {
-                        text: '网络虚拟化',
+                        text: '2.3 网络虚拟化',
                         link: "/content/chapter1/SDN.md",
                         children: [
                             '/content/chapter1/network-namespace.md',
@@ -96,7 +91,24 @@ export default defineUserConfig({
                             '/content/chapter1/vxlan.md'
                         ]
                     },
-                    '/network/netfilter.md',
+                     {
+                        text: '2.4 互联网络',
+                        link: "/content/chapter1/underlay.md",
+                        children: [
+                            '/content/chapter1/bgp.md',
+                            '/content/chapter1/anycast.md',
+                            
+                        ]
+                    },
+                     {
+                        text: '2.5 网络关键指标及观测指南',
+                        link: "/network/observation.md",
+                        children: [
+                            '/network/mtr.md',
+                            '/network/tcpdump.md'
+                        ]
+                    },
+                   
                     {
                         text: '网络优化指南',
                         link: "/content/chapter1/net-optimize-intro.md",
@@ -111,18 +123,11 @@ export default defineUserConfig({
                                     '/network/bbr.md',
                                 ]
                             },
-                            '/network/kernel-bypass.md'
+                           
                         ]
                     },
 
-                    {
-                        text: '网络关键指标及观测指南',
-                        link: "/network/observation.md",
-                        children: [
-                            '/network/mtr.md',
-                            '/network/tcpdump.md'
-                        ]
-                    },
+                   
                 ]
             },
             {
