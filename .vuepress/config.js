@@ -376,10 +376,7 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 link: '/MicroService/micro-service.md',
                 children: [
-
-                    '/MicroService/micro-service-principle.md',
                     '/MicroService/micro-service-arc.md',
-
                     {
                         text: "ServiceMesh",
                         link: '/MicroService/ServiceMesh.md',
