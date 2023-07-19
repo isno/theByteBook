@@ -108,7 +108,7 @@ export default defineUserConfig({
                             '/network/tcpdump.md'
                         ]
                     },
-                   
+                    /*
                     {
                         text: '网络优化指南',
                         link: "/content/chapter1/net-optimize-intro.md",
@@ -125,7 +125,7 @@ export default defineUserConfig({
                             },
                            
                         ]
-                    },
+                    },*/
 
                    
                 ]
