@@ -72,6 +72,7 @@ export default defineUserConfig({
                         link: "/network/linux-kernel-networking.md",
                         children: [
                             '/network/tcp.md',
+                            '/content/chapter1/congestion-control.md'
                         ]
                     },
                     {
@@ -80,7 +81,7 @@ export default defineUserConfig({
                         children: [
                             '/content/chapter1/bgp.md',
                             '/content/chapter1/anycast.md',
-                            '/content/chapter1/congestion-control.md'
+                            
                         ]
                     },
                     {

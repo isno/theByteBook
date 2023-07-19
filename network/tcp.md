@@ -65,5 +65,5 @@ Linux 内核使用两个队列管理 TCP 连接。
 
 <div  align="center">
 	<p>图1:TCP挥手流程</p>
-	<img src="../..//assets/tcp-handwave.png" width = "500"  align=center />
+	<img src="..//assets/tcp-handwave.png" width = "500"  align=center />
 </div>
