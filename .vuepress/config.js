@@ -28,7 +28,6 @@ export default defineUserConfig({
                 text: '讨论',
                 link: 'https://github.com/isno/theByteBook/discussions'
             },
-
             {
                 text: 'GitHub仓库',
                 link: 'https://github.com/isno/theByteBook'
@@ -340,7 +339,8 @@ export default defineUserConfig({
                             '/kubernetes/pv.md',
                         ]
                     },
-                     '/kubernetes/Qos.md',
+                    '/kubernetes/CRD-Operator.md',
+                    '/kubernetes/Qos.md',
                     {
                         text: 'Kubernetes 弹性伸缩',
                         link: '/kubernetes/AutoScaling.md',
@@ -351,7 +351,7 @@ export default defineUserConfig({
                             '/kubernetes/requests-limits.md',
                         ]
                     },
-                   
+                    '/kubernetes/monitor.md',
                     {
                         text: 'Kubernetes 进阶',
                         link: '/kubernetes/AutoScaling.md',
