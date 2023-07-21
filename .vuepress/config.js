@@ -316,7 +316,7 @@ export default defineUserConfig({
                 children: [
                     '/kubernetes/declarative-api.md',
                     '/kubernetes/namespace.md',
-                    '/kubernetes/virtual.md',
+                    
                     {
                         text: 'Kubernetes 架构与组件',
                         link: '/kubernetes/component.md',
@@ -339,18 +339,22 @@ export default defineUserConfig({
                             '/kubernetes/pv.md',
                         ]
                     },
-                    '/kubernetes/CRD-Operator.md',
-                    '/kubernetes/Qos.md',
+                   
+                    
                     {
-                        text: 'Kubernetes 弹性伸缩',
-                        link: '/kubernetes/AutoScaling.md',
+                        text: '资源限制模型以及 QoS',
+                        link: '/kubernetes/capacity.md',
                         collapsable: false,
                         sidebarDepth: 1,
                         children: [
-                            
+                            '/kubernetes/virtual.md',
                             '/kubernetes/requests-limits.md',
+                            '/kubernetes/Qos.md',
                         ]
                     },
+                    '/kubernetes/AutoScaling.md',
+                    '/kubernetes/CRD-Operator.md',
+
                     '/kubernetes/monitor.md',
                     {
                         text: 'Kubernetes 进阶',

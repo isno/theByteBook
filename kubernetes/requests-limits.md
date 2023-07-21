@@ -1,24 +1,37 @@
 # 容器资源限制：requests 与 limits 
 
-为了实现集群资源的有效调度和充分利用， Kubernetes 采用 requests (资源需求） 和 limits (资源限制) 两种限制类型来对资源进行容器粒度的分配。
+当节点资源不足时，会发生以下情况：
 
-每一个容器都可以独立地设定相应的 requests 和 limits 。这 2 个参数通过每个容器 containerSpec 的 resources 字段进行设置。
+- Pod 可能会因为抢占或节点压力而被驱逐。
+- 当进程运行内存不足（OOM）时，它会因为没有所需资源而被 Kill。
+- 如果 CPU 消耗高于 实际 Limits，进程将开始收到限制。
 
-- requests 定义了对应容器需要的最小资源量，举例来讲，对于一个 Spring Boot 业务容器，这里的 requests 必须是容器镜像中 JVM 虚拟机需要占用的最少资源，如果 JVM 实际占用的内存 Xms 超出了 Kubernetes 分配给 pod 的内存，导致 pod 内存溢出，从而 Kubernetes 不断重启 pod 。
+Kubernetes 通过配置 Pod 内容器的 requests (资源需求） 和 limits (资源限制) 属性分配内存和 CPU 资源，以防止资源匮乏并调整云成本。
 
-- limits 定义了这个容器最大可以消耗的资源上限，防止过量消耗资源导致资源短缺甚至宕机。当设置 limits 而没有设置 requests 时，Kubernetes 默认令 requests 等于 limits 。
+- requests 容器需要的最小资源量。举例来讲，对于一个 Spring Boot 业务容器，这里的 requests 必须是容器镜像中 JVM 虚拟机需要占用的最少资源。
+- limits 容器最大可以消耗的资源上限，防止过量消耗资源导致资源短缺甚至宕机。
+
+<div  align="center">
+	<img src="../assets/requests-limits.png" width = "500"  align=center />
+</div>
+
+
+每一个容器都可以独立地设定相应的 requests 和 limits 。这 2 个参数通过每个容器 resources 字段进行设置。
+，当设置 limits 而没有设置 requests 时，Kubernetes 默认令 requests 等于 limits 。
 
 ```
-resources:  
-    requests:    
-        cpu: 50m
-        memory: 50Mi
-   limits:    
-        cpu: 100m
-        memory: 100Mi
+container:
+	resources:  
+	    requests:    
+	        cpu: 50m
+	        memory: 50Mi
+	   limits:    
+	        cpu: 100m
+	        memory: 100Mi
 ```
 
-一般来说，在调度的时候 requests 比较重要，在 schedule 阶段，Kubernetes 要保证所有 pod 的 requests 总和小于 node 能提供的计算能力，而 limits 则运行时限制了容器占用资源的上限。
+该资源对象指定容器进程需要 50/1000 核（5%）才能被调度，并且允许最多使用 100/1000 核（10%）。
+
 
 ## Pod 的服务质量
 
