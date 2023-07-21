@@ -45,7 +45,7 @@ iptables 分为两部分：
 - 用户空间的 iptables 命令向用户提供访问内核 iptables 模块的管理界面。
 - 内核空间的 iptables 模块在内存中维护规则表，实现表的创建及注册。
 
-iptables 有个`四表五链`的概念。每一个链挂相应的表对IP数据包进行流经处理判断。 
+iptables 有个`四表五链`的概念。通过组合不同的链表关系实现对不同的IP数据包进行流经处理判断。 
 
 五链是对应 netfilter的5个hook的内置链（除这五链之外，用户也可以自定义链））。 四表如下：
 
@@ -76,7 +76,56 @@ iptables 有个`四表五链`的概念。每一个链挂相应的表对IP数据�
 
 ## iptables 规则用法
 
-**iptables 更新延迟的问题**
+**iptables 规则用法**
+
+iptables可以有效的对特定的网络数据包进行封禁，但若需要处理大量ip/port时，需要添加大量的规则，这会导致性能严重下降，而且管理和维护也不够方便。
+
+ipset是iptables的扩展，支持集合动态修改、规则有效时间、通配符等功能，可以帮助用户更好的配置和管理iptables。
+```
+**配置网段规则**
+$ ipset create blacklist hash:net
+$ ipset add blacklist 1.1.0.0/16
+$ ipset create whitelist hash:net
+$ ipset add whitelist 2.2.0.0/16
+
+**配置ip + port规则**
+$ ipset create ip_port_list hash:ip,port
+# 添加entry 
+$ ipset add ip_port_list 1.1.1.1,100-200
+$ ipset add ip_port_list 8.8.8.8,udp:88 
+$ ipset add ip_port_list 88.88.88.88,80 
+# 删除entry
+$ ipset del ip_port_list 1.2.3.4,100-200
+
+**配置ip规则**
+$ ipset create ip_list hash:ip
+$ ipset add ip_list 192.168.1.1
+$ ipset add ip_list 192.168.1.2
+
+配置port规则
+$ ipset create port_list bitmap:port
+$ ipset add port_list 80 timeout 3600
+$ ipset add port_list 8080 timeout 3600
+
+启用相应规则
+# 网段黑名单
+$ iptables -I INPUT -m set --match-set blacklist src -j DROP 
+# 网段白名单
+$ iptables -I INPUT -m set --match-set whitelist src -j ACCEPT 
+# ip + port黑名单
+$ iptables -I INPUT -m set --match-set ip_port_list src -j DROP 
+# ip黑名单
+$ iptables -I INPUT -m set --match-set ip_list src -j DROP 
+# 端口白名单
+$ iptables -I INPUT -m set --match-set port_list src -j ACCEPT 
+
+删除ipset规则
+ipset destroy blacklist
+ipset destroy whitelist
+```
+更多灵活用法请参考 `ipset help` 或 `man ipset`
+
+## iptables 更新延迟的问题
 
 由于每条规则长度不等、内部结构复杂，且同一规则集位于连续的内存空间，iptables 使用全量替换的方式来更新规则，这使得我们能够从用户空间以原子操作来添加/删除规则，但非增量式的规则更新会在规则数量级较大时带来严重的性能问题。
 

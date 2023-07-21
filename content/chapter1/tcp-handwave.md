@@ -63,7 +63,7 @@ net.ipv4.ip_local_port_range = 1024 65535
 sysctl -p
 ```
 
-## TIME_WAITE上限调整
+## TIME_WAIT上限调整
 
 当 TIME_WAIT 的连接数量超过该参数时，新关闭的连接就不再经历 TIME_WAIT 而直接关闭。
 当服务器的并发连接增多时，同时处于 TIME_WAIT 状态的连接数量也会变多，此时就应当调大 tcp_max_tw_buckets 参数，减少不同连接间数据错乱的概率。

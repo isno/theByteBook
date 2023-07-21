@@ -54,7 +54,7 @@ Linux 内核使用两个队列管理 TCP 连接，当队列溢出时，TCP 将�
 
 
 
-## 2.3 TCP 挥手以及 TIME_WAITE
+## 2.3 TCP 挥手以及 TIME_WAIT
 
 <div  align="center">
 	<p>图1:TCP挥手流程</p>
