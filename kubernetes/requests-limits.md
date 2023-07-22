@@ -1,4 +1,4 @@
-# 8.4 容器资源限制：requests 与 limits 
+# 8.5.2 容器资源限制：requests 与 limits 
 
 Kubernetes 通过配置 Pod 内容器的 requests (资源需求） 和 limits (资源限制) 属性分配内存和 CPU 资源，以防止资源匮乏并调整云成本。
 

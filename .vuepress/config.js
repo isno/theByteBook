@@ -316,18 +316,9 @@ export default defineUserConfig({
                 children: [
                     '/kubernetes/declarative-api.md',
                     '/kubernetes/namespace.md',
-                    
+                    '/kubernetes/component.md',
                     {
-                        text: 'Kubernetes 架构与组件',
-                        link: '/kubernetes/component.md',
-                        collapsable: false,
-                        sidebarDepth: 1,
-                        children: [
-                            '/kubernetes/kube-proxy.md',
-                        ]
-                    },
-                    {
-                        text: 'Kubernetes 核心资源',
+                        text: '8.4 Kubernetes 核心资源',
                         link: '/kubernetes/resource.md',
                         collapsable: false,
                         sidebarDepth: 1,
@@ -342,7 +333,7 @@ export default defineUserConfig({
                    
                     
                     {
-                        text: '资源限制模型以及 QoS',
+                        text: '8.5 资源限制模型以及 QoS',
                         link: '/kubernetes/capacity.md',
                         collapsable: false,
                         sidebarDepth: 1,
