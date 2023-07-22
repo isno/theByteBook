@@ -29,8 +29,7 @@ tcpdump: listening on en0, link-type EN10MB (Ethernet), snapshot length 524288 b
 	<p>图 TCP 报文信息</p>
 </div>
 
-
-Wireshark 可以用时序图的方式显示数据包交互的过程，从菜单栏中，点击 统计 (Statistics) -> 流量图 (Flow Graph)，然后，在弹出的界面中的「流量类型」选择 「TCP Flows」，你可以更清晰的看到，整个过程中 TCP 流的执行过程：
+Wireshark 可以用时序图的方式显示数据包交互的过程，从菜单栏中，点击 统计 (Statistics) -> 流量图 (Flow Graph)，然后，在弹出的界面中的「流量类型」选择 「TCP Flows」，可以更清晰的看到，整个过程中 TCP 流的执行过程。
 
 <div  align="center">
 	<img src="../assets/wireshark-2.png" width = "600"  align=center />
