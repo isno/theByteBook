@@ -1,10 +1,4 @@
-# 容器资源限制：requests 与 limits 
-
-当节点资源不足时，会发生以下情况：
-
-- Pod 可能会因为抢占或节点压力而被驱逐。
-- 当进程运行内存不足（OOM）时，它会因为没有所需资源而被 Kill。
-- 如果 CPU 消耗高于 实际 Limits，进程将开始收到限制。
+# 8.4 容器资源限制：requests 与 limits 
 
 Kubernetes 通过配置 Pod 内容器的 requests (资源需求） 和 limits (资源限制) 属性分配内存和 CPU 资源，以防止资源匮乏并调整云成本。
 
@@ -32,15 +26,6 @@ container:
 
 该资源对象指定容器进程需要 50/1000 核（5%）才能被调度，并且允许最多使用 100/1000 核（10%）。
 
-
-## Pod 的服务质量
-
-Pod 的服务质量（ QoS ）
-Kubernetes 创建 Pod 时就给它指定了下列一种 QoS 类：Guaranteed，Burstable，BestEffort。
-
-- Guaranteed：Pod 中的每个容器，包含初始化容器，必须指定内存和CPU的requests和limits，并且两者要相等。
-- Burstable：Pod 不符合 Guaranteed QoS 类的标准；Pod 中至少一个容器具有内存或 CPU requests。
-- BestEffort：Pod 中的容器必须没有设置内存和 CPU requests或limits。
 
 
 ## 集群稳定性建议
