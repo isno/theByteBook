@@ -78,55 +78,60 @@ iptables 有个`四表五链`的概念。通过组合不同的链表关系实现
 
 **iptables 规则用法**
 
-iptables可以有效的对特定的网络数据包进行封禁，但若需要处理大量ip/port时，需要添加大量的规则，这会导致性能严重下降，而且管理和维护也不够方便。
+iptables可以有效地对特定的网络数据包进行管理，但当需要配置大量的网络规则时，会出现管理和维护不够方便的情况。
 
-ipset是iptables的扩展，支持集合动态修改、规则有效时间、通配符等功能，可以帮助用户更好的配置和管理iptables。
+ipset是iptables的扩展，支持集合增量更新、动态修改、规则有效时间、通配符等功能，可以帮助用户更好的配置和管理iptables。
 ```
 **配置网段规则**
-$ ipset create blacklist hash:net
-$ ipset add blacklist 1.1.0.0/16
-$ ipset create whitelist hash:net
-$ ipset add whitelist 2.2.0.0/16
+$ ipset create net_blacklist hash:net
+$ ipset add net_blacklist 1.1.0.0/16
+$ ipset create net_whitelist hash:net
+$ ipset add net_whitelist 2.2.0.0/16
 
-**配置ip + port规则**
-$ ipset create ip_port_list hash:ip,port
-# 添加entry 
-$ ipset add ip_port_list 1.1.1.1,100-200
-$ ipset add ip_port_list 8.8.8.8,udp:88 
-$ ipset add ip_port_list 88.88.88.88,80 
-# 删除entry
-$ ipset del ip_port_list 1.2.3.4,100-200
+**配置 ip + port 规则**
+$ ipset create ip_port_blacklist hash:ip,port
+$ ipset add ip_port_blacklist 1.1.1.1,100-200
+$ ipset add ip_port_blacklist 8.8.8.8,udp:88 
+$ ipset add ip_port_blacklist 88.88.88.88,80 
+$ ipset del ip_port_blacklist 1.1.1.1,100-200
 
 **配置ip规则**
-$ ipset create ip_list hash:ip
-$ ipset add ip_list 192.168.1.1
-$ ipset add ip_list 192.168.1.2
+$ ipset create ip_blacklist hash:ip
+$ ipset add ip_blacklist 192.168.1.1
+$ ipset add ip_blacklist 192.168.1.2
 
 配置port规则
-$ ipset create port_list bitmap:port
-$ ipset add port_list 80 timeout 3600
-$ ipset add port_list 8080 timeout 3600
+$ ipset create port_whitelist bitmap:port
+$ ipset add port_whitelist 80 timeout 3600
+$ ipset add port_whitelist 8080 timeout 3600
 
 启用相应规则
 # 网段黑名单
-$ iptables -I INPUT -m set --match-set blacklist src -j DROP 
+$ iptables -I INPUT -m set --match-set net_blacklist src -j DROP 
 # 网段白名单
-$ iptables -I INPUT -m set --match-set whitelist src -j ACCEPT 
+$ iptables -I INPUT -m set --match-set net_whitelist src -j ACCEPT 
 # ip + port黑名单
-$ iptables -I INPUT -m set --match-set ip_port_list src -j DROP 
+$ iptables -I INPUT -m set --match-set ip_port_blacklist src -j DROP 
 # ip黑名单
-$ iptables -I INPUT -m set --match-set ip_list src -j DROP 
+$ iptables -I INPUT -m set --match-set ip_blacklist src -j DROP 
 # 端口白名单
-$ iptables -I INPUT -m set --match-set port_list src -j ACCEPT 
+$ iptables -I INPUT -m set --match-set port_whitelist src -j ACCEPT 
 
 删除ipset规则
-ipset destroy blacklist
-ipset destroy whitelist
+ipset destroy net_blacklist
+ipset destroy net_whitelist
+ipset destroy ip_port_blacklist
+ipset destroy ip_blacklist
+ipset destroy port_whitelist
 ```
-更多灵活用法请参考 `ipset help` 或 `man ipset`
+更多灵活用法请参考: `iptables --help` `man iptables` `ipset --help` `man ipset` 
 
 ## iptables 更新延迟的问题
 
 由于每条规则长度不等、内部结构复杂，且同一规则集位于连续的内存空间，iptables 使用全量替换的方式来更新规则，这使得我们能够从用户空间以原子操作来添加/删除规则，但非增量式的规则更新会在规则数量级较大时带来严重的性能问题。
 
-假如在一个大规模 Kubernetes 集群中使用 iptables 方式实现 Service，当 service 数量较多时，哪怕更新一个 service 也会整体修改 iptables 规则表。全量提交的过程会 kernel lock 进行保护，因此会有很大的更新时延。
+假如在一个大规模 Kubernetes 集群中使用 iptables 方式实现 Kube-Proxy，当 service 数量较多时，哪怕更新一个 service 也会整体修改 iptables 规则表。全量提交的过程会 kernel lock 进行保护，因此会有很大的更新时延。
+
+当 service 数量较多时，可以尝试在 Kubernetes 集群中使用基于 ipset 的 ipvs 方式实现 Kube-Proxy， 采用增量更新的方式保证service提供更加稳定的服务。
+
+
