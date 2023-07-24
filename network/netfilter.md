@@ -81,41 +81,43 @@ iptables 有个`四表五链`的概念。通过组合不同的链表关系实现
 iptables可以有效地对特定的网络数据包进行管理，但当需要配置大量的网络规则时，会出现管理和维护不够方便的情况。
 
 ipset是iptables的扩展，支持集合增量更新、动态修改、规则有效时间、通配符等功能，可以帮助用户更好的配置和管理iptables。
+
+云服务商提供的安全组 `security group` 也能提供类似的功能，不过 `iptables` 在服务器内，而`security group`在服务器外。
 ```
-**配置网段规则**
+配置网段规则
 $ ipset create net_blacklist hash:net
 $ ipset add net_blacklist 1.1.0.0/16
 $ ipset create net_whitelist hash:net
 $ ipset add net_whitelist 2.2.0.0/16
 
-**配置 ip + port 规则**
+配置 ip + port 规则
 $ ipset create ip_port_blacklist hash:ip,port
 $ ipset add ip_port_blacklist 1.1.1.1,100-200
 $ ipset add ip_port_blacklist 8.8.8.8,udp:88 
 $ ipset add ip_port_blacklist 88.88.88.88,80 
 $ ipset del ip_port_blacklist 1.1.1.1,100-200
 
-**配置ip规则**
+配置ip规则
 $ ipset create ip_blacklist hash:ip
 $ ipset add ip_blacklist 192.168.1.1
 $ ipset add ip_blacklist 192.168.1.2
 
 配置port规则
-$ ipset create port_whitelist bitmap:port
-$ ipset add port_whitelist 80 timeout 3600
-$ ipset add port_whitelist 8080 timeout 3600
+$ ipset create port_whitelist bitmap:port range 0-65535
+$ ipset add port_whitelist 80
+$ ipset add port_whitelist 8080
 
-启用相应规则
-# 网段黑名单
+启用五条规则：网段黑名单，网段白名单，ip + port黑名单，ip黑名单，端口白名单
 $ iptables -I INPUT -m set --match-set net_blacklist src -j DROP 
-# 网段白名单
 $ iptables -I INPUT -m set --match-set net_whitelist src -j ACCEPT 
-# ip + port黑名单
 $ iptables -I INPUT -m set --match-set ip_port_blacklist src -j DROP 
-# ip黑名单
 $ iptables -I INPUT -m set --match-set ip_blacklist src -j DROP 
-# 端口白名单
-$ iptables -I INPUT -m set --match-set port_whitelist src -j ACCEPT 
+$ iptables -I INPUT -m set --match-set port_whitelist src -j ACCEPT
+
+删除iptables规则
+$ iptables -nL --line-number # 查看iptables rule number
+$ iptables -D <chain name> <rule number> # 根据chain name 和 iptables rule number删除规则
+$ iptables -flush INPUT # 删除INPUT chain的全部规则
 
 删除ipset规则
 ipset destroy net_blacklist
