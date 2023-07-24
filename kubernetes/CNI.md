@@ -1,16 +1,20 @@
 # Kubernetes CNI
 
+在介绍 CNI 规范之前，我们先了解 Kubernetes 集群内的网络模型定义。
+
+- 每个 Pod 都有一个独立 IP，Pod 内所有的容器共享一个网络命名空间。
+- 集群内所有的 Pod 都在一个直连连通的扁平网络中，无需 NAT 就可以互相访问 Node 和容器
+- Service Cluster IP 可在集群内部访问。外部请求需要通过 NodePort、LoadBalance 或者 Ingress 访问。
+
+<div  align="center">
+	<img src="../assets/k8s-net.png" width = "300"  align=center />
+</div>
+
+
 CNI(Container Network Interface) 是 CNCF 项目，定义了一套 Linux 容器网络接口规范，同时也包含了一些插件和实现库。
 
 Kubernetes 本身不实现集群内的网络模型，而是通过将其抽象出来提供了 CNI 接口给第三方实现，这样一来节省了开发资源可以集中精力到 Kubernetes 本身，二来可以利用开源社区的力量打造一整个丰富的生态。
 
-## Kubernetes 网络模型定义
-
-在介绍 CNI 规范之前，我们先了解 Kubernetes 集群内的网络模型定义。
-
-- 每个 Pod 都有一个独立IP，Pod 内所有的容器共享一个网络命名空间
-- 集群内所有的Pod都在一个直连连通的扁平网络中，无需 NAT 就可以互相访问 Node和容器
-- Service Cluster IP 可在集群内部访问。外部请求需要通过 NodePort、LoadBalance 或者 Ingress 访问。
 
 Kubernetes 并不关心各个 CNI 如何具体实现上述基础规则，只要最终的网络模型符合标准即可。因此我们可以确保不论使用什么 CNI，Kubernetes 集群内的 Pod 网络都是一张巨大的平面网络，每个 Pod 在这张网络中地位是平等的，这种设计对于集群内的服务发现、负载均衡、服务迁移、应用配置等诸多场景都带来了极大的便利。
 
