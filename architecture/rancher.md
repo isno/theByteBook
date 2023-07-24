@@ -2,7 +2,7 @@
 
 Rancher 是一家容器产品及解决方案服务商。Rancher 最初目标就是为了支持多种容器编排引擎而构建。随着 Kubernetes 的兴起， Rancher 2.x 也开始彻底转向了 Kubernetes。
 
-使用 Rancher 可以选择使用 RKE （Rancher Kubernetes Engine）创建Kubernetes 集群，也可以使用 TKE、ACK、AKS 等云厂商的 Kubernetes 服务。由于 Rancher 仅需要主机有CPU、内存、本地磁盘和网络资源，因为可以使用任何公有云或者本地主机资源。
+使用 Rancher 可以选择使用 RKE （Rancher Kubernetes Engine）创建Kubernetes 集群，也可以使用 TKE、ACK、AKS 等云厂商的 Kubernetes 服务。由于 Rancher 仅需要主机有CPU、内存、本地磁盘和网络资源，因此可以使用任何公有云或者本地主机资源。
 
 ## Rancher 的特点
 
