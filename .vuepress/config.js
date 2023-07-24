@@ -392,13 +392,12 @@ export default defineUserConfig({
             },
             {
                 text: '第十章：GitOps 的落地与实施',
-                link: '/GitOps/intro.md',
+                link: '/GitOps/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
                     '/GitOps/GitOps.md',
                     '/GitOps/AoneFlow.md',
-                    
                     {
                         text: "基础设施即代码",
                         link: '/GitOps/IaC.md',
