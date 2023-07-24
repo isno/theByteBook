@@ -45,7 +45,7 @@ iptables 分为两部分：
 - 用户空间的 iptables 命令向用户提供访问内核 iptables 模块的管理界面。
 - 内核空间的 iptables 模块在内存中维护规则表，实现表的创建及注册。
 
-iptables 有个`四表五链`的概念。每一个链挂相应的表对IP数据包进行流经处理判断。 
+iptables 有个`四表五链`的概念。通过组合不同的链表关系实现对不同的IP数据包进行流经处理判断。 
 
 五链是对应 netfilter的5个hook的内置链（除这五链之外，用户也可以自定义链））。 四表如下：
 
@@ -76,8 +76,64 @@ iptables 有个`四表五链`的概念。每一个链挂相应的表对IP数据�
 
 ## iptables 规则用法
 
-**iptables 更新延迟的问题**
+**iptables 规则用法**
+
+iptables可以有效地对特定的网络数据包进行管理，但当需要配置大量的网络规则时，会出现管理和维护不够方便的情况。
+
+ipset是iptables的扩展，支持集合增量更新、动态修改、规则有效时间、通配符等功能，可以帮助用户更好的配置和管理iptables。
+
+云服务商提供的安全组 `security group` 也能提供类似的功能，不过 `iptables` 在服务器内，而`security group`在服务器外。
+```
+配置网段规则
+$ ipset create net_blacklist hash:net
+$ ipset add net_blacklist 1.1.0.0/16
+$ ipset create net_whitelist hash:net
+$ ipset add net_whitelist 2.2.0.0/16
+
+配置 ip + port 规则
+$ ipset create ip_port_blacklist hash:ip,port
+$ ipset add ip_port_blacklist 1.1.1.1,100-200
+$ ipset add ip_port_blacklist 8.8.8.8,udp:88 
+$ ipset add ip_port_blacklist 88.88.88.88,80 
+$ ipset del ip_port_blacklist 1.1.1.1,100-200
+
+配置ip规则
+$ ipset create ip_blacklist hash:ip
+$ ipset add ip_blacklist 192.168.1.1
+$ ipset add ip_blacklist 192.168.1.2
+
+配置port规则
+$ ipset create port_whitelist bitmap:port range 0-65535
+$ ipset add port_whitelist 80
+$ ipset add port_whitelist 8080
+
+启用五条规则：网段黑名单，网段白名单，ip + port黑名单，ip黑名单，端口白名单
+$ iptables -I INPUT -m set --match-set net_blacklist src -j DROP 
+$ iptables -I INPUT -m set --match-set net_whitelist src -j ACCEPT 
+$ iptables -I INPUT -m set --match-set ip_port_blacklist src -j DROP 
+$ iptables -I INPUT -m set --match-set ip_blacklist src -j DROP 
+$ iptables -I INPUT -m set --match-set port_whitelist src -j ACCEPT
+
+删除iptables规则
+$ iptables -nL --line-number # 查看iptables rule number
+$ iptables -D <chain name> <rule number> # 根据chain name 和 iptables rule number删除规则
+$ iptables -flush INPUT # 删除INPUT chain的全部规则
+
+删除ipset规则
+ipset destroy net_blacklist
+ipset destroy net_whitelist
+ipset destroy ip_port_blacklist
+ipset destroy ip_blacklist
+ipset destroy port_whitelist
+```
+更多灵活用法请参考: `iptables --help` `man iptables` `ipset --help` `man ipset` 
+
+## iptables 更新延迟的问题
 
 由于每条规则长度不等、内部结构复杂，且同一规则集位于连续的内存空间，iptables 使用全量替换的方式来更新规则，这使得我们能够从用户空间以原子操作来添加/删除规则，但非增量式的规则更新会在规则数量级较大时带来严重的性能问题。
 
-假如在一个大规模 Kubernetes 集群中使用 iptables 方式实现 Service，当 service 数量较多时，哪怕更新一个 service 也会整体修改 iptables 规则表。全量提交的过程会 kernel lock 进行保护，因此会有很大的更新时延。
+假如在一个大规模 Kubernetes 集群中使用 iptables 实现 Kube-Proxy，当 service 数量较多时，哪怕更新一个 service 也会整体修改 iptables 规则表。全量提交的过程会 kernel lock 进行保护，因此会有很大的更新时延。
+
+当 service 数量较多时，可以尝试在 Kubernetes 集群中使用基于 ipset 的 ipvs 实现 Kube-Proxy， 采用增量更新的方式保证service提供更加稳定的服务。
+
+
