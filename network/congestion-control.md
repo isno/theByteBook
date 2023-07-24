@@ -2,10 +2,15 @@
 
 TCP拥塞控制是传输层做的事情，对于常规的应用影响微乎其微，我们只要大致理解拥塞控制原理以及现流行的控制算法就可以。
 
-现在Linux系统常规使用的拥塞控制算法一般是 cubic。版本更高一点的内核会有 bbr 和 bbr2的选择。查询系统所支持的拥塞控制算法。
+现在Linux系统常规使用的拥塞控制算法一般是 cubic。版本更高一点的内核会有 bbr 和 bbr2的选择。
+
+Linux内核4.9或更高版本支持TCP BBR, 通过 `uname -r` 查看内核版本
+
+查询系统所支持的拥塞控制算法以及正在使用中的拥塞控制算法。
 
 ```
 sysctl net.ipv4.tcp_available_congestion_control
+sysctl net.ipv4.tcp_congestion_control
 ```
 
 ## 理解拥塞控制
