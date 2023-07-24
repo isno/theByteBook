@@ -427,11 +427,12 @@ export default defineUserConfig({
             },
             {
                 text: '第十一章：架构可观测性',
-                link: '/Observability/intro.md',
+                link: '/Observability/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
                     '/Observability/monitor-upgrade.md',
+                    '/Observability/metrics.md',
                     '/MicroService/tracing.md'
                 ]
             },
