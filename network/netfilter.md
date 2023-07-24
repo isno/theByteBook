@@ -132,8 +132,8 @@ ipset destroy port_whitelist
 
 由于每条规则长度不等、内部结构复杂，且同一规则集位于连续的内存空间，iptables 使用全量替换的方式来更新规则，这使得我们能够从用户空间以原子操作来添加/删除规则，但非增量式的规则更新会在规则数量级较大时带来严重的性能问题。
 
-假如在一个大规模 Kubernetes 集群中使用 iptables 方式实现 Kube-Proxy，当 service 数量较多时，哪怕更新一个 service 也会整体修改 iptables 规则表。全量提交的过程会 kernel lock 进行保护，因此会有很大的更新时延。
+假如在一个大规模 Kubernetes 集群中使用 iptables 实现 Kube-Proxy，当 service 数量较多时，哪怕更新一个 service 也会整体修改 iptables 规则表。全量提交的过程会 kernel lock 进行保护，因此会有很大的更新时延。
 
-当 service 数量较多时，可以尝试在 Kubernetes 集群中使用基于 ipset 的 ipvs 方式实现 Kube-Proxy， 采用增量更新的方式保证service提供更加稳定的服务。
+当 service 数量较多时，可以尝试在 Kubernetes 集群中使用基于 ipset 的 ipvs 实现 Kube-Proxy， 采用增量更新的方式保证service提供更加稳定的服务。
 
 
