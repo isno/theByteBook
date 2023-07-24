@@ -9,7 +9,7 @@
 
 以上的问题，就是 QUIC 出现的背景。
 
-QUIC (Quick UDP Internet Connection, 快速 UDP 互联网连接) 是一种基于 UDP 封装的安全、可靠传输协议，他的目标是取代 TCP 并自包含 TLS 成为标准的安全传输协议。
+QUIC (Quick UDP Internet Connection, 快速 UDP 互联网连接) 是一种基于 UDP 封装的安全、可靠传输协议，它的目标是取代 TCP 成为标准且效率更高的安全传输协议。
 
 下图是 QUIC 在协议栈中的位置，基于 QUIC 承载的 HTTP 协议进一步被标准化为 HTTP3。
 
@@ -18,11 +18,11 @@ QUIC (Quick UDP Internet Connection, 快速 UDP 互联网连接) 是一种基于
 	<p>图 3-8 HTTP2 与 HTTP3 协议对比</p>
 </div>
 
-QUIC 采用 UDP 作为其传输协议，与 TCP 相比具有更低的延迟和更高的吞吐量，并且它还使 QUIC 能够绕过可能干扰 TCP 的网络中间件。 QUIC 包含基于 TLS 1.3 的内置加密协议，可在端点之间提供安全通信。总结，列举 QUIC 的重要特性，这些特性是 QUIC 得以被广泛应用的关键
+QUIC 采用 UDP 作为其传输协议，与 TCP 相比具有更低的延迟和更高的吞吐量，并且它还使 QUIC 能够绕过可能干扰 TCP 的网络中间件。 QUIC 包含基于 TLS 1.3 内置加密协议，可在端点之间提供安全通信。总结，列举 QUIC 的重要特性，这些特性是 QUIC 得以被广泛应用的关键。
 
 ### 1. 支持连接迁移
 
-当用户网络环境发生变化时，如 WIFI 切换到 4G，基于 TCP 四元组的方式无法保持连接的存活。而 QUIC 使用连接 ID 唯一识别连接。当源地址发生改变时，QUIC 可以实现无缝切换，保证连接存活和数据正常收发。
+当用户网络环境发生变化，如 WIFI 切换到 4G 时，基于 TCP 四元组的方式无法保持连接的存活，而 QUIC 由于使用连接 ID 识别连接，当源地址发生改变时，QUIC 可以实现无缝切换，从而保证连接存活和数据正常收发。
 
 <div  align="center">
 	<img src="../assets/quic-connection.png" width = "580"  align=center />
@@ -31,7 +31,7 @@ QUIC 采用 UDP 作为其传输协议，与 TCP 相比具有更低的延迟和�
 
 ### 2.低延时连接
 
-以一个 HTTPS 的请求为例，使用 TLS1.3 初次连接需要 2-RTT 才能开启数据传输，另外对于 TCP Fastopen 等方案，由于协议僵化的问题，也难以在网络中应用。而 QUIC 由于基于 UDP 无需 TCP 握手。初次连接 QUIC 只需要 1- RTT 就能开启数据传输。
+以一个 HTTPS 的请求为例，使用 TLS1.3 初次连接需要 2-RTT 才能开启数据传输，另外对于 TCP Fastopen 等方案，由于协议僵化等原因，也难以在网络中应用。而 QUIC 基于 UDP 无需 TCP 握手，初次连接只需要 1- RTT 就能开启数据传输。
 
 <div  align="center">
 	<img src="../assets/quic-handshake.png" width = "580"  align=center />
@@ -44,7 +44,7 @@ TCP协议和内核绑定，要升级拥塞控制算法，必须升级内核才�
 
 ### 4. 降低对丢包的敏感度
 
-QUIC 为每个流设计和实现单独的流量控制，解决了影响整个连接的队头阻塞问题，QUIC 在单个连接上每个流之间没有顺序依赖。这意味着如果流 2 丢失了一个 UDP 数据包，它只会影响流 2 的处理，不会阻塞流 1 和 3 的数据传输。此外，作为 QUIC 的一项新功能，HPACK 标头压缩格式的变体 QPACK 旨在减少通过网络传输的冗余数据量，从而有助于缓解头部阻塞问题，这样 QUIC 在弱网场景下比  TCP 有更高的传输效率。
+QUIC 为每个流设计和实现单独的流量控制，解决了影响整个连接的队头阻塞问题，QUIC 在单个连接上每个流之间没有顺序依赖。这意味着如果流 2 丢失了一个 UDP 数据包，它只会影响流 2 的处理，不会阻塞流 1 和 3 的数据传输。此外，作为 QUIC 的一项新功能，HPACK 标头压缩格式的变体 QPACK 旨在减少通过网络传输的冗余数据量，从而有助于缓解头部阻塞问题，这样 QUIC 在弱网场景下比 TCP 有更高的传输效率。
 
 <div  align="center">
 	<img src="../assets/quic-head-block.png" width = "480"  align=center />
