@@ -74,8 +74,9 @@ export default defineUserConfig({
                         text: '2.2 Linux 内核网络',
                         link: "/network/linux-kernel-networking.md",
                         children: [
-                            '/network/conntrack.md',
                             '/network/netfilter.md',
+                            '/network/conntrack.md',
+                            '/network/XDP.md',
                             '/network/kernel-bypass.md',
                             '/network/tcp.md',
                             '/network/congestion-control.md',
