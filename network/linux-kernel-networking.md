@@ -8,3 +8,7 @@ netfilter 是 linux 内核中的数据包处理框架，netfilter 的功能包�
 	<img src="../assets/Netfilter-packet-flow.svg" width = "800"  align=center />
 	<p>图 2-1 Packet flow in Netfilter and General Networking</p>
 </div>
+
+iptables 工作在网络层（network Layer）处理的是 IP 数据包。ebtables 工作在链路层 Link Layer，处理的是以太网帧。
+
+一些代表 iptables 表和链的绿色小方框位于链路层, 这是为解决在链路层Bridge中处理IP数据包的问题而引入的 bridge_nf 。 搭建 k8s 环境要求 net.bridge.bridge-nf-call-iptables=1 
