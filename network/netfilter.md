@@ -1,4 +1,4 @@
-# Linux内核网络之 iptables 与 Netfilter
+# 2.1 Netfilter
 
 iptables 在 SLB、Container、Istio 以及 Kubernetes 等服务中应用非常广泛，比如容器和宿主机端口映射、Istio中的透明流量劫持、Kubernetes 核心组件 kube-proxy 的 IPVS 模式等等都是通过 iptables 实现的。
 

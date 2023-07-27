@@ -75,6 +75,8 @@ export default defineUserConfig({
                         link: "/network/linux-kernel-networking.md",
                         children: [
                             '/network/netfilter.md',
+                            '/network/conntrack.md',
+                            '/network/XDP.md',
                             '/network/kernel-bypass.md',
                             '/network/tcp.md',
                             '/network/congestion-control.md',

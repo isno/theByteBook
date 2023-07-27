@@ -8,5 +8,5 @@
 ## 交个朋友
 
 <div  align="left">
-	<img src="./assets/webchat.jpg" width = "220"  align=center />
+	<img src="./assets/webchat.jpg" width = "220"  align=center style="border-radius: 8px" />
 </div>
