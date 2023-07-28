@@ -42,7 +42,7 @@ Meta 这次故障带给以下几点考虑：
 </div>
 <div  align="center">
 	<img src="../assets/dns-2.png" width = "350"  align=center />
-	<p>图 3-5  amazon.co 与 facebook.com 域名结构对比</p>
+	<p>图 3-5  amazon.com 与 facebook.com 域名结构对比</p>
 </div>
 
 
