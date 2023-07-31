@@ -1,6 +1,6 @@
 # 5.1 BASE 理论及应用
 
-BASE 是 Basically Available(基本可用)、Soft Stae（软状态）和 Eventually Consistent（最终一致性）三个短语的缩写。
+BASE 是 Basically Available(基本可用)、Soft State（软状态）和 Eventually Consistent（最终一致性）三个短语的缩写。
 
 BASE 理论是分布式系统中一致性和可用性权衡的结果，其核心思想是在某些场景中，无需做到强一致性，以保证系统的可用性，同时业务系统可采用适当的方式使数据达到最终一致性。
 
