@@ -11,7 +11,7 @@
 
 - XDP (eXpress Data Path) 是 Linux Kernel 中提供高性能、可编程的网络数据包处理框架。它使得 Linux Kernel 能够在数据报文到达 L2（网卡驱动层）时就对其进行针对性的高速处理，而无需再 “循规蹈矩” 地进入到 TCP/IP Stack。
 
-- netfilter 的功能包括数据包过滤、修改、SNAT/DNAT 等，netfilter 框架在内核协议栈的不同位置实现了多个 hook 点，通过在 hook 点注册的处理函数，netfilter 可以对网络层（network Layer）IP 数据包，以及链路层（Link Layer）以太网帧进行处理。
+- netfilter 功能包括数据包过滤、修改、SNAT/DNAT 等，netfilter 框架在内核协议栈的不同位置实现了多个 hook 点，通过在 hook 点注册的处理函数，以及上层应用（iptables、ebtables）配置等，可以对网络层（network Layer）IP 数据包，以及链路层（Link Layer）以太网帧进行处理。
 
 - conntrack 允许内核跟踪所有逻辑网络连接或会话，从而关联可能构成该连接的所有数据包。conntrack 是 NAT 以及防火墙的实现基础。
 
