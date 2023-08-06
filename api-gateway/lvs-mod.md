@@ -24,6 +24,6 @@ LVS 当前应用主要采用 DR 和 NAT 模式，但这两种模式要求 RS 和
 
 为了解决上述问题， LVS 上添加了一种新的转发模式：FULLNAT。
 
-该模式和 NAT 模式的区别是：Packet IN 时，除了做 DNAT，还做 SNAT（用户 ip->内 网 ip），从而实现 LVS-RealServer 间可以跨 vlan 通讯，RS 只需要连接到内网。
+该模式和 NAT 模式的区别是：Packet IN 时，除了做 DNAT，还做 SNAT（用户 ip->内网 ip），从而实现 LVS-RealServer 间可以跨 vlan 通讯，RS 只需要连接到内网。
 
 FullNAT一个最大的问题是：RS无法获得用户IP，为了解决这个问题，又提出了TOA的概念，主要原理是：将cip放到了TCP Option里面带给后端RS，RS上通过toa内核模块hack了getname函数，给用户态返回TCP Option中的cid。

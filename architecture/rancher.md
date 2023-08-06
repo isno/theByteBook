@@ -1,4 +1,4 @@
-# 1.2.4 使用 Rancher 开源方案
+# 1.2.3 使用 Rancher 开源方案
 
 Rancher 是一家容器产品及解决方案服务商。Rancher 最初目标就是为了支持多种容器编排引擎而构建。随着 Kubernetes 的兴起， Rancher 2.x 也开始彻底转向了 Kubernetes。
 
