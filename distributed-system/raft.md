@@ -65,4 +65,4 @@ Raft 拥有不同的开发语言多种实现，如下表展示了部分 Raft 工
 
 如果是 Java 开发者，可以尝试使用 SOFAJRaft。 SOFAJRaft 是一个蚂蚁金服开源的高性能生产级类库，SOFAJRaft 除了提供单元测试之外，还可以使用 Jepsen 分布式一致性和线性化的安全性，以及模拟各种分布式场景。
 
-感兴趣的读者可以在 https://raft.github.io/ 获取更多信息
+感兴趣的读者可以在 https://raft.github.io 获取更多信息

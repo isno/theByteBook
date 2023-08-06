@@ -2,7 +2,7 @@
 
 LVS是Linux Virtual Server的简写，意即Linux虚拟服务器。之所以是虚拟服务器，是因为 LVS 自身是个负载均衡器(Director Server)，不直接处理请求，而是将请求转发至位于它后端真正的服务器 Real Server 上
 
-负载均衡(LB) 集群的架构和原理很简单，就是当用户的请求过来时，会直接分发到 Director Server 上，然后它把用户的请求根据设置好的调度算法，智能均衡地分发到后端真正服务器 (real server) 上。为了避免不同机器上用户请求得到的数据不一样，需要用到了共享存储，这样保证所有用户请求的数据是一样的。
+负载均衡(LB) 集群的架构和原理很简单，就是当用户的请求过来时，会直接分发到 Director Server 上，然后它把用户的请求根据设置好的调度算法，智能均衡地分发到后端真正服务器 (real server) 上。为了避免不同机器上用户请求得到的数据不一样，需要用到共享存储，这样保证所有用户请求的数据是一样的。
 
 
 LVS由两部分组成：ipvs和ipvsadm
@@ -14,8 +14,8 @@ LVS由两部分组成：ipvs和ipvsadm
 
 首先要解释的是 LVS 相关的几种 IP
 
-- VIP：virtual IP，LVS 服务器上接收外网数据包的网卡 IP 地址。
-- DIP：director IP，LVS 服务器上转发数据包到 realserver 的网卡 IP 地址。
+- VIP：virtual IP，LVS 服务器上接收外网数据包的网卡 IP 地址，是用于接收用户请求的IP。
+- DIP：director IP，LVS 服务器上转发数据包到 realserver 的网卡 IP 地址，是用于连接内网的IP。
 - RIP：realserver(常简称为 RS)上接收 Director 转发数据包的 IP，即提供服务的服务器 IP。
 - CIP：客户端的 IP
 
@@ -25,7 +25,7 @@ Server相关
 - DS：Director Server 指的是前端负载均衡器节点，又称 Dispatcher、Balancer，主要接收用户请求
 - RS：Real Server 后端真实的工作服务器
 
-
+工作流程：CIP---->(DS)VIP---->(DS)DIP----->(RS)RIP
 
 ## LVS的工作原理
 
