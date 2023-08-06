@@ -41,78 +41,61 @@ iptables 使用 table（表） 来组织规则，并将不同功能的规则分�
 
 
 
-我们扩充一下图1. 一个 IP 包经过 iptables 的处理流程如下
+假设服务器知道如何路由数据包，而且防火墙允许数据包传输，下面就是不同场景下包转发流程：
+
+- 收到的、目的是本机的包：PRETOUTING -> INPUT
+- 收到的、目的是其他主机的包：PRETOUTING -> FORWARD -> POSTROUTING
+- 本地产生的包：OUTPUT -> POSTROUTING
+
 
 <div  align="center">
 	<img src="../assets/iptables-chain.png" width = "450"  align=center />
 </div>
 
-实际上 iptables的规则就是挂在netfilter钩子上的函数，用来修改IP数据包的内容或者过滤数据包，iptables的表就是所有规则的逻辑集合。
+通过上图，我们可以看到对于一个收到目的是本机的包：首先依次经过 PRETOUTING chain 上面的 mangle、nat table，然后依次经过 INPUT chain 的 mangle、filter、nat table，然后才会到达本机某个 socket。
 
-一般情况下一条iptables的规则包含两个部分：`匹配条件`和`动作`。匹配条件比如协议类型、源ip、目的ip、源端口号等，匹配条件可以组合，匹配之后动作有如下几种：
+## 3. iptables 规则
 
-- `DROP`：直接将数据包丢弃
-- `REJECT` 给客户端返回 `connection refused` 或 `destination unreachable`报文。
-- `QUEUE` 将数据包放入用户空间队列，供用户空间程序使用
-- `RETURN` 跳出当前链，后续规则不再处理
-- `ACCEPT` 允许数据包通过
-- `JUMP` 跳转到用户自定义的其他链继续执行
+规则放置在特定 table 的特定 chain 里面。当 chain 被调用的时候，包会依次匹配 chain 里面的规则。每条规则都有一个匹配部分和一个动作部分。规则的匹配部分指定了一些条件，包必须满足这些条件才会和相应的将要执行的动作`target`进行关联。target 分为两种类型：
 
-理解iptables的链、表、规则的概念之后，我们来介绍一下iptables的命令用法。
+- 终止目标（terminating targets）：这种 target 会终止 chain 的匹配，将控制权 转移回 netfilter hook。根据返回值的不同，hook 或者将包丢弃，或者允许包进行下一 阶段的处理。
+- 非终止目标（non-terminating targets）：非终止目标执行动作，然后继续 chain 的执行。虽然每个 chain 最终都会回到一个终止目标，但是在这之前，可以执行任意多个非终止目标。
 
-## iptables 规则用法
+### 3.1  跳转到用户自定义 chain
 
-**iptables 规则用法**
+这里要介绍一种特殊的非终止目标：跳转目标（jump target），jump target 是跳转到其他 chain 继续处理的动作。iptables 也支持管理员创建他们自己的用于管理目的的 chain。不过用户定义的 chain 只能通过从另一个规则跳转（jump）到它，因为它们没有注册到 netfilter hook。
 
-iptables可以有效地对特定的网络数据包进行管理，但当需要配置大量的网络规则时，会出现管理和维护不够方便的情况。
+用户定义的 chain 可以看作是对调用它的 chain 的扩展。例如，用户定义的 chain 在结 束的时候，可以返回 netfilter hook，也可以继续跳转到其他自定义 chain。这种设计使框架具有强大的分支功能，使得管理员可以组织更大更复杂的网络规则。
 
-ipset是iptables的扩展，支持集合增量更新、动态修改、规则有效时间、通配符等功能，可以帮助用户更好的配置和管理iptables。
+<div  align="center">
+	<img src="../assets/custom-chain.png" width = "550"  align=center />
+	<p></p>
+</div>
 
-云服务商提供的安全组 `security group` 也能提供类似的功能，不过 `iptables` 在服务器内，而`security group`在服务器外。
-```
-配置网段规则
-$ ipset create net_blacklist hash:net
-$ ipset add net_blacklist 1.1.0.0/16
-$ ipset create net_whitelist hash:net
-$ ipset add net_whitelist 2.2.0.0/16
 
-配置 ip + port 规则
-$ ipset create ip_port_blacklist hash:ip,port
-$ ipset add ip_port_blacklist 1.1.1.1,100-200
-$ ipset add ip_port_blacklist 8.8.8.8,udp:88 
-$ ipset add ip_port_blacklist 88.88.88.88,80 
-$ ipset del ip_port_blacklist 1.1.1.1,100-200
 
-配置ip规则
-$ ipset create ip_blacklist hash:ip
-$ ipset add ip_blacklist 192.168.1.1
-$ ipset add ip_blacklist 192.168.1.2
+kubernetes 利用自定义链模块化地实现了数据包 DNAT。KUBE-SERVICE 作为整个反向代理的入口链，KUBE-SVC-XXX 链为具体某一服务的入口链，KUBE-SEP-XXX 链代表某一个具体的 Pod 地址和端口，即 Endpoint，
 
-配置port规则
-$ ipset create port_whitelist bitmap:port range 0-65535
-$ ipset add port_whitelist 80
-$ ipset add port_whitelist 8080
+KUBE-SERVICE 链会根据具体的服务 IP 跳转至具体的的 KUBE-SVC-XXX 链，然后 KUBE-SVC-XXX 链再根据一定的负载均衡算法跳转至 Endpoint 链。其结构如图所示。
 
-启用五条规则：网段黑名单，网段白名单，ip + port黑名单，ip黑名单，端口白名单
-$ iptables -I INPUT -m set --match-set net_blacklist src -j DROP 
-$ iptables -I INPUT -m set --match-set net_whitelist src -j ACCEPT 
-$ iptables -I INPUT -m set --match-set ip_port_blacklist src -j DROP 
-$ iptables -I INPUT -m set --match-set ip_blacklist src -j DROP 
-$ iptables -I INPUT -m set --match-set port_whitelist src -j ACCEPT
 
-删除iptables规则
-$ iptables -nL --line-number # 查看iptables rule number
-$ iptables -D <chain name> <rule number> # 根据chain name 和 iptables rule number删除规则
-$ iptables -flush INPUT # 删除INPUT chain的全部规则
+<div  align="center">
+	<img src="../assets/k8s-chain.png" width = "400"  align=center />
+	<p></p>
+</div>
 
-删除ipset规则
-ipset destroy net_blacklist
-ipset destroy net_whitelist
-ipset destroy ip_port_blacklist
-ipset destroy ip_blacklist
-ipset destroy port_whitelist
-```
-更多灵活用法请参考: `iptables --help` `man iptables` `ipset --help` `man ipset` 
+
+## 3. netfilter 与 kubernetes 网络
+
+<div  align="center">
+	<img src="../assets/netfilter-k8s.png" width = "600"  align=center />
+	<p>图: kubernetes 网络</p>
+</div>
+
+数据包从 Pod 网络 Vthe 接口发送到 cni0 虚拟网桥，进入主机协议栈之后，首先会经过 PREROUTING，调用相关的链做 DNAT，经过 DNAT 处理后，数据包的目的地址变成另外一个 Pod 地址，再继续转发至 eth0，发给正确的集群节点。
+
+
+
 
 ## iptables 更新延迟的问题
 
