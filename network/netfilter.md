@@ -41,10 +41,7 @@ iptables 使用 table（表） 来组织规则，并将不同功能的规则分�
 
 
 
-
-
-
-我们扩充一下图1. 一个IP包经过 iptables 的处理流程如下
+我们扩充一下图1. 一个 IP 包经过 iptables 的处理流程如下
 
 <div  align="center">
 	<img src="../assets/iptables-chain.png" width = "450"  align=center />

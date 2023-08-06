@@ -77,6 +77,7 @@ export default defineUserConfig({
                             '/network/netfilter.md',
                             '/network/conntrack.md',
                             '/network/XDP.md',
+                            '/network/netfilter-k8s.md',
                             '/network/kernel-bypass.md',
                             '/network/tcp.md',
                             '/network/congestion-control.md',
