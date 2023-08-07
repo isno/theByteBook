@@ -15,11 +15,11 @@ netfilter 框架在内核协议栈的不同位置实现了 5 个 hook 点，每�
 
 下面几个 hook 是内核协议栈中已经定义好的：
 
-- **NF_IP_PRE_ROUTING:** 接收到的包进入协议栈后立即触发此 hook，在进行任何路由判断 （将包发往哪里）之前
-- **NF_IP_LOCAL_IN:** 接收到的包经过路由判断，如果目的是本机，将触发此 hook
-- **NF_IP_FORWARD:** 接收到的包经过路由判断，如果目的是其他机器，将触发此 hook
-- **NF_IP_LOCAL_OUT:** 本机产生的准备发送的包，在进入协议栈后立即触发此 hook
-- **NF_IP_POST_ROUTING:** 本机产生的准备发送的包或者转发的包，在经过路由判断之后， 将触发此 hook
+- **NF_IP_PRE_ROUTING:** 接收到的包进入协议栈后立即触发此 hook，在进行任何路由判断 （将包发往哪里）之前。
+- **NF_IP_LOCAL_IN:** 接收到的包经过路由判断，如果目的是本机，将触发此 hook。
+- **NF_IP_FORWARD:** 接收到的包经过路由判断，如果目的是其他机器，将触发此 hook。
+- **NF_IP_LOCAL_OUT:** 本机产生的准备发送的包，在进入协议栈后立即触发此 hook。
+- **NF_IP_POST_ROUTING:** 本机产生的准备发送的包或者转发的包，在经过路由判断之后，将触发此 hook。
 
 <div  align="center">
 	<img src="../assets/netfilter.png" width = "550"  align=center />
@@ -102,6 +102,6 @@ KUBE-SERVICE 链会根据具体的服务 IP 跳转至具体的的 KUBE-SVC-XXX �
 
 假如在一个大规模 Kubernetes 集群中使用 iptables 实现 Kube-Proxy，当 service 数量较多时，哪怕更新一个 service 也会整体修改 iptables 规则表。全量提交的过程会 kernel lock 进行保护，因此会有很大的更新时延。
 
-当 service 数量较多时，可以尝试在 Kubernetes 集群中使用基于 ipset 的 ipvs 实现 Kube-Proxy， 采用增量更新的方式保证service提供更加稳定的服务。
+当 service 数量较多时，可以尝试在 Kubernetes 集群中使用基于 ipset 的 ipvs 实现 Kube-Proxy，采用增量更新的方式保证service提供更加稳定的服务。
 
 

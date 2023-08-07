@@ -9,7 +9,7 @@ tcpdump 是一款强大的网络分析工具，不受 netfilter 影响，它可�
 
 ## 1. 使用 tcpdump 进行抓包
 
-使用 tcpdump 命令进行抓包， -i 参数为指定 `en0` 网卡，host 参数指定 thebyte.com.cn 的包，-w 参数将抓到的包写到文件。
+使用 tcpdump 命令进行抓包，-i 参数为指定 `en0` 网卡，host 参数指定 thebyte.com.cn 的包，-w 参数将抓到的包写到文件。
 
 ```
 $ tcpdump -i en0 host thebyte.com.cn -w thebyte.com.cn.pcap
