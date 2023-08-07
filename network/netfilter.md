@@ -21,7 +21,6 @@ netfilter 框架在内核协议栈的不同位置实现了 5 个 hook 点，每�
 - **NF_IP_LOCAL_OUT:** 本机产生的准备发送的包，在进入协议栈后立即触发此 hook
 - **NF_IP_POST_ROUTING:** 本机产生的准备发送的包或者转发的包，在经过路由判断之后， 将触发此 hook
 
-
 <div  align="center">
 	<img src="../assets/netfilter.png" width = "550"  align=center />
 	<p>图 2-3 数据包经过内核 hook </p>

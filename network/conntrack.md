@@ -1,6 +1,6 @@
-# 2.2 连接跟踪
+# 2.2 连接跟踪 conntrack
 
-连接跟踪（connection tracking，conntrack，CT）顾名思义，就是跟踪（并记录）连接的状态。
+连接跟踪（connection tracking，conntrack，CT）对连接状态进行跟踪并记录。
 
 <div  align="center">
 	<img src="../assets/conntrack.png" width = "400"  align=center />
