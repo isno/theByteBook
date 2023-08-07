@@ -1,6 +1,6 @@
 # 2.1.3 快速数据路径 XDP
 
-XDP（eXpress Data Path）是 Linux kernel 中提供高性能、可编程的网络数据包处理框架，本质上是 Linux kernel 网络模块中的一个 BPF Hook，能够动态挂载 eBPF 程序逻辑，使得 Linux kernel 能够在数据报文到达 L2（网卡驱动层）时就对其进行针对性 kernel bypass 处理，而无需再`循规蹈矩`地进入到 TCP/IP 协议栈。
+XDP（eXpress Data Path）是 Linux 内核中提供高性能、可编程的网络数据包处理框架，本质上是 Linux kernel 网络模块中的一个 BPF Hook，能够动态挂载 eBPF 程序逻辑，使得 Linux kernel 能够在数据报文到达 L2（网卡驱动层）时就对其进行针对性 kernel bypass 处理，而无需再`循规蹈矩`地进入到内核网络协议栈。
 
 ## 1. XDP 数据处理
 下面展示了 XDP 程序执行的流程， 网卡驱动调用内核 XDP 模块提供的 API ，然后间接调用用户提供的XDP程序，也就是说 XDP 是在设备驱动程序的上下文中执行。
@@ -18,7 +18,7 @@ XDP（eXpress Data Path）是 Linux kernel 中提供高性能、可编程的网�
 
 ## 2. XDP 应用示例
 
-连接跟踪概念是独立于 Netfilter 的，Netfilter 只是 Linux 内核中的一种连接跟踪实现。换句话说，只要具备了 hook 能力，能拦截到进出主机的每个包，完全可以在此基础上自 己实现一套连接跟踪。
+连接跟踪概念是独立于 netfilter 。netfilter 只是 Linux kernel 中的一种连接跟踪实现。换句话说，只要具备了 hook 能力，能拦截到进出主机的每个包，完全可以在此基础上实现另外一套连接跟踪。
 
 <div  align="center">
 	<img src="../assets/cilium.png" width = "500"  align=center />
@@ -28,9 +28,9 @@ XDP（eXpress Data Path）是 Linux kernel 中提供高性能、可编程的网�
 
 基于 BPF hook 实现数据包的拦截功能（等价于 netfilter 里面的 hook 机制）
 在 BPF hook 的基础上，实现一套全新的 conntrack 和 NAT
-因此，即便卸载 Netfilter ，也不会影响 Cilium 对 Kubernetes ClusterIP、NodePort、ExternalIPs 和 LoadBalancer 等功能的支持。
+因此，即便卸载 netfilter ，也不会影响 Cilium 对 Kubernetes ClusterIP、NodePort、ExternalIPs 和 LoadBalancer 等功能的支持。
 
-由于这套连接跟踪机制是独立于 Netfilter 的，因此它的 conntrack 和 NAT 信息也没有存储在内核的（也就是 Netfilter 的）conntrack table 和 NAT table。所以常规的 conntrack/netstats/ss/lsof 等工具是看不到的，要使用 Cilium 的命令，例如：
+由于这套连接跟踪机制是独立于 netfilter ，因此它的 conntrack 和 NAT 信息也没有存储在内核的（也就是 netfilter 的）conntrack table 和 NAT table。所以常规的 conntrack/netstats/ss/lsof 等工具是看不到的，要使用 Cilium 的命令，例如：
 
 ```
 $ cilium bpf nat list
