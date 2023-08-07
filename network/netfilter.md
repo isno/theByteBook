@@ -1,4 +1,4 @@
-# 2.2.1 iptables 与 Netfilter
+# 2.1.1 iptables 与 Netfilter
 
 Linux 上最常用的防火墙工具是 iptables，可用于检测、修改转发、重定向以及丢弃 IPv4 数据包。同时，iptables 也是众多上层应用，例如 SLB、容器网络、kube-proxy 等实现基础。
 

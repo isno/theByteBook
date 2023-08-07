@@ -1,4 +1,4 @@
-# 2.2 连接跟踪 conntrack
+# 2.1.2 连接跟踪 conntrack
 
 连接跟踪（connection tracking，conntrack，CT）对连接状态进行跟踪并记录。
 
@@ -24,7 +24,7 @@
 
 对于每个通过conntrack的数据包，内核都为其生成一个conntrack条目用以跟踪此连接，对于后续通过的数据包，内核会判断若此数据包属于一个已有的连接，则更新所对应的conntrack条目的状态(比如更新为ESTABLISHED状态)，否则内核会为它新建一个conntrack条目。所有的conntrack条目都存放在一张表里，称为连接跟踪表
 
-连接跟踪表存放于系统内存中，可以用cat /proc/net/nf_conntrack查看当前跟踪的所有conntrack条目。conntrack 维护的所有信息都包含在这个条目中，通过它就可以知道某个连接处于什么状态。
+连接跟踪表存放于系统内存中，可以用 cat /proc/net/nf_conntrack 查看当前跟踪的所有 conntrack 条目。conntrack 维护的所有信息都包含在这个条目中，通过它就可以知道某个连接处于什么状态。
 
 如下示例 表示一条状态为 ESTABLISHED 的 TCP 连接。
 ```

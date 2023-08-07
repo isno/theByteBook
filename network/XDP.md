@@ -1,6 +1,7 @@
-# 2.3 快速数据路径 XDP
+# 2.1.3 快速数据路径 XDP
 
 XDP（eXpress Data Path）是 Linux 内核中提供高性能、可编程的网络数据包处理框架，本质上是 Linux内核网络模块中的一个 BPF Hook，能够动态挂载 eBPF 程序逻辑，使得 Linux 内核能够在数据报文到达 L2（网卡驱动层）时就对其进行针对性 kernel bypass 处理，而无需再 “循规蹈矩” 地进入到 TCP/IP 协议栈。
+
 ## 1. XDP 数据处理
 下面展示了 XDP 程序执行的流程， 网卡驱动调用内核 XDP 模块提供的 API ，然后间接调用用户提供的XDP程序，也就是说 XDP 是在设备驱动程序的上下文中执行。
 
@@ -23,11 +24,7 @@ XDP（eXpress Data Path）是 Linux 内核中提供高性能、可编程的网�
 	<img src="../assets/cilium.png" width = "500"  align=center />
 </div>
 
-
-云原生网络方案 Cilium 在 1.7.4+ 版本就实现了这样一套独立的连接跟踪和 NAT 机制 （完备功能需要 Kernel 4.19+）。其基本原理是：
-
-
-
+云原生网络方案 Cilium 在 1.7.4+ 版本就实现了这样一套独立的连接跟踪和 NAT 机制。其基本原理是：
 
 基于 BPF hook 实现数据包的拦截功能（等价于 netfilter 里面的 hook 机制）
 在 BPF hook 的基础上，实现一套全新的 conntrack 和 NAT

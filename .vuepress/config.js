@@ -71,20 +71,17 @@ export default defineUserConfig({
                 children: [
                     '/network/latency.md',
                      {
-                        text: '2.2 Linux 内核网络',
+                        text: '2.1 Linux 内核网络',
                         link: "/network/linux-kernel-networking.md",
                         children: [
                             '/network/netfilter.md',
                             '/network/conntrack.md',
                             '/network/XDP.md',
-                            '/network/tcp.md',
-                            '/network/congestion-control.md',
-                            '/network/bbr.md',
+                       
                         ]
                     },
-                   
                     {
-                        text: '2.3 网络虚拟化',
+                        text: '2.2 网络虚拟化',
                         link: "/content/chapter1/SDN.md",
                         children: [
                             '/content/chapter1/network-namespace.md',
@@ -95,7 +92,15 @@ export default defineUserConfig({
                             '/content/chapter1/vxlan.md'
                         ]
                     },
-                     {
+                    {
+                        text: '2.3 TCP 协议理解与应用',
+                        link: "/network/tcp.md",
+                        children: [
+                            '/network/congestion-control.md',
+                            '/network/bbr.md',
+                        ]
+                    },
+                    {
                         text: '2.4 互联网络',
                         link: "/content/chapter1/underlay.md",
                         children: [
