@@ -1,4 +1,4 @@
-# Network namespace
+# 2.2.1 Network namespace
 
 顾名思义，namespace 的作用是 Linux 内核用来隔离内核资源。而 network namespace 的作用就是用来隔离网络资源。
 

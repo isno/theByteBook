@@ -1,4 +1,4 @@
-# Veth Pair
+# 2.2.2 Veth Pair
 
 Veth（Virtual Ethernet devices）是 Linux 中一种用软件虚拟出来的模拟硬件网卡的设备，Veth 总是成对出现，所以一般也叫 Veth-Pair。
 

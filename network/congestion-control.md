@@ -41,7 +41,7 @@ Google 发布过一篇 BBR 的论文，文章内有个图片比较清晰的解�
 横轴表示 inflight 数据量，有三个关键的区间:
 
 - **(0, BDP)**: 这个区间内，客户端发送的数据并未占满瓶颈带宽。 称为： 应用受限（app limited）区。
-- **(BDP, BtlneckBuffSize):** 这个区间内，已经达到链路瓶颈容量，但还未超过瓶颈容量+缓冲区容量，此时应用能发送的数据量主要受带宽限制， 称为带宽受限（bandwidth limited）区。
+- **(BDP, BtlneckBuffSize):** 这个区间内，已经达到链路瓶颈容量，但还未超过瓶颈容量+缓冲区容量，此时应用能发送的数据量主要受带宽限制，称为带宽受限（bandwidth limited）区。
 - **(BDP+BtlneckBuffSize, infinity)** ：这个区间内，实际发送速率已经超过瓶颈容量+缓冲区容量 ，多出来的数据会被丢弃，缓冲区大小决定了丢包多少。称为缓冲区受限（buffer limited）区。
 
 

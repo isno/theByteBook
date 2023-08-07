@@ -62,7 +62,7 @@ iptables 使用 table（表） 来组织规则，并将不同功能的规则分�
 
 ### 3.1  跳转到用户自定义 chain
 
-这里要介绍一种特殊的非终止目标：跳转目标（jump target），jump target 是跳转到其他 chain 继续处理的动作。iptables 也支持管理员创建他们自己的用于管理目的的 chain。不过用户定义的 chain 只能通过从另一个规则跳转（jump）到它，因为它们没有注册到 netfilter hook。
+这里要介绍一种特殊的非终止目标：跳转目标（jump target），jump target 是跳转到其他 chain 继续处理的动作。iptables 也支持管理员创建他们自己的用于管理目的 chain。不过用户定义的 chain 只能通过从另一个规则跳转（jump）到它，因为它们没有注册到 netfilter hook。
 
 用户定义的 chain 可以看作是对调用它的 chain 的扩展。例如，用户定义的 chain 在结 束的时候，可以返回 netfilter hook，也可以继续跳转到其他自定义 chain。这种设计使框架具有强大的分支功能，使得管理员可以组织更大更复杂的网络规则。
 
@@ -71,18 +71,14 @@ iptables 使用 table（表） 来组织规则，并将不同功能的规则分�
 	<p></p>
 </div>
 
-
-
 kubernetes 利用自定义链模块化地实现了数据包 DNAT。KUBE-SERVICE 作为整个反向代理的入口链，KUBE-SVC-XXX 链为具体某一服务的入口链，KUBE-SEP-XXX 链代表某一个具体的 Pod 地址和端口，即 Endpoint，
 
-KUBE-SERVICE 链会根据具体的服务 IP 跳转至具体的的 KUBE-SVC-XXX 链，然后 KUBE-SVC-XXX 链再根据一定的负载均衡算法跳转至 Endpoint 链。其结构如图所示。
-
+KUBE-SERVICE 链会根据具体的服务 IP 跳转至具体的 KUBE-SVC-XXX 链，然后 KUBE-SVC-XXX 链再根据一定的负载均衡算法跳转至 Endpoint 链。其结构如图所示。
 
 <div  align="center">
 	<img src="../assets/k8s-chain.png" width = "400"  align=center />
 	<p></p>
 </div>
-
 
 ## 3. netfilter 与 kubernetes 网络
 
@@ -92,8 +88,6 @@ KUBE-SERVICE 链会根据具体的服务 IP 跳转至具体的的 KUBE-SVC-XXX �
 </div>
 
 数据包从 Pod 网络 Vthe 接口发送到 cni0 虚拟网桥，进入主机协议栈之后，首先会经过 PREROUTING，调用相关的链做 DNAT，经过 DNAT 处理后，数据包的目的地址变成另外一个 Pod 地址，再继续转发至 eth0，发给正确的集群节点。
-
-
 
 
 ## iptables 更新延迟的问题

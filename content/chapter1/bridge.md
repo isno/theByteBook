@@ -1,4 +1,4 @@
-# Linux Bridge
+# 2.2.3 Linux Bridge
 
 Veth实现了点对点的虚拟连接，可以通过Veth连接两个network namespace，如果我们需要将三个或者多个network namespace接入同一个二层网络时，就不能只使用veth了。
 
