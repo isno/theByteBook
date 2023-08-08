@@ -64,7 +64,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第二章：理解网络与应用实践',
+                text: '第二章：网络技术概论与应用实践',
                 collapsable: true,
                 link: '/network/summary.md',
                 sidebarDepth: 2,
