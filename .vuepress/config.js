@@ -77,7 +77,6 @@ export default defineUserConfig({
                             '/network/netfilter.md',
                             '/network/conntrack.md',
                             '/network/XDP.md',
-                       
                         ]
                     },
                     {

@@ -1,6 +1,6 @@
 # 2.1.3 快速数据路径 XDP
 
-XDP（eXpress Data Path，快速数据路径）是 Linux 内核中提供高性能、可编程的网络数据包处理框架，本质上是 Linux kernel 网络模块中的一个 BPF Hook，能够动态挂载 eBPF 程序逻辑，使得 Linux kernel 能够在数据报文到达 L2（网卡驱动层）时就对其进行针对性 kernel bypass 处理，而无需再`循规蹈矩`地进入到内核网络协议栈。
+XDP（eXpress Data Path，快速数据路径）是 Linux 内核中提供高性能、可编程的网络数据包处理框架，本质上是 Linux 内核网络模块中的一个 BPF Hook，能够动态挂载 eBPF 程序逻辑，使得 Linux 内核能够在数据报文到达 L2（网卡驱动层）时就对其进行针对性 kernel bypass（内核旁路）处理，而无需再`循规蹈矩`地进入到内核网络协议栈。
 
 ## 1. XDP 数据处理
 下面展示了 XDP 程序执行的流程，网卡驱动调用内核 XDP 模块提供的 API ，然后间接调用用户提供的XDP程序，也就是说 XDP 是在设备驱动程序的上下文中执行。
@@ -18,7 +18,7 @@ XDP（eXpress Data Path，快速数据路径）是 Linux 内核中提供高性�
 
 ## 2. XDP 应用示例
 
-连接跟踪概念是独立于 netfilter 。netfilter 只是 Linux kernel 中的一种连接跟踪实现。换句话说，只要具备了 hook 能力，能拦截到进出主机的每个包，完全可以在此基础上实现另外一套连接跟踪。
+我们 2.1.2 小节讲过连接跟踪机制，连接跟踪独立于 netfilter，netfilter 只是 Linux 内核中的一种连接跟踪实现。换句话说，只要具备了 hook 能力，能拦截到进出主机的每个数据包，就完全可以在此基础上实现另外一套连接跟踪。
 
 <div  align="center">
 	<img src="../assets/cilium.png" width = "500"  align=center />
@@ -26,11 +26,12 @@ XDP（eXpress Data Path，快速数据路径）是 Linux 内核中提供高性�
 
 云原生网络方案 Cilium 在 1.7.4+ 版本就实现了这样一套独立的连接跟踪和 NAT 机制。其基本原理是：
 
-基于 BPF hook 实现数据包的拦截功能（等价于 netfilter 里面的 hook 机制）
-在 BPF hook 的基础上，实现一套全新的 conntrack 和 NAT
+- 基于 BPF hook 实现数据包的拦截功能（等价于 netfilter 的 hook 机制）
+- 在 BPF hook 的基础上，实现一套全新的 conntrack 和 NAT
+
 因此，即便卸载 netfilter ，也不会影响 Cilium 对 Kubernetes ClusterIP、NodePort、ExternalIPs 和 LoadBalancer 等功能的支持。
 
-由于这套连接跟踪机制是独立于 netfilter ，因此它的 conntrack 和 NAT 信息也没有存储在内核的（也就是 netfilter 的）conntrack table 和 NAT table。所以常规的 conntrack/netstats/ss/lsof 等工具是看不到的，要使用 Cilium 的命令，例如：
+由于这套连接跟踪机制是独立于 netfilter ，因此它的 conntrack 和 NAT 信息也没有存储在内核中的 conntrack table 和 NAT table，所以常规的 conntrack/netstats/ss/lsof 等工具是看不到 Cilium 实现的 nat、conntrack 数据，需要另外使用 Cilium 的命令，例如：
 
 ```
 $ cilium bpf nat list

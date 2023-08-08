@@ -1,4 +1,4 @@
-# 2.1.1 netfilter
+# 2.1.1 数据包处理框架 netfilter
 
 netfilter 是 Linux 内核 2.4 版本中引入的数据包处理框架。netfilter 在内核协议栈的不同位置实现了 5 个 hook 点，其它内核模块(例如 iptables、IPVS 等)可以向这些 hook 点注册处理函数，这样当数据包经过这些 hook 点时，注册处理函数就被依次调用，从而实现对数据包过滤、修改、SNAT/DNAT等各类功能。
 
@@ -18,7 +18,7 @@ iptables 的底层实现是 netfilter，iptables 在用户空间管理数据包�
 	<p>图 2-2 iptables 与 netfilter 的关系</p>
 </div>
 
-## 3. netfilter hooks
+## 2. netfilter hooks
 
 netfilter 框架在内核协议栈的不同位置实现了 5 个 hook 点，每个进入网络系统的数据包经过协议栈时会触发注册在这里的 hook 处理函数 。数据包触发哪个 hook 取决于数据包的方向（ingress/egress）、目的地址、上一个 hook 点是被丢弃还是拒绝等等。
 
@@ -69,7 +69,6 @@ iptables -A INPUT -i eth0 -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j 
 
 在 INPUT chain 增加一条规则，对来自 eth0 接口，协议为 TCP，目标端口 80，连接状态(conntrack) 为 NEW,ESTABLISHED 的数据包执行 ACCEPT 动作。
 
-
 ## 5. 用户自定义 chain
 
 iptables 规则允许数据包 jump 跳转到其他 chain 继续处理的动作， 同时 iptables 也支持管理员创建自定义的 chain，不过自定义 chain 没有注册到 netfilter hook，所以用户定义 chain 只能通过从另一个规则跳转（jump）到它。
@@ -88,22 +87,10 @@ kubernetes 中 kube-proxy 组件 iptbales 模式就是利用自定义 chain 模�
 	<p></p>
 </div>
 
-## 3. netfilter 与 kubernetes 网络
+## 6. iptables 应用问题
 
-<div  align="center">
-	<img src="../assets/netfilter-k8s.png" width = "600"  align=center />
-	<p>图: kubernetes 网络</p>
-</div>
+在 Kubernetes 中 Kube-Proxy 组件有两种模式：iptables 和 IPVS。这两者都基于 netfilter，不过定位不同，iptables 是为防火墙而设计，而 IPVS 则专门用于高性能负载均衡。在应用中，iptables 的规则链是一种线性表，为 O(n) 算法，规则的遍历和更新成线性延时，当 service 数量较多，会有较大的性能问题，而 IPVS 为更高效的哈希表，其连接过程的复杂度为 O(1)，性能与规模无关。
 
-数据包从 Pod 网络 Veth 接口发送到 cni0 虚拟网桥，进入主机协议栈之后，首先会经过 PREROUTING，调用相关的链做 DNAT，经过 DNAT 处理后，数据包的目的地址变成另外一个 Pod 地址，再继续转发至 eth0，发给正确的集群节点。
-
-
-## iptables 更新延迟的问题
-
-由于每条规则长度不等、内部结构复杂，且同一规则集位于连续的内存空间，iptables 使用全量替换的方式来更新规则，这使得我们能够从用户空间以原子操作来添加/删除规则，但非增量式的规则更新会在规则数量级较大时带来严重的性能问题。
-
-假如在一个大规模 Kubernetes 集群中使用 iptables 实现 Kube-Proxy，当 service 数量较多时，哪怕更新一个 service 也会整体修改 iptables 规则表。全量提交的过程会 kernel lock 进行保护，因此会有很大的更新时延。
-
-当 service 数量较多时，可以尝试在 Kubernetes 集群中使用基于 ipset 的 ipvs 实现 Kube-Proxy，采用增量更新的方式保证service提供更加稳定的服务。
+所以，当 Kubernetes 规模较大时，应避免使用 iptables 模式。
 
 
