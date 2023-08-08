@@ -85,7 +85,7 @@ KUBE-SERVICE 链会根据具体的服务 IP 跳转至具体的 KUBE-SVC-XXX 链�
 	<p>图: kubernetes 网络</p>
 </div>
 
-数据包从 Pod 网络 Vthe 接口发送到 cni0 虚拟网桥，进入主机协议栈之后，首先会经过 PREROUTING，调用相关的链做 DNAT，经过 DNAT 处理后，数据包的目的地址变成另外一个 Pod 地址，再继续转发至 eth0，发给正确的集群节点。
+数据包从 Pod 网络 Veth 接口发送到 cni0 虚拟网桥，进入主机协议栈之后，首先会经过 PREROUTING，调用相关的链做 DNAT，经过 DNAT 处理后，数据包的目的地址变成另外一个 Pod 地址，再继续转发至 eth0，发给正确的集群节点。
 
 
 ## iptables 更新延迟的问题
