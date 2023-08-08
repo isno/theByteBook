@@ -29,9 +29,9 @@ XDP（eXpress Data Path，快速数据路径）是 Linux 内核中提供高性�
 - 基于 BPF hook 实现数据包的拦截功能（等价于 netfilter 的 hook 机制）
 - 在 BPF hook 的基础上，实现一套全新的 conntrack 和 NAT
 
-因此，即便卸载 netfilter ，也不会影响 Cilium 对 Kubernetes ClusterIP、NodePort、ExternalIPs 和 LoadBalancer 等功能的支持。
+因此使用 Cilium 方案的 Kubernetes 网络模型，即便在 Node 节点卸载 netfilter ，也不会影响 Cilium 对 Kubernetes ClusterIP、NodePort、ExternalIPs 和 LoadBalancer 等功能的支持。
 
-由于这套连接跟踪机制是独立于 netfilter ，因此它的 conntrack 和 NAT 信息也没有存储在内核中的 conntrack table 和 NAT table，所以常规的 conntrack/netstats/ss/lsof 等工具是看不到 Cilium 实现的 nat、conntrack 数据，需要另外使用 Cilium 的命令，例如：
+由于 Cilium 方案的连接跟踪机制独立于 netfilter ，因此它的 conntrack 和 NAT 信息也没有存储在内核中的 conntrack table 和 NAT table 中，常规的 conntrack/netstats/ss/lsof 等工具看不到 nat、conntrack 数据，所以需要另外使用 Cilium 的命令查询，例如：
 
 ```
 $ cilium bpf nat list
