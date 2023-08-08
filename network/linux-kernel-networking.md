@@ -18,7 +18,7 @@
 
 ## netfilter 的应用示例
 
-我们以 Kubernetes 的网络模型说明 netfilter 的作用。当一个 Pod 跨 Node 进行通信时，数据包从 Pod 网络 Veth 接口发送到 cni0 虚拟网桥，进入主机协议栈之后，首先会经过 PREROUTING hook，调用相关的链做 DNAT，经过 DNAT 处理后，数据包目的地址变成另外一个 Pod 地址，再继续转发至 eth0，发给正确的集群节点。
+我们以 Kubernetes 网络模型说明 netfilter 的作用，当一个 Pod 跨 Node 进行通信时，数据包从 Pod 网络 Veth 接口发送到 cni0 虚拟网桥，进入主机协议栈之后，首先会经过 PREROUTING hook，调用相关的链做 DNAT，经过 DNAT 处理后，数据包目的地址变成另外一个 Pod 地址，再继续转发至 eth0，发给正确的集群节点。
 
 <div  align="center">
 	<img src="../assets/netfilter-k8s.png" width = "550"  align=center />

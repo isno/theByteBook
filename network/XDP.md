@@ -7,9 +7,9 @@ XDP（eXpress Data Path，快速数据路径）是 Linux 内核中提供高性�
 
 在网卡接收到数据包之后，内核协议栈处理数据包之前，设备驱动程序会先调用 XDP 模块中的 BPF 程序，这段程序进行以下几种工作
 
-- XDP_DROP 丢弃数据包 
+- XDP_DROP 丢弃数据包。
 - XDP_REDIRECT 将数据包重定向其他网络接口（包括虚拟网卡），或者结合 AF_XDP 套接字重定向用户态程序。
-- XDP_PASS 放行数据包，数据包进入常规的内核网络协议栈
+- XDP_PASS 放行数据包，数据包进入常规的内核网络协议栈。
 - XDP_TX XDP 程序的一个高效选型，能够在收到数据包的网络接口上直接将数据包再发送出去。适合防火墙或负载均衡程序。
 
 <div  align="center">
@@ -18,7 +18,7 @@ XDP（eXpress Data Path，快速数据路径）是 Linux 内核中提供高性�
 
 ## 2. XDP 应用示例
 
-我们 2.1.2 小节讲过连接跟踪机制，连接跟踪独立于 netfilter，netfilter 只是 Linux 内核中的一种连接跟踪实现。换句话说，只要具备了 hook 能力，能拦截到进出主机的每个数据包，就完全可以在此基础上实现另外一套连接跟踪。
+本书在 2.1.2 小节讲过连接跟踪机制，连接跟踪独立于 netfilter，netfilter 只是 Linux 内核中的一种连接跟踪实现。换句话说，只要具备了 hook 能力，能拦截到进出主机的每个数据包，就完全可以在此基础上实现另外一套连接跟踪。
 
 <div  align="center">
 	<img src="../assets/cilium.png" width = "500"  align=center />
