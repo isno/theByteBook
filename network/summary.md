@@ -5,6 +5,6 @@
 在本章节笔者对这部分网络知识进行综合性概述，相信读者在学习此部分理论体系后，面对各类业务场景中错综复杂的问题，例如用户端弱网、高延迟、高BDP（Bandwidth-Delay Product，带宽时延积）、数据中心组网等问题时，能做到得其理知其法。
 
 <div  align="center">
-	<p>图1：本章内容导图 </p>
 	<img src="../assets/guide.png" width = "500"  align=center />
+	<p>图 2-1 本章内容导图 </p>
 </div>

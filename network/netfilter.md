@@ -1,21 +1,20 @@
 # 2.1.1 数据包处理框架 netfilter
 
-netfilter 是 Linux 内核 2.4 版本中引入的数据包处理框架。netfilter 在内核协议栈的不同位置实现了 5 个 hook 点，其它内核模块(例如 iptables、IPVS 等)可以向这些 hook 点注册处理函数，这样当数据包经过这些 hook 点时，注册处理函数就被依次调用，从而实现对数据包过滤、修改、SNAT/DNAT等各类功能。
+netfilter 是 Linux 内核 2.4 版本中引入的数据包处理框架。netfilter 在内核协议栈的不同位置实现了 5 个 hook 点，其它内核模块(例如 iptables、IPVS 等)可以向这些 hook 点注册处理函数，当数据包经过这些 hook 点时，注册处理函数被依次调用，进而实现对数据包过滤、修改、SNAT/DNAT 等各类功能。
 
-从图 2-1 中，可以看到 netfilter 框架是如何处理通过不同协议栈路径上的数据包。netfilter 既可以处理网络层（network Layer）IP 数据包，也可以在链路层（Link Layer）处理以太网帧。
+图 2-3 中，可以看到 netfilter 框架是如何处理通过不同协议栈路径上的数据包，netfilter 既可以处理网络层（network Layer）IP 数据包，也可以在链路层（Link Layer）处理以太网帧。
 
 我们看到在链路层（Link Layer）也有一些 iptables 的表和链标识，这意味着 iptables 配置的规则也可以对链路层数据生效，这种机制是保证同数据包不会因网桥和IP层差异导致通信失败。例如，搭建 kubernetes 环境要求设置 net.bridge.bridge-nf-call-iptables = 1，就是以上原因。
 
-
 ## 1. netfilter 与 iptables 
 
-Linux 上最常用的防火墙工具是 iptables，可用于检测、修改转发、重定向以及丢弃 IPv4 数据包。同时，iptables 也是众多上层应用，例如 SLB（Server Load Balancer，负载均衡）、容器网络、kube-proxy iptables模式等实现基础。
+Linux 上最常用的防火墙工具是 iptables，可用于检测、修改转发、重定向以及丢弃 IPv4 数据包。同时，iptables 也是众多上层应用，例如 SLB（Server Load Balancer，负载均衡）、容器网络、kube-proxy iptables模式等实现基础，所以在本节我们介绍 netfilter 与 iptables 的关系。
 
-iptables 的底层实现是 netfilter，iptables 在用户空间管理数据包处理规则，内核中 netfilter 根据 iptables 的配置对数据包进行处理。iptables 与 netFilter 的关系如图 2-2 所示。
+iptables 的底层实现是 netfilter，iptables 在用户空间管理数据包处理规则，内核中 netfilter 根据 iptables 的配置对数据包进行处理。iptables 与 netFilter 的关系如图 2-5 所示。
 
 <div  align="center">
 	<img src="../assets/iptables.png" width = "320"  align=center />
-	<p>图 2-2 iptables 与 netfilter 的关系</p>
+	<p>图 2-5 iptables 与 netfilter 的关系</p>
 </div>
 
 ## 2. netfilter hooks
@@ -32,7 +31,7 @@ netfilter 框架在内核协议栈的不同位置实现了 5 个 hook 点，每�
 
 <div  align="center">
 	<img src="../assets/netfilter.png" width = "550"  align=center />
-	<p>图 2-3 数据包经过内核 hook </p>
+	<p>图 2-6 数据包经过内核 hook </p>
 </div>
 
 ## 3. iptables 表和链
@@ -57,6 +56,7 @@ iptables 规则放置在特定 table 的特定 chain 中。当 chain 被调用�
 
 <div  align="center">
 	<img src="../assets/iptables-chain.png" width = "450"  align=center />
+	<p>图 2-7 netfilter hook 和 iptables 表 </p>
 </div>
 
 通过上图，对于一个目的是本机的数据包：首先依次经过 PRETOUTING chain 上面的 mangle、nat table，然后再依次经过 INPUT chain 的 mangle、filter、nat table，最后到达本机某个具体应用。
@@ -74,17 +74,17 @@ iptables -A INPUT -i eth0 -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j 
 iptables 规则允许数据包 jump 跳转到其他 chain 继续处理的动作， 同时 iptables 也支持管理员创建自定义的 chain，不过自定义 chain 没有注册到 netfilter hook，所以用户定义 chain 只能通过从另一个规则跳转（jump）到它。
 
 <div  align="center">
-	<img src="../assets/custom-chain.png" width = "550"  align=center />
-	<p></p>
+	<img src="../assets/custom-chain.png" width = "500"  align=center />
+	<p>图 2-8 iptables 自定义链</p>
 </div>
 
 用户定义 chain 可以看作是对调用它的 chain 的扩展，用户定义 chain 在结束的时候，可以返回 netfilter hook，也可以再继续跳转到其他自定义 chain，这种设计使框架具有强大的分支功能，使得管理员可以组织更大更复杂的网络规则。
 
-kubernetes 中 kube-proxy 组件 iptbales 模式就是利用自定义 chain 模块化地实现了 Service 机制。KUBE-SERVICE 作为整个反向代理的入口链，KUBE-SVC-XXX 链为具体某一服务的入口链，KUBE-SEP-XXX 链代表某一个具体的 Pod 地址和端口，即 Endpoint。KUBE-SERVICE 链会根据具体的服务 IP 跳转至具体的 KUBE-SVC-XXX 链，然后 KUBE-SVC-XXX 链再根据一定的负载均衡算法跳转至 Endpoint 链。其结构如图所示。
+kubernetes 中 kube-proxy 组件 iptbales 模式就是利用自定义 chain 模块化地实现了 Service 机制。KUBE-SERVICE 作为整个反向代理的入口链，KUBE-SVC-XXX 链为具体某一服务的入口链，KUBE-SEP-XXX 链代表某一个具体的 Pod 地址和端口，即 Endpoint。KUBE-SERVICE 链会根据具体的服务 IP 跳转至具体的 KUBE-SVC-XXX 链，然后 KUBE-SVC-XXX 链再根据一定的负载均衡算法跳转至 Endpoint 链。其结构如图 2-9 所示。
 
 <div  align="center">
-	<img src="../assets/k8s-chain.png" width = "400"  align=center />
-	<p></p>
+	<img src="../assets/k8s-chain.png" width = "450"  align=center />
+	<p>图 2-9 kubernetes 中 kube-porxy组件 iptables 模式自定义链</p>
 </div>
 
 ## 6. iptables 应用问题

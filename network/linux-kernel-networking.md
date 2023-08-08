@@ -4,7 +4,7 @@
 
 <div  align="center">
 	<img src="../assets/Netfilter-packet-flow.svg" width = "800"  align=center />
-	<p>图 2-1 Packet flow in Netfilter and General Networking</p>
+	<p>图 2-3 Packet flow in Netfilter and General Networking</p>
 </div>
 
 从图 2-1 可以看到 Linux 内核如何处理通过不同协议栈路径上的数据包。
@@ -18,11 +18,11 @@
 
 ## netfilter 的应用示例
 
-我们以 Kubernetes 网络模型说明 netfilter 的作用，当一个 Pod 跨 Node 进行通信时，数据包从 Pod 网络 Veth 接口发送到 cni0 虚拟网桥，进入主机协议栈之后，首先会经过 PREROUTING hook，调用相关的链做 DNAT，经过 DNAT 处理后，数据包目的地址变成另外一个 Pod 地址，再继续转发至 eth0，发给正确的集群节点。
+我们以 Kubernetes 网络模型说明 netfilter 的作用，如图 2-4 示例，当一个 Pod 跨 Node 进行通信时，数据包从 Pod 网络 Veth 接口发送到 cni0 虚拟网桥，进入主机协议栈之后，首先会经过 PREROUTING hook，调用相关的链做 DNAT，经过 DNAT 处理后，数据包目的地址变成另外一个 Pod 地址，再继续转发至 eth0，发给正确的集群节点。
 
 <div  align="center">
 	<img src="../assets/netfilter-k8s.png" width = "550"  align=center />
-	<p>图: kubernetes 网络模型</p>
+	<p>图 2-4 kubernetes 网络模型</p>
 </div>
 
 

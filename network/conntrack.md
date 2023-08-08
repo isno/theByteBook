@@ -4,9 +4,10 @@
 
 <div  align="center">
 	<img src="../assets/conntrack.png" width = "400"  align=center />
+	<p>图 2-10 conntrack 示例</p>
 </div>
 
-例如，上图是一台 IP 地址为 10.1.1.3 的 Linux 机器，我们能看到这台机器上有两条连接：
+例如，图 2-10 是一台 IP 地址为 10.1.1.3 的 Linux 机器，我们能看到这台机器上有两条连接：
 
 - 机器访问外部 HTTP 服务的连接（目的端口 80）
 - 机器访问外部 DNS 服务的连接（目的端口 53）
@@ -31,9 +32,13 @@
 ipv4     2 tcp      6 88 ESTABLISHED src=10.0.12.12 dst=10.0.12.14 sport=48318 dport=27017 src=10.0.12.14 dst=10.0.12.12 sport=27017 dport=48318 [ASSURED] mark=0 zone=0 use=2
 ```
 
-## 2. conntrack 应用实例 NAT
+## 2. conntrack 应用示例 
 
-连接跟踪是许多网络应用的基础，最重要的使用场景就是 NAT。NAT（Network Address Translation，网络地址转换）, 即对（数据包的）网络地址（IP + Port）进行转换。
+连接跟踪是许多网络应用的基础，常用的使用场景如 NAT、iptables 的状态匹配等。
+
+### 2.1 NAT
+
+NAT（Network Address Translation，网络地址转换）, 即对（数据包的）网络地址（IP + Port）进行转换。
 
 <div  align="center">
 	<img src="../assets/nat.png" width = "400"  align=center />
@@ -52,12 +57,11 @@ ipv4     2 tcp      6 88 ESTABLISHED src=10.0.12.12 dst=10.0.12.14 sport=48318 d
 	<img src="../assets/conntrack-nat.png" width = "450"  align=center />
 </div>
 
-## 3. conntrack 与 LVS DR 模式
+### 2.2 conntrack 与 LVS DR 模式
 
 在 LVS 机器上应用 iptables 时需要注意一个问题就是，LVS-DR(或LVS-Tun)模式下，不能在 director 上使用 iptables 状态匹配(NEW,ESTABLISHED,INVALID…)，LVS-DR模式下，client访问director，director转发流量到realserver，realserver直接回复client，不经过director，这种情况下，client与direcotr处于tcp半连接状态
 
 因此如果在director机器上启用conntrack，此时conntrack只能看到client–>director的数据包，因为响应包不经过direcotr，conntrack无法看到反方向上的数据包，就表示iptables中的ESTABLISHED状态永远无法匹配，从而可能发生DROP
-
 
 <div  align="center">
 	<img src="../assets/conntrack-lvs.png" width = "350"  align=center />

@@ -23,8 +23,10 @@ SSD 随机读 | 16,000 ns  ≈ 16 μs
 磁盘寻址 | 2,000,000 ns ≈ 2 ms
 从美国发送到欧洲的数据包 | 150,000,000 ns ≈ 150 ms
 
-> 秒(s)、毫秒(ms)、微秒 (μs)、纳秒(ns)之间关系为：
-> 1 s = $$10^{3}$$ms = $$10^{6}$$μs = $$10^{9}$$ns 
+<div  align="center">
+	<img src="../assets/time.png" width = "300"  align=center />
+	<p>图 2-2 秒(s)、毫秒(ms)、微秒 (μs)、纳秒(ns)之间关系 </p>
+</div>
 
 
 [^注1]: https://colin-scott.github.io/personal_website/research/interactive_latency.html
