@@ -1,15 +1,8 @@
-# 2.2.3 Linux Bridge
+# 2.2.3 虚拟网桥设备 Linux Bridge
 
-Veth实现了点对点的虚拟连接，可以通过Veth连接两个network namespace，如果我们需要将三个或者多个network namespace接入同一个二层网络时，就不能只使用veth了。
+我们使用 Veth 实现了两个 Network Namespace 之间的点对点通信，但如果是多个 Network Namespace 呢？在物理网络中，如果需要连接多个主机，我们会使用网桥（也可以理解为交换机）设备组成一个小型局域网。在 Linux 网络虚拟化系统中，也提供了网桥虚拟实现 Linux Bridge。
 
-在物理网络中，如果需要连接多个主机，我们会使用网桥，或者又称为交换机。Linux也提供了网桥的虚拟实现：Linux Bridge。
-
-Linux Bridge与其他网络设备的区别在于：普通的网络设备只有两端，从一端进来的数据会从另一端出去。
-
-比如，物理网卡接收的网络数据会转发给内核协议栈，内核协议栈收到的数据会转发给物理网卡，而 Linux Bridge 则有多个端口，数据可以从任何端口进入，哪个出口出去取决于目的地 Mac 地址，bridge就相当于软件模拟硬件中的交换机。
-
-
-Docker中支持bridge网络模式，就是Docker利用Bridge 再依靠 Veth-pair 连接到 docker0 网桥上与宿主机乃至外界的其他机器通信。
+Linux Bridge 与 物理交换机工作流程一致，运行 ARP 协议， 根据 MAC 地址转发等。我们在部署 Docker 或者 Kubernetes 时，宿主机内的 cni0、docker0，就是它们创建的虚拟 bridge 设备。
 
 
 <div  align="center">

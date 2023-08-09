@@ -2,14 +2,13 @@
 
 Veth（Virtual Ethernet）是 Linux 中一种用软件虚拟出来的模拟硬件网卡的设备，Veth 总是成对出现，所以有时候也叫 Veth pair。
 
-Veth 的作用很简单，就是连接不同的 Network Namespace，简单理解，Veth 就是一根带两个 Ethernet 网卡的`网线`，从一头发数据，自然可以从另一头收到数据。 如果 veth0 和 veth1 是一对 Veth 设备，veth0 发送的数据会由 veth1 收到。反之亦然。
+Veth 的作用很简单，就是连接不同的 Network Namespace，简单理解，Veth 就是一根带两个 Ethernet 网卡的`网线`，从一头发数据，从另一头收到数据。如果 veth0 和 veth1 是一对 Veth 设备，veth0 发送的数据会由 veth1 收到。反之亦然。
 
 因为 Veth 这个特性，它常常充当着一个桥梁，连接着宿主机内的虚拟网络，典型的例子像两个 Network Namespace 之间的连接、Bridge 和 OVS 之间的连接等，通过这种方式，从而构建出复杂的虚拟网络拓扑架构。
 
 <div  align="center">
 	<img src="../../assets/veth.png" width = "550"  align=center />
 </div>
-
 
 因为 Veth 的两头都直接连着网络协议栈，所以创建一个 Veth 对，主机上就会多两个网卡。我们在 Kubernetes 集群中的宿主机查看，总能看到一堆 veth 开头的网卡设备信息，这些就是为不同 Pod 之间通信而创建的虚拟网卡。
 
@@ -22,7 +21,7 @@ $ ip addr
        valid_lft forever preferred_lft forever
 ```
 
-## Veth 操作实践
+## 1. Veth 操作实践
 
 笔者根据 图 ，基于 Veth 实现两个 Network Namespace 之间点对点通信。
 
