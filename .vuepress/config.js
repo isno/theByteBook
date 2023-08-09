@@ -39,6 +39,7 @@ export default defineUserConfig({
         ],
         sidebar: [
             '/intro.md',
+            '/noun.md',
             {
                 text: '第一章：云技术概论',
                 link: "/architecture/summary.md",
