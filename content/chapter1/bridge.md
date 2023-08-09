@@ -6,16 +6,12 @@ Linux Bridge 与 物理交换机机制一致，能够接入任何二层的网络
 
 
 <div  align="center">
-    <img src="../assets/bridge.png" width = "500"  align=center />
+    <img src="../../assets/bridge.png" width = "500"  align=center />
 </div>
 
 ## 1. Linux Bridge 操作实践
 
 笔者在这里通过实践操作，创建多个 Network Namespace 并通过 Bridge 实现通信。该实践的网络拓扑如图 2-2 所示。
-
-<div  align="center">
-    <img src="../assets/network_namespace_typology.png" width = "500"  align=center />
-</div>
 
 创建连个 Network Namespace：
 
