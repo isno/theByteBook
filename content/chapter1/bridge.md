@@ -6,7 +6,7 @@ Linux Bridge 与 物理交换机机制一致，能够接入任何二层的网络
 
 
 <div  align="center">
-    <img src="../../assets/bridge.png" width = "500"  align=center />
+    <img src="../../assets/bridge.png" width = "300"  align=center />
 </div>
 
 ## 1. Linux Bridge 操作实践
