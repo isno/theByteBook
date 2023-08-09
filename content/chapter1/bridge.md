@@ -2,7 +2,7 @@
 
 我们使用 Veth 实现了两个 Network Namespace 之间的点对点通信，但如果是多个 Network Namespace 呢？在物理网络中，如果需要连接多个主机，我们会使用网桥（也可以理解为交换机）设备组成一个小型局域网。在 Linux 网络虚拟化系统中，也提供了网桥虚拟实现 Linux Bridge。
 
-Linux Bridge 与 物理交换机工作流程一致，运行 ARP 协议， 根据 MAC 地址转发等。我们在部署 Docker 或者 Kubernetes 时，宿主机内的 cni0、docker0，就是它们创建的虚拟 bridge 设备。
+Linux Bridge 与 物理交换机机制一致，能够接入任何二层的网络设备，无论是真实的物理设备（例如 eth0）亦或者虚拟设备（例如 Veth、Tap）。我们在部署 Docker 或者 Kubernetes 时，宿主机内的 cni0、docker0，就是它们创建的虚拟 bridge 设备。
 
 
 <div  align="center">
