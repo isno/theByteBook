@@ -89,8 +89,15 @@ kubernetes 中 kube-proxy 组件 iptbales 模式就是利用自定义 chain 模�
 
 ## 6. iptables 应用问题
 
-在 Kubernetes 中 Kube-Proxy 组件有两种模式：iptables 和 IPVS。这两者都基于 netfilter，不过定位不同，iptables 是为防火墙而设计，而 IPVS 则专门用于高性能负载均衡。在应用中，iptables 的规则链是一种线性表，为 O(n) 算法，规则的遍历和更新成线性延时，当 service 数量较多，会有较大的性能问题，而 IPVS 为更高效的哈希表，其连接过程的复杂度为 O(1)，性能与规模无关。
+在 Kubernetes 中 Kube-Proxy 组件有两种模式：iptables 和 IPVS。这两者都基于 netfilter，不过 iptables 定位是为防火墙而设计，而 IPVS 则专门用于高性能负载均衡。iptables 的规则链是一种线性表，时间复杂度为 O(n) ，规则的遍历和更新成线性延时，当集群内 Service 数量较多，则会有较大的性能问题，而 IPVS 的实现为更高效的哈希表，时间复杂度为 O(1)，性能与规模无关，如表 2-1 所示。
+
+表 2-1 不同模式、规模下增加规则的延迟
+
+|  |  | ||
+|:--|:--|:--|:--|
+| of Services | 1 | 5,000 | 20,000 |
+| of Rules | 8 |  40,000|  160,000|
+| iptables| 2 ms| 11 min | 5 hours |
+| ipvs  |  2 ms | 2ms | 2 ms |
 
 所以，当 Kubernetes 规模较大时，应避免使用 iptables 模式。
-
-
