@@ -93,24 +93,16 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '2.3 TCP 协议理解与应用',
-                        link: "/network/tcp.md",
-                        children: [
-                            '/network/congestion-control.md',
-                            '/network/bbr.md',
-                        ]
-                    },
-                    {
-                        text: '2.4 互联网络',
+                        text: '2.3 网络协议理解及应用',
                         link: "/content/chapter1/underlay.md",
                         children: [
                             '/content/chapter1/bgp.md',
                             '/content/chapter1/anycast.md',
-                            
-                        ]
+                            "/network/tcp.md",
+                            '/network/congestion-control.md'                        ]
                     },
                      {
-                        text: '2.5 网络关键指标及观测指南',
+                        text: '2.4 网络关键指标及观测指南',
                         link: "/network/observation.md",
                         children: [
                             '/network/mtr.md',
