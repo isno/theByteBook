@@ -28,6 +28,7 @@
 | KVM | Kernel-based Virtual Machine | 基于内核的虚拟机 |
 | AZ | Availability Zone | 可用区 |
 | SRE|  Site Reliability Engineering | 站点可靠性工程 |
+| 混沌工程 | Chaos Engineering | 故障演练及解决。研究大规模分布式系统瓶颈、缺陷，提升整体服务稳定的方法学|
 | DevOps|  Development + Operations | 开发运维 |
 | AIDevOps|  AI + Development + Operations | 智能开发运维 |
 | DevSecOps | Development + Security + Operations | 开发、安全和运维，应用安全 (AppSec) 领域术语 |
