@@ -1,16 +1,14 @@
 # 2.3.4 使用 BBR 提升数据传输效率
 
-TCP拥塞控制是传输层做的事情，对于常规的应用影响微乎其微，我们只要大致理解拥塞控制原理以及现流行的控制算法就可以。
+服务器的带宽是 1 Gbps，用户家里的入网带宽 500 Mbps，但是观看一个视频确速率只有 `1~2 Mbp/s`，这是怎么回事？在本节，我们先分析拥塞控制的原理、方法，再实践使用更好的拥塞控制算法提升数据传输效率。相信读者就能明白以上问题。
 
-现在Linux系统常规使用的拥塞控制算法一般是 cubic。版本更高一点的内核会有 bbr 和 bbr2的选择。
-
-Linux内核4.9或更高版本支持TCP BBR, 通过 `uname -r` 查看内核版本
-
-查询系统所支持的拥塞控制算法以及正在使用中的拥塞控制算法。
+现在 Linux 系统常规使用的拥塞控制算法一般是 cubic。版本更高内核 4.9+ 会有 bbr 选择。查询系统所支持的拥塞控制算法以及正在使用中的拥塞控制算法。
 
 ```
-sysctl net.ipv4.tcp_available_congestion_control
-sysctl net.ipv4.tcp_congestion_control
+$ sysctl net.ipv4.tcp_available_congestion_control
+net.ipv4.tcp_congestion_control = bbr cubic reno
+$ sysctl net.ipv4.tcp_congestion_control
+net.ipv4.tcp_congestion_control = cubic
 ```
 
 ## 理解拥塞控制
@@ -25,16 +23,16 @@ Google 发布过一篇 BBR 的论文，文章内有个图片比较清晰的解�
 
 我们根据这张图梳理TCP的传输链路，他有几个物理属性：
 
-- **RTprop** (round-trip propagation time). 两端之间最小时延，取决于物理距离。
-- **BtlBw**  （bottleneck bandwidth）瓶颈带宽. 把链路想象成物理管道，RTprop 就是管道的长度，BtlBw 则是管道最窄处的直径）。
+- **RTprop** (round-trip propagation time)，两端之间最小时延，取决于物理距离。
+- **BtlBw**（bottleneck bandwidth）瓶颈带宽，把链路想象成物理管道，RTprop 就是管道的长度，BtlBw 则是管道最窄处的直径）。
 - **BtlBufSize**  链路之间各个路由节点的缓存。
 - **BDP 带宽时延积** 整条物理链路（不含路由器缓存）所能储藏的比特数据之和 BDP = BtlBw * RTprop。
 
 除了上面的物理属性，TCP的传输效率还关注两个现实属性：
 
-- **T（时延）** 数据从发送端到接收端实际时延，也就是RTT，对应于图中的round-trip time
-- **R（带宽）** 数据的实际传输带宽，对应于图中的delivery rate
-- **D（数据量）** 已发送但还未被确认的数据量, 对应于inflight data
+- **T（时延）** 数据从发送端到接收端实际时延，也就是RTT，对应于图中 round-trip time。
+- **R（带宽）** 数据的实际传输带宽，对应图中的 delivery rate。
+- **D（数据量）** 已发送但还未被确认的数据量, 对应图 inflight data。
 
 ### 拥塞控制的分区
 
