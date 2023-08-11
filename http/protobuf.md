@@ -99,6 +99,6 @@ protocol buffers 在序列化方面，与 XML、JSON 相比，有诸多优点，
 
 总结 protocol buffers 的特点如下
 
-- Protocol Buffer 利用 varint 以及 Tag - Value (Tag - Length - Value)的 编码后，二进制数据非常紧凑。选用它作为网络数据传输，消耗的网络流量更少（varint 并没有对 float 类型进行压缩）。
+- Protocol Buffer 利用 varint 以及 Tag - Value (Tag - Length - Value)的 编码后，二进制数据非常紧凑。选用它作为网络数据传输，消耗的网络流量相对更少。
 - Protocol Buffer 一个核心价值在于提供了一套工具自动化生成 get/set 代码，简化了多语言交互的复杂度，使得编码解码工作有了生产力。
 - Protocol Buffer 具有向后兼容的特性，更新数据结构以后，老版本依旧可以兼容，这也是 Protocol Buffer 诞生之初被寄予解决的问题。

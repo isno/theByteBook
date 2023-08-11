@@ -2,7 +2,7 @@
 
 笔者所在的爱奇艺海外业务中，曾做过提升 CDN 网络吞吐量，改善视频播放流畅度的工作，主要的实践是尝试使用了 BBR 算法。在本节，笔者对拥塞控进行简单地讲解，以供读者参考。
 
-现在 Linux 系统常规使用的拥塞控制算法一般是 Cubic，内核 4.9+ 会更新的有 BBR 算法支持。拥塞控制算法比较复杂，按实现的分类上有基于延迟改变 (Reno)、丢包反馈(Cubic)、主动探测(BBR) 这几类实现代表。查询系统所支持的拥塞控制算法：
+现在 Linux 系统常规使用的拥塞控制算法一般是 Cubic，内核 4.9+ 增加了 BBR 算法支持。对拥塞控制算法分类有基于延迟改变 (Reno)、丢包反馈(Cubic)、主动探测(BBR) 这几类实现代表。查询系统所支持的拥塞控制算法：
 ```
 $ sysctl net.ipv4.tcp_available_congestion_control
 net.ipv4.tcp_congestion_control = bbr cubic reno
@@ -48,7 +48,7 @@ $ echo net.ipv4.tcp_congestion_control=bbr >> /etc/sysctl.conf && sysctl -p
 - **(BDP, BtlneckBuffSize):** 该区间已经达到链路瓶颈容量，但还未超过瓶颈容量+缓冲区容量，此时应用能发送的数据量受带宽限制，称为带宽受限（bandwidth limited）区。
 - **(BDP + BtlneckBuffSize, infinity)** ：该区间实际发送速率已经超过瓶颈容量+缓冲区容量 ，多出来的数据会被丢弃，缓冲区大小决定了丢包多少。称为缓冲区受限（buffer limited）区。
 
-通过分析图片的关系：**拥塞就是 inflight 数据量持续向右侧偏离 BDP 线的行为（在接近第三区间时，传输效率最高），而拥塞控制就是各种在平均程度上控制这种偏离程度 解决 Bufferbloat 方案或算法**，如果是基于丢包反馈的拥塞控制算法，就会在无法及时第三区间偏离而形成锯齿形波动。
+通过分析图片的关系：**拥塞就是 inflight 数据量持续向右侧偏离 BDP 线的行为（在接近第三区间时，传输效率最高），而拥塞控制就是各种在平均程度上控制这种偏离程度解决 Bufferbloat 方案或算法**，如果是基于丢包反馈的拥塞控制算法，就会在无法及时第三区间偏离而形成锯齿形波动。
 
 ## 3. 使用 BBR 实践
 
