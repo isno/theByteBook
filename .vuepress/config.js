@@ -46,9 +46,8 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
-                    '/architecture/migrate-cloud.md',
                     '/architecture/define-cloud-native.md',
-                 
+                    '/architecture/migrate-cloud.md',
                     {
                         text: '1.2 云技术方案选型',
                         link: '/architecture/selection.md',
