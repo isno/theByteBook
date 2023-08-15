@@ -14,7 +14,7 @@ CRI 是一套通过 Protocol Buffer 定义的 API，如下图：
 	<img src="../assets/cri-arc.png" width = "450"  align=center />
 </div>
 
-从上图可以看出：CRI 主要有 gRPC client、gRPC Server 和具体容器运行时实现三个组件。其中 Kubelet 作为 gRPC Client 调用 CRI 接口，CRI shim 作为 gRPC Server 来响应 CRI 请求，并负责将 CRI 请求内容转换为具体运行时管理A操作。
+从上图可以看出：CRI 主要有 gRPC client、gRPC Server 和具体容器运行时实现三个组件。其中 Kubelet 作为 gRPC Client 调用 CRI 接口，CRI shim 作为 gRPC Server 来响应 CRI 请求，并负责将 CRI 请求内容转换为具体的运行时管理操作。
 
 
 因此，任何容器运行时实现想要接入 Kubernetes，都需要实现一个基于 CRI 接口规范的 CRI shim（gRPC Server）。由于容器运行时与镜像的生命周期是彼此隔离的，因此 CRI 主要定义了两类接口：
