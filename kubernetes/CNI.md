@@ -21,7 +21,7 @@ Kubernetes 并不关心各个 CNI 如何具体实现上述基础规则，只要�
 
 ## CNI 设计思路
 
-CNI 设计的基本思路是：容器运行时创建网络命令空间 (network namepsace) 后，然后由 CNI 插件负责网络配置，最后启动容器内的应用。CNI 定义了两个插件， CNI plugin 主要用于负责配置网络，以及负责容器地址的 IPAM glugin。我们以容器的启动为例，介绍这两个插件的应用。
+CNI 设计的基本思路是：容器运行时创建网络命令空间 (network namepsace) 后，然后由 CNI 插件负责网络配置，最后启动容器内的应用。CNI 定义了两个插件， CNI plugin 主要用于负责配置网络，以及负责容器地址的 IPAM plugin。我们以容器的启动为例，介绍这两个插件的应用。
 
 - kubelet 在启动容器之前，先启用 Pause 容器。
 - Pause 容器启动之前创建网络 namespace。
