@@ -7,7 +7,7 @@
 综合所述，借助容器技术实现了让开发所需的灵活性、开放性和运维所关注的标准化、自动化达成相对平衡。
 
 <div  align="center">
-	<img src="../assets/Container-1.png" width = "100%"  align=center />
+	<img src="../assets/container-1.png" width = "100%"  align=center />
 	<p>图 传统部署、虚拟化部署和容器部署的比较</p>
 </div>
 
