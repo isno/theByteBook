@@ -9,6 +9,12 @@
 
 我会持续更新这个仓库的内容，如果想要关注可以点 `star` 。
 
+
+<div  align="center">
+	<img src="./assets/star-history-2023816.png" width = "460"  align=center />
+	<p><a href="https://github.com/isno/theByteBook">https://github.com/isno/theByteBook</a></p>
+</div>
+
 ## 关于写作进度
 
 本书预计2023年10月左右完稿，目前内容还存在用词不规范、逻辑不清晰、内容组织结构不完整的地方，我将在这期间逐渐完成修正。

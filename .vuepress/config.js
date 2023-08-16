@@ -49,7 +49,7 @@ export default defineUserConfig({
                     '/architecture/define-cloud-native.md',
                     '/architecture/migrate-cloud.md',
                     {
-                        text: '1.3 云技术方案选型',
+                        text: '1.3 云架构方案选型',
                         link: '/architecture/selection.md',
                         children: [
                            '/architecture/aliyun.md',
