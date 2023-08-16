@@ -49,7 +49,7 @@ export default defineUserConfig({
                     '/architecture/define-cloud-native.md',
                     '/architecture/migrate-cloud.md',
                     {
-                        text: '1.2 云技术方案选型',
+                        text: '1.3 云技术方案选型',
                         link: '/architecture/selection.md',
                         children: [
                            '/architecture/aliyun.md',
@@ -58,8 +58,6 @@ export default defineUserConfig({
                            '/architecture/cloud-contrast.md'
                         ]
                     },
-
-                    '/architecture/arc.md',
                     '/architecture/arc-guide.md'
                 ]
             },
