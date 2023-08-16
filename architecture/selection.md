@@ -11,3 +11,9 @@
 	<img src="../assets/IaaS.png" width = "380"  align=center />
 	<p>图 IaaS 架构</p>
 </div>
+
+
+<div  align="center">
+	<img src="../assets/PaaS.png" width = "480"  align=center />
+	<p>图 PaaS 架构</p>
+</div>
