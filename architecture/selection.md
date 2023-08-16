@@ -9,11 +9,19 @@
 
 <div  align="center">
 	<img src="../assets/IaaS.png" width = "380"  align=center />
-	<p>图 IaaS 架构</p>
+	<p>图 IaaS 技术架构</p>
 </div>
 
 
+
+在云原生时代，应用从原来有状态的单体架构逐渐演变成简单的无状态微服务架构，无状态、容器化，并且结合 DevOps 技术快速迭代，在这个阶段，对云计算提供的服务形式有了新的转变。更多的是考虑平台服务，资源的束缚的摆脱以及直接面向服务、运维和管理的程序化操作。
+
+伴随着容器技术和 Kubernetes 技术的兴起，云原生系列的技术体系
+为 PaaS（Platform as a Service，平台即服务）的实现提供了一种新的途径，通过将业务代码打包到容器镜像，再通过 Kubernetes 容器调度和运行管理对外提供服务，并且可以自动伸缩、滚动升级等。
+
+在新的平台服务方式下，PaaS 屏蔽了各 IaaS 差异，提供了混合云（公有云+公有云、公有云+私有云）之上的 PaaS 层服务 将过管理的对象从资源升级到服务，并自动化编译构建以及自动化服务运维等，更深层次的服务。
+
 <div  align="center">
 	<img src="../assets/PaaS.png" width = "480"  align=center />
-	<p>图 PaaS 架构</p>
+	<p>图 PaaS 技术架构</p>
 </div>
