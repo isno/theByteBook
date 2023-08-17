@@ -58,7 +58,16 @@ export default defineUserConfig({
                            '/architecture/cloud-contrast.md'
                         ]
                     },
-                    '/architecture/arc-guide.md'
+                    {
+                        text: '1.4 云原生架构落地指南',
+                        link: '/architecture/arc-guide.md',
+                        children: [
+                           '/architecture/container.md',
+                           '/architecture/ServiceMesh.md',
+                           '/architecture/Immutable.md'
+                        ]
+                    },
+                    
                 ]
             },
             {
