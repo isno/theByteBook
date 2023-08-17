@@ -67,7 +67,7 @@ export default defineUserConfig({
                            '/architecture/Immutable.md'
                         ]
                     },
-                    
+                    '/architecture/cloud-selection.md',
                 ]
             },
             {

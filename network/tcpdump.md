@@ -1,4 +1,4 @@
-# 2.5.2 使用 tcpdump 排查网络问题 
+# 2.4.2 使用 tcpdump 排查网络问题 
 
 如果服务端出现 Connection refused ，这大概率是 TCP 层面的连接错误。对于此类的错误，我们可以使用 tcpdump 进行分析 TCP 报文排查问题。
 
