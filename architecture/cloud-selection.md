@@ -9,7 +9,7 @@
 
 > 存储密集型: 即任务需要使用充足的硬盘空间和良好的硬盘性能，如搭建 ceph minio 等存储相关系统。
 
-> IO密集型：即系统的CPU性能需求相对硬盘、内存要小很多，大部分的状况是CPU在等IO (硬盘/内存) 的读写操作，CPU负载并不高。如postgres，redis对硬盘和内存进行大量读写。
+> IO密集型：即系统的CPU性能需求相对硬盘、内存要小很多，大部分的状况是CPU在等IO (硬盘/内存) 的读写操作，CPU负载并不高，如Hadoop离线计算型业务等典型场景需要部署大量顺序读写的应用，就需要关注IO和吞吐量。
 
 > 网络密集型：即任务需要占用大量的网络带宽。如直播、视频业务可能会占用较高的带宽。
 
@@ -27,13 +27,13 @@
 
 - 国内各大云厂商价格都相差不是特别大，除了在一些如重保、GA全球加速、高防等场景的价格高昂，大部分云产品的价格是有价格优势的。
 - 海外知名云厂商的服务价格普遍比国内云厂商贵很多，非出海、国际化等特殊业务不建议考虑。
-- 中小型云厂商如Linode、BandwagonHost、RackNerd等，它们主要提供Iaas服务，不支持Saas、Paas服务，价格最便宜，更适合个人或小团队业务，但需要承担如厂商跑路、迁移、多租户资源超卖、性能不足等风险。
+- 中小型云厂商如Linode、BandwagonHost、RackNerd等，它们主要提供Iaas服务，价格最便宜，更适合个人或小团队业务，但需要承担如厂商跑路、迁移、多租户资源超卖、性能不足等风险。
 
 ## 4.云服务支持
 
 * 支持体验：目前各大厂商都提供7*24小时的售后支持服务，但实际响应速度各有不同。普通工单的响应速度主要看运气和问题复杂程度，支持的专业程度会有不同，可能会出现甩锅的情况。
 
 * 支持价格：各大云厂商支持不同付费类型的支持服务，会根据你的付费情况提供不同程度的支持。如AlibabaCloud每个季度提供一定的免费工单额度，GCP的免费工单可支持账单相关的人工服务；最高级别的服务一般包括如即时通讯，技术专家支持等服务，下面是一些参考。
-- [AWS Support Plans](https://us-east-1.console.aws.amazon.com/support/plans/home)
+- [AWS Support Plans](https://console.aws.amazon.com/support/plans/home)
 - [GCP Support Plans](https://console.cloud.google.com/support/offerings)
 - [AlibabaCloud Support Plans](https://www.alibabacloud.com/support/after-sales)

@@ -1,4 +1,4 @@
-# OpenResty
+# 4.3.1 OpenResty
 
 OpenResty是一个基于 Nginx 与 LuaJIT 的高性能动态 Web 平台。
 
