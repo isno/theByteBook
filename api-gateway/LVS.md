@@ -1,4 +1,4 @@
-# LVS 理解
+# 4.1.1 LVS 理解
 
 LVS是Linux Virtual Server的简写，意即Linux虚拟服务器。之所以是虚拟服务器，是因为 LVS 自身是个负载均衡器(Director Server)，不直接处理请求，而是将请求转发至位于它后端真正的服务器 Real Server 上
 

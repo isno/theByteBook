@@ -1,4 +1,4 @@
-# LVS 工作模式
+# 4.1.2 LVS 工作模式
 
 默认的LVS版本有3种工作模式，DR、NAT、Tunnel。不过一些开源的LVS也提供了FullNAT模式，FullNAT并没有合进到内核主线版本，需要安装使用 https://github.com/alibaba/lvs。
 
