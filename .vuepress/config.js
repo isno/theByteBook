@@ -64,7 +64,8 @@ export default defineUserConfig({
                         children: [
                            '/architecture/container.md',
                            '/architecture/ServiceMesh.md',
-                           '/architecture/Immutable.md'
+                           '/architecture/Immutable.md',
+                           '/architecture/declarative-api.md'
                         ]
                     },
                     
