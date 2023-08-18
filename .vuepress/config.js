@@ -55,13 +55,17 @@ export default defineUserConfig({
                            '/architecture/aliyun.md',
                            '/architecture/tencent.md',
                            '/architecture/rancher.md',
-                           '/architecture/cloud-contrast.md'
+                           '/architecture/cloud-contrast.md',
+                           '/architecture/hybrid-cloud.md'
                         ]
                     },
                     {
                         text: '1.4 云原生架构落地指南',
                         link: '/architecture/arc-guide.md',
                         children: [
+                           '/architecture/devops.md',
+                           '/architecture/cicd.md',
+                           '/architecture/MicroService.md',
                            '/architecture/container.md',
                            '/architecture/ServiceMesh.md',
                            '/architecture/Immutable.md',
