@@ -52,11 +52,8 @@ export default defineUserConfig({
                         text: '1.3 云架构方案选型',
                         link: '/architecture/selection.md',
                         children: [
-                           '/architecture/aliyun.md',
-                           '/architecture/tencent.md',
-                           '/architecture/rancher.md',
-                           '/architecture/cloud-contrast.md',
-                           '/architecture/hybrid-cloud.md'
+                           '/architecture/hybrid-cloud.md',
+                           '/architecture/PaaS.md'
                         ]
                     },
                     {

@@ -1,13 +1,11 @@
 # 1.3 云架构方案选型
 
-从云技术的发展来看，
+当前任何 IT 相关的技术研发过程都会考虑和云的结合，尽量符合云原生架构。
+按照云计算的服务类型（交付方式）可分为 IaaS、PaaS、SaaS 以及最近流程的 FaaS。
 
 
 ## IaaS 层架构
 基于 KVM、Xen 等各类虚拟化软件，并整合网络、存储进行软件定义
-
-当前任何 IT 相关的技术研发过程都会考虑和云的结合，尽量符合云原生架构。
-按照云计算的服务类型（交付方式）可分为 IaaS、PaaS、SaaS 以及 最近流程的 FaaS。
 
 <div  align="center">
 	<img src="../assets/IaaS.png" width = "380"  align=center />
