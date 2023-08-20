@@ -6,7 +6,7 @@
 
 ## IaaS 层架构
 
-基于 KVM、Xen 等各类虚拟化软件，并整合网络、存储进行软件定义
+从技术角度讲，IaaS（Infrastructure as a Service，基础设施即服务）是基于 KVM、Xen 等各类虚拟化软件，并抽象隔离计算、网络、存储等资源一种基础设施服务交付形式。
 
 <div  align="center">
 	<img src="../assets/IaaS.png" width = "380"  align=center />
