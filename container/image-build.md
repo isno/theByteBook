@@ -85,6 +85,6 @@ docker run --rm --name nginx -p 80:80 alpine:nginx
 * 选用精简的基础镜像
 * 使用多阶段构建
 * COPY ADD和RUN命令都会增加镜像层数，所以构建镜像时可以通过合并RUN指令减少叠加层，同时RUN命令最后可以通过一些工具的清理命令如`yum clean` `conda clean --all`来清理缓存，以此来减小RUN层的大小
-* 在高层次的layer删除某文件，该文件依然曾在低层次layer依然可见
+* 在高层 layer 删除某文件时，该文件依然低层 layer 可见
 * 尽量使用COPY命令而非ADD命令，可以在RUN命令中使用wget curl等命令替代ADD
 * 改动不频繁的layer尽量往前在Dockerfile的前面
