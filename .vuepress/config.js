@@ -49,15 +49,7 @@ export default defineUserConfig({
                     '/architecture/define-cloud-native.md',
                     '/architecture/migrate-cloud.md',
                     {
-                        text: '1.3 云架构方案选型',
-                        link: '/architecture/selection.md',
-                        children: [
-                           '/architecture/hybrid-cloud.md',
-                           '/architecture/PaaS.md'
-                        ]
-                    },
-                    {
-                        text: '1.4 云原生架构落地指南',
+                        text: '1.3 云原生架构落地指南',
                         link: '/architecture/arc-guide.md',
                         children: [
                            '/architecture/devops.md',
@@ -69,7 +61,15 @@ export default defineUserConfig({
                            '/architecture/declarative-api.md'
                         ]
                     },
-                    
+                    {
+                        text: '1.4 云架构方案选型',
+                        link: '/architecture/selection.md',
+                        children: [
+                           '/architecture/hybrid-cloud.md',
+                           '/architecture/PaaS.md'
+                        ]
+                    },
+                    '/architecture/conclusion.md',    
                 ]
             },
             {
