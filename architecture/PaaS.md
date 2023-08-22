@@ -1,12 +1,24 @@
 # 1.3.2 企业 PaaS 层方案
 
-容器技术兴起之后，各大云厂商也推出了自己的商业化容器服务。
+在云原生时代，应用从原来有状态的单体架构逐渐演变成微单元化的无状态微服务架构。技术架构朝向服务无状态化、容器化，并且结合 DevOps 方向发展。
+
+伴随着容器技术和 Kubernetes 技术的兴起，云原生技术体系
+为 PaaS（Platform as a Service，平台即服务）的实现提供了一种新的方式。通过 Kubernetes 底层能力屏蔽了各 IaaS 差异，提供了混合云之上的 PaaS 层服务，新的 PaaS 层架构将对管理对象从资源升级到服务，结合自动化编译构建以及自动化运维等操作，继而构建出新型的直接面向服务、运维和管理的标准化系统平台。
+
+<div  align="center">
+	<img src="../assets/PaaS.png" width = "480"  align=center />
+	<p>图 PaaS 技术架构</p>
+</div>
+
+
+
+容器技术兴起之后，各大云厂商也推出了自己的商业化容器服务。Amazon Elastic Container Service (Amazon ECS)、Azure Kubernetes Service (AKS)、Alibaba Cloud Container Service for Kubernetes (ACK)。
 
 ## 2 使用 Rancher 等开源方案
 
 Rancher 是一家容器产品及解决方案服务商。Rancher 最初目标就是为了支持多种容器编排引擎而构建。随着 Kubernetes 的兴起， Rancher 2.x 也开始彻底转向了 Kubernetes。
 
-使用 Rancher 可以选择使用 RKE （Rancher Kubernetes Engine）创建Kubernetes 集群，也可以使用 TKE、ACK、AKS 等云厂商的 Kubernetes 服务。由于 Rancher 仅需要主机有CPU、内存、本地磁盘和网络资源，因此可以使用任何公有云或者本地主机资源。
+使用 Rancher 可以选择使用 RKE（Rancher Kubernetes Engine）创建Kubernetes 集群，也可以使用 TKE、ACK、AKS 等云厂商的 Kubernetes 服务。由于 Rancher 仅需要主机有CPU、内存、本地磁盘和网络资源，因此可以使用任何公有云或者本地主机资源。
 
 ### Rancher 的特点
 
