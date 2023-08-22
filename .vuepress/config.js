@@ -66,9 +66,10 @@ export default defineUserConfig({
                         link: '/architecture/selection.md',
                         children: [
                            '/architecture/hybrid-cloud.md',
-                           '/architecture/PaaS.md'
+                           
                         ]
                     },
+                    '/architecture/PaaS.md',
                     '/architecture/conclusion.md',    
                 ]
             },
