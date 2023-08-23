@@ -74,8 +74,9 @@ export default defineUserConfig({
                 children: [
                     '/network/latency.md',
                     '/network/layer.md',
+                    '/network/networking.md',
                      {
-                        text: '2.1 Linux 内核网络',
+                        text: '2.4 Linux 内核网络',
                         link: "/network/linux-kernel-networking.md",
                         children: [
                             '/network/netfilter.md',

@@ -10,6 +10,7 @@
 | VIP | Virtual IP address | 虚拟 IP 地址 |
 | SDN | Software Defined Networking | 软件定义网络 |
 | (S)LB |（Service ）Load Balancer| 负载均衡 |
+| NIC | Network interface card | 网卡 |
 | RTT | Round-Trip Time | 往返时延 |
 | NAT | Network Address Translation | 网络地址转换 |
 | TTFB | Time To First Byte | 首字节时间 |

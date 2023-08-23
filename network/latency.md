@@ -29,4 +29,4 @@ SSD 随机读 | 16,000 ns  ≈ 16 μs
 </div>
 
 
-[^注1]: https://colin-scott.github.io/personal_website/research/interactive_latency.html
+> 注1: https://colin-scott.github.io/personal_website/research/interactive_latency.html
