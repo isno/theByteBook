@@ -136,7 +136,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第三章：应用层原理与优化实践',
+                text: '第三章：应用层服务原理及优化实践',
                 link: "/http/summary.md",
                 collapsable: false,
                 sidebarDepth: 1,
