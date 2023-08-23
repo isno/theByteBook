@@ -1,4 +1,4 @@
-# 1.4.2 CI/CD 系统流程化
+# 1.3.2 CI/CD 系统流程化
 
 CI（Continuous Integration，持续集成）与 CD（Continuous Deployment，持续部署）两者整合体现的企业持续交付（Continuous Delivery）的能力。
 

@@ -52,13 +52,12 @@ export default defineUserConfig({
                         text: '1.3 云原生架构的定义和技术特点',
                         link: '/architecture/arc.md',
                         children: [
-                         
-                           '/architecture/cicd.md',
-                           '/architecture/MicroService.md',
-                           '/architecture/container.md',
-                           '/architecture/ServiceMesh.md',
-                           '/architecture/Immutable.md',
-                           '/architecture/declarative-api.md',
+                            '/architecture/MicroService.md',
+                            '/architecture/cicd.md',
+                            '/architecture/container.md',
+                            '/architecture/ServiceMesh.md',
+                            '/architecture/Immutable.md',
+                            '/architecture/declarative-api.md',
                         ]
                     },
                     '/architecture/arc-guide.md',
