@@ -10,7 +10,7 @@ CI（Continuous Integration，持续集成）与 CD（Continuous Deployment，�
 
 <div  align="center">
 	<img src="../assets/cicd-tools.png" width = "600"  align=center />
-	<p>图：CI/CD 典型工具链</p>
+	<p>图 1-4 CI/CD 典型工具链</p>
 </div>
 
 总结 CI/CD 的优点：

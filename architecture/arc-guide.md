@@ -17,7 +17,7 @@
 
 <div  align="center">
 	<img src="../assets/kubesphere.png" width = "500"  align=center />
-	<p>图 kubesphere dashboard 示例</p>
+	<p>图 1-7 kubesphere dashboard 示例</p>
 </div>
 
 
@@ -25,7 +25,6 @@
 ## 1.4.3 架构师要有`货`
 
 面对这庞杂的技术领域和技术工具，即便掌握了云原生核心技术 Docker 和 Kubernetes，在工程实践中还远远不够，总结来说，如果要推进云原生架构落地，需要聚焦在下面几个领域：
-
 
 - 容器和镜像：Docker、containerd、CRI-O、Nydus
 - 持续集成：Gitlab、Tekton
@@ -41,7 +40,7 @@
 
 <div  align="center">
 	<img src="../assets/tech.jpeg" width = "600"  align=center />
-	<p>图：云原生代表技术栈</p>
+	<p>图 1-8 云原生代表技术栈</p>
 </div>
 
 

@@ -8,7 +8,7 @@
 
 <div  align="center">
 	<img src="../assets/container-1.png" width = "100%"  align=center />
-	<p>图 传统部署、虚拟化部署和容器部署的比较</p>
+	<p>图 1-5 传统部署、虚拟化部署和容器部署的比较</p>
 </div>
 
 

@@ -14,6 +14,7 @@ CNCF 官网对云原生的定义如下：
 
 <div  align="center">
 	<img src="../assets/cloud-native.png" width = "280"  align=center />
+	<p>图 1-2 云原生概念图</p>
 </div>
 
 ## 1.1.1 什么是 CNCF？
@@ -24,6 +25,7 @@ CNCF 中有个 Landscape 全景图，用户可以了解实施云原生架构有�
 
 <div  align="center">
 	<img src="../assets/landscape.png" width = "100%"  align=center />
+	<p>图 1-3 CNCF 云原生项目 Landscape </p>
 </div>
 
 至 2023 年，CNCF graduated 级别项目中已包括 Kubernetes、Prometheus、Helm、argo、etcd、istio、Envoy、Harbor 等众多应用，孵化级别的项目更是数不胜数。

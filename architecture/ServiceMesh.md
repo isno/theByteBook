@@ -17,7 +17,7 @@
 
 <div  align="center">
 	<img src="../assets/servicemesh.jpeg" width = "600"  align=center />
-	<p>图 服务网格示意图</p>
+	<p>图 1-6 服务网格示意图</p>
 </div>
 
 ## 2. 服务网格的优点
