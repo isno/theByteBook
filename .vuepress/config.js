@@ -48,28 +48,22 @@ export default defineUserConfig({
                 children: [
                     '/architecture/define-cloud-native.md',
                     '/architecture/migrate-cloud.md',
-                    {
-                        text: '1.3 云原生架构落地指南',
-                        link: '/architecture/arc-guide.md',
+                     {
+                        text: '1.3 云原生架构的定义和技术特点',
+                        link: '/architecture/arc.md',
                         children: [
-                           '/architecture/devops.md',
+                         
                            '/architecture/cicd.md',
                            '/architecture/MicroService.md',
                            '/architecture/container.md',
                            '/architecture/ServiceMesh.md',
                            '/architecture/Immutable.md',
-                           '/architecture/declarative-api.md'
+                           '/architecture/declarative-api.md',
                         ]
                     },
-                    {
-                        text: '1.4 云架构方案选型',
-                        link: '/architecture/selection.md',
-                        children: [
-                           '/architecture/hybrid-cloud.md',
-                           
-                        ]
-                    },
+                    '/architecture/arc-guide.md',
                     '/architecture/PaaS.md',
+                    '/architecture/hybrid-cloud.md',
                     '/architecture/conclusion.md',    
                 ]
             },
