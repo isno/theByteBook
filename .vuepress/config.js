@@ -136,7 +136,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第三章：应用层服务原理及优化指南',
+                text: '第三章：应用层原理与优化实践',
                 link: "/http/summary.md",
                 collapsable: false,
                 sidebarDepth: 1,
@@ -177,7 +177,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第四章：负载均衡与网关架构实践',
+                text: '第四章：负载均衡原理与网关架构应用实践',
                 link: '/api-gateway/intro.md',
                 collapsable: false,
                 sidebarDepth: 1,
@@ -210,7 +210,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: "第五章：分布式系统理论与实践",
+                text: "第五章：分布式系统理论与应用实践",
                 link: '/distributed-system/distributed-transaction.md',
                 children: [
                     '/distributed-system/BASE.md',
@@ -250,7 +250,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第七章：容器技术概括及应用',
+                text: '第七章：容器技术原理概论与应用实践',
                 link: '/container/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
