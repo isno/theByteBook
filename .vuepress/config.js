@@ -112,7 +112,6 @@ export default defineUserConfig({
                         children: [
                             '/network/mtr.md',
                             '/network/tcpdump.md',
-                            '/network/ss.md'
                         ]
                     },
                     /*
