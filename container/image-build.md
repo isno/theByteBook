@@ -84,7 +84,7 @@ docker run --rm --name nginx -p 80:80 alpine:nginx
 构建镜像最有挑战性之一的就是使用镜像尽可能小，小的镜像不论在大规模集群部署、故障转移、存储成本方面都有巨大的优势，以下是一些镜像构建的小技巧：
 * 选用精简的基础镜像
 * 使用多阶段构建
-* COPY ADD和RUN命令都会增加镜像层数，所以构建镜像时可以通过合并RUN指令减少叠加层，同时RUN命令最后可以通过一些工具的清理命令如`yum clean` `conda clean --all`来清理缓存，以此来减小RUN层的大小
-* 在高层的layer删除某文件时，该文件在低层layer依然可见
+* COPY ADD和RUN命令都会增加镜像层数，所以构建镜像时可以通过合并RUN指令减少叠加层，同时RUN指令最后可以通过一些工具的清理命令如`yum clean` `conda clean --all`来清理缓存，以此来减小RUN层的大小
+* 在高层的layer删除某文件时，该文件在低层的layer依然可见
 * 尽量使用COPY命令而非ADD命令，可以在RUN命令中使用wget curl等命令替代ADD
 * 改动不频繁的layer尽量放在Dockerfile的前面
