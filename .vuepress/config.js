@@ -111,7 +111,7 @@ export default defineUserConfig({
                         link: "/network/observation.md",
                         children: [
                             '/network/mtr.md',
-                            '/network/tcpdump.md',
+                            '/network/tcpdump.md'
                         ]
                     },
                     /*
