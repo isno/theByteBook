@@ -4,10 +4,10 @@
 
 <div  align="center">
 	<img src="../assets/network-model.png" width = "600"  align=center />
-	<p>图 计算机网络体系结构</p>
+	<p>图 2-3 计算机网络体系结构</p>
 </div>
 
-下面按照从上到下的顺序，简单介绍 OSI 模型中各个分层的作用。
+下面按照从上到下的顺序，以 OSI 模型为例，简单介绍各个分层的作用。
 
 - 应用层（L7）：该层的协议包括 HTTP、HTTPS、SSH 等。
 - 表示层（L6）：把数据转换为能与接收者的系统格式兼容并适合传输的格式。
@@ -26,5 +26,5 @@
 
 <div  align="center">
 	<img src="../assets/network-stack.png" width = "650"  align=center />
-	<p>图 数据的封装和拆封示例</p>
+	<p>图 2-4  数据的封装和拆封示例</p>
 </div>
