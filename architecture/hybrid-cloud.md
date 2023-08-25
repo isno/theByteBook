@@ -3,7 +3,7 @@
 在本章 1.5 节介绍 PaaS 架构时，在图 1-9 中有一个融合层，这也是我们常谈的跨云多活（混合云架构）。
 
 <div  align="center">
-	<img src="../assets/az.png" width = "480"  align=center />
+	<img src="../assets/az.svg" width = "520"  align=center />
 	<p>图 1-13 多云下多活示例</p>
 </div>
 
@@ -14,7 +14,7 @@
 
 
 <div  align="center">
-	<img src="../assets/hybrid-cloud.png" width = "480"  align=center />
+	<img src="../assets/hybrid-cloud.svg" width = "480"  align=center />
 	<p>图 1-14 多云下的云平台架构</p>
 </div>
 

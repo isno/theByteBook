@@ -3,7 +3,7 @@
 伴随着容器技术和 Kubernetes 技术的兴起，云原生技术体系为 PaaS（Platform as a Service，平台即服务）的实现提供了一种新的方式，通过 Kubernetes 底层能力屏蔽了各 IaaS 差异，提供了混合云之上的 PaaS 层服务。新的 PaaS 层架构将对管理对象从资源升级到服务，结合自动化编译构建以及自动化运维等操作，继而构建出新型的直接面向服务、运维和管理的标准化系统平台。
 
 <div  align="center">
-	<img src="../assets/PaaS.png" width = "480"  align=center />
+	<img src="../assets/PaaS.svg" width = "550"  align=center />
 	<p>图 1-9 PaaS 技术架构</p>
 </div>
 
