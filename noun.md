@@ -23,9 +23,10 @@
 
 |术语|名词全称|释义|
 |:--|:--|:--|
-| IaaS | Infrastructure as a Service | 基础设置即服务 |
+| IaaS | Infrastructure as a Service | 基础设施即服务 |
 | PaaS | Platform  as a Service | 平台即服务 |
 | SaaS | Software as a Service | 软件即服务 |
+| IaC | Infrastructure as Code | 基础设施即代码 |
 | KVM | Kernel-based Virtual Machine | 基于内核的虚拟机 |
 | AZ | Availability Zone | 可用区 |
 | SRE|  Site Reliability Engineering | 站点可靠性工程 |
