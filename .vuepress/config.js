@@ -74,9 +74,18 @@ export default defineUserConfig({
                 children: [
                     '/network/latency.md',
                     '/network/layer.md',
-                    '/network/networking.md',
+                    {
+                        text: '2.3 Linux 系统收包流程以及内核参数优化指南',
+                        link: '/network/networking.md',
+                        children: [
+                            "/network/nic-performance.md",
+                            "/network/netstack-performance.md",
+                            "/network/congestion-control.md"
+                        ]
+                    },
+
                      {
-                        text: '2.4 Linux 内核网络',
+                        text: '2.4 Linux 内核网络框架分析',
                         link: "/network/linux-kernel-networking.md",
                         children: [
                             '/network/netfilter.md',
@@ -97,13 +106,12 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '2.3 网络协议理解及应用',
+                        text: '2.3 互联网络理解及应用实践',
                         link: "/content/internet.md",
                         children: [
                             '/content/chapter1/bgp.md',
                             '/content/chapter1/anycast.md',
                             "/network/tcp.md",
-                            '/network/congestion-control.md'
                         ]
                     },
                      {
