@@ -1,8 +1,11 @@
-# 2.3.1 网络优化配置实践
+# 2.3.2 Ring Buffer 的监控与配置
+
+
+
+如果网卡及其驱动支持 RSS(Receive Side Scaling)/多队列，可以调整相关的配置。
+
 
 ## 1. 调整 RX 队列数量
-
-如果网卡及其驱动支持 RSS/多队列，可以调整 RX queue（也叫 RX channel）的数量。
 
 ```
 $ sudo ethtool -l eth0

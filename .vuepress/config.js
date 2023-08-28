@@ -78,7 +78,8 @@ export default defineUserConfig({
                         text: '2.3 Linux 系统收包流程以及内核参数优化指南',
                         link: '/network/networking.md',
                         children: [
-                            "/network/nic-performance.md",
+                            "/network/RSS.md",
+                            "/network/RingBuffer.md",
                             "/network/netstack-performance.md",
                             "/network/congestion-control.md"
                         ]
