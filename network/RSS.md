@@ -1,5 +1,12 @@
 # 2.3.1 多 CPU 下的 Ring Buffer 处理
 
+
+- RRS（receive side steering）：利用网卡多队列特性，将每个核分别跟网卡的一个首发队列绑定，以达到网卡硬中断和软中断均衡的负载在各个 CPU 中，RPS 要求网卡必须要支持多队列特性。
+
+- RPS(receive packet steering)：RPS 可以把收到的数据包依据一定的 hash 规则给到不同的 CPU，以达到各个 CPU 负载均衡的目的，不过 RPS 只是把软中断做负载均衡，不改变硬中断，因此对网卡没有任何要求。
+
+- RFS（receive flow steering）：RFS 需要依赖于 RPS，他跟 RPS 不同的是不再简单的依据数据包来做 hash，而是根据 flow 的特性，即 application 在哪个核上来运行去做 hash，从而使得有更好的数据局部性。
+
 NIC 收到数据的时候产生的 IRQ 只可能被一个 CPU 处理，从而只有一个 CPU 会执行 softirq 和 softirq 的 handler，所以同一个时刻只有一个 CPU 在拉取 Ring Buffer。因为分配给 Ring Buffer 的空间是有限的，当收到的数据包速率大于单个 CPU 处理速度的时候 Ring Buffer 可能被占满，占满之后再来的新数据包会被自动丢弃。
 
 <div  align="center">
