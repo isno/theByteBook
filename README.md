@@ -22,7 +22,7 @@
 
 ## 如何阅读
 
-- **在线阅读**：本文档在线阅读地址为：[https://www.thebyte.com.cn](https://www.thebyte.com.cn)  （为防止缓存，阅读前请先强制刷新）
+- **在线阅读**：本文档在线阅读地址为：[https://www.thebyte.com.cn](https://www.thebyte.com.cn)  【为防止缓存，阅读前请先强制刷新】
 
 - **离线阅读**：
 
