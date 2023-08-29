@@ -29,7 +29,7 @@
 由于 TCP 双全工的特性，安全关闭一个连接需要四次挥手。但在一个复杂的网络环境下，会存在很多异常情况，异常断开连接会导致产生孤儿连(半连接)。 这种连接既不能发送数据，也无法接收数据，累计过多，会消耗大量系统资源。在高并发的场景下，孤儿连过多会引起资源不足，产生 Address already in use: connect 类似的错误。
 
 <div  align="center">
-	<img src="../assets/tcp-disconnect.png" width = "550"  align=center />
+	<img src="../assets/tcp_disconnect.svg" width = "550"  align=center />
 	<p>图 2-3 TCP 挥手概览</p>
 </div>
 

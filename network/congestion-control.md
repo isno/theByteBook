@@ -1,19 +1,21 @@
 # 2.3.3 使用 BBR 提升数据传输效率
 
-笔者所负责的业务中，曾做过提升 CDN 网络吞吐量，改善视频播放流畅度的工作，主要的实践是尝试使用了 BBR 算法。在本节，笔者对拥塞控进行简单地讲解，以供读者参考。
+笔者所负责的业务中，曾做过提升 CDN 网络吞吐量的工作，主要的实践是尝试使用了 BBR 算法。在本节，笔者对拥塞控进行简单地讲解，以供读者在后续实践中参考。
 
-现在 Linux 系统常规使用的拥塞控制算法一般是 Cubic，内核 4.9+ 增加了 BBR 算法支持。对拥塞控制算法分类有基于延迟改变 (Reno)、丢包反馈(Cubic)、主动探测(BBR) 这几类实现代表。查询系统所支持的拥塞控制算法：
+TCP 中对拥塞控制算法分类有基于延迟改变 (Reno)、丢包反馈(Cubic)、主动探测(BBR) 这几类实现代表。Linux 系统常规使用的拥塞控制算法一般是 Cubic，内核 4.9+ 增加了 BBR 算法支持，而 Reno 已不再使用。
+
+查询系统所支持的拥塞控制算法。
 ```
 $ sysctl net.ipv4.tcp_available_congestion_control
 net.ipv4.tcp_congestion_control = bbr cubic reno
 ```
-
 查询正在使用中的拥塞控制算法
+
 ```
 $ sysctl net.ipv4.tcp_congestion_control
 net.ipv4.tcp_congestion_control = cubic
 ```
-指定拥塞控制算法为 bbr。
+，指定拥塞控制算法为 bbr。
 
 ```
 $ echo net.ipv4.tcp_congestion_control=bbr >> /etc/sysctl.conf && sysctl -p
@@ -21,13 +23,15 @@ $ echo net.ipv4.tcp_congestion_control=bbr >> /etc/sysctl.conf && sysctl -p
 
 ## 1. 理解拥塞控制
 
-正常情况下，程序员完全不需关注拥塞控制，笔者仅仅是因为有点好奇心而撰写本节内容。拥塞控制是一个很复杂的过程，两端网络链路其一是动态变化的，其二中间网络设备 buffer 影响、ISP 中的 QoS 策略 等等都影响传输效率，整个过程非常难以理解（部分机制笔者至今也是云里雾里）。笔者在参阅文章时，注意到 Google 一篇 BBR 论文中一张拥塞控制逻辑配图，我们解读配图，对拥塞控制部分概念有个初步的了解。
+正常情况下，程序员完全不需关注拥塞控制，拥塞控制是一个很复杂的过程，两端网络链路其一是动态变化的，其二中间网络设备 buffer 影响、ISP 中的 QoS 策略 等等都影响传输效率，整个过程非常难以理解（部分机制笔者至今也是云里雾里）。
+
+笔者在配置 BBR，参阅文章时，注意到 Google 一篇 BBR 论文中一张拥塞控制逻辑配图，该配图对拥塞控制有一个完整的概括。
 
 <div  align="center">
 	<img src="../assets/transfer-control.png" width = "500"  align=center />
 </div>
 
-我们根据这张图梳理传输链路，他有几个物理属性：
+我们根据这张图梳理传输链路，有几个物理属性需要关注。
 
 - **RTprop** (round-trip propagation time)，两端之间最小时延，取决于物理距离。
 - **BtlBw**（bottleneck bandwidth）瓶颈带宽，把链路想象成物理管道，RTprop 就是管道的长度，BtlBw 则是管道最窄处的直径。
@@ -52,9 +56,11 @@ $ echo net.ipv4.tcp_congestion_control=bbr >> /etc/sysctl.conf && sysctl -p
 
 ## 3. 使用 BBR 实践
 
-bbr 算法对于大带宽长链路也就是高 BDP 网络环境中，例如跨海网络、尤其是在有轻微丢包的网络条件下，较传统的 cubic 算法，有一定的提升。简单来讲，BBR 通过应答包（ACK）中的 RTT 信息和已发送字节数来计算 真实传输速率（delivery rate），然后根据后者来调节客户端接下来的发送速率（sending rate），通过保持合理的 inflight 数据量来使传输带宽最大、传输延迟最低。
+BBR 算法对于大带宽长链路也就是高 BDP 网络环境中，例如跨海网络、尤其是在有轻微丢包的网络条件下，较传统的 cubic 算法，有一定的提升。
 
-笔者所负责的海外业务中，对 cubic 和 bbr 进行应用测试，大概提升了 25% 的传输效率。在网上，有其他人验证了使用不同拥塞控制算法、延迟和丢包参数所做的各种 TCP 吞吐量测试的全套测试，证明了在一定的丢包率（1.5%、3%）的情况下 BBR 的出色表现。结果如下图。
+简单来讲，BBR 通过应答包（ACK）中的 RTT 信息和已发送字节数来计算 真实传输速率（delivery rate），然后根据后者来调节客户端接下来的发送速率（sending rate），通过保持合理的 inflight 数据量来使传输带宽最大、传输延迟最低。
+
+笔者所进行的实践中，通过对 cubic 和 BBR 进行吞吐量测试，提升了 30% ~ 45% 的传输率。在网上，有其他人验证了使用不同拥塞控制算法、延迟和丢包参数所做的各种 TCP 吞吐量测试的全套测试，证明了在一定的丢包率（1.5%、3%）的情况下 BBR 的出色表现。结果如下图。
 
 <div  align="center">
 	<img src="../assets/bbr.png" width = "600"  align=center />
