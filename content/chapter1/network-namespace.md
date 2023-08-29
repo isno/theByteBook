@@ -1,4 +1,4 @@
-# 2.2.1 网络命名空间 Network Namespace
+# 2.5.1 网络命名空间 Network Namespace
 
 在 Linux 系统中，namespace 是一种用来隔离内核资源的机制，目前 Linux 提供了八类系统资源的隔离 Cgroup、IPC、Network、PID 等（Namespace 内容详见本书 第七章 2.1 小节）。而其中 Network Namespace 的作用用来隔离网络资源。
 

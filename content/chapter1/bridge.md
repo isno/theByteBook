@@ -1,4 +1,4 @@
-# 2.2.3 虚拟网桥设备 Linux Bridge
+# 2.5.3 虚拟网桥设备 Linux Bridge
 
 我们使用 Veth 实现了两个 Network Namespace 之间的点对点通信，但如果是多个 Network Namespace 呢？在物理网络中，如果需要连接多个主机，我们会使用网桥（也可以理解为交换机）设备组成一个小型局域网。在 Linux 网络虚拟化系统中，也提供了网桥虚拟实现 Linux Bridge。
 

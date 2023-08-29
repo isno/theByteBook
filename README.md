@@ -9,11 +9,7 @@
 
 我会持续更新这个仓库的内容，如果想要关注可以点 `star` 。
 
-
-<div  align="center">
-	<img src="./assets/star-history-2023816.png" width = "460"  align=center />
-	<p><a href="https://github.com/isno/theByteBook">https://github.com/isno/theByteBook</a></p>
-</div>
+<iframe style="width:100%;height:auto;min-width:600px;min-height:400px;" src="https://star-history.com/embed?secret=#isno/thebytebook&Date" frameBorder="0"></iframe>
 
 ## 关于写作进度
 
