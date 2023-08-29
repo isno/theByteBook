@@ -95,8 +95,8 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '2.2 网络虚拟化',
-                        link: "/content/chapter1/SDN.md",
+                        text: '2.5 网络虚拟化',
+                        link: "/network/net-virtual.md",
                         children: [
                             '/content/chapter1/network-namespace.md',
                             '/content/chapter1/veth-pair.md',
@@ -107,12 +107,12 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '2.3 互联网络理解及应用实践',
+                        text: '2.6 互联网络理解及应用实践',
                         link: "/content/internet.md",
                         children: [
                             '/content/chapter1/bgp.md',
                             '/content/chapter1/anycast.md',
-                            "/network/tcp.md",
+                            '/http/Edge-Acceleration.md',
                         ]
                     },
                      {
@@ -182,7 +182,7 @@ export default defineUserConfig({
                             '/http/ssl-performance.md',
                         ]
                     },
-                    '/http/Edge-Acceleration.md',
+                    
                     '/http/protobuf.md'
                 ]
             },
