@@ -5,6 +5,6 @@
 在本章，我们将内容主题聚焦在 Linux 系统网络、内核网络框架、网络虚拟化、网络互联技术等核心知识点，有了对网络技术的完整理解，就会发现一片新天地，也会对各类架构设计有新的理解。
 
 <div  align="center">
-	<img src="../assets/guide.png" width = "500"  align=center />
+	<img src="../assets/network-summary.png" width = "680"  align=center />
 	<p>图 2-1 本章内容导图 </p>
 </div>
