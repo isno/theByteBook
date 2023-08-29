@@ -79,7 +79,6 @@ export default defineUserConfig({
                         link: '/network/networking.md',
                         children: [
                             "/network/RSS.md",
-                            "/network/RingBuffer.md",
                             "/network/netstack-performance.md",
                             "/network/congestion-control.md"
                         ]
