@@ -115,7 +115,7 @@ export default defineUserConfig({
                         ]
                     },
                      {
-                        text: '2.4 网络关键指标及观测指南',
+                        text: '2.7 网络关键指标及观测指南',
                         link: "/network/observation.md",
                         children: [
                             '/network/mtr.md',
