@@ -13,7 +13,7 @@ XDP（eXpress Data Path，快速数据路径）是 Linux 内核中提供高性�
 - XDP_TX XDP 程序的一个高效选型，能够在收到数据包的网络接口上直接将数据包再发送出去。适合防火墙或负载均衡程序。
 
 <div  align="center">
-	<img src="../assets/XDP.png" width = "500"  align=center />
+	<img src="../assets/XDP.svg" width = "500"  align=center />
 </div>
 
 ## 2. XDP 应用示例
@@ -21,7 +21,7 @@ XDP（eXpress Data Path，快速数据路径）是 Linux 内核中提供高性�
 本书在 2.1.2 小节讲过连接跟踪机制，连接跟踪独立于 netfilter，netfilter 只是 Linux 内核中的一种连接跟踪实现。换句话说，只要具备了 hook 能力，能拦截到进出主机的每个数据包，就完全可以在此基础上实现另外一套连接跟踪。
 
 <div  align="center">
-	<img src="../assets/cilium.png" width = "500"  align=center />
+	<img src="../assets/cilium.svg" width = "500"  align=center />
 </div>
 
 云原生网络方案 Cilium 在 1.7.4+ 版本就实现了这样一套独立的连接跟踪和 NAT 机制。其基本原理是：
