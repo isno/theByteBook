@@ -33,7 +33,7 @@
 	<p>图 2-3 TCP 挥手概览</p>
 </div>
 
-挥手流程中的主要优化为 TIME_WAIE 的参数调整。TIME_WAIT 是 TCP 挥手的最后一个状态。当收到被动方发来的 FIN 报文后，主动方回复 ACK，表示确认对方的发送通道已经关闭，继而进入TIME_WAIT 状态 ，等待 2MSL 时间后关闭连接。
+挥手流程中的主要优化为 TIME_WAIT 的参数调整。TIME_WAIT 是 TCP 挥手的最后一个状态。当收到被动方发来的 FIN 报文后，主动方回复 ACK，表示确认对方的发送通道已经关闭，继而进入TIME_WAIT 状态 ，等待 2MSL 时间后关闭连接。
 
 如果发起连接一方的 TIME_WAIT 状态过多，会占满了所有端口资源，则会导致无法创建新连接。TIME_WAIT 的问题在反向代理中比较明显，例如 nginx 默认行为下会对于 client 传来的每一个 request 都向 upstream server 打开一个新连接，高 QPS 的反向代理将会快速积累 TIME_WAIT 状态的 socket，直到没有可用的本地端口，无法继续向 upstream 打开连接，此时服务将不可用。
 
