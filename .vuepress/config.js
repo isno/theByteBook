@@ -115,9 +115,10 @@ export default defineUserConfig({
                         ]
                     },
                      {
-                        text: '2.7 网络关键指标及观测指南',
+                        text: '2.7 网络性能观测指南',
                         link: "/network/observation.md",
                         children: [
+                            '/network/dperf.md',
                             '/network/mtr.md',
                             '/network/tcpdump.md'
                         ]
