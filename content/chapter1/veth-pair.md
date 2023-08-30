@@ -23,26 +23,26 @@ $ ip addr
 
 ## 1. veth 操作实践
 
-笔者根据 图 ，基于 Veth 实现两个 Network Namespace 之间点对点通信。
+笔者根据 图 ，基于 veth 实现两个 Network namespace 之间点对点通信。
 
-首先创建两个  Network Namespace。
+首先创建两个 Network namespace。
 
 ```
 $ ip netns add ns1
 $ ip netns add ns2
 ```
-创建一对虚拟以太网卡，名为 veth1 和 veth1-peer。
 
+创建一对虚拟以太网卡，名为 veth1 和 veth1-peer。
 ```
 $ ip link add veth1 type veth peer name veth1-peer
 ```
-把 Veth 分别放入 ns1 和 ns2 中。
+把 veth 分别放入 ns1 和 ns2 中。
 ```
 $ ip link set veth1 netns ns1
 $ ip link set veth1-peer netns ns2
 ```
 
-设置 Veth 设备为 UP 状态，并分配 IP 地址。
+设置 veth 设备为 UP 状态，并分配 IP 地址。
 
 ```
 $ ip netns exec ns1 ip addr add 172.16.0.1/24 dev veth1
@@ -52,7 +52,7 @@ $ ip netns exec ns2 ip addr add 172.16.0.2/24 dev veth1-peer
 $ ip netns exec ns2 ip link set dev veth1-peer up
 ```
 
-配置完基本信息之后，我们查看 Veth 设备是否正常，如下所示 Veth MAC地址、IP 地址 以及 设备状态均处于正常状态。
+配置完基本信息之后，我们查看 veth 设备是否正常，如下所示 veth MAC 地址、IP 地址 以及设备状态均处于正常状态。
 
 ```
 $ ip netns exec ns1 ip addr
@@ -62,7 +62,7 @@ $ ip netns exec ns1 ip addr
     ...
 ```
 
-现在我们测试这两个 netns 是否可以相互通信：
+现在我们测试这两个 namespace 是否可以相互通信：
 
 ```
 $ ip netns exec ns1 ping 172.16.0.2
@@ -72,4 +72,4 @@ PING 172.16.0.2 (172.16.0.2) 56(84) bytes of data.
 ...
 ```
 
-对上面的流程进行分析总结，由于 Veth 的特性，当向另一方通信时，不论是 ARP、还是或者 ICMP 等，当由 172.16.0.1（veth1）出口发出时，都将转发给 veth1 的另一端 veth1-peer，然后再交由上层协议栈完成点对点通信。
+对上面的流程进行分析总结，由于 veth 的特性，当向另一方通信时，不论是 ARP、还是或者 ICMP 等，当从 172.16.0.1（veth1）出口发出时，都将转发给 veth1 的另一端 veth1-peer，然后再交由上层协议栈完成点对点通信。
