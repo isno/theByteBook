@@ -101,7 +101,6 @@ export default defineUserConfig({
                             '/content/chapter1/veth-pair.md',
                             '/content/chapter1/bridge.md',
                             '/content/chapter1/tun.md',
-                            '/content/chapter1/route.md',
                             '/content/chapter1/vxlan.md'
                         ]
                     },
