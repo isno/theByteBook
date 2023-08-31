@@ -38,7 +38,6 @@ $ brctl addif bridge0 veth1-peer
 $ ip -n ns1 link veth1 up
 $ ip link set veth1-peer up
 
-
 $ ip link add veth2 type veth peer name veth2-peer
 
 $ ip link set veth2 netns ns2
