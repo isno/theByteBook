@@ -1,4 +1,7 @@
-# 2.6.3 使用动态加速改善服务质量
+# 2.6.3 使用动态加速服务改善链路
+
+
+ Dynamic Site Accelerator
 
 如果我们提供一个全球化的网络产品，用户来自于世界各地，这种情况下我们该如何改善网络质量呢？
 
@@ -21,8 +24,8 @@
 - 最佳线路通常会考量多个指标如丢包率、RTT、整体下载时间等等，这些指标用来判断线路是否最佳，这种路由探索一般是在数万台节点中动态进行，是一个很复杂的过程。
 
 <div  align="center">
-	<p>图：边缘节点动态加速</p>
-	<img src="../assets/edge.png" width = "550"  align=center />
+	<img src="../assets/direct-connect-wecome-v1.1.jpg" width = "550"  align=center />
+	<p>图：Akamai 直连服务</p>
 </div>
 
 除了路由优化外，根据前面 TCP 优化策略，CDN 服务商也会有连接、传输等相关的策略调整。在应用层，像TLS1.3、ECC证书、QUIC协议等等相关对服务有提升的技术都有应用。
