@@ -94,7 +94,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '2.5 网络虚拟化',
+                        text: '2.5 Linux 网络虚拟化',
                         link: "/network/net-virtual.md",
                         children: [
                             '/content/chapter1/network-namespace.md',

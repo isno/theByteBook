@@ -3,7 +3,7 @@
 高并发的系统架构中，任何细微调整，稍有不注意便会引起连锁反应，只有系统地了解整个网络栈，在处理疑难杂症或者系统优化工作中，才能做到手中有粮心中不慌。在本节，我们概览一个 Linux 系统收包的流程，以便了解高并发系统所面临的性能瓶颈问题以及相关的优化策略。
 
 <div  align="center">
-	<img src="../assets/networking.svg" width="550"  align=center />
+	<img src="../assets/networking.svg" width="650"  align=center />
 	<p>图 2-5 Linux ingress 架构概览 </p>
 </div>
 
