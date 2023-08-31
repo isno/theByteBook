@@ -23,26 +23,10 @@ Anycast 是一种网络寻址和路由方法，允许多个节点共享一个 IP
 
 ## 2. Anycast 技术应用场景说明
 
-Anycast 技术适用于大范围的 DNS 部署、CDN 数据缓存、数据中心等。以一个案例需求说明，某业务后端服务集群部署在新加坡机房，该公司希望全球客户能够流畅接入，但为控制成本又不想部署多套服务集群。这就需要全局漂移 IP 作为访问的唯一入口，并可做全局的就近分配、动态流量分配、故障剔除。
-
-**方案设计说明**
+Anycast 技术适用于大范围的 DNS 部署、CDN 数据缓存、数据中心等。大部分公有云都提供 Anycast EIP（ Anycast Elastic IP Address，任播弹性公网IP） 服务，以阿里云 EIP 实现多地同服务架构为例说明。
 
 <div  align="center">
-	<img src="../assets/anycast-app.png" width = "350"  align=center />
+	<img src="../../assets/eip.png" width = "500"  align=center />
 </div>
 
-方案重点如下：
-
-**使用 Anycast 的 EIP (Anycast Elastic IP Address)，该 IP 同时在多地 Anycast，从而实现多地同服。**
-
-后端集中维护一套集群，然后绑定 Anycast 类型的 EIP。该 EIP 借助云内网和 POP 点，多地发路由。
-客户不用感知网络路径的选择，无需手动指定 IP 的发布位置，流量就近完成了全局负载均衡，从最优的地域进出，后端得到简化。同时，客户的 IP 得到收敛，无需每个地域配一个 IP 和 DNS 规则, 管理上得到简化, 同时传输质量得到提高。
-
-**多个 IP 发布地，实现了多路径，增加了网络的容错能力**
-
-此外，就近接入后走的是专线传输，比公网传输更可靠、更低延时，提升了用户的播放体验。
-
-参考文档: 
-- [CloudFlare Anycast介绍](https://www.cloudflare.com/learning/cdn/glossary/anycast-network)
-- [阿里云Anycast实现多地同服](https://www.alibabacloud.com/help/zh/anycast-eip/latest/169284)
-- [AWS Anycast实现全球加速](https://aws.amazon.com/cn/blogs/china/use-aws-global-accelerator-global-visit)
+后端集中维护一套集群，然后绑定 Anycast 类型的 EIP，该 EIP 借助云内网和 POP 点，多地发路由。客户不用感知网络路径的选择，无需手动指定 IP 的发布位置，流量就近完成了全局负载均衡，从最优的地域进出，就近接入后数据走的是专线传输，比公网传输更可靠、更低延时，服务质量也得到提高。
