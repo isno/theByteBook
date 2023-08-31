@@ -105,7 +105,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '2.6 互联网络理解及应用实践',
+                        text: '2.6 网络互联理解及应用',
                         link: "/network/internet.md",
                         children: [
                             '/content/chapter1/bgp.md',
