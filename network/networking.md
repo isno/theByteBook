@@ -4,7 +4,7 @@
 
 <div  align="center">
 	<img src="../assets/networking.svg" width="550"  align=center />
-	<p>图 2-5 Linux 系统收包流程概览 </p>
+	<p>图 2-5 Linux ingress 架构概览 </p>
 </div>
 
 根据 图 2-5 示例，Linux 系统收包流程如下。
