@@ -25,11 +25,10 @@ VXLAN 完美地弥补了 VLAN 的上述不足，一方面通过 VXLAN 中的 24 
 从上图中可以发现，VXLAN 本质上是一种隧道封装技术，它使用 TCP/IP 协议栈的惯用手法“封装/解封装技术”，将 L2 的以太网帧（Ethernet frames）封装成 L4 的 UDP 数据报，然后在 L3 的网络中传输，效果就像 L2 的以太网帧在一个广播域中传输一样，不再受数据中心传输的限制。
 
 <div  align="center">
-	<img src="../../assets/vxlan.png" width = "500"  align=center />
+	<img src="../../assets/VXLAN.png" width = "500"  align=center />
 </div>
 
 VXLAN 对网络基础设施的要求很低，不需要专门的硬件提供特别支持，只要三层可达的网络就可以部署 VXLAN。VXLAN 每个边缘入口都部署了一个 VTEP（VXLAN Tunnel Endpoints，VXLAN 隧道端点），VTEP 是 VXLAN 隧道的起点和终点，VXLAN 对用户原始数据帧的封装和解封装均在 VTEP 上进行，VTEP 既可以是一台独立的网络设备，也可以是在服务器中的虚拟交换机。源服务器发出的原始数据帧，在 VTEP 上被封装成 VXLAN 格式的报文，并在 IP 网络中传递到另外一个 VTEP 上，并经过解封转还原出原始的数据帧，最后转发给目的服务器。
-
 
 目前 Linux 对 VXLAN 有较完善的支持，一台 Linux 主机经过简单配置之后，就可以把 Linux bridge 作为 VETP 设备使用。VXLAN 带来了很高的灵活性、扩展性和可管理性，不过 VXLAN 也带来了额外的复杂度和性能开销，每个 VXLAN 报文的解封和封包都属于额外操作，尤其是使用软件实现 VETP，额外的性能消耗不可忽视。
 
