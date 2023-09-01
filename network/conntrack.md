@@ -4,10 +4,10 @@
 
 <div  align="center">
 	<img src="../assets/conntrack.png" width = "400"  align=center />
-	<p>图 2-10 conntrack 示例</p>
+	<p>图 2-16 conntrack 示例</p>
 </div>
 
-例如，图 2-10 是一台 IP 地址为 10.1.1.3 的 Linux 机器，我们能看到这台机器上有两条连接：
+例如，图 2-16 是一台 IP 地址为 10.1.1.3 的 Linux 机器，我们能看到这台机器上有两条连接：
 
 - 机器访问外部 HTTP 服务的连接（目的端口 80）
 - 机器访问外部 DNS 服务的连接（目的端口 53）
@@ -42,6 +42,7 @@ NAT（Network Address Translation，网络地址转换）, 即对（数据包的
 
 <div  align="center">
 	<img src="../assets/nat.png" width = "400"  align=center />
+	<p>图 2-17</p>
 </div>
 
 例如上图中，机器自己的 IP 10.1.1.3 可以与外部正常通信，但 192.168 网段是私有 IP 段，外界无法访问，源 IP 地址是 192.168 的包，其应答包也无 法回来。因此，
@@ -55,6 +56,7 @@ NAT（Network Address Translation，网络地址转换）, 即对（数据包的
 
 <div  align="center">
 	<img src="../assets/conntrack-nat.png" width = "450"  align=center />
+	<p>图 2-18</p>
 </div>
 
 ### 2.2 conntrack 与 LVS DR 模式
@@ -65,4 +67,5 @@ NAT（Network Address Translation，网络地址转换）, 即对（数据包的
 
 <div  align="center">
 	<img src="../assets/conntrack-lvs.png" width = "350"  align=center />
+	<p>图 2-19 conntrack 示例</p>
 </div>

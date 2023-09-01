@@ -14,6 +14,7 @@ XDP（eXpress Data Path，快速数据路径）是 Linux 内核中提供高性�
 
 <div  align="center">
 	<img src="../assets/XDP.svg" width = "500"  align=center />
+	<p>图 2-20</p>
 </div>
 
 ## 2. XDP 应用示例
@@ -22,6 +23,7 @@ XDP（eXpress Data Path，快速数据路径）是 Linux 内核中提供高性�
 
 <div  align="center">
 	<img src="../assets/cilium.svg" width = "500"  align=center />
+	<p>图 2-21</p>
 </div>
 
 云原生网络方案 Cilium 在 1.7.4+ 版本就实现了这样一套独立的连接跟踪和 NAT 机制。其基本原理是：

@@ -14,7 +14,7 @@ iptables 的底层实现是 netfilter，iptables 在用户空间管理数据包�
 
 <div  align="center">
 	<img src="../assets/iptables.png" width = "320"  align=center />
-	<p>图 2-5 iptables 与 netfilter 的关系</p>
+	<p>图 2-11 iptables 与 netfilter 的关系</p>
 </div>
 
 ## 2. netfilter hooks
@@ -31,7 +31,7 @@ netfilter 框架在内核协议栈的不同位置实现了 5 个 hook 点，每�
 
 <div  align="center">
 	<img src="../assets/netfilter.png" width = "550"  align=center />
-	<p>图 2-6 数据包经过内核 hook </p>
+	<p>图 2-12 数据包经过内核 hook </p>
 </div>
 
 ## 3. iptables 表和链
@@ -56,7 +56,7 @@ iptables 规则放置在特定 table 的特定 chain 中。当 chain 被调用�
 
 <div  align="center">
 	<img src="../assets/iptables-chain.png" width = "450"  align=center />
-	<p>图 2-7 netfilter hook 和 iptables 表 </p>
+	<p>图 2-13 netfilter hook 和 iptables 表 </p>
 </div>
 
 通过上图，对于一个目的是本机的数据包：首先依次经过 PRETOUTING chain 上面的 mangle、nat table，然后再依次经过 INPUT chain 的 mangle、filter、nat table，最后到达本机某个具体应用。
@@ -75,7 +75,7 @@ iptables 规则允许数据包 jump 跳转到其他 chain 继续处理的动作�
 
 <div  align="center">
 	<img src="../assets/custom-chain.png" width = "500"  align=center />
-	<p>图 2-8 iptables 自定义链</p>
+	<p>图 2-14 iptables 自定义链</p>
 </div>
 
 用户定义 chain 可以看作是对调用它的 chain 的扩展，用户定义 chain 在结束的时候，可以返回 netfilter hook，也可以再继续跳转到其他自定义 chain，这种设计使框架具有强大的分支功能，使得管理员可以组织更大更复杂的网络规则。
@@ -84,14 +84,14 @@ kubernetes 中 kube-proxy 组件 iptbales 模式就是利用自定义 chain 模�
 
 <div  align="center">
 	<img src="../assets/k8s-chain.png" width = "450"  align=center />
-	<p>图 2-9 kubernetes 中 kube-porxy组件 iptables 模式自定义链</p>
+	<p>图 2-15 kubernetes 中 kube-porxy组件 iptables 模式自定义链</p>
 </div>
 
 ## 6. iptables 应用问题
 
 在 Kubernetes 中 Kube-Proxy 组件有两种模式：iptables 和 IPVS。这两者都基于 netfilter，不过 iptables 定位是为防火墙而设计，而 IPVS 则专门用于高性能负载均衡。iptables 的规则链是一种线性表，时间复杂度为 O(n) ，规则的遍历和更新成线性延时，当集群内 Service 数量较多，则会有较大的性能问题，而 IPVS 的实现为更高效的哈希表，时间复杂度为 O(1)，性能与规模无关，如表 2-1 所示。
 
-表 2-1 不同模式、规模下增加规则的延迟
+表 2-3 不同模式、规模下增加规则的延迟
 
 |  |  | ||
 |:--|:--|:--|:--|

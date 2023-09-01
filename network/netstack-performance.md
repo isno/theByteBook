@@ -4,7 +4,7 @@
 
 <div  align="center">
 	<img src="../assets/TCP.svg" width = "550"  align=center />
-	<p>图 2-3 TCP 握手概览</p>
+	<p>图 2-6 TCP 握手概览</p>
 </div>
 
 ## 1. TCP 握手流程参数优化
@@ -30,7 +30,7 @@
 
 <div  align="center">
 	<img src="../assets/tcp_disconnect.svg" width = "550"  align=center />
-	<p>图 2-3 TCP 挥手概览</p>
+	<p>图 2-7 TCP 挥手概览</p>
 </div>
 
 挥手流程中的主要优化为 TIME_WAIT 的参数调整。TIME_WAIT 是 TCP 挥手的最后一个状态。当收到被动方发来的 FIN 报文后，主动方回复 ACK，表示确认对方的发送通道已经关闭，继而进入TIME_WAIT 状态 ，等待 2MSL 时间后关闭连接。

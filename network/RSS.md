@@ -1,4 +1,4 @@
-# 2.3.1 RX/TX Ring 优化指南
+# 2.3.1 RX/TX 优化指南
 
 从 图 2-5 得知，处理一个数据包会有各类的中断、softirq 等处理，因为分配给 Ring Buffer 的空间是有限的，当收到的数据包速率大于单个 CPU 处理速度的时，Ring Buffer 可能被占满并导致新数据包被自动丢弃。一个 CPU 去处理 Ring Buffer 数据会很低效，这个时候就产生 RSS、RPS 等多核并发机制来提升内核网络包的处理能力。
 
@@ -19,7 +19,7 @@ TX packets 515280693  bytes 140609362555 (130.9 GiB)
 TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 ```
 
-以上查询结果中，RX dropped 表示数据包已经进入了 Ring Buffer，但是由于内存不够等系统原因，导致在拷贝到内存的过程中被丢弃，RX overruns 为 Ring Buffer 传输的 IO 大于 kernel 能够处理的 IO 导致，overruns 的错误意味着 CPU 无法即使的处理中断是造成 Ring Buffer 溢出。
+以上查询结果中，RX dropped 表示数据包已经进入了 Ring Buffer，但是由于内存不够等系统原因，导致在拷贝到内存的过程中被丢弃，RX overruns 错误为 Ring Buffer 传输的 IO 大于 kernel 能够处理的 IO 导致，为 CPU 无法及时处理中断而造成 Ring Buffer 溢出。
 
 
 ## 2. RSS 下的多队列调整

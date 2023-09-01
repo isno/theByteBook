@@ -29,6 +29,7 @@ $ echo net.ipv4.tcp_congestion_control=bbr >> /etc/sysctl.conf && sysctl -p
 
 <div  align="center">
 	<img src="../assets/transfer-control.png" width = "500"  align=center />
+	<p>图 2-8 拥塞控制因素概览</p>
 </div>
 
 我们根据这张图梳理传输链路，有几个物理属性需要关注。
@@ -62,8 +63,9 @@ BBR 算法对于大带宽长链路也就是高 BDP 网络环境中，例如跨�
 
 笔者所进行的实践中，通过对 cubic 和 BBR 进行吞吐量测试，提升了 30% ~ 45% 的传输率。在网上，有其他人验证了使用不同拥塞控制算法、延迟和丢包参数所做的各种 TCP 吞吐量测试的全套测试，证明了在一定的丢包率（1.5%、3%）的情况下 BBR 的出色表现。结果如下图。
 
+表 2-2 拥塞控制算法效果对比实践。
+
 <div  align="center">
 	<img src="../assets/bbr.png" width = "600"  align=center />
-	<p>网络吞吐量 – 各种拥塞控制算法的测试结果 </p>
 </div>
 
