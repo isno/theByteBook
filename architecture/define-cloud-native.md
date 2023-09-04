@@ -17,11 +17,9 @@ CNCF 官网对云原生的定义如下：
 	<p>图 1-2 云原生概念图</p>
 </div>
 
-## 1.1.1 什么是 CNCF？
+笔者在上面提到了一个组织 CNCF，CNCF (Cloud Native Computing Foundation) 是 Google 与 Linux 基金会及众多行业合作伙伴一起建立了一个云原生计算基金会，致力于云原生技术的普及和可持续发展。
 
-CNCF (Cloud Native Computing Foundation，云原生计算基金会)，致力于云原生（Cloud Native）技术的普及和可持续发展。
-
-CNCF 中有个 Landscape 全景图，用户可以了解实施云原生架构有哪些具体的软件和产品选择。CNCF Landscape 几乎包揽了所有云计算相关开源项目，迄今为止，CNCF 在其公布的云原生全景图中，显示了目前近 30 个领域、数百个项目的繁荣发展。
+CNCF 中有个 Landscape 全景图，CNCF Landscape 几乎包揽了所有云计算相关开源项目，迄今为止，CNCF 在其公布的云原生全景图中，显示了目前近 30 个领域、数百个项目的繁荣发展。用户可以根据 CNCF Landscape 了解实施云原生架构有哪些具体的软件和产品选择。
 
 <div  align="center">
 	<img src="../assets/landscape.png" width = "100%"  align=center />

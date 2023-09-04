@@ -53,7 +53,7 @@ $ ethtool -L eth0 combined 8
 
 ### 2.2 队列大小调整
 
-增大 RX/TX 队列大小可以在 PPS（packets per second）很大时缓解丢包问题。
+增大 RX/TX 队列大小可以在 PPS（packets per second，包每秒）很大时缓解丢包问题。
 
 查看队列大小。
 

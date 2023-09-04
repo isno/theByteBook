@@ -88,9 +88,10 @@ export default defineUserConfig({
                         text: '2.4 Linux 内核网络框架分析',
                         link: "/network/linux-kernel-networking.md",
                         children: [
+                            '/network/kernel-networking.md',
+                            '/network/XDP.md',
                             '/network/netfilter.md',
                             '/network/conntrack.md',
-                            '/network/XDP.md',
                         ]
                     },
                     {
@@ -122,30 +123,10 @@ export default defineUserConfig({
                             '/network/tcpdump.md'
                         ]
                     },
-                    /*
-                    {
-                        text: '网络优化指南',
-                        link: "/content/chapter1/net-optimize-intro.md",
-                        children: [
-                            '/network/kernel.md',
-                            {
-                                text: "传输层优化",
-                                link: "/content/chapter1/transport.md",
-                                children: [
-                                    '/content/chapter1/tcp-handshake.md',
-                                    '/content/chapter1/tcp-handwave.md',
-                                    '/network/bbr.md',
-                                ]
-                            },
-                           
-                        ]
-                    },*/
-
-                   
                 ]
             },
             {
-                text: '第三章：应用层服务原理及优化实践',
+                text: '第三章：应用层协议理解及优化实践',
                 link: "/http/summary.md",
                 collapsable: false,
                 sidebarDepth: 1,
