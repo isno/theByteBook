@@ -11,7 +11,7 @@
 2000年前后，虚拟化技术逐渐发展成熟，如图1-1所示。
 
 <div  align="center">
-	<img src="../assets/cloud-history-2.png" width = "620"  align=center />
+	<img src="../assets/cloud-history-1.svg" width = "620"  align=center />
 	<p>图1-1 虚拟化走向成熟</p>
 </div>
 
