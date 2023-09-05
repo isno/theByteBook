@@ -46,6 +46,8 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
+                    '/architecture/history.md',
+                    '/architecture/background.md',
                     '/architecture/define-cloud-native.md',
                     '/architecture/migrate-cloud.md',
                      {
