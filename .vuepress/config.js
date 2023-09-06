@@ -50,6 +50,7 @@ export default defineUserConfig({
                     '/architecture/background.md',
                     '/architecture/define-cloud-native.md',
                     '/architecture/target.md',
+                    '/architecture/flywheel.md',
                      {
                         text: '1.3 云原生架构的定义和技术特点',
                         link: '/architecture/arc.md',
