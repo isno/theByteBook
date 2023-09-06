@@ -6,29 +6,29 @@
 
 ## 1.3.1 Pivotal的定义
 
-Pivotal 是Cloud Native/云原生应用的提出者，并推出了Pivotal Cloud Foundry和Spring系列开发框架，是云原生的先驱者和探路者。2015年，来自Pivotal公司的Matt Stine编写了一本名为《迁移到云原生应用架构》的电子书，提出云原生应用架构应该具备的几个主要特征：
+Pivotal 是Cloud Native/云原生应用的提出者，并推出了Pivotal Cloud Foundry和Spring系列开发框架，是云原生的先驱者和探路者。2015年，来自Pivotal公司的Matt Stine编写了一本名为《迁移到云原生应用架构》的电子书，在书中Matt Stine提出云原生应用架构应该具备的几个主要特征。
 
-- 符合12因素应用(Twelve-Factor Applications)
-- 面向微服务架构(Microservices)
-- 自服务敏捷架构(Self-Service Agile Infrastructure)
-- 基于API的协作(API-Based Collaboration)
-- 抗脆弱性(Antifragility)
 
-在2017年10月，也是Matt Stine，在接受InfoQ采访时，则对云原生的定义做了小幅调整，将Cloud Native Architectures定义为具有以下六个特质：
+<div  align="center">
+	<img src="../assets/pivotal-cloud-native.svg" width = "650"  align=center />
+	<p>图 1-2 Pivotal 云原生定义</p>
+</div>
 
-- 模块化(Modularity):（通过微服务）
-- 可观测性(Observability)
-- 可部署性(Deployability)
-- 可测试性(Testability)
-- 可处理性(Disposability)
-- 可替换性(Replaceability)
+在2017年10月，也是Matt Stine，在接受InfoQ采访时，则对云原生的定义做了小幅调整，将Cloud Native Architectures定义为具有以下六个特质。
 
-而在Pivotal最新的官方网站 https://pivotal.io/cloud-native 上，对cloud native的介绍则是关注如下图所示的四个要点：
+<div  align="center">
+	<img src="../assets/pivotal-cloud-native-update.svg" width = "650"  align=center />
+	<p>图 1-2 Matt Stine 更新后的云原生定义</p>
+</div>
+
+现在，在Pivotal最新的官方网站 https://pivotal.io/cloud-native 上，对cloud native的介绍则是关注如下图所示的四个要点：
 
 <div  align="center">
 	<img src="../assets/cloud-native.png" width = "280"  align=center />
 	<p>图 1-2 Pivotal 云原生定义</p>
 </div>
+
+可见Pivotal对云原生的定义一直在变。
 
 ## 1.3.2 CNCF的定义
 
@@ -38,17 +38,9 @@ Pivotal 是Cloud Native/云原生应用的提出者，并推出了Pivotal Cloud 
 - 面向微服务架构(Microservices oriented)
 - 应用支持容器的编排调度(Dynamically Orchestrated)
 
-云原生包含了一组应用的模式，用于帮助企业快速，持续，可靠，规模化地交付业务软件。云原生由微服务架构，DevOps 和以容器为代表的敏捷基础架构组成。援引宋净超同学的一张图片来描述云原生所需要的能力与特征：
-
-<div  align="center">
-	<img src="../assets/cloud-native-definition-cncf-original.png" width = "580"  align=center />
-	<p>图 1-2 云原生能力与特征</p>
-</div>
-
-
 在2018年，随着社区对云原生理念的广泛认可和云原生生态的不断扩大，还有CNCF项目和会员的大量增加，起初的定义已经不再适用，因此CNCF对云原生进行了重新定位。
 
-2018年6月，CNCF正式对外公布了更新之后的云原生的定义（包含中文版本）v1.0版本 (官网地址 https://github.com/cncf/toc/blob/main/DEFINITION.md)。
+2018年6月，CNCF正式对外公布了更新之后的云原生的定义v1.0版本，CNCF的定义如下： 
 
 :::tip <i></i>
 
@@ -57,16 +49,20 @@ Pivotal 是Cloud Native/云原生应用的提出者，并推出了Pivotal Cloud 
 这些技术能够构建容错性好、易于管理和便于观察的松耦合系统。结合可靠的自动化手段，云原生技术使工程师能够轻松地对系统作出频繁和可预测的重大变更。
 
 云原生计算基金会（CNCF）致力于培育和维护一个厂商中立的开源生态系统，来推广云原生技术。我们通过将最前沿的模式民主化，让这些创新为大众所用。
+
+官网地址 https://github.com/cncf/toc/blob/main/DEFINITION.md。
+
 :::
 
-新的定义中，继续保持原有的核心内容：容器和微服务，但是非常特别的将服务网格单独列出来，而不是将服务网格作为微服务的一个子项或者实现模式，体现了云原生中服务网格这一个新生技术的重要性。而不可变基础设施和声明式API这两个设计指导理念的加入，则强调了这两个概念对云原生架构的影响和对未来发展的指导作用。
+图1-2 是新定义中描述的代表技术，其中容器和微服务两项在不同时期的不同定义中都有出现，而服务网格这个在 2017 年才开始被社区接纳的新热点技术被非常醒目的列出来，和微服务并列，而不是我们通常认为的服务网格只是微服务在实施时的一种新的方式。
 
 <div  align="center">
 	<img src="../assets/cncf-cloud-native.svg" width = "480"  align=center />
-	<p>图 1-2 CNCF 定义的云原生特征</p>
+	<p>图 1-2 CNCF 定义的云原生代表技术</p>
 </div>
 
 ## 1.3.3 云原生定义之外
 
 从上面可以看到，云原生的内容和具体形式随着时间的推移一直在变化，即便是CNCF最新推出的云原生定义也非常明确的标注为v1.0，相信未来我们很有机会看到v1.1、v2版本。而且云原生这个词汇最近被过度使用，混有各种营销色彩，容易发生偏离。因此，云原生的定义是什么并不重要，关键还是云原生定义后面的理念、文化、技术、工具、组织结构和行为方式。
 
+了解云原生的定义之后，下一节我们接续讨论云原生技术的目标。
