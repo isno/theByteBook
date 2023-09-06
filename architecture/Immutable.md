@@ -5,8 +5,6 @@
 1. 《Trash Your Servers and Burn Your Code: Immutable Infrastructure and Disposable Components》 Chad Fowler， 2013
 2. 《Phoenix Server》 Martin Fowler, 2012
 
-
-
 谈论不可变基础设施（Immutable Infrastructure）之前，我们先了解不可变（Immutable）和可变（Mutable）的区别。
 
 从基础设施的角度来看，Mutable 更倾向于传统的运维视角。例如，主机部署的是 Apache，现在想换成 Nginx，则需要先卸载掉 Apache，然后再重新安装一个 Nginx，然后重启让系统对这次变更生效。在这个过程中，基础设施为了满足业务需求，进行了一次或多次变更，装有 Apache 的 Linux 系统这就是一个可变的基础设施。
@@ -16,10 +14,10 @@
 - **重大故障时，难以快速重新构建服务**：持续过多的手动操作，并且缺乏记录，会导致很难由标准初始化的服务器来重新构建起等效的服务。
 - **不一致风险**：在服务运行过程中，持续地修改基础设施配置，会像程序变量因并发修改引起的状态不一致风险。这对服务器修改而言，同样会引入中间状态，导致出现不可预知的问题。
 
-可变的基础设施带来的运维之痛，援引 Chad Fowler 文章内的吐槽。
+可变的基础设施带来的运维之痛，引得Chad Fowler的文章中第一句就开始吐槽。
 ::: tip <i></i>
 要把一个不知道打过多少个升级补丁，不知道经历了多少任管理员的系统迁移到其他机器上，毫无疑问会是一场灾难。
-::
+:::
 
 不可变基础设施（Immutable Infrastructure）的核心思想是任何基础设施的实例一旦创建之后就变成只读状态。如需修改或升级，应该先修改基础设施的配置模版（例如 yaml 配置），修改配置模版之后使用新的实例进行替换。
 
