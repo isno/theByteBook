@@ -56,11 +56,11 @@ export default defineUserConfig({
                         link: '/architecture/MicroService.md',
                         children: [
                             '/architecture/MicroService.md',
-                            '/architecture/cicd.md',
                             '/architecture/container.md',
                             '/architecture/ServiceMesh.md',
                             '/architecture/Immutable.md',
                             '/architecture/declarative-api.md',
+                            '/architecture/devops.md',
                         ]
                     },
                     '/architecture/arc-guide.md',

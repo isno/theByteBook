@@ -1,6 +1,21 @@
-# 1.3.4 服务网格
+# 1.6.3 服务网格
+
+服务网格（Service Mesh）的概念最早由 Buoyant CEO William Morgan 在2016年首次提出，2017年4月该公司发布了第一个 Service Mesh 产品 Linkerd。 同年发表了文章《What’s a service mesh？And why do I need one?》，被公认是 Service Mesh 的权威定义。
+
+:::tip  文章内 William Morgan 对 ServiceMesh 的定义
+
+“A service mesh is a dedicated infrastructure layer for handling service-to-service communication. It’s responsible for the reliable delivery of requests through the complex topology of services that comprise a modern, cloud native application. In practice, the service mesh is typically implemented as an array of lightweight network proxies that are deployed alongside application code, without the application needing to be aware.”
+
+翻译：Service Mesh 是一个处理服务通讯的专门的基础设施层。它的职责是在由云原生应用组成服务的复杂拓扑结构下进行可靠的请求传送。在实践中，它是一组和应用服务部署在一起的轻量级的网络代理，对应用服务透明。
+
+:::
 
 ## 1. 服务网格出现的背景
+
+Service Mesh 诞生的背景主要有两点：
+
+- 微服务架构模式逐渐流行，开发者将多个服务组合在一起来构建应用程序
+- 企业已经使用了云原生平台技术，例如容器（Docker）、编排器（Kubernetes）和网关等
 
 当微服务数量越来越多时，开始逐渐暴露一些问题。
 
@@ -10,6 +25,16 @@
 - 如何管理复杂的上下游微服务依赖，当出现问题时，能快速定位问题。
 
 工程师除了关注业务功能外，还有聚焦以上服务治理问题，这类问题的解决方案通常的做法是把共有的能力抽象出通用的 SDK，通过 SDK 通用能力的抽象，实现服务治理功能的复用。但这种方式缺点也很明显，SDK 和业务功能耦合在一起，业务人员需要关注各类 common 包的更新、维护，还要关心各个服务治理调用逻辑等。
+
+
+Service Mesh 模式试图解决的问题包括：
+
+- 无需将特定语言的通信库编译到单个服务中来处理服务发现、路由和 application-level (Layer 7) 非功能性通信需求。
+- 外部化服务通信配置，包括外部服务的网络位置、安全凭证和服务质量目标。
+- 为其他服务提供被动和主动监控。
+- 在整个分布式系统中，执行分散策略。
+- 提供可观察性默认值并标准化相关数据的收集，如启用请求日志记录、配置分布式跟踪、收集指标等。
+
 
 ## 2. 什么是服务网格
 
