@@ -6,9 +6,7 @@
 
 ## 1.3.1 Pivotal的定义
 
-Pivotal 是Cloud Native/云原生应用的提出者，并推出了Pivotal Cloud Foundry和Spring系列开发框架，是云原生的先驱者和探路者。
-
-2015年，来自Pivotal公司的Matt Stine编写了一本名为《迁移到云原生应用架构》的电子书，提出云原生应用架构应该具备的几个主要特征：
+Pivotal 是Cloud Native/云原生应用的提出者，并推出了Pivotal Cloud Foundry和Spring系列开发框架，是云原生的先驱者和探路者。2015年，来自Pivotal公司的Matt Stine编写了一本名为《迁移到云原生应用架构》的电子书，提出云原生应用架构应该具备的几个主要特征：
 
 - 符合12因素应用(Twelve-Factor Applications)
 - 面向微服务架构(Microservices)
@@ -50,7 +48,7 @@ Pivotal 是Cloud Native/云原生应用的提出者，并推出了Pivotal Cloud 
 
 在2018年，随着社区对云原生理念的广泛认可和云原生生态的不断扩大，还有CNCF项目和会员的大量增加，起初的定义已经不再适用，因此CNCF对云原生进行了重新定位。
 
-2018年6月，CNCF正式对外公布了更新之后的云原生的定义（包含中文版本）v1.0版本。
+2018年6月，CNCF正式对外公布了更新之后的云原生的定义（包含中文版本）v1.0版本 (官网地址 https://github.com/cncf/toc/blob/main/DEFINITION.md)。
 
 :::tip <i></i>
 
