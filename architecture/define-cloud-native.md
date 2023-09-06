@@ -42,7 +42,7 @@ Pivotal 是Cloud Native/云原生应用的提出者，并推出了Pivotal Cloud 
 
 <div  align="center">
 	<img src="../assets/cloud-native-definition-cncf-original.png" width = "580"  align=center />
-	<p>图 1-2 cloud-native-definition-cncf-original</p>
+	<p>图 1-2 云原生能力与特征</p>
 </div>
 
 
@@ -59,5 +59,14 @@ Pivotal 是Cloud Native/云原生应用的提出者，并推出了Pivotal Cloud 
 云原生计算基金会（CNCF）致力于培育和维护一个厂商中立的开源生态系统，来推广云原生技术。我们通过将最前沿的模式民主化，让这些创新为大众所用。
 :::
 
+新的定义中，继续保持原有的核心内容：容器和微服务，但是非常特别的将服务网格单独列出来，而不是将服务网格作为微服务的一个子项或者实现模式，体现了云原生中服务网格这一个新生技术的重要性。而不可变基础设施和声明式API这两个设计指导理念的加入，则强调了这两个概念对云原生架构的影响和对未来发展的指导作用。
 
+<div  align="center">
+	<img src="../assets/cncf-cloud-native.svg" width = "480"  align=center />
+	<p>图 1-2 CNCF 定义的云原生特征</p>
+</div>
+
+## 1.3.3 云原生定义之外
+
+从上面可以看到，云原生的内容和具体形式随着时间的推移一直在变化，即便是CNCF最新推出的云原生定义也非常明确的标注为v1.0，相信未来我们很有机会看到v1.1、v2版本。而且云原生这个词汇最近被过度使用，混有各种营销色彩，容易发生偏离。因此，云原生的定义是什么并不重要，关键还是云原生定义后面的理念、文化、技术、工具、组织结构和行为方式。
 

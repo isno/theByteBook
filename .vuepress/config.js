@@ -49,7 +49,7 @@ export default defineUserConfig({
                     '/architecture/history.md',
                     '/architecture/background.md',
                     '/architecture/define-cloud-native.md',
-                    '/architecture/migrate-cloud.md',
+                    '/architecture/target.md',
                      {
                         text: '1.3 云原生架构的定义和技术特点',
                         link: '/architecture/arc.md',
