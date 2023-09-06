@@ -1,4 +1,4 @@
-# 1.6 云原生架构及技术特征
+# 1.5 云原生架构及技术特征
 
 继续援引 Mark Andreessen 在《Software is Eating The World》中的观点。
 
