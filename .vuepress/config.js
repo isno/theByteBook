@@ -50,7 +50,6 @@ export default defineUserConfig({
                     '/architecture/background.md',
                     '/architecture/define-cloud-native.md',
                     '/architecture/target.md',
-                    '/architecture/flywheel.md',
                     '/architecture/arc.md',
                      {
                         text: '1.7 云原生代表技术',

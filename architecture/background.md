@@ -4,12 +4,12 @@
 
 <div  align="center">
 	<img src="../assets/SoftwareEatingTheWorld.jpg" width = "620"  align=center />
-	<p>Software is Eating The World —— by Mark Andreessen, in 2011。</p>
+	<p>图1-7 Software is Eating The World —— by Mark Andreessen, in 2011。</p>
 </div>
 
-Mark Andreessen是风险投资公司Andreessen-Horowitz的联合创始人和合伙人，该公司投资了Facebook，Groupon，Skype，Twitter，Zynga和Foursquare等。在2011年8月20日的华尔街日报上，Mark Andreessen发表了名为 “Why Software Is Eating the World” 的文章。
+Mark Andreessen是风险投资公司Andreessen-Horowitz的联合创始人和合伙人，该公司投资了Facebook，Groupon，Skype，Twitter，Zynga和Foursquare等。
 
-援引原文部分内容：
+在2011年8月20日的华尔街日报上，Mark Andreessen发表了名为 “Why Software Is Eating the World” 的文章。文章阐述了软件如何影响各个行业，援引原文部分内容：
 
 :::tip <i></i>
 
@@ -38,9 +38,9 @@ Mark Andreessen是风险投资公司Andreessen-Horowitz的联合创始人和合�
 在接下来的10年里，我预计全球至少有50亿人拥有智能手机，每个人每天都可以随时随地使用手机充分利用互联网。
 :::
 
-现在，我们已经可以确认Mark Andreessen的预测很正确，移动互联网时代的用户规模已经开始向人口基数看齐。而移动互联网如此巨大的用户规模会对软件开发有什么影响？
+现在，我们已经可以确认Mark Andreessen的预测很正确，移动互联网时代的用户规模已经开始向人口基数看齐，开始出现各类亿级DAU规模的移动应用。而移动互联网如此巨大的用户规模会对软件开发有什么影响？
 
-援引Netflix的一页PPT，这里按照规模和变更速度将软件企业划分为四个象限/四种类型：
+援引Netflix的一页PPT，如图1-8，这里按照规模和变更速度将软件企业划分为四个象限/四种类型：
 
 - 企业IT：规模小，变化慢，容易处理
 - 电信：规模大，变化慢，主要应对硬件失败
@@ -49,11 +49,12 @@ Mark Andreessen是风险投资公司Andreessen-Horowitz的联合创始人和合�
 
 <div  align="center">
 	<img src="../assets/ppt4.jpg" width = "620"  align=center />
+	<p>图1-8 Netflix按照规模和变更速度对软件企业划分的总结</p>
 </div>
 
 在十年前乃至二十年前的互联网时代，大多数软件企业都位于上图左边的两个象限：规模或许有大有小，但是变更速度相对今天都不高。当企业发展壮大时，体现的也更多是在规模上，变更速度并不会发生质的变化。
 
-而今天的移动互联网时代，则都位于上图右边的两个象限：无论规模是大是小，变更速度都要求非常高。并且当企业逐步发展壮大，规模十倍百倍增长时，对变更速度的要求并不会降低，甚至会要求更快。
+而今天的移动互联网时代，则都位于图1-8右边的两个象限：无论规模是大是小，变更速度都要求非常高。并且当企业逐步发展壮大，规模十倍百倍增长时，对变更速度的要求并不会降低，甚至会要求更快。
 
 在移动互联网时代，能够成长并发展起来的这些公司，他们的共同点是：
 
@@ -73,7 +74,7 @@ Mark Andreessen是风险投资公司Andreessen-Horowitz的联合创始人和合�
 
 ## 1.2.4 总结
 
-前面我们谈到了软件对各行各业的渗透和对世界的改变，以及移动互联网时代巨大的用户基数下快速变更和不断创新的需求对软件开发方式带来的巨大推动力，结合上一篇文章描述的过去二十年间云计算的发展演进和软件上云的趋势，我们可以清晰的看到这样一个波澜壮阔的技术浪潮：
+前面我们谈到了软件对各行各业的渗透和对世界的改变，以及移动互联网时代巨大的用户基数下快速变更和不断创新的需求对软件开发方式带来的巨大推动力，结合本章1.1篇节描述的过去二十年间云计算的发展演进和软件上云的趋势，我们可以清晰的看到这样一个波澜壮阔的技术浪潮：
 
 - 软件正在改变世界。
 - 移动互联网让这个变革影响到每一个人。

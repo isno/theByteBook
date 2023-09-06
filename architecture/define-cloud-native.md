@@ -1,31 +1,31 @@
 # 1.3 云原生的定义
 
-当需要回答“什么是云原生”这个问题时，还是会有些困难。在过去几年间，云原生的定义一直在变化和发展演进，不同时期不同的公司对此的理解和诠释也不尽相同，因此往往会带来一些疑惑和误解。
+在今天，当需要回答“什么是云原生”这个问题时，还是会有些困难。
 
-我们一起来看看云原生定义在不同时期的变化。
+在过去几年间，云原生的定义一直在变化和发展演进，不同时期不同的公司对此的理解和诠释也不尽相同，因此往往会带来一些疑惑和误解。我们一起来看看云原生定义在不同时期的变化。
 
 ## 1.3.1 Pivotal的定义
 
-Pivotal 是Cloud Native/云原生应用的提出者，并推出了Pivotal Cloud Foundry和Spring系列开发框架，是云原生的先驱者和探路者。2015年，来自Pivotal公司的Matt Stine编写了一本名为《迁移到云原生应用架构》的电子书，在书中Matt Stine提出云原生应用架构应该具备的几个主要特征。
+Pivotal是Cloud Native/云原生应用的提出者，并推出了Pivotal Cloud Foundry和Spring系列开发框架，是云原生的先驱者和探路者。2015年，来自Pivotal公司的产品经理Matt Stine编写了一本名为《迁移到云原生应用架构》的电子书，在书中Matt Stine提出云原生应用架构应该具备的5个主要特征，如图1-9所示。
 
 
 <div  align="center">
 	<img src="../assets/pivotal-cloud-native.svg" width = "650"  align=center />
-	<p>图 1-2 Pivotal 云原生定义</p>
+	<p>图 1-9 Pivotal云原生定义</p>
 </div>
 
-在2017年10月，也是Matt Stine，在接受InfoQ采访时，则对云原生的定义做了小幅调整，将Cloud Native Architectures定义为具有以下六个特质。
+2017年10月，还是Matt Stine，在接受InfoQ采访时，对云原生的定义做了小幅调整，将云原生架构定义为具有以下6个特质，如图1-10所示。
 
 <div  align="center">
 	<img src="../assets/pivotal-cloud-native-update.svg" width = "650"  align=center />
-	<p>图 1-2 Matt Stine 更新后的云原生定义</p>
+	<p>图 1-10 Matt Stine更新后的云原生定义</p>
 </div>
 
-现在，在Pivotal最新的官方网站 https://pivotal.io/cloud-native 上，对cloud native的介绍则是关注如下图所示的四个要点：
+现在，在Pivotal最新的官方网站 https://pivotal.io/cloud-native 上，对cloud native的介绍则是关注如图1-11所示的4个要点。
 
 <div  align="center">
 	<img src="../assets/cloud-native.png" width = "280"  align=center />
-	<p>图 1-2 Pivotal 云原生定义</p>
+	<p>图 1-11 Pivotal 云原生定义</p>
 </div>
 
 可见Pivotal对云原生的定义一直在变。
@@ -54,11 +54,11 @@ Pivotal 是Cloud Native/云原生应用的提出者，并推出了Pivotal Cloud 
 
 :::
 
-图1-2 是新定义中描述的代表技术，其中容器和微服务两项在不同时期的不同定义中都有出现，而服务网格这个在 2017 年才开始被社区接纳的新热点技术被非常醒目的列出来，和微服务并列，而不是我们通常认为的服务网格只是微服务在实施时的一种新的方式。
+图1-12是新定义中描述的代表技术，其中容器和微服务两项在不同时期的不同定义中都有出现，而服务网格这个在 2017 年才开始被社区接纳的新热点技术被非常醒目的列出来，和微服务并列，而不是我们通常认为的服务网格只是微服务在实施时的一种新的方式。
 
 <div  align="center">
 	<img src="../assets/cncf-cloud-native.svg" width = "480"  align=center />
-	<p>图 1-2 CNCF 定义的云原生代表技术</p>
+	<p>图 1-12 CNCF 定义的云原生代表技术</p>
 </div>
 
 ## 1.3.3 云原生定义之外
