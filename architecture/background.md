@@ -2,15 +2,12 @@
 
 ## 1.2.1 软件正在改变世界
 
-Software is Eating The World —— by Mark Andreessen, in 2011。
-
 <div  align="center">
 	<img src="../assets/SoftwareEatingTheWorld.jpg" width = "620"  align=center />
+	<p>Software is Eating The World —— by Mark Andreessen, in 2011。</p>
 </div>
 
-Mark Andreessen是风险投资公司Andreessen-Horowitz的联合创始人和合伙人，该公司投资了Facebook，Groupon，Skype，Twitter，Zynga和Foursquare等，Mark Andreessen也是LinkedIn的投资者。
-
-在2011年8月20日的华尔街日报上，Mark Andreessen发表了名为 “Why Software Is Eating the World” 的文章。
+Mark Andreessen是风险投资公司Andreessen-Horowitz的联合创始人和合伙人，该公司投资了Facebook，Groupon，Skype，Twitter，Zynga和Foursquare等。在2011年8月20日的华尔街日报上，Mark Andreessen发表了名为 “Why Software Is Eating the World” 的文章。
 
 援引原文部分内容：
 
@@ -35,13 +32,13 @@ Mark Andreessen是风险投资公司Andreessen-Horowitz的联合创始人和合�
 
 ## 1.2.2 移动互联网在加剧变化
 
-作者展望互联网规模时，写道
+作者展望互联网规模时，写道：
 
 :::tip <i></i> 
 在接下来的10年里，我预计全球至少有50亿人拥有智能手机，每个人每天都可以随时随地使用手机充分利用互联网。
 :::
 
-现在，我们已经可以清晰的确认Mark Andreessen的预测很正确，移动互联网时代的用户规模已经开始向人口基数看齐。而移动互联网如此巨大的用户规模会对软件开发有什么影响？
+现在，我们已经可以确认Mark Andreessen的预测很正确，移动互联网时代的用户规模已经开始向人口基数看齐。而移动互联网如此巨大的用户规模会对软件开发有什么影响？
 
 援引Netflix的一页PPT，这里按照规模和变更速度将软件企业划分为四个象限/四种类型：
 
@@ -58,18 +55,20 @@ Mark Andreessen是风险投资公司Andreessen-Horowitz的联合创始人和合�
 
 而今天的移动互联网时代，则都位于上图右边的两个象限：无论规模是大是小，变更速度都要求非常高。并且当企业逐步发展壮大，规模十倍百倍增长时，对变更速度的要求并不会降低，甚至会要求更快。
 
-在移动互联网时代，能够成长并发展起来的这些公司，他们的共同点是什么：
+在移动互联网时代，能够成长并发展起来的这些公司，他们的共同点是：
 
 - 快速变更，不断创新，随时调整
 - 提供持续可用的服务，因对各种可能的错误和中断
 - 弹性可扩展的系统，因对用户规模的快速增长
 - 提供新的用户体验，以移动为中心
 
-这样的背景下，对软件开发的有了更高的要求，软件开发的方式也不得不跟随时代而变化：首当其冲的就是如何解决规模越来越大同时变更越来越快的难题。
+这样的背景下，对软件开发的有了更高的要求，软件开发的方式也不得不跟随时代而变化，首当其冲的就是如何解决规模越来越大同时变更越来越快的难题。
 
 ## 1.2.3 软件上云是大势所趋
 
 将软件迁移到云上是应对这一挑战的自然演化方式，在过去二十年，从物理机到虚拟机到容器，从IaaS诞生到PaaS、CaaS、SaaS、FaaS一路演进，应用的构建和部署变的越来越轻、越来越快，而底层基础设施和平台则越来越强大，以不同形态的云对上层应用提供强力支撑。
+
+2006年AWS通过提供EC2服务开创了IaaS市场。通过按时计费的方式租借服务器，客户不承担资本支出，仅在使用服务时付费。将资本支出（Capex）转变为运营支出（Opex），这是云计算时代的真正开始，而之后PaaS，SaaS等的演进只是朝云这个方向一步一步继续前行。
 
 
 ## 1.2.4 总结
