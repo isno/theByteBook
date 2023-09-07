@@ -1,11 +1,10 @@
 # 1.6.3 不可变基础设施
 
-不可变基础设施（Immutable Infrastructure）这个概念由来已久，并在不同的场合被很多技术专家已不同的形式提出并讨论，例如：
-
-1. 《Trash Your Servers and Burn Your Code: Immutable Infrastructure and Disposable Components》 Chad Fowler， 2013
-2. 《Phoenix Server》 Martin Fowler, 2012
+2013年6月，Chad Fowler 在自己的博客中撰写一篇 《Trash Your Servers and Burn Your Code: Immutable Infrastructure and Disposable Components》 的文章，提出了 Immutable Infrastructure 的概念。这一前瞻性的构想，伴随着 Docker 容器技术的兴起、微服务架构的流行，得到了事实上的检验。
 
 谈论不可变基础设施之前，我们先了解不可变（Immutable）和可变（Mutable）的区别。
+
+## 1.可变的基础设施
 
 从基础设施的角度来看，Mutable 更倾向于传统的运维视角。例如，主机部署的是 Apache，现在想换成 Nginx，则需要先卸载掉 Apache，然后再重新安装一个 Nginx，然后重启让系统对这次变更生效。在这个过程中，基础设施为了满足业务需求，进行了一次或多次变更，装有 Apache 的 Linux 系统这就是一个可变的基础设施。
 
@@ -19,7 +18,9 @@
 要把一个不知道打过多少个升级补丁，不知道经历了多少任管理员的系统迁移到其他机器上，毫无疑问会是一场灾难。
 :::
 
-不可变基础设施（Immutable Infrastructure）的核心思想是任何基础设施的实例一旦创建之后就变成只读状态。如需修改或升级，应该先修改基础设施的配置模版（例如 yaml 配置），修改配置模版之后使用新的实例进行替换。
+## 2.不可变基础设施
+
+不可变基础设施的核心思想是任何基础设施的实例一旦创建之后就变成只读状态。如需修改或升级，应该先修改基础设施的配置模版（例如 yaml 配置），修改配置模版之后使用新的实例进行替换。
 
 不可变基础设施的系统中如果有新的变更需求，如上面的 Nginx 升级案例，就应该准备一个新的 Nginx 基础设施，而不是在原有的基础上做原地更新。
 
