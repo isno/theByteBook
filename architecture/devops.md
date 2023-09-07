@@ -1,5 +1,6 @@
 # 1.6.8 DevOps
 
+DevOps包含很多不同的概念，试图用几个简短的语句解释DevOps是一件很困难的事情，我们延用之前的做法，如果要解释一个复杂的概念，最好的方法，就是去了解他的过去、他的历史以及出现的背景。
 
 <div  align="center">
 	<img src="../assets/devops-1.png" width = "480"  align=center />
@@ -11,6 +12,14 @@
 《MANAGING THE DEVELOPMENT OF LARGE SOFTWARE SYSTEMS》
 
 ## 2.敏捷开发
+
+
+开发侧很快，运维侧太稳，这个就是我们常说的开发与运维之间固有的、根因的冲突，即下图的混乱之墙。那么如何要化解这个矛盾呢？现在，到了DevOps上场的时间。
+
+<div  align="center">
+	<img src="../assets/devops-wall.png" width = "420"  align=center />
+	<p>图 1-13 开发与运维的混乱之墙</p>
+</div>
 
 
 ## 3.DevOps
