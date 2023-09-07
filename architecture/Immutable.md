@@ -1,11 +1,11 @@
 # 1.6.3 不可变基础设施
 
-不可变基础设施这个概念由来已久，并在不同的场合被很多技术专家已不同的形式提出并讨论，例如：
+不可变基础设施（Immutable Infrastructure）这个概念由来已久，并在不同的场合被很多技术专家已不同的形式提出并讨论，例如：
 
 1. 《Trash Your Servers and Burn Your Code: Immutable Infrastructure and Disposable Components》 Chad Fowler， 2013
 2. 《Phoenix Server》 Martin Fowler, 2012
 
-谈论不可变基础设施（Immutable Infrastructure）之前，我们先了解不可变（Immutable）和可变（Mutable）的区别。
+谈论不可变基础设施之前，我们先了解不可变（Immutable）和可变（Mutable）的区别。
 
 从基础设施的角度来看，Mutable 更倾向于传统的运维视角。例如，主机部署的是 Apache，现在想换成 Nginx，则需要先卸载掉 Apache，然后再重新安装一个 Nginx，然后重启让系统对这次变更生效。在这个过程中，基础设施为了满足业务需求，进行了一次或多次变更，装有 Apache 的 Linux 系统这就是一个可变的基础设施。
 
