@@ -1,5 +1,25 @@
 # 1.6.1 微服务
 
+:::tip  
+A microservices architecture as a service‑oriented architecture composed of loosely coupled elements that have bounded contexts.
+:::
+
+这里有两个核心概念，一是 Loosely Coupled（松耦合），二是 Bounded Context（限界上下文）。
+1. Loosely Coupled（松耦合）意味着每个服务可以独立的更新，更新一个服务无需要求改变其他服务。
+2. Bounded Contexts 概念来自 Eric Evans 写的 《Domain -Driven Design 》这本书，Bounded Context 意味着每个服务要有明确的边界性，你可以只关注自身软件的发布，而无需考虑谁在依赖你的发布版本。微服务和它的消费者严格通过 API 进行交互，不共享数据结构、数据库、POJO 等等。
+
+综合上述，也就说微服务要实现独立部署，拥有独立的技术栈、界定上下文，明确所有权等。
+
+如下图，单体服务（Monolith Application）与微服务（MicroServices）的形象对比。
+<div  align="center">
+	<img src="../assets/Monolith-vs-MicroService.png" width = "480"  align=center />
+	<p>图 1-6 单体服务和微服务的对比</p>
+</div>
+
+单体服务就是把所有的东西放在一个大盒子里，这个大盒子里面什么都有。微服务更像是集装箱，每个箱子里面包含特定的功能模块，所有的东西可以很灵活的拆分和组装。
+
+
+
 :::tip 微服务架构（Microservices）
 
 微服务是一种通过多个小型服务组合来构建单个应用的架构风格，这些服务围绕业务能力而非特定的技术标准来构建。各个服务可以采用不同的编程语言，不同的数据存储技术，运行在不同的进程之中。服务采取轻量级的通信机制和自动化的部署机制实现通信与运维。
