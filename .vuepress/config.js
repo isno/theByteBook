@@ -66,6 +66,7 @@ export default defineUserConfig({
                     '/architecture/arc-guide.md',
                     '/architecture/PaaS.md',
                     '/architecture/hybrid-cloud.md',
+                    '/architecture/architect.md',
                     '/architecture/conclusion.md',    
                 ]
             },

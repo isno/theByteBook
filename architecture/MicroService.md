@@ -1,6 +1,9 @@
 # 1.6.1 微服务
 
-:::tip  
+Netflix 是业界微服务和DevOps组织的先驱，有大规模生产级微服务的成功实践，并为Spring Cloud Netflix 社区贡献了大量优秀的开源软件，例如Eureka（服务注册与发现）、Zuul（服务网关）、Ribbon（负载均衡）、Hystrix（熔断限流）等等。
+
+对于微服务的解释，我们援引 Adrian Cockcroft 的观点。
+:::tip <i></i>
 A microservices architecture as a service‑oriented architecture composed of loosely coupled elements that have bounded contexts.
 :::
 

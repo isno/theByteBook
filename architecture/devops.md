@@ -2,7 +2,7 @@
 
 DevOps包含很多不同的概念，试图用几个简短的语句解释DevOps是一件很困难的事情，我们延用之前的惯例，如果要理解一个复杂的概念，就先去了解他的历史以及出现的背景。
 
-聊 DevOps，这三种不同的软件开发方法论。
+先用瀑布开发说起。
 
 <div  align="center">
 	<img src="../assets/devops-1.png" width = "480"  align=center />
