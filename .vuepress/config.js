@@ -55,8 +55,8 @@ export default defineUserConfig({
                         text: '1.6 云原生代表技术',
                         link: '/architecture/MicroService.md',
                         children: [
-                            '/architecture/MicroService.md',
                             '/architecture/container.md',
+                            '/architecture/MicroService.md',
                             '/architecture/ServiceMesh.md',
                             '/architecture/Immutable.md',
                             '/architecture/declarative-api.md',
@@ -68,7 +68,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第二章：网络技术概论与应用实践',
+                text: '第二章：网络技术概论及实践',
                 collapsable: true,
                 link: '/network/summary.md',
                 sidebarDepth: 2,
@@ -127,7 +127,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第三章：应用层协议理解及优化实践',
+                text: '第三章：移动端网络优化实践',
                 link: "/http/summary.md",
                 collapsable: false,
                 sidebarDepth: 1,
