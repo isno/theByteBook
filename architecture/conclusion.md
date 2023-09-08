@@ -12,4 +12,4 @@
 - https://pivotal.io/cloud-native 
 - https://github.com/cncf/toc/blob/main/DEFINITION.md
 - https://landscape.cncf.io/
-- 《凤凰架构》周志明
+- https://icyfenix.cn/architecture/architect-history/post-microservices.html
