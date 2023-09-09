@@ -35,9 +35,9 @@ spec:
 
 ### 使用 ServiceName 访问 Service
 
-使用 IP 直连有一个问题，如果 Service 被删除，相应的 Cluster IP 也会被回收。域名发现
+使用 IP 直连有一个问题，如果 Service 被删除，相应的 Cluster IP 也会被回收。
 
-为此 Kubernetes 结合 DNS 的。CoreDNS 安装成功后会成为 DNS 服务器，当创建 Service 后，CoreDNS 会将Service 的名称与 IP 记录起来，这样 Pod 就可以通过向 CoreDNS 查询 Service 的名称获得 Service 的IP地址。
+为此 Kubernetes 结合 DNS 的域名发现。CoreDNS 安装成功后会成为 DNS 服务器，当创建 Service 后，CoreDNS 会将Service 的名称与 IP 记录起来，这样 Pod 就可以通过向 CoreDNS 查询 Service 的名称获得 Service 的IP地址。
 
 
 coreDNS 提供格式如 `<service-name>.<namespace-name>.svs.cluster.local` 的服务，访问改地址，集群内的域名解析解析服务器会返回该服务所对应的 A 记录。实际使用中，同一个命名空间下可以省略`<namespace>.svc.cluster.local`，直接使用 ServiceName 即可。
