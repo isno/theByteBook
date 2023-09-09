@@ -13,3 +13,4 @@
 - https://github.com/cncf/toc/blob/main/DEFINITION.md
 - https://landscape.cncf.io/
 - https://icyfenix.cn/architecture/architect-history/post-microservices.html
+- https://mp.weixin.qq.com/s/ccFkJJz97KcuXdO3r5zdXA
