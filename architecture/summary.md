@@ -1,4 +1,4 @@
-# 第一章：云技术概论
+# 第一章：云原生技术概论
 
 从 2015 年 CNCF（Cloud Native Computing Foundation，云原生计算基金会）成立至今，云原生技术历经八年的高速发展。初期仅是概念性讨论，现在已围绕 Kubernetes 诞生了各类运行时、Istio、Knative 等等丰富的上层应用和生态。另外，Service Mesh（服务网格）、Serverless（无服务器架构）等革新云技术思想也真正落地实施，解决生产中的各类问题。
 

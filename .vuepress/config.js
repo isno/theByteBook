@@ -53,7 +53,7 @@ export default defineUserConfig({
                     '/architecture/arc.md',
                      {
                         text: '1.6 云原生代表技术',
-                        link: '/architecture/MicroService.md',
+                        link: '/architecture/cloud-native-tech.md',
                         children: [
                             '/architecture/container.md',
                             '/architecture/MicroService.md',
