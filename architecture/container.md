@@ -20,10 +20,7 @@
 
 
 
-<div  align="center">
-	<img src="../assets/k8s-1.png" width = "300"  align=center />
-	<p>图 1-5 Kubernetes能力 </p>
-</div>
+
 
 
 在过去几年，容器技术已经被广泛应用到生产环境中，除以上的概述性优势外，容器技术落地后的几个明显收益如下。
