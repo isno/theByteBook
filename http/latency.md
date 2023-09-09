@@ -2,7 +2,15 @@
 
 HTTPS 协议是绝对是互联网程序员最常打交道的协议，绝大部分的互联网流量都是由 HTTPS 进行传输。搞明白 HTTP 请求流程对网络优化或者网络问题排障等问题能得心应手。
 
-一个完整 HTTPS 请求流程包括：DNS 域名解析、TCP 握手、SSL 握手、服务器处理、内容传输阶段。下面的流程图展示了 HTTP(S) 请求的各个阶段：
+一个完整 HTTPS 请求流程包括：
+
+1. DNS 域名解析
+2. TCP 握手
+3. SSL 握手
+4. 服务器处理
+5. 内容传输阶段
+
+下面的流程图展示了 HTTP(S) 请求的各个阶段。
 
 <div  align="center">
 	<img src="../content/assets/http-process.png" width = "500"  align=center />

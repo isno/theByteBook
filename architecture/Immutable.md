@@ -1,4 +1,4 @@
-# 1.6.3 不可变基础设施
+# 1.6.4 不可变基础设施
 
 2013年6月，Chad Fowler 在自己的博客中撰写一篇 《Trash Your Servers and Burn Your Code: Immutable Infrastructure and Disposable Components》 的文章，提出了 Immutable Infrastructure 的概念。这一前瞻性的构想，伴随着 Docker 容器技术的兴起、微服务架构的流行，得到了事实上的检验。
 
