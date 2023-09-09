@@ -28,7 +28,7 @@ Mark Andreessen是风险投资公司Andreessen-Horowitz的联合创始人和合�
 
 文中列出了被重塑的产业，具体有 : 最大的书店 Amazon、最多人订阅的Video service Netflix、最大的音乐公司iTune、 Spotify and Pandora等、成长最快的娱乐领域 videogame、最好的电影制片厂 Pixar、最大的行销平台 : Google、Groupon、 Facebook等、成长最快的电信公司 : Skype 、成长最快招聘公司 LinkedIn。
 
-文章发表于2011年，在12年后的2023年再来看，感触更加深刻。
+文章发表于2011年，在12年后的2023年再来看，互联网冲击已经无所不在，感触更加深刻。
 
 ## 1.2.2 移动互联网在加剧变化
 
