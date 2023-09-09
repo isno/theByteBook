@@ -68,7 +68,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第二章：网络技术概论及实践',
+                text: '第二章：深入Linux内核网络及实践',
                 collapsable: true,
                 link: '/network/summary.md',
                 sidebarDepth: 2,
