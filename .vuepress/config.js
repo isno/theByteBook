@@ -127,12 +127,12 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第三章：移动端网络优化实践',
+                text: '第三章：构建”足够快“的网络服务',
                 link: "/http/summary.md",
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
-                   
+                    '/http/background.md',
                     '/http/latency.md',
                     {
                         text: '3.2 DNS 的原理与应用',
