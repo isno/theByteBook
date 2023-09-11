@@ -89,8 +89,6 @@ Cilium 认为，内核加上共享型代理的引入可以极大的减少代理�
 </div>
 
 
-
-
 但同样，软件领域没有银弹，Sidecarless 也是取舍后的结果。ebpf 并不是万能钥匙，也存在内核版本要求、编写难度大、安全等方面的问题。
 
 
@@ -98,11 +96,25 @@ Cilium 认为，内核加上共享型代理的引入可以极大的减少代理�
 
 2022 年 9 月 Istio 发布了一个名为“Ambient Mesh”的无边车数据平面模型，宣称用户可以弃用 Sidecar，以 Ambient Mesh 模式使用 Istio 的特性。
 
-Ambient Mesh 将 Istio 的功能分为两层，安全覆盖层用来处理 L4 层的路由和安全。如果需要，用户可以启用 L7 处理层从而使用更全面的功能特性。在这一点上它和 Cilium 的做法类似。
+相比Sidecar，Ambient Mesh提供一种侵入性更低，升级管理更简单的选择。Ambient 将 Istio 的功能分成两个不同的层次，安全覆盖层（四层治理）和七层处理层（七层治理），如下图示例。
 
 <div  align="center">
 	<img src="../assets/Ambient-Mesh.png" width = "520"  align=center />
 </div>
+
+- 安全覆盖层：处理TCP路由、监控指标、访问日志，mTLS 隧道，简单的授权
+- 七层处理层：除安全覆盖层的功能外，提供HTTP协议的路由、监控、访问日志、调用链、负载均衡、熔断、限流、重试等流量管理功能以及丰富的七层授权策略
+
+
+下图中ztunnel即为安全覆盖层，以DaemonSet部署，本质上是一个处理L4层场景的共享代理。图中的Waypoint代理以Pod形态部署于集群中，可使用Istio处理L7网络的完整能力。
+
+<div  align="center">
+	<img src="../assets/Ambient-Mesh-2.png" width = "580"  align=center />
+</div>
+
+
+
+Ambient Mesh可以被理解为一种无Sidecar模式，但笔者认为将其描述为“中心化代理模式”更为准确。这是因为这种模式侧重于通过共享和中心化的代理进行流量管理，以替代位于应用容器旁边的Sidecar代理。
 
 从官方的博客来看，Istio 在过去的半年中一直在推进 Ambient Mesh 的开发，并于 2023 年 2 月将其合并到了 Istio 的主代码分支。这也从一定程度上说明 Istio 未来的发展方向之一就是持续的对 Ambient Mesh 改进并探索多种数据平面的可能性。
 
