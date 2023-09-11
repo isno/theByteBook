@@ -1,12 +1,16 @@
 # 1.6.3 服务网格
 
+在云原生计算基金会（CNCF）的最新定义中，服务网格被与微服务等同看待，这标志着服务网格技术已经成为云原生的又一个重要领域，而非仅仅被视为实施微服务的一种新方法。我们之前已经解释了服务网格出现的背景和原因。现在，让我们深入探讨这个新技术的特性以及未来的发展趋势。
+
+## 1.服务网格的定义
+
 服务网格（Service Mesh）的概念最早由 Buoyant CEO William Morgan 在2016年首次提出，2017年4月该公司发布了第一个 Service Mesh 产品 Linkerd。 同年发表了文章《What’s a service mesh？And why do I need one?》，被公认是 Service Mesh 的权威定义。
 
 :::tip  文章内 William Morgan 对 ServiceMesh 的定义
 
 “A service mesh is a dedicated infrastructure layer for handling service-to-service communication. It’s responsible for the reliable delivery of requests through the complex topology of services that comprise a modern, cloud native application. In practice, the service mesh is typically implemented as an array of lightweight network proxies that are deployed alongside application code, without the application needing to be aware.”
 
-翻译：Service Mesh 是一个处理服务通讯的专门的基础设施层。它的职责是在由云原生应用组成服务的复杂拓扑结构下进行可靠的请求传送。在实践中，它是一组和应用服务部署在一起的轻量级的网络代理，对应用服务透明。
+Service Mesh 是一个处理服务通讯的专门的基础设施层。它的职责是在由云原生应用组成服务的复杂拓扑结构下进行可靠的请求传送。在实践中，它是一组和应用服务部署在一起的轻量级的网络代理，对应用服务透明。
 
 :::
 

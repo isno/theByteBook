@@ -231,16 +231,6 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第六章：从消息到事件流',
-                link: '/MessageQueue/intro.md',
-                collapsable: false,
-                sidebarDepth: 1,
-                children: [
-                    '/MessageQueue/mq-diff.md',
-                    '/MessageQueue/mq-benchmark.md'
-                ]
-            },
-            {
                 text: '第七章：容器技术原理概论与应用实践',
                 link: '/container/summary.md',
                 collapsable: false,
