@@ -127,7 +127,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第三章：构建”足够快“的网络服务',
+                text: '第二章：构建”足够快“的网络服务',
                 link: "/http/summary.md",
                 collapsable: false,
                 sidebarDepth: 1,
