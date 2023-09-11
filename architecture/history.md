@@ -32,7 +32,7 @@
 - PaaS（Platform as a service，平台即服务）的出现，云计算服务商由IaaS阶段的卖资源进阶为卖服务。
 - 开源IaaS的出现：云计算开始进入开源时代。
 - 开源PaaS的出现。
-- FaaS（Function as a Service，功能即服务）的出现意味着云计算无服务器（Serverless）阶段即将到来，应用将无需再关注任服务、资源等设施。
+- FaaS（Function as a Service，功能即服务）的出现意味着云计算服务商，开始提供更深层次的服务，无服务器（Serverless）的概念已经初现，应用将无需再关注任服务、资源等设施。
 
 2006年是云计算发展史中的一个重要事件点，在2006年8月9日，Google首席执行官埃里克·施密特（Eric Schmidt）在搜索引擎大会（SESSanJose2006）首次提出“云计算“（Cloud Computing）的概念。而亚马逊正是那年推出了IaaS服务平台AWS。
 
