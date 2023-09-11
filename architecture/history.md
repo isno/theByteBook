@@ -28,11 +28,11 @@
 
 在这期间，出现了云计算领域多个重要里程碑：
 
-- IaaS的出现：通过按时计费的方式租借服务器，将资本支出（Capex）转变为运营支出（Opex），这使得云计算得以大规模兴起和普及。
-- PaaS的出现。
+- IaaS（Infrastructure as a service，基础设施即服务）的出现：通过按时计费的方式租借服务器，将资本支出（Capex）转变为运营支出（Opex），这使得云计算得以大规模兴起和普及。
+- PaaS（Platform as a service，平台即服务）的出现，云计算服务商由IaaS阶段的卖资源进阶为卖服务。
 - 开源IaaS的出现：云计算开始进入开源时代。
 - 开源PaaS的出现。
-- FaaS的出现。
+- FaaS（Function as a Service，功能即服务）的出现意味着云计算无服务器（Serverless）阶段即将到来，应用将无需再关注任服务设施。
 
 2006年是云计算发展史中的一个重要事件点，在2006年8月9日，Google首席执行官埃里克·施密特（Eric Schmidt）在搜索引擎大会（SESSanJose2006）首次提出“云计算“（Cloud Computing）的概念。而亚马逊正是那年推出了IaaS服务平台AWS。
 
