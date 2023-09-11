@@ -1,6 +1,15 @@
 # 3.1 HTTPS 请求阶段分析
 
-HTTPS协议无疑是互联网程序员最常接触的协议之一。绝大部分的互联网流量都是通过HTTPS进行传输的。因此，深入理解HTTPS请求的处理流程对于进行网络优化或解决网络问题等诸多任务来说至关重要。
+:::tip <i></i>
+小张是一名后端工程师，他报告了一个光速般的30ms的后端接口延迟。领导一看，感觉像看到了闪电，指示立马给小张加薪升职。接着轮到前端小王，它的接口延迟指标是 3000ms。简直比走路还慢！这个季度小王绩效是B减。
+:::
+
+小王是不是很冤？我们得先看看 HTTP(S) 请求的各个阶段。
+
+<div  align="center">
+	<img src="../content/assets/http-process.png" width = "500"  align=center />
+	<p>图 3-1 HTTPS（TLS1.2）请求阶段</p>
+</div>
 
 一个完整 HTTPS 请求流程包括：
 
@@ -10,12 +19,7 @@ HTTPS协议无疑是互联网程序员最常接触的协议之一。绝大部分
 4. 服务器处理
 5. 内容传输阶段
 
-下面的流程图展示了 HTTP(S) 请求的各个阶段。
 
-<div  align="center">
-	<img src="../content/assets/http-process.png" width = "500"  align=center />
-	<p>图 3-1 HTTPS 请求阶段</p>
-</div>
 
 ## 3.1.1 耗时分析
 
