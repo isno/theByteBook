@@ -1,32 +1,23 @@
 # 3.1 HTTPS 请求阶段分析
 
-:::tip <i></i>
-小张是一名后端工程师，他报告了一个光速般的30ms的后端接口延迟。领导一看，感觉像看到了闪电，指示立马给小张加薪升职。接着轮到前端小王，它的接口延迟指标是 3000ms。简直比走路还慢！这个季度，小王绩效得了B减。
-:::
+在优化网络之前，我们得先看看一个HTTPS网络接口请求有哪些环节。
 
-小王是不是很冤？我们得先看看 HTTP(S) 请求的各个阶段。
+## 3.1.1 请求阶段分析
+
+一个完整的、无任何缓存、未复用连接的HTTPS请求，需要经过DNS域名解析、TCP 握手、SSL 握手、服务器处理、内容传输阶段。如图2-1示例示例。
 
 <div  align="center">
 	<img src="../content/assets/http-process.png" width = "500"  align=center />
-	<p>图 3-1 HTTPS（TLS1.2）请求阶段</p>
+	<p>图 2-1 HTTPS（TLS1.2）请求阶段</p>
 </div>
 
-一个完整未有任何缓存的 HTTPS 
+判断网络时延，我们通常使用RTT（Round-Trip Time，往返时延）的用时衡量。如图2-1示例，一个HTTPS共需要5个RTT = 1RTT(DNS) + 1RTT（TCP 握手）+ 2RTT（SSL握手，使用TLS1.2协议）+ 1RTT（HTTP 内容请求传输）。
 
-1. DNS 域名解析
-2. TCP 握手
-3. SSL 握手
-4. 服务器处理
-5. 内容传输阶段
+北京到美国洛杉矶的网络时延约在190毫秒。如果我们从北京访问美国的一个接口服务（`5*190+后端业务延时`），大概需要1s的时间。
 
+## 3.1.2 请求阶段耗时分析
 
-
-## 3.1.1 耗时分析
-
-如果想对 HTTP 性能监控或者在命令行下分析，可以通过 curl 工具来统计各阶段耗时情况。curl 命令支持的阶段耗时归纳总结如表 3-1 所示。
-<div  align="center">
-	<p>表 3-1 curl 支持的耗时统计</p>
-</div>
+我们可以使用一些工具，对一个请求的各个阶段进行更详细的耗时分析，例如使用curl命令，curl支持非常详细的耗时分析，如表3-1所示。
 
 | 请求阶段 | 释义 |
 |:--|:--|
@@ -38,6 +29,20 @@
 | time_starttransfer | 从请求开始到内容传输前的时间 |
 | time_total | 从请求开始到完成的总耗时 |
 
+我们对一个接口使用curl测试。
+
+```
+$ curl -w '\n time_namelookup=%{time_namelookup}\n time_connect=%{time_connect}\n time_appconnect=%{time_appconnect}\n time_redirect=%{time_redirect}\n time_pretransfer=%{time_pretransfer}\n time_starttransfer=%{time_starttransfer}\n time_total=%{time_total}\n' -o /dev/null -s -L 'https://www.thebyte.com.cn/'
+
+time_namelookup=0.025021
+time_connect=0.033326
+time_appconnect=0.071539
+time_redirect=0.000000
+time_pretransfer=0.071622
+time_starttransfer=0.088528
+time_total=0.088744
+```
+表 3-2为以上的输出结果说明。
 
 业务常关注的性能指标有 DNS 请求耗时、TCP 建立耗时、TTFB （Time To First Byte）等，以下表格为计算方式及说明。
 
@@ -51,19 +56,6 @@
 | 总耗时 = time_total ||
 
 
-用 curl 命令 请求 https://www.thebyte.com.cn 进行示例分析 
-
-```
-$ curl -w '\n time_namelookup=%{time_namelookup}\n time_connect=%{time_connect}\n time_appconnect=%{time_appconnect}\n time_redirect=%{time_redirect}\n time_pretransfer=%{time_pretransfer}\n time_starttransfer=%{time_starttransfer}\n time_total=%{time_total}\n' -o /dev/null -s -L 'https://www.thebyte.com.cn/'
-
-time_namelookup=0.025021
-time_connect=0.033326
-time_appconnect=0.071539
-time_redirect=0.000000
-time_pretransfer=0.071622
-time_starttransfer=0.088528
-time_total=0.088744
-```
-
-通过分析上述的执行结果，我们可以看到有几个关键的时间消耗环节，其中DNS解析约占总时间的28%，TCP连接约占9%，而SSL握手则占到了约50%。从这些指标中，我们可以清晰地看出，如果我们想要优化网络性能，那么在DNS解析、TCP连接和SSL握手这三个阶段的优化将会带来显著的性能提升。
+通过分析上述的执行结果，我们可以看到有几个关键的时间消耗环节，其中DNS解析约占总时间的28%，TCP连接约占9%，而SSL握手则占到了约50%。
+根据这些指标结果的判断，如果我们想要优化网络性能，那么在DNS解析、TCP连接和SSL握手这三个阶段的优化将会带来显著的性能提升。
 
