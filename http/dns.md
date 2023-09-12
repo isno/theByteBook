@@ -1,10 +1,16 @@
 # 2.3 DNS 应用实践
 
+2021年期间，互联网发生了几起影响颇大的服务宕机故障。2021年10月 Facebook 大面积瘫痪，facebook、instagram、whatsapp 等众多服务出现了长达接近 7 个小时宕机。Aakamai Edge DNS 故障，造成 PlayStation Network、HBO、UPS、Airbnb、Salesforce等服务约1个小时停摆。
+
+这些故障是怎么引起的，故障影响范围为何如此广泛，带着这些问题，让我们开始 DNS 篇节。
+
+## 1.DNS是什么
+
 DNS（Domain Name System）本质是一个分布式树状命名系统，从 NS（NameServer，域名权威解析服务）到各级 Local DNS（本地域名解析服务） 就像一个去中心化的分布式数据库，存储着从域名到 IP 地址的映射关系。
 
 笔者从业经历中所见到的重量级故障大部分都跟 DNS 有关系。例如 2021年 Facebook 大面积瘫痪、Aakamai Edge DNS 故障等，都是由 NameServer 宕机引起，所以了解 DNS 解析原理，才能在服务故障时尽快地进行排除分析。
 
-## 1. 域名解析流程说明
+## 2.域名解析流程说明
 
 在对DNS简单了解之后，我们继续进入 DNS 工作原理的部分。
 
@@ -21,7 +27,7 @@ DNS（Domain Name System）本质是一个分布式树状命名系统，从 NS�
 
 从上面解析流程看出，有两个易出问题的环节，第一个是 Local DNS 出错，会产生局部用户无法访问服务，第二个是 Name Server 解析出现问题，会产生严重的整体服务不可用。一些重量级应用自建的 Name Server 宕机甚至会影响到整个互联网的稳定（如 facebook 挂掉，用户疯狂重试，引起公共 DNS 超负荷宕机，继而产生二次故障）。
 
-## 2. 域名故障排查
+## 3.域名故障排查
 
 如果碰到网络故障、 DNS 解析错误时，第一步，我们可以用 nslookup 命令查询域名解析的基本信息，进行快速故障判断。
 
