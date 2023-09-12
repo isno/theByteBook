@@ -1,4 +1,4 @@
-# 3.3 DNS 的原理与应用
+# 2.3 DNS 应用实践
 
 DNS（Domain Name System）本质是一个分布式树状命名系统，从 NS（NameServer，域名权威解析服务）到各级 Local DNS（本地域名解析服务） 就像一个去中心化的分布式数据库，存储着从域名到 IP 地址的映射关系。
 
