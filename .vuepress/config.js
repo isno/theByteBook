@@ -85,7 +85,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '3.3 HTTP 服务优化指南',
+                        text: '2.4 HTTP 服务优化指南',
                         link:  '/http/http-performance.md',
        
                         children: [

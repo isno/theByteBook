@@ -39,7 +39,7 @@ DNS（Domain Name System）是将域名转换为IP地址的系统。我们在浏
 
 ### 1 使用nslookup命令
 
-第一个介绍的是nslookup命令，该命令用于查询DNS的记录，查看域名解析是否正常。命令格式：nslookup domain [DNS解析器] ，命令示例。
+第一个介绍的是nslookup命令，该命令用于查询DNS的记录、域名解析是否正常。命令格式：nslookup domain [DNS解析器] ，命令示例。
 
 ```
 $ nslookup thebyte.com.cn        
@@ -53,9 +53,9 @@ Address: 110.40.229.45
 
 返回信息说明。
 
-- 第一行的 Server 为当前使用的DNS解析器，也可以指定解析器，例如 `nslookup thebyte.com.cn 8.8.8.8`。
+- 第一行的 Server 为当前使用的DNS解析器（也可以指定解析器，例如 `nslookup thebyte.com.cn 8.8.8.8`）。
 - Non-authoritative answer 因为DNS解析器只是转发权威解析服务器的记录，所以为非权威应答。
-- Address 为域名所对应的IP，上面的解析可以看到是一个A记录 110.40.229.45
+- Address 为解析结果，上面的解析可以看到是一个A记录 110.40.229.45。
 
 ### 2 使用dig命令
 
