@@ -68,7 +68,48 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第二章：深入Linux内核网络及实践',
+                text: '第二章：构建”足够快“的网络服务',
+                link: "/http/summary.md",
+                collapsable: false,
+                sidebarDepth: 1,
+                children: [
+                    '/http/background.md',
+                    '/http/latency.md',
+                    {
+                        text: '3.2 DNS 应用实践',
+                        link:  '/http/dns.md',
+       
+                        children: [
+                            '/http/http-dns.md',
+                            '/http/dns-ha.md',
+                        ]
+                    },
+                    {
+                        text: '3.3 HTTP 服务优化指南',
+                        link:  '/http/http-performance.md',
+       
+                        children: [
+                            '/http/compress.md',
+                            '/http/quic.md',
+                            '/http/nginx-quic.md',
+                            //'/http/quic-performance.md'
+                        ]
+                    },
+                    {
+                        text: '3.4 HTTPS 原理及 SSL 优化实践',
+                        link:  '/http/https-summary.md',
+                        children: [
+                            '/http/https.md',
+                            '/http/ssl.md',
+                            '/http/ssl-performance.md',
+                        ]
+                    },
+                    
+                    '/http/protobuf.md'
+                ]
+            },
+            {
+                text: '第三章：深入Linux内核网络及实践',
                 collapsable: true,
                 link: '/network/summary.md',
                 sidebarDepth: 2,
@@ -126,47 +167,7 @@ export default defineUserConfig({
                     },
                 ]
             },
-            {
-                text: '第二章：构建”足够快“的网络服务',
-                link: "/http/summary.md",
-                collapsable: false,
-                sidebarDepth: 1,
-                children: [
-                    '/http/background.md',
-                    '/http/latency.md',
-                    {
-                        text: '3.2 DNS 的原理与应用',
-                        link:  '/http/dns.md',
-       
-                        children: [
-                            '/http/http-dns.md',
-                            '/http/dns-ha.md',
-                        ]
-                    },
-                    {
-                        text: '3.3 HTTP 服务优化指南',
-                        link:  '/http/http-performance.md',
-       
-                        children: [
-                            '/http/compress.md',
-                            '/http/quic.md',
-                            '/http/nginx-quic.md',
-                            //'/http/quic-performance.md'
-                        ]
-                    },
-                    {
-                        text: '3.4 HTTPS 原理及 SSL 优化实践',
-                        link:  '/http/https-summary.md',
-                        children: [
-                            '/http/https.md',
-                            '/http/ssl.md',
-                            '/http/ssl-performance.md',
-                        ]
-                    },
-                    
-                    '/http/protobuf.md'
-                ]
-            },
+            
             {
                 text: '第四章：负载均衡原理与网关架构应用实践',
                 link: '/api-gateway/intro.md',

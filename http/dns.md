@@ -4,26 +4,31 @@
 
 这些故障是怎么引起的，故障影响范围为何如此广泛，带着这些问题，让我们开始 DNS 篇节。
 
-## 1.DNS是什么
+## 1.DNS的工作原理
 
-DNS（Domain Name System）本质是一个分布式树状命名系统，从 NS（NameServer，域名权威解析服务）到各级 Local DNS（本地域名解析服务） 就像一个去中心化的分布式数据库，存储着从域名到 IP 地址的映射关系。
+DNS（Domain Name System）是将域名转换为IP地址的系统。我们在浏览器输入一个域名时，DNS负责将该域名解析为相应的IP地址，以便后续与目标服务器建立TCP/IP连接。
 
-笔者从业经历中所见到的重量级故障大部分都跟 DNS 有关系。例如 2021年 Facebook 大面积瘫痪、Aakamai Edge DNS 故障等，都是由 NameServer 宕机引起，所以了解 DNS 解析原理，才能在服务故障时尽快地进行排除分析。
-
-## 2.域名解析流程说明
-
-在对DNS简单了解之后，我们继续进入 DNS 工作原理的部分。
+要清楚DNS的工作原理，就必须了解域名是一个树状结构。最顶层的域名是根域名（root），然后是顶级域名（top-level domain，简写 TLD），再是一级域名、二级域名、三级域名，如图所示。
 
 <div  align="center">
-	<img src="../assets/dns.png" width = "420"  align=center />
-	<p>图 3-2 DNS 解析流程</p>
+	<img src="../assets/dns-tree.webp" width = "350"  align=center />
+	<p>图 3-2 DNS域名结构</p>
+</div>
+
+这种树状结构的意义在于，只有上级域名，才知道下一级域名的 IP 地址，需要逐级查询，每一级域名都有自己的 DNS 服务器，存放下级域名的 IP 地址。
+
+了解域名的结构之后，我们看看域名时如何进行解析的，如下图所示。
+
+<div  align="center">
+	<img src="../assets/dns-example.png" width = "420"  align=center />
+	<p>图 3-2 DNS 工作原理</p>
 </div>
 
 
 1. 用户向 `DNS 解析器`（如 Local DNS、代理用户 DNS 请求过程）发出解析 thebyte.com.cn 域名请求。
-2. `DNS解析器` 判断是否存在解析缓存，如存在返回缓存结果。如无则向就近的 `Root DNS Server` (根域名服务器)，请求所属 `TLD 域名服务器`。
-3. 获取  com.cn.域的 `TLD 域名服务器`后， 向该地址请求 thebyte.com.cn. 的 `权威解析服务器`（Name Server）。
-4. 得到`权威解析服务器`（Name Server）后，向该服务请求域名对应的 IP 地址。 
+2. `DNS解析器` 判断是否存在解析缓存，如存在返回缓存结果。如无则向就近的 `Root nameserver` (根域名服务器)，请求所属 `TLD 域名服务器`。
+3. 获取  com.cn.域的 `TLD 域名服务器`后， 向该地址请求 thebyte.com.cn. 的 `权威解析服务器`（Authoritative nameserver）。
+4. 得到`权威解析服务器`后，向该服务请求域名对应的 IP 地址。 
 
 从上面解析流程看出，有两个易出问题的环节，第一个是 Local DNS 出错，会产生局部用户无法访问服务，第二个是 Name Server 解析出现问题，会产生严重的整体服务不可用。一些重量级应用自建的 Name Server 宕机甚至会影响到整个互联网的稳定（如 facebook 挂掉，用户疯狂重试，引起公共 DNS 超负荷宕机，继而产生二次故障）。
 
