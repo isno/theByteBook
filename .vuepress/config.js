@@ -76,12 +76,12 @@ export default defineUserConfig({
                     '/http/background.md',
                     '/http/latency.md',
                     {
-                        text: '3.2 DNS 应用实践',
+                        text: '2.3 DNS 应用实践',
                         link:  '/http/dns.md',
        
                         children: [
-                            '/http/http-dns.md',
                             '/http/dns-ha.md',
+                            '/http/http-dns.md',
                         ]
                     },
                     {

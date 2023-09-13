@@ -1,10 +1,10 @@
 # 2.3 DNS 应用实践
 
-2021年期间，互联网发生了几起影响颇大的服务宕机故障。7月23日 Aakamai Edge DNS 故障，造成 PlayStation Network、HBO、UPS、Airbnb、Salesforce等众多知名网站宕机。不久之后，10月4日 社交网络平台Facebook及旗下服务Messenger、Instagram、WhatsApp、Mapillary与Oculus发生全球性宕机。。
+2021年期间，互联网发生了几起影响颇大的服务宕机故障。7月23日 Aakamai Edge DNS 故障，造成 PlayStation Network、HBO、UPS、Airbnb、Salesforce等众多知名网站宕机。不久之后，10月4日 社交网络平台Facebook及旗下服务Messenger、Instagram、WhatsApp、Mapillary与Oculus发生全球性宕机。
 
 这些故障是怎么引起的？影响范围为何如此广泛？带着这些问题，让我们开始 DNS 篇节。
 
-## 1.DNS的工作原理
+## 2.3.1 DNS的工作原理
 
 DNS（Domain Name System）是将域名转换为IP地址的系统。我们在浏览器输入一个域名时，DNS负责将该域名解析为相应的IP地址，以便后续与目标服务器建立TCP/IP连接。
 
@@ -33,12 +33,12 @@ DNS（Domain Name System）是将域名转换为IP地址的系统。我们在浏
 
 从上面解析流程看出，有两个环节容易发生问题。一个是DNS解析器容易发布解析污染或者DNS解析器宕机，例如如企业内部自建DNS解析器，或者使用小运营商的解析器，这种情况会导致域名解析局部的不可用。另外一个是权威解析服务器出现故障，这种情况会导致全局域名解析不可用，但出现问题的概率极低。
 
-## 3.DNS故障排查
+## 2.3.2 DNS故障排查
 
 如果碰到服务不可用、Unknown host 等错误时，我们可以先用几个运维命令确认是否为DNS解析阶段出现问题。
 
-### 3.1 使用nslookup命令
- 
+### 1 使用nslookup命令
+
 第一个介绍的是nslookup命令，该命令用于查询DNS的记录，查看域名解析是否正常。命令格式：nslookup domain [DNS解析器] ，命令示例。
 
 ```
@@ -57,7 +57,7 @@ Address: 110.40.229.45
 - Non-authoritative answer 因为DNS解析器只是转发权威解析服务器的记录，所以为非权威应答。
 - Address 为域名所对应的IP，上面的解析可以看到是一个A记录 110.40.229.45
 
-### 3.2 使用dig命令
+### 2 使用dig命令
 
 nslookup 返回的结果比较简单，如果想获取更多的信息，可以尝试使用 dig 命令。
 
