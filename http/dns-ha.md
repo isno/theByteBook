@@ -1,4 +1,4 @@
-# 3.2.2 DNS NameServer 可用性设计指南
+# 3.2.2 Facebook故障总结复盘
 
 互联网中多次重大故障均由 DNS NameServer 宕机引起，DNS NameServer 宕机影响大、故障范围广，一定要引起重视。在本节，我们以 Meta DNS 故障案例说明 DNS NameServer 可用性设计的必要性。
 
