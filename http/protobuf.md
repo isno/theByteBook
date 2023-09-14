@@ -1,10 +1,11 @@
-# 3.6 使用 Protocol buffers 序列化数据
+# 2.4.2 使用 Protocol Buffers 序列化数据
 
-Protocol buffers 是一种语言中立，平台无关，可扩展的序列化数据的格式。
-Protocol buffers 在序列化数据方面相对 XML、JSON 来说，更加小巧、灵活、高效。一旦定义了要处理的数据的数据结构之后，就可以利用 Protocol buffers 的代码生成工具生成相关的代码。即可利用各种不同语言或从各种不同数据流中对你的结构化数据轻松读写。
+笔者所参与的一些业务中，对序列化和反序列化性能、传输数据量大小有要求的场景中大量使用了 Protocol Buffers，那么这一节，我们来看下这个数据格式，以及讨论我们为什么使用它。
+
+Protocol Buffers 是一种语言中立，平台无关，可扩展的序列化数据的格式。Protocol Buffers 在序列化数据方面相对 XML、JSON 来说，更加小巧、灵活、高效。一旦定义了要处理的数据的数据结构之后，就可以利用 Protocol Buffers 的代码生成工具生成相关的代码，即可利用各种不同语言或从各种不同数据流中对你的结构化数据轻松读写。
 
 
-## 1. 为什么要有 protocol buffers ？
+## 1. 为什么要有 Protocol Buffers
 
 开发人员如果要进行低版本、新旧协议兼容，可能会写如下类似逻辑的代码，虽然能实现多版本协议支持，不过代码比较丑陋。
 
@@ -18,16 +19,20 @@ if (version == 1.0) {
 }
 ```
 
-服务器端新旧协议(高低版本)兼容性问题，如果使用明确的格式化协议，会使新协议的迭代变得非常复杂，开发人员必须确保历史版本都能被兼容、理解， 然后才能切换开关开启新协议。
+如果使用明确的格式协议处理服务器端新旧协议（高低版本）兼容性问题，会使新协议的迭代变得非常复杂，开发人员必须确保历史版本都能被兼容、理解，然后才能切换开关开启新协议。
 
-protocol buffers 的出现就是为了解决这些问题。
+Protocol Buffers的出现就是为了解决这些问题。
 
+## 2. Protocol Buffers 使用示例 
 
-## 2. proto 使用示例 
-目前 protocol buffers 最新版本是 proto3，在 proto 中，所有结构化的数据都被称为 message。
+### 2.1定义 message
+
+在 Protocol buffers 中，所有结构化的数据都被称为 message。
+
+下面为一个message的示例（如果开头第一行不声明 `syntax = "proto3";` 则默认使用 proto2 进行解析）。
 
 ```
-syntax = "proto3";
+syntax = "proto3"; // 版本声明
 
 message helloworld
 { 
@@ -37,14 +42,14 @@ message helloworld
 }
 ```
 
-上面这几行语句，定义了一个消息 helloworld，该消息有三个成员，类型为 int32 的 id，另一个为类型为 string 的成员 str。opt 是一个可选的成员，即消息中可以不包含该成员。
+该message有三个成员。
 
-如果开头第一行不声明 `syntax = "proto3";` 则默认使用 proto2 进行解析。
+ - 类型为 int32 的 id
+ - 类型为 string 的成员 str。
+ - opt 是一个可选的成员，即消息中可以不包含该成员。
 
-每个消息定义中的每个字段都有唯一的编号，这些字段编号用于标识消息二进制格式中的字段，并且在使用消息类型后不应更改, 可以指定的最小字段编号为1，最大字段编号为2^29^-1 或 536,870,911。但注意不能使用数字 19000 到 19999，这是 Protocol Buffers 保留数字，使用时编译会报错。
 
-
-### 2.1 proto3 定义 Services
+### 2.2 定义 Service
 
 如果要使用 RPC（远程过程调用）系统的消息类型，可以在 .proto 文件中定义 RPC 服务接口，protocol buffer 编译器将使用所选语言生成服务接口代码和 stubs。所以，例如，如果你定义一个 RPC 服务，入参是 SearchRequest 返回值是 SearchResponse，你可以在你的 .proto 文件中定义它，如下所示：
 
@@ -54,6 +59,7 @@ service SearchService {
 }
 ```
 与 protocol buffer 一起使用的最直接的 RPC 系统是 gRPC。gRPC 允许通过使用特殊的 protocol buffer 编译插件，直接从 .proto 文件中生成 RPC 相关的代码。
+
 
 ## 3. Protocol Buffer 编码原理
 

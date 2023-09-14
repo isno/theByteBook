@@ -90,13 +90,21 @@ export default defineUserConfig({
        
                         children: [
                             '/http/compress.md',
+                            '/http/protobuf.md',
+                        ]
+                    },
+                    {
+                        text: '2.5 QUIC 协议理解与实践',
+                        link:  '/http/http3.md',
+                        children: [
                             '/http/quic.md',
                             '/http/nginx-quic.md',
                             //'/http/quic-performance.md'
                         ]
                     },
+
                     {
-                        text: '3.4 HTTPS 原理及 SSL 优化实践',
+                        text: '2.6 HTTPS 原理及 SSL 优化实践',
                         link:  '/http/https-summary.md',
                         children: [
                             '/http/https.md',
@@ -105,7 +113,7 @@ export default defineUserConfig({
                         ]
                     },
                     
-                    '/http/protobuf.md'
+                   
                 ]
             },
             {
