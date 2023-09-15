@@ -28,9 +28,12 @@ configure arguments:
 ...
 ```
 
-以下为测试 nginx conf 配置信息，开启 HTTP/3, 启用 early_data 特性，设置 alt-svc 用于 HTTP 协议选择。
+以下为测试 nginx conf 配置信息。
 
-> Alt-Svc 全称为“Alternative-Service”，直译为“备选服务”。 该头部列举了当前站点备选的访问方式列表。 一般用于在提供“QUIC”等新兴协议支持的同时，实现向下兼容。
+- 开启 HTTP/3。
+- 启用 early_data 特性。
+- 设置 alt-svc 用于 HTTP 协议选择（Alt-Svc 全称为“Alternative-Service”，直译为“备选服务”。 该头部列举了当前站点备选的访问方式列表。 一般用于在提供“QUIC”等新兴协议支持的同时，实现向下兼容）。
+
 
 ```
 server {
@@ -65,4 +68,5 @@ server {
 
 <div  align="center">
 	<img src="../assets/nginx-quic.png" width = "500"  align=center />
+    <p>图2-17 测试是否开启QUIC协议</p>
 </div>

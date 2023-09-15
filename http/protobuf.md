@@ -100,6 +100,7 @@ Protobuf 的 message 是一系列键值对，message 的二进制版本只是使
 
 <div  align="center">
 	<img src="../assets/protobuf_example.png" width = "650"  align=center />
+	<p>图 2-10 Protobuf Message结构</p>
 </div> 
 
 由于采用了 tag-value 的形式，所以 option 的 field 如果有，就存在在这个 message buffer 中，如果没有，就不会在这里，这一点也算是压缩了 message 的大小了。
@@ -110,7 +111,7 @@ Protobuf 的 message 是一系列键值对，message 的二进制版本只是使
 
 ## 4. Protobuf 的优缺点
 
-回答上面的问题，Protobuf 序列化后的数据还需要压缩么？当然，protobuf 的 string 类型和byte类型是直接存储的，只有 int 采用了变长压缩。
+回答上面的问题，Protobuf 序列化后的数据还需要压缩么？protobuf 的 string 类型和byte类型是直接存储的，只有 int 采用了变长压缩，当然还需要压缩。
 
 总结 Protobuf 的特点如下。
 

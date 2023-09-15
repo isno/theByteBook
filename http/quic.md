@@ -6,12 +6,12 @@ QUIC (Quick UDP Internet Connection, 快速 UDP 互联网连接) 是一种基于
 
 <div  align="center">
 	<img src="../assets/quic.png" width = "420"  align=center />
-	<p>图 3-8 HTTP2 与 HTTP3 协议对比</p>
+	<p>图 2-13 HTTP2 与 HTTP3 协议对比</p>
 </div>
 
 ## 1.QUIC 出现的背景
 
-在 QUIC 出现之前，HTTP 中使用 TCP 作为传输数据的底层协议。然而，传统的 TCP 这种已经使用了40多年的传输层通信协议，在目前高 BDP、复杂的移动网络的背景下，存在先天的性能瓶颈，这些问题集中在以下几点：
+在 QUIC 出现之前，HTTP 中使用 TCP 作为传输数据的底层协议。然而，TCP 这种已经使用了40多年的传输层通信协议，在目前高 BDP、复杂的移动网络的背景下，存在先天的性能瓶颈，这些问题集中在以下几点。
 
 - 建立连接时握手延迟大：HTTPS 握手初次连接至少需要 3 个 RTT 才能建立。
 - 队头阻塞问题：以 HTTP/2 为例，多个数据请求在同一个 TCP 连接上所有流都必须按顺序处理。如果一个流的数据丢失，后面其他流的数据将被阻塞，直到丢失的数据被重传。
@@ -22,7 +22,7 @@ QUIC (Quick UDP Internet Connection, 快速 UDP 互联网连接) 是一种基于
 
 ## 2.QUIC的优点
 
-QUIC 采用 UDP 作为其传输协议，与 TCP 相比具有更低的延迟和更高的吞吐量，并且它还使 QUIC 能够绕过可能干扰 TCP 的网络中间件。 QUIC 包含基于 TLS 1.3 内置加密协议，可在端点之间提供安全通信。总结，列举 QUIC 的重要特性，这些特性是 QUIC 得以被广泛应用的关键。
+QUIC 采用 UDP 作为其传输协议，与 TCP 相比具有更低的延迟和更高的吞吐量，并且它还使 QUIC 能够绕过可能干扰 TCP 的网络中间件。 QUIC 包含基于 TLS 1.3 内置加密协议，可在端点之间提供安全通信。下面列举 QUIC 的部分重要特性，这些特性是 QUIC 得以被广泛应用的关键。
 
 ### 2.1支持连接迁移
 
@@ -30,7 +30,7 @@ QUIC 采用 UDP 作为其传输协议，与 TCP 相比具有更低的延迟和�
 
 <div  align="center">
 	<img src="../assets/quic-connection.png" width = "580"  align=center />
-	<p>图 3-9 QUIC 支持连接迁移</p>
+	<p>图 2-14 QUIC 支持连接迁移</p>
 </div>
 
 ### 2.2低延时连接
@@ -39,12 +39,14 @@ QUIC 采用 UDP 作为其传输协议，与 TCP 相比具有更低的延迟和�
 
 <div  align="center">
 	<img src="../assets/quic-handshake.png" width = "580"  align=center />
-	<p>图 3-10 QUIC 请求 RTT 示例</p>
+	<p>图 2-15 QUIC 请求 RTT 示例</p>
 </div>
 
 ### 2.3可插拔拥塞控制
 
 TCP协议和内核绑定，要升级拥塞控制算法，必须升级内核才可以。而 QUIC 协议栈运行在用户态，支持可插拔的 Cubic、BBRv2 等拥塞控制算法，也可以根据具体场景定制私有算法。
+
+笔者在推进BBR拥塞控制时，相当难以推进，原因就是要升级内核。
 
 ### 2.4降低对丢包的敏感度
 
@@ -52,7 +54,7 @@ QUIC 为每个流设计和实现单独的流量控制，解决了影响整个连
 
 <div  align="center">
 	<img src="../assets/quic-head-block.png" width = "480"  align=center />
-	<p>图 3-11 QUIC 流</p>
+	<p>图 2-16 QUIC 流</p>
 </div>
 
 

@@ -16,7 +16,7 @@ HTTPDNS 服务在这样的背景下应运而生。
 
 <div  align="center">
 	<img src="../assets/httpdns.png" width = "520"  align=center />
-	<p>图 3-3 HTTPDNS 模式下 DNS 解析流程</p>
+	<p>图 2-7 HTTPDNS 模式下 DNS 解析流程</p>
 </div>
 
 HTTPDNS使用 HTTP(S) 协议绕过运营商的 Local DNS，避免域名劫持、也更准确地判断客户端地区和运营商，得到更精准的解析结果。
