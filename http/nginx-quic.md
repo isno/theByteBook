@@ -1,18 +1,18 @@
-# 2.5.2 部署支持 QUIC 协议的服务端
+# 2.5.2 部署HTTP/3服务端
 
 对于 Nginx 来说，支持 HTTP/3 目前有两种方案可以选择：
 
-- 基于 Cloudflare 的分支版本 Nginx
+- Nginx 的 Cloudflare 的分支版本 
 - Nginx官方 Nginx-quic 项目
 
 使用常规方式部署，需要安装 BoringSSL 等依赖，较为繁琐，这里我们直接使用 docker 镜像 nginx-http3  来进行部署。
 
-拉取镜像
+1. 拉取镜像
 ```
 $ docker pull macbre/nginx-http3:latest
 ```
 
-查看镜像配置
+2. 运行容器并查看Nginx配置信息
 ```
 $ docker run -it macbre/nginx-http3 nginx -V
 
@@ -28,7 +28,7 @@ configure arguments:
 ...
 ```
 
-以下为测试 nginx conf 配置信息。
+以下为 nginx.conf 配置信息。
 
 - 开启 HTTP/3。
 - 启用 early_data 特性。
@@ -64,7 +64,7 @@ server {
 }
 ```
 
-运行容器并查看 HTTP 返回信息，确认是否已经是 QUIC 协议。
+4. 通过浏览器请求确认是否已经是 QUIC 协议。
 
 <div  align="center">
 	<img src="../assets/nginx-quic.png" width = "500"  align=center />
