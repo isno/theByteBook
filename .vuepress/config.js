@@ -108,8 +108,7 @@ export default defineUserConfig({
                         link:  '/http/https-summary.md',
                         children: [
                             '/http/https.md',
-                            '/http/ssl.md',
-                            '/http/ssl-performance.md',
+                            '/http/ssl.md'
                         ]
                     },
                     
