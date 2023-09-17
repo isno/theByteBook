@@ -26,7 +26,7 @@
 |:--|:--|
 | time_namelookup | 从请求开始到 DNS 解析完成的耗时 |
 | time_connect | 从请求开始到 TCP 三次握手完成耗时 |
-| time_appconnect | 从请求开始到 TL S握手完成的耗时 |
+| time_appconnect | 从请求开始到 TLS 握手完成的耗时 |
 | time_pretransfer | 从请求开始到向服务器发送第一个 GET/POST 请求开始之前的耗时 |
 | time_redirect | 重定向时间，包括到内容传输前的重定向的 DNS 解析、TCP 连接、内容传输等时间 |
 | time_starttransfer | 从请求开始到内容传输前的时间 |
