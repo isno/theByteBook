@@ -2,9 +2,9 @@
 
 Facebook的故障有必要总结复盘，在这一节我们了解故障的原因以及给我们的警醒。
 
-Facebook此次故障发生在2021年10月，故障绕过了所有的高可用设计。故障期间facebook、instagram、whatsapp 等众多服务出现了长达接近 7 个小时宕机，影响范围之广以至于差点产生严重二次故障，搞崩整个互联网。
+Facebook此次故障发生在2021年10月4日，故障绕过了所有的高可用设计，故障期间facebook、instagram、whatsapp 等众多服务出现了长达接近 7 个小时宕机，影响范围之深以至于差点产生严重二次故障，搞崩整个互联网。
 
-遇到如此大规模的瘫痪不是DNS就是BGP出了问题。但是很抱歉，这次是两个一起出了问题。
+如此大规模服务的瘫痪不是DNS就是BGP出了问题，但很抱歉，这次是两个一起出了问题。
 
 <div  align="center">
 	<img src="../assets/facebook-404-error.jpeg" width = "450"  align=center />
@@ -16,7 +16,7 @@ Facebook官方在故障后续发布原因总结是：**运维人员修改BGP路�
 
 ## 1.故障现象
 
-故障时期，使用 dig 查询 Facebook 域名解析全部出现 SERVFAIL 错误，根据我们前面的结论，这是Authoritative nameserver出现了故障。
+故障时期，使用 dig 查询 Facebook 域名解析全部出现 SERVFAIL 错误，根据我们前面的结论，这是Authoritative nameserver出现了故障，那这个影响范围就大了，世界上所有的DNS解析器都不会再正常返回Facebook域名的解析结果。
 
 ```
 ➜  ~ dig @1.1.1.1 facebook.com
@@ -38,9 +38,9 @@ Facebook官方在故障后续发布原因总结是：**运维人员修改BGP路�
 
 ## 2.故障总结
 
-这次故障实际上 BGP 和 DNS 一系列设计缺陷叠加，从而放大了故障影响。BGP 发布了错误路由，恰巧Facebook权威域名解析服务器IP 包含在这部分路由中，这就导致域名解析请求无法路由到Facebook内部的Authoritative nameserver服务器中。由于DNS出现问题，运维人员基本无法再通过远程的方式修复，只能是修复团队紧急跑到数据中心修复，这就是此次故障范围、时长影响巨大的原因。
+这次故障实际上 BGP 和 DNS 一系列设计缺陷叠加，从而放大了故障影响。BGP 发布了错误路由，恰巧Facebook的Authoritative nameserver 节点的IP段 包含在这部分路由中，这就导致域名解析请求无法路由到Facebook内部的Authoritative nameserver服务器中。
 
-Facebook这次故障带给以下几点考虑：
+由于DNS出现问题，运维人员很难再通过远程的方式修复，只能是修复团队紧急跑到数据中心修复，这就是此次故障范围、时长影响巨大的原因。Facebook这次故障带给我们以下几点思考：
 
 - 部署形式考虑：可选择将 DNS 服务器节点全部放在 SLB（Server Load Balancer，负载均衡）后方，或采用 OSPF Anycast 架构等部署形式，从而提高 DNS 系统的可靠性。
 - 部署位置考虑：可选择数据中心自建集群 + 公有云服务混合异构部署，利用云的分布式优势进一步增强 DNS 系统健壮性，同时提升 DNS 系统在遭受 DDoS 攻击时的抵御能力。

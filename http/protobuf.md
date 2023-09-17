@@ -19,13 +19,13 @@ if (version == 1.0) {
 ```
 使用明确的格式协议处理服务端新旧协议（APP高低版本）等兼容性问题，会使新协议的迭代变得非常复杂，开发人员必须确保历史版本都能被兼容、理解，然后才能切换开关开启新协议。
 
-Protobuf的出现就是为了解决这些问题。
+Protobuf的出现就是为了解决这种向后兼容问题。
 
 ## 2. Protobuf 使用示例 
 
 在 Protobuf 中，所有结构化的数据都被称为 message。
 
-下面为一个message的示例（如果开头第一行不声明 `syntax = "proto3";` 则默认使用 proto2 进行解析）。
+1. 定义一个 message（如果开头第一行不声明 `syntax = "proto3";` 则默认使用 proto2 进行解析）。
 
 ```
 syntax = "proto3"; // 版本声明
@@ -36,13 +36,13 @@ message Person  {
 }  
 ```
 
-定义完 proto 结构体之后，根据proto文件生成class类文件。
+2. 定义完 proto 结构体之后，根据proto文件生成java类文件。
 
 ```
 proto --java_out = / Person.proto
 ```
 
-在 Java 中使用 Protobuf 定义的结构进行序列化数据。
+3. 在 Java 中使用 Protobuf 定义的结构进行序列化数据。
 
 ```
 //1、 创建Builder
@@ -55,9 +55,8 @@ PersonProto.Person person = builder.build();
 //4、序列化
 byte[] data = person.toByteArray();
 ```
-序列化后的数据，可以通过 RPC、HTTP等方式传递。
 
-接收方获取数据后进行反序列化。
+4. 序列化后的数据，可以通过 RPC、HTTP等方式传递，接收方获取数据后进行反序列化。
 ```
 PersonProto.Person person = PersonProto.Person.parseFrom(data);
 System.out.println(person.getAge());
@@ -66,13 +65,13 @@ System.out.println(person.getName());
 
 ## 3.Protobuf 编码原理
 
-Protobuf 的介绍中说序列化后的数据比JSON、XML更紧凑。那么来一个简单的问题，Protobuf 序列化后的数据传输过程中还需要压缩么？想知道这个问题，得先了解什么是Varint编码。
+Protobuf 的介绍中说序列化后的数据比JSON、XML更紧凑。那么思考一个简单的问题 “Protobuf 序列化后的数据传输过程中还需要压缩么？”
+
+想知道答案，得先了解什么是Varint编码。
 
 ### 3.1 Varints 编码
 
-Varint 是一种紧凑的表示数字的方法，它用一个或多个字节来表示一个数字，值越小的数字使用越少的字节数，这能减少用来表示数字的字节数。
-
-Varint 中的每个字节（最后一个字节除外）都设置了最高有效位（msb），这一位表示还会有更多字节出现。每个字节的低 7 位用于以 7 位组的形式存储数字的二进制补码表示，最低有效组首位。
+Varint 是一种紧凑的表示数字的方法，它用一个或多个字节来表示一个数字。Varint 中的每个字节（最后一个字节除外）都设置了最高有效位（msb），这一位表示还会有更多字节出现。每个字节的低 7 位用于以 7 位组的形式存储数字的二进制补码表示，最低有效组首位。
 
 如果用不到 1 个字节，那么最高有效位设为 0。如下面这个例子，1 用一个字节就可以表示，所以 msb 为 0.
 
@@ -92,9 +91,13 @@ Varint 确实是一种紧凑的表示数字的方法。比如对于 int32 类型
 
 300 如果用 int32 表示，需要 4 个字节，现在用 Varint 表示，只需要 2 个字节了，缩小了一半！
 
+回答上面的问题，Protobuf 序列化的 string 类型和byte类型是直接存储的，只有 int 采用了变长压缩，当然还需要压缩。
+
 ### 3.2 Message 结构
 
-Protobuf 还有个特性：向后兼容。这一小节，我们来了解下message的结构设计，搞明白 Protocol buffer 是怎么做到向后兼容的。
+Protobuf 还有个特性：向后兼容。
+
+这一小节，我们来了解下message的结构设计，搞明白 Protocol buffer 是怎么做到向后兼容的。
 
 Protobuf 的 message 是一系列键值对，message 的二进制版本只是使用字段号(field's number 和 wire_type) 作为 key。每个字段的名称和声明类型只能在解码端通过引用消息类型的定义（即 .proto 文件）来确定。这一点也是人们常常说的 protocol buffer 比 JSON，XML 安全一点的原因，如果没有数据结构描述 .proto 文件，拿到数据以后无法解释成正常的数据。
 
@@ -103,17 +106,13 @@ Protobuf 的 message 是一系列键值对，message 的二进制版本只是使
 	<p>图 2-10 Protobuf Message结构</p>
 </div> 
 
-由于采用了 tag-value 的形式，所以 option 的 field 如果有，就存在在这个 message buffer 中，如果没有，就不会在这里，这一点也算是压缩了 message 的大小了。
-
-当消息编码时，键和值被连接成一个字节流。当消息被解码时，解析器需要能够跳过它无法识别的字段。这样，可以将新字段添加到消息中，而不会破坏不知道它们的旧程序。
+由于采用了 tag-value 的形式，所以 option 的 field 如果有，就存在在这个 message buffer 中，如果没有，就不会在这里，这一点也算是压缩了 message 的大小了。当消息编码时，键和值被连接成一个字节流。当消息被解码时，解析器需要能够跳过它无法识别的字段。这样，可以将新字段添加到消息中，而不会破坏不知道它们的旧程序。
 
 这就是所谓的 “向后”兼容性。
 
-## 4. Protobuf 的优缺点
+## 4. 总结Protobuf的特点 
 
-回答上面的问题，Protobuf 序列化后的数据还需要压缩么？protobuf 的 string 类型和byte类型是直接存储的，只有 int 采用了变长压缩，当然还需要压缩。
-
-总结 Protobuf 的特点如下。
+总结 Protobuf 的特点如下：
 
 - Protobuf 利用 varint 以及 Tag - Value (Tag - Length - Value)的 编码后，二进制数据非常紧凑。选用它作为网络数据传输，消耗的网络流量相对更少。
 - Protobuf 一个核心价值在于提供了一套工具自动化生成 get/set 代码，简化了多语言交互的复杂度，使得编码解码工作有了生产力。

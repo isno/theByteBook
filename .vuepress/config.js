@@ -74,6 +74,7 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/http/background.md',
+                    '/network/latency.md',
                     '/http/latency.md',
                     {
                         text: '2.3 DNS 应用实践',
@@ -85,12 +86,15 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '2.4 HTTP 服务优化指南',
+                        text: '2.4 HTTP 内容传输及链路优化',
                         link:  '/http/http-performance.md',
        
                         children: [
                             '/http/compress.md',
                             '/http/protobuf.md',
+                            "/network/congestion-control.md",
+                            '/http/Edge-Acceleration.md',
+                            
                         ]
                     },
                     {
@@ -111,6 +115,15 @@ export default defineUserConfig({
                             '/http/ssl.md'
                         ]
                     },
+                    {
+                        text: '2.7 网络性能观测指南',
+                        link: "/network/observation.md",
+                        children: [
+                            '/network/dperf.md',
+                            '/network/mtr.md',
+                            '/network/tcpdump.md'
+                        ]
+                    },
                     
                    
                 ]
@@ -121,7 +134,7 @@ export default defineUserConfig({
                 link: '/network/summary.md',
                 sidebarDepth: 2,
                 children: [
-                    '/network/latency.md',
+                    
                     '/network/layer.md',
                     {
                         text: '2.3 Linux 系统收包流程以及内核参数优化指南',
@@ -129,7 +142,7 @@ export default defineUserConfig({
                         children: [
                             "/network/RSS.md",
                             "/network/netstack-performance.md",
-                            "/network/congestion-control.md"
+                            
                         ]
                     },
 
@@ -160,18 +173,9 @@ export default defineUserConfig({
                         children: [
                             '/content/chapter1/bgp.md',
                             '/content/chapter1/anycast.md',
-                            '/http/Edge-Acceleration.md',
+                           
                         ]
-                    },
-                     {
-                        text: '2.7 网络性能观测指南',
-                        link: "/network/observation.md",
-                        children: [
-                            '/network/dperf.md',
-                            '/network/mtr.md',
-                            '/network/tcpdump.md'
-                        ]
-                    },
+                    }
                 ]
             },
             
