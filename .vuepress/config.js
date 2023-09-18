@@ -129,25 +129,15 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第三章：深入Linux内核网络及实践',
+                text: '第三章：深入Linux内核网络',
                 collapsable: true,
                 link: '/network/summary.md',
                 sidebarDepth: 2,
                 children: [
-                    
                     '/network/layer.md',
+                    '/network/networking.md',
                     {
-                        text: '2.3 Linux 系统收包流程以及内核参数优化指南',
-                        link: '/network/networking.md',
-                        children: [
-                            "/network/RSS.md",
-                            "/network/netstack-performance.md",
-                            
-                        ]
-                    },
-
-                     {
-                        text: '2.4 Linux 内核网络框架分析',
+                        text: '3.3 Linux 内核网络框架分析',
                         link: "/network/linux-kernel-networking.md",
                         children: [
                             '/network/kernel-networking.md',
@@ -156,6 +146,17 @@ export default defineUserConfig({
                             '/network/conntrack.md',
                         ]
                     },
+
+                    {
+                        text: '3.4 内核参数优化指南',
+                        link: '/network/networking.md',
+                        children: [
+                            "/network/RSS.md",
+                            "/network/netstack-performance.md",
+                            
+                        ]
+                    },
+
                     {
                         text: '2.5 Linux 网络虚拟化',
                         link: "/network/net-virtual.md",
