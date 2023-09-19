@@ -7,6 +7,16 @@
 	<p>图 2-9 网络数据包流程和 Netfilter 框架</p>
 </div>
 
+## netfilter 框架
+
+netfilter是Linux内核中的一个包过滤框架，允许用户空间的软件配置内核网络栈的IPV4和IPV6数据包过滤的规则。主要由多个钩子函数（hook functions）组成，这些函数被插入到内核网络栈的关键位置，可以在数据包通过网络栈时进行拦截和处理。
+
+netfilter最常见的应用是iptables，一个强大的防火墙软件。通过使用iptables，我们可以创建一系列的规则来控制计算机上的网络流量，保护系统不受恶意攻击。
+
+此外，netfilter也可用于网络地址转换（NAT）、端口转发、数据包日志记录等多种工具，在网络管理和安全方面起到关键作用。
+
+
+
 从图 2-9 可以看到 Linux 内核如何处理通过不同协议栈路径上的数据包。我们对图中各个模块进行说明，图中有颜色的长方形方框表示 iptables 或 ebtables 的表和链，绿色小方框表示 network level，即 iptables 的表和链（用以处理 IP 数据包），蓝色小方框表示 bridge level，即 ebtables 的表和链（用以处理太网帧），由于处理以太网帧相对简单，因此链路层的蓝色小方框相对较少。
 
 我们还注意到一些代表 iptables 表和链的绿色小方框位于链路层，这是为了解决在链路层 Bridge 中处理 IP 数据包而引入 bridge_nf 的原因，这也是安装 Kubernetes 要求开启 bridge-nf-call-iptables 的原因。

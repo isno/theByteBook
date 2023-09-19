@@ -94,7 +94,6 @@ export default defineUserConfig({
                             '/http/protobuf.md',
                             "/network/congestion-control.md",
                             '/http/Edge-Acceleration.md',
-                            
                         ]
                     },
                     {
@@ -124,8 +123,6 @@ export default defineUserConfig({
                             '/network/tcpdump.md'
                         ]
                     },
-                    
-                   
                 ]
             },
             {
@@ -146,7 +143,6 @@ export default defineUserConfig({
                             '/network/conntrack.md',
                         ]
                     },
-
                     {
                         text: '3.4 内核参数优化指南',
                         link: '/network/networking.md',
@@ -156,7 +152,7 @@ export default defineUserConfig({
                             
                         ]
                     },
-
+                    '/network/C10M.md',
                     {
                         text: '2.5 Linux 网络虚拟化',
                         link: "/network/net-virtual.md",
@@ -436,16 +432,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第十二章：Serverless 架构',
-                link: '/serverless/summary.md',
-                collapsable: false,
-                sidebarDepth: 1,
-                children: [
-                    '/serverless/Knative.md',
-                ]
-            },
-            {
-                text: '第十三章：FinOps云成本管理',
+                text: '第十二章：FinOps云成本管理',
                 link: '/FinOps/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
