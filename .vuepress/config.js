@@ -137,7 +137,6 @@ export default defineUserConfig({
                         text: '3.3 Linux 内核网络框架分析',
                         link: "/network/linux-kernel-networking.md",
                         children: [
-                            '/network/kernel-networking.md',
                             '/network/XDP.md',
                             '/network/netfilter.md',
                             '/network/conntrack.md',
@@ -153,6 +152,7 @@ export default defineUserConfig({
                         ]
                     },
                     '/network/C10M.md',
+                    /*
                     {
                         text: '2.5 Linux 网络虚拟化',
                         link: "/network/net-virtual.md",
@@ -172,7 +172,7 @@ export default defineUserConfig({
                             '/content/chapter1/anycast.md',
                            
                         ]
-                    }
+                    }*/
                 ]
             },
             
