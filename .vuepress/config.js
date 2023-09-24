@@ -144,7 +144,7 @@ export default defineUserConfig({
                     },
                     {
                         text: '3.4 内核参数优化指南',
-                        link: '/network/networking.md',
+                        link: '/network/kernel-performance.md',
                         children: [
                             "/network/RSS.md",
                             "/network/netstack-performance.md",
