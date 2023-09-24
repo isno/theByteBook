@@ -177,12 +177,13 @@ export default defineUserConfig({
             },
             
             {
-                text: '第四章：负载均衡原理与网关的实践',
+                text: '第四章：负载均衡概论与实践',
                 link: '/api-gateway/intro.md',
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
                 '/api-gateway/balance.md',
+                '/api-gateway/balance-topology.md',
                 {
                         text: "4.1 四层负载均衡",
                         link: '/api-gateway/balance4.md',
