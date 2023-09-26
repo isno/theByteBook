@@ -27,7 +27,7 @@ Mark Andreessen是风险投资公司Andreessen-Horowitz的联合创始人和合�
 在后端，软件编程工具和基于互联网的服务可以轻松地在许多行业中推出新的全球软件驱动的初创企业 —— 无需投资新的基础设施和培训新员工。2000年，当我的合伙人Ben Horowitz担任第一家云计算公司Loudcloud的首席执行官时，运营基本互联网应用程序每月的成本约为15万美元。今天在亚马逊云中运行相同的应用程序每月花费大约1500美元。
 :::
 
-文中列出了被重塑的产业，具体有：最大的书店 Amazon、最多人订阅的Video service Netflix、最大的音乐公司iTune、Spotify and Pandora等、成长最快的娱乐领域 videogame、最好的电影制片厂 Pixar、最大的行销平台 Google、Groupon、Facebook等、成长最快的电信公司Skype 、成长最快招聘公司 LinkedIn。
+文中列出了被重塑的产业，具体有：最大的书店 Amazon、最多人订阅的Video service Netflix、最大的音乐公司iTunes、Spotify and Pandora等、成长最快的娱乐领域 videogame、最好的电影制片厂 Pixar、最大的行销平台 Google、Groupon、Facebook等、成长最快的电信公司Skype 、成长最快招聘公司 LinkedIn。
 
 文章发表于2011年，在12年后的2023年再来看，互联网冲击已经无所不在，感触更加深刻。
 
