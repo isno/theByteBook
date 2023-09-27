@@ -2,7 +2,7 @@
 
 ## 1.2.1 软件正在改变世界
 
-Mark Andreessen是风险投资公司Andreessen-Horowitz的联合创始人和合伙人（如图1-7所示），该公司投资了Facebook、Groupon、Skype、Twitter、Zynga和Foursquare等。
+Mark Andreessen 是风险投资公司 Andreessen-Horowitz 的联合创始人和合伙人（如图1-7所示），该公司投资了 Facebook、Groupon、Skype、Twitter、Zynga、Foursquare 等公司。
 
 <div  align="center">
 	<img src="../assets/SoftwareEatingTheWorld.jpg" width = "620"  align=center />
@@ -10,7 +10,7 @@ Mark Andreessen是风险投资公司Andreessen-Horowitz的联合创始人和合�
 </div>
 
 
-在2011年8月20日的华尔街日报上，Mark Andreessen发表了名为 “Why Software Is Eating the World” 的文章。文章阐述了软件如何影响各个行业，援引原文部分内容：
+在2011年8月20日的华尔街日报上，Mark Andreessen 发表了名为 “Why Software Is Eating the World” 的文章。文章阐述了软件如何影响各个行业，援引原文部分内容：
 
 :::tip <i></i>
 
@@ -27,9 +27,9 @@ Mark Andreessen是风险投资公司Andreessen-Horowitz的联合创始人和合�
 在后端，软件编程工具和基于互联网的服务可以轻松地在许多行业中推出新的全球软件驱动的初创企业 —— 无需投资新的基础设施和培训新员工。2000年，当我的合伙人Ben Horowitz担任第一家云计算公司Loudcloud的首席执行官时，运营基本互联网应用程序每月的成本约为15万美元。今天在亚马逊云中运行相同的应用程序每月花费大约1500美元。
 :::
 
-文中列出了被重塑的产业，具体有：最大的书店 Amazon、最多人订阅的Video service Netflix、最大的音乐公司iTunes、Spotify and Pandora等、成长最快的娱乐领域 videogame、最好的电影制片厂 Pixar、最大的行销平台 Google、Groupon、Facebook等、成长最快的电信公司Skype 、成长最快招聘公司 LinkedIn。
+文中列出了被重塑的产业，具体有：最大的书店 Amazon、最多人订阅的 Video service Netflix、最大的音乐公司 iTunes、Spotify and Pandora 等、成长最快的娱乐领域 videogame、最好的电影制片厂 Pixar、最大的行销平台 Google、Groupon、Facebook 等、成长最快的电信公司 Skype 、成长最快招聘公司 LinkedIn。
 
-文章发表于2011年，在12年后的2023年再来看，互联网冲击已经无所不在，感触更加深刻。
+文章发表于2011年，2023年再来回顾，互联网冲击已经无所不在，感触更加深刻。
 
 ## 1.2.2 移动互联网在加剧变化
 
