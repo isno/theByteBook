@@ -1,14 +1,10 @@
 # 1.5.6 DevOps
 
-DevOps包含很多不同的概念，试图用几个简短的语句解释DevOps是一件很困难的事情，我们延用之前的惯例，如果要理解一个复杂的概念，就先去了解他的历史以及出现的背景。
-
-DevOps的核心目标是解决软件开发生命周期中的种种问题，那么我们就先从瀑布模型的开发方法说起。
+DevOps 包含很多不同的概念，用几个简短的语句解释 DevOps 无法形成深刻印象，我们延用之前的惯例，如果要理解一个复杂的概念，就先去了解他的历史以及出现的背景。DevOps 的核心目标是解决软件开发生命周期中的管理问题，那么我们就先从瀑布模型的开发方法说起。
 
 ## 1.瀑布开发
 
-早在 1970 年，Winston Royce 发表《MANAGING THE DEVELOPMENT OF LARGE SOFTWARE SYSTEMS》
-
-整个软件开发流程严格遵循需求、设计、开发、测试和部署几个阶段，在这个流程中，需要等上一个阶段完成工作后，才会进行下一阶段的工作。这种模式下，项目开发的进程是由一个阶段“流动”到下一个阶段，如同瀑布流水一般，因为被称为瀑布模型（Waterfall Model）。
+早在 1970 年，Winston Royce 发表《Managing the development of large software systems》文章内就提出了瀑布模型，该模型下整个软件开发流程严格遵循需求、设计、开发、测试和部署几个阶段，在这个流程中，需要等上一个阶段完成工作后，才会进行下一阶段的工作。这种开发模型下项目开发的进程是由一个阶段“流动”到下一个阶段，如同瀑布流水一般，因为被称为瀑布模型（Waterfall Model）。
 
 <div  align="center">
 	<img src="../assets/waterfall-model.jpg" width = "280"  align=center />
@@ -62,9 +58,9 @@ DevOps（Development和Operations的混成词）是一种重视“软件开发�
 https://zh.wikipedia.org/wiki/DevOps
 :::
 
-2009年DevOps概念引入之时，基于“Development”和“Operations”合成一个新词“DevOps”，强调开发（指交付前的广义上的研发活动，包括测试等）与运维的融合，要求人们把注意力放在开发和运维的合作商，促进开发、技术运维和QA部门之间的沟通、协作与整合，这属于简要版的DevOps（DevOps lite）。而现在通常意义的 DevOps是强调整个组织的协作和整合（约束理论也是要求优化整体而不是单个的“孤岛”）。超越IT和公司的边界，扩展到HR、财务、供应商和客户。
+2009年DevOps概念引入之时，基于“Development”和“Operations”合成一个新词“DevOps”，强调开发（指交付前的广义上的研发活动，包括测试等）与运维的融合，目的是实现快速交付价值且具有持续改进能力，其核心是用于打破研发和运维之间的隔阂、加快软件交付流程、提高软件质量。
 
-可以说，DevOps的出现正式为了打破开发和运维之间的壁垒，这两者得以更加通畅的沟通，以清除部门之间的对立。
+可以说，DevOps的出现正是为了打破开发和运维之间的壁垒，这两者得以更加通畅的沟通，以清除部门之间的对立。
 
 <div  align="center">
 	<img src="../assets/devops-2.jpg" width = "320"  align=center />
