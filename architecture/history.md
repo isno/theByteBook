@@ -74,16 +74,6 @@ Docker 的宣传口号是“Build，Ship and Run Any App，Anywhere”。“Run 
 - 2017年底，Kubernetes 赢得容器编排的胜利，云计算进入 Kubernetes 时代。
 - 2018年，Istio 正式发布，服务网格（ServiceMesh）从理念走向成熟。
 
-在容器编排大战期间，以 kubernetes 为核心的 CNCF 生态系统也得以迅猛发展，云原生成为云计算市场的技术新热点。迄今为止，CNCF 在其公布的云原生全景图中，如图1-5所示，显示了目前近 30 个领域、数百个项目的繁荣发展，几乎包揽了所有云计算相关开源项目。
-
-<div  align="center">
-	<img src="../assets/landscape.png" width = "100%"  align=center />
-	<p>图 1-5 CNCF 云原生项目 Landscape </p>
-</div>
-
-至 2023 年，CNCF graduated 级别项目中已包括 Kubernetes、Prometheus、Helm、argo、etcd、istio、Envoy、Harbor 等众多应用，孵化级别的项目更是数不胜数。
-
-现在，CNCF 早已超出了 Kubernetes 的范畴，而是旨在建立在 Kubernetes 为底层资源调度和应用生命周期管理之上的生态系统，CNCF 中还演进出了如 Service Mesh 和 Serverless 之类的分支生态。
 
 ## 1.1.4 云计算演进总结
 
