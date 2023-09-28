@@ -50,9 +50,8 @@ export default defineUserConfig({
                     '/architecture/background.md',
                     '/architecture/define-cloud-native.md',
                     '/architecture/target.md',
-                    '/architecture/arc.md',
-                     {
-                        text: '1.6 云原生代表技术',
+                    {
+                        text: '1.5 云原生代表技术',
                         link: '/architecture/cloud-native-tech.md',
                         children: [
                             '/architecture/container.md',
@@ -63,6 +62,7 @@ export default defineUserConfig({
                             '/architecture/devops.md',
                         ]
                     },
+                    '/architecture/arc.md',
                     '/architecture/architect.md',
                     '/architecture/conclusion.md',    
                 ]
