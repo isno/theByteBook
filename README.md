@@ -11,7 +11,7 @@
 
 
 <div  align="center">
-	<img src="./assets/star-history-2023829.png" width = "460"  align=center />
+	<img src="./assets/star-history-2023928.png" width = "460"  align=center />
 	<p><a href="https://github.com/isno/theByteBook">https://github.com/isno/theByteBook</a></p>
 </div>
 
