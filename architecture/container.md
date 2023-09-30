@@ -1,8 +1,8 @@
 # 1.5.1 容器技术
 
-虽然容器概念是在 Docker 出现以后才开始在全球范围内火起来的，并把容器技术推向了巅峰，但容器技术却不是从 Docker 诞生的。实际上，容器技术连新技术都算不上，在 Docker 之前，就已经有无数先驱在探索这一极具前瞻性的虚拟化技术。
+虽然容器概念是在 Docker 出现以后才开始在全球范围内火起来的，但容器技术却不是从 Docker 诞生的。实际上，容器技术连新技术都算不上，在 Docker 之前，就已经有无数先驱在探索这一极具前瞻性的虚拟化技术。
 
-在本节，我们概览容器技术发展演进历程以及各个阶段所试图解决的问题。
+在本节，我们概览容器技术发展演进历程以及各个阶段所试图解决的问题，以便更全面的了解容器技术。
 
 ## 1.早期容器阶段
 
@@ -15,7 +15,7 @@ chroot 被认为是最早的容器化技术之一，chroot 可以重定向进程
 
 ## 2.封装系统 Linux 容器阶段
 
-2006年，Google 推出 Process Container（进程容器） 用来对一组进程进行限制、记账、隔离资源（CPU、内存、磁盘 I/O、网络等），Process Container 在 2006 年正式推出后，第二年就进入了 Linux 内核主干。由于 Container 这一命名在 Kernel 具有许多不同的含义，所以为了避免代码命名的混乱，就将 Process Container 更名为了 Control Groups，简称：cgroups。
+2006年，Google 推出 Process Container（进程容器） 用来对一组进程进行限制、记账、隔离资源（CPU、内存、磁盘 I/O、网络等），Process Container 推出后不久就进入了 Linux 内核主干，不过由于 Container 这一命名在 Kernel 具有许多不同的含义，所以为了避免代码命名的混乱，后来就将 Process Container 更名为了 Control Groups，简称：cgroups。
 
 2008 年 Linux kernel 2.6.24 在刚刚开始提供 cgroups 的同一时间，社区开发者将 cgroups 的资源管理能力和 Linux namespace（命名空间）的资源隔离能力组合在一起，形成了完整的容器技术 LXC（Linux Container，Linux 容器），这就是如今被广泛应用的容器技术的实现基础。
 
@@ -60,9 +60,7 @@ OCI 项目启动后，为了符合 OCI 标准，Docker推动自身的架构持�
 
 而为了能够兼容所有符合标准的 OCI Runtime 实现，Docker 进一步重构了 Docker Daemon 子系统，把其中与运行时交互的部分抽象为了containerd 项目。这是一个负责管理容器执行、分发、监控、网络、构建、日志等功能的核心模块，其内部会为每个容器运行时创建一个 containerd-shim 适配进程，默认与 runC 搭配工作，但也可以切换到其他 OCI Runtime 实现上（然而实际并没做到，最后 containerd 仍是紧密绑定于 runC）。
 
-后来到了 2016 年，Docker 把 containerd 捐献给了 CNCF 管理。
-
-此后 Docker 运行就不是简单通过 Docker Daemon 来启动了，现阶段的 Docker 通过集成 containerd、containerd-shim、runC 等多个组件共同完成，架构如图1-16所示。
+后来到了 2016 年，Docker 把 containerd 捐献给了 CNCF 管理。此后 Docker 运行就不是简单通过 Docker Daemon 来启动了，现阶段的 Docker 通过集成 containerd、containerd-shim、runC 等多个组件共同完成，架构如图1-16所示。
 
 <div  align="center">
 	<img src="../assets/docker-arc.png" width = "600"  align=center />
@@ -75,13 +73,11 @@ OCI 项目启动后，为了符合 OCI 标准，Docker推动自身的架构持�
 
 尽管早在 2013 年，Pivotal 就提出了“云原生”的概念，但是要实现服务化、具备韧性（Resilience）、弹性（Elasticity）、可观测性（Observability）的软件系统依旧十分困难，在当时基本只能依靠架构师和程序员高超的个人能力，云计算本身还帮不上什么忙。直到 Kubernetes 横空出世，大家才终于等到了破局的希望，**认准了这就是云原生时代的操作系统，是让复杂软件在云计算下获得韧性、弹性、可观测性的最佳路径，也是为厂商们推动云计算时代加速到来的关键引擎之一**。
 
-Kubernetes 发布之后，作为回应，Docker 公司在2015年发布的 Docker 1.12 版本中也加入了一个容器集群管理系统 Docker swarm，力图构建完善的容器编排系统，和 Kubernetes 展开正面竞争，随后市场上又出现了Apache Mesos，容器编排系统开始出现 Kubernetes，Docker Swarm和Apache Mesos 三国并立。
+Kubernetes 发布之后，作为回应，Docker 公司在2015年发布的 Docker 1.12 版本中也加入了一个容器集群管理系统 Docker swarm，力图构建完善的容器编排系统，和 Kubernetes 展开正面竞争，随后市场上又出现了 Apache Mesos，容器编排系统开始出现 Kubernetes、Docker Swarm 和 Apache Mesos 三国并立。
 
-与 Docker Swarm 和 Mesos 等容器编排框架相比，Kubernetes 出道晚，但后发优势明显。Kubernetes 脱胎于已经在 Google 内部运行了多年的 Borg 项目，但并没有直接延用 Borg，而是在这些宝贵经验的基础上从零开始设计，使得其能采用最先进的设计理念而没有任何历史包袱。
+与 Docker Swarm 和 Mesos 等容器编排框架相比，虽然 Kubernetes 出道晚，但后发优势明显，Kubernetes 脱胎于已经在 Google 内部运行了多年的 Borg 项目，但并没有直接延用 Borg，而是在这些宝贵经验的基础上从零开始设计，使得其能采用最先进的设计理念而没有任何历史包袱。Kubernetes 设计了一套稳定可扩展的 API 接口、预置服务发现、容器网络、及可扩展等关键特性，其概念抽象非常符合理想的分布式调度系统。
 
-Kubernetes 设计了一套稳定可扩展的 API 接口、预置服务发现、容器网络、及可扩展等关键特性。其概念抽象非常符合理想的分布式调度系统。
-
-实际上，Kubernetes的一个成功之处就是提供了一个规范，可以让你描述集群的架构、定义服务的最终状态，由它来帮助你的系统达到和维持在这个状态。其开放的架构从API到容器运行的每一层，为开发者暴露出可以拓展的插件机制，鼓励用户通过代码的方式接入到Kubernetes项目。这个机制催生出了大量基于Kubernetes API的创新，壮大了生态。
+实际上，Kubernetes 的一个成功之处就是提供了一个规范，可以让你描述集群的架构、定义服务的最终状态，由它来帮助你的系统达到和维持在这个状态。其开放的架构从 API 到容器运行的每一层，为开发者暴露出可以拓展的插件机制，鼓励用户通过代码的方式接入到Kubernetes项目。这个机制催生出了大量基于 Kubernetes API 的创新，壮大了生态。
 
 最终，Kubernetes 成为容器编排事实上的标准。
 
@@ -102,9 +98,9 @@ OCI 和 CNCF 这两个围绕容器的基金会对云原生生态的发展发挥�
 
 <div  align="center">
 	<img src="../assets/landscape.png" width = "100%"  align=center />
-	<p>图 1-5 CNCF 云原生项目 Landscape </p>
+	<p>图1-18 CNCF 云原生项目 Landscape </p>
 </div>
 
-至 2023 年，CNCF graduated 级别项目中已包括 Kubernetes、Prometheus、Helm、argo、etcd、istio、Envoy、Harbor 等众多应用，孵化级别的项目更是数不胜数。
+至2023年，CNCF graduated 级别项目中已包括 Kubernetes、Prometheus、Helm、argo、etcd、istio、Envoy、Harbor 等众多应用，孵化级别的项目更是数不胜数。
 
 现在，CNCF 早已超出了 Kubernetes 的范畴，而是旨在建立在 Kubernetes 为底层资源调度和应用生命周期管理之上的生态系统。

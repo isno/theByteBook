@@ -1,4 +1,5 @@
 import { defineUserConfig, defaultTheme } from 'vuepress';
+import { mdEnhancePlugin } from "vuepress-plugin-md-enhance";
 
 export default defineUserConfig({
     lang: 'zh-CN',
@@ -18,7 +19,12 @@ export default defineUserConfig({
      `
  ]
     ],
-    plugins: [],
+    plugins: [
+        mdEnhancePlugin({
+          // 启用脚注
+          footnote: true,
+        }),
+    ],
     theme: defaultTheme({
         navbar: [{
                 text: '首页',

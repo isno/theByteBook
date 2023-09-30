@@ -6,9 +6,9 @@
 
 ## 1.微服务的定义
 
-微服务概念被提出之后，在很长的一段时间内并没有被普及，直到2014年，由 Martin Fowler（《MicroServices》作者）、Adrian Cockcroft（Netflix架构师）、Neal ford（《卓有成效的程序员》作者） 等人持续介绍、完善、演进、实践之后，微服务才算是一种真正丰满、独立的架构风格。
+微服务概念被提出之后，在很长的一段时间内并没有被普及，直到2014年，由 Martin Fowler（《MicroServices》作者）、Adrian Cockcroft（Netflix 架构师）、Neal ford（《卓有成效的程序员》作者） 等人持续介绍、完善、演进、实践之后，微服务才算是一种真正丰满、独立的架构风格。
 
-对于微服务的定义，我们援引 Netflix 云架构师 Adrian Cockcroft 的观点。
+对于微服务的定义，我们援引 Netflix[^1] 云架构师 Adrian Cockcroft 的观点。
 :::tip <i></i>
 A microservices architecture as a service‑oriented architecture composed of loosely coupled elements that have bounded contexts.
 :::
@@ -19,18 +19,18 @@ Adrian Cockcroft 的观点中有两个核心概念：Loosely Coupled（松耦合
 
 综合上述，也就说微服务架构要实现独立部署，拥有独立的技术栈、界定上下文，明确所有权等。
 
-如下图，巨石应用（Monolith Application）与微服务（MicroServices）的形象对比，巨石应用就是把所有的东西放在一个大盒子里，这个大盒子里面什么都有。
+如图1-19所示，巨石应用（Monolith Application）与微服务（MicroServices）的形象对比，巨石应用就是把所有的东西放在一个大盒子里，这个大盒子里面什么都有。
 
 <div  align="center">
 	<img src="../assets/Monolith-vs-MicroService.png" width = "480"  align=center />
-	<p>图1-6 巨石应用和微服务的对比</p>
+	<p>图1-19 巨石应用和微服务的对比</p>
 </div>
 
-而微服务更像是集装箱，每个箱子里面包含特定的功能模块，所有的东西可以很灵活的拆分和组装。如图1-13所示，微服务架构中，每个服务都运行在自己的进程中，并通过一些轻量级的机制（如 RPC）进行通信，每个服务都围绕着业务功能进行构建，并且可以独立的进行部署和扩展。
+而微服务更像是集装箱，每个箱子里面包含特定的功能模块，所有的东西可以很灵活的拆分和组装。如图1-20所示，微服务架构中，每个服务都运行在自己的进程中，并通过一些轻量级的机制（如 RPC）进行通信，每个服务都围绕着业务功能进行构建，并且可以独立的进行部署和扩展。
 
 <div  align="center">
 	<img src="../assets/micro-service-1.png" width = "380"  align=center />
-	<p>图 1-13 微服务架构</p>
+	<p>图1-20 微服务架构</p>
 </div>
 
 
@@ -105,5 +105,6 @@ Kubernetes的崛起标志着微服务时代的新篇章，但它并未能完全�
 
 为了解决这一类问题，微服务基础设施很快进行了第二次进化，引入了今天被称为“服务网格“（Service Mesh）的模式。
 
-> Netflix 是业界微服务和DevOps组织的先驱，有大规模生产级微服务的成功实践，并为Spring Cloud Netflix 社区贡献了大量优秀的开源软件，例如Eureka（服务注册与发现）、Zuul（服务网关）、Ribbon（负载均衡）、Hystrix（熔断限流）等等。
+
+[^1]: Netflix 是业界微服务和DevOps组织的先驱，有大规模生产级微服务的成功实践，并为Spring Cloud Netflix 社区贡献了大量优秀的开源软件，例如Eureka（服务注册与发现）、Zuul（服务网关）、Ribbon（负载均衡）、Hystrix（熔断限流）等等。
 
