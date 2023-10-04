@@ -84,7 +84,7 @@ export default defineUserConfig({
                     '/network/latency.md',
                     '/http/latency.md',
                     {
-                        text: '2.4 DNS 应用实践',
+                        text: '2.4 域名解析环节实践',
                         link:  '/http/dns.md',
        
                         children: [
@@ -93,7 +93,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '2.4 HTTP 内容传输及链路优化',
+                        text: '2.5 HTTP 服务优化',
                         link:  '/http/http-performance.md',
        
                         children: [

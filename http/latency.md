@@ -44,7 +44,6 @@ time_total=0.088744
 | time_starttransfer | 从请求开始到内容传输前的时间 |
 | time_total | 从请求开始到完成的总耗时 |
 
-
 业务常关注的性能指标有 DNS请求耗时、TCP建立耗时、TTFB（Time To First Byte）等，表2-3为计算方式及说明。
 
 表2-3 网络请求耗时计算
