@@ -78,5 +78,5 @@ CNCF 通过建立社区、管理众多开源项目等手段来推广技术和生
 了解云原生的定义之后，1.4节继续讨论云原生技术的目标。
 
 [^1]: Pivotal 是云原生概念提出的鼻祖，属于云原生的先驱者和探路者。Pivotal 还推出了 Pivotal Cloud Foundry 和 Spring 系列开发框架。2019年，Pivotal 被 VMware 收购。
-[^2]: https://pivotal.io/cloud-native
-[^3]: https://github.com/cncf/toc/blob/main/DEFINITION.md
+[^2]: 参见 https://pivotal.io/cloud-native
+[^3]: 参见 https://github.com/cncf/toc/blob/main/DEFINITION.md

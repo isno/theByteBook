@@ -2,7 +2,7 @@
 
 在故障的排查解决中，经常会先出现这么几个画面，开发工程师 “我本地跑好好的啊”，运维工程师 “我只是升级了一个依赖库啊”。对于这类问题，在本节，我们聊聊问题的本源 -- 基础设施。
 
-2013年6月，Chad Fowler 在自己的博客中撰写一篇 《Trash Your Servers and Burn Your Code: Immutable Infrastructure and Disposable Components》 的文章，提出了 Immutable Infrastructure（不可变基础设施） 的概念。这一前瞻性的构想，伴随着 Docker 容器技术的兴起、微服务架构的流行，得到了事实上的检验。
+2013年6月，Chad Fowler 在自己的博客中撰写一篇 《Trash Your Servers and Burn Your Code: Immutable Infrastructure and Disposable Components》 的文章，提出了 Immutable Infrastructure（不可变基础设施） 的概念[^1]。这一前瞻性的构想，伴随着 Docker 容器技术的兴起、微服务架构的流行，得到了事实上的检验。
 
 不过谈论不可变基础设施之前，我们先了解不可变（Immutable）和可变（Mutable）的区别。
 
@@ -39,3 +39,6 @@
 
 - **一致性**：在不可变基础设施下，所有的配置都通过标准化描述文件（例如 yaml、dockerfile 等）进行统一定义，不同的 Pod、Service 都按照同样的定义创建，不同实例配置不一致的情况不会再出现。
 - **自动化快速容灾**：当线上突发故障或者遇到异常流量时，不可变基础设施可以快速进行弹性扩缩容、升级、回滚等操作，应对问题时更加快速和自动化，大幅提升持续部署效率。
+
+
+[^1]: 参见 http://chadfowler.com/2013/06/23/immutable-deployments.html
