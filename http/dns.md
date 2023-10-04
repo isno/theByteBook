@@ -1,18 +1,18 @@
-# 2.3 DNS 应用实践
+# 2.4 DNS 应用实践
 
-2021年期间，互联网发生了几起影响颇大的服务宕机故障，7月23日 Aakamai Edge DNS 故障，造成 PlayStation Network、HBO、UPS、Airbnb、Salesforce等众多知名网站宕机，不久之后，10月4日 社交网络平台Facebook及旗下服务Messenger、Instagram、WhatsApp、Mapillary与Oculus发生全球性宕机。
+2021年期间，互联网发生了几起影响颇大的服务宕机故障：7月23日 Aakamai Edge DNS 故障，造成 PlayStation Network、HBO、UPS、Airbnb、Salesforce 等众多知名网站宕机。不久之后，10月4日 社交网络平台 Facebook 及旗下服务 Messenger、Instagram、WhatsApp、Mapillary 与 Oculus 发生全球性宕机。
 
-这些故障是怎么引起的？影响范围为何如此广泛？带着这些问题，让我们开始 DNS 篇节。
+这些故障是怎么引起的？影响范围为何如此广泛？带着这些问题，我们开始 DNS 篇节。
 
-## 2.3.1 DNS的工作原理
+## 2.4.1 DNS的工作原理
 
-DNS（Domain Name System）是将域名转换为IP地址的系统。我们在浏览器输入一个域名时，DNS负责将该域名解析为相应的IP地址，以便后续与目标服务器建立TCP/IP连接。
+DNS（Domain Name System）是将域名转换为IP地址的系统，我们在浏览器输入一个域名时，DNS 负责将该域名解析为相应的 IP 地址，以便后续与目标服务器建立 TCP/IP 连接。
 
 要清楚DNS的工作原理，得先理解域名是一个树状结构。最顶层的域名是根域名（root），然后是顶级域名（top-level domain，简写 TLD），再是一级域名、二级域名、三级域名，如图2-2所示。
 
 <div  align="center">
 	<img src="../assets/dns-tree.webp" width = "350"  align=center />
-	<p>图 2-2 DNS域名结构</p>
+	<p>图 2-3 DNS域名结构</p>
 </div>
 
 这种树状结构的意义在于只有上级域名才知道下一级域名的 IP 地址，获取一个域名IP时，需要逐级查询。每一级域名都有自己的DNS服务器存放下级域名的 IP 地址。
@@ -21,7 +21,7 @@ DNS（Domain Name System）是将域名转换为IP地址的系统。我们在浏
 
 <div  align="center">
 	<img src="../assets/dns-example.png" width = "420"  align=center />
-	<p>图 2-3 DNS解析原理</p>
+	<p>图 2-4 DNS解析原理</p>
 </div>
 
 
@@ -34,7 +34,7 @@ DNS解析流程中有两个环节容易发生问题，一个是DNS解析器容�
 
 下面我们继续看看如果DNS解析出现故障了该如何排查。
 
-## 2.3.2 DNS故障排查
+## 2.4.2 DNS故障排查
 
 如果碰到服务不可用、Unknown host 等错误时，我们可以先用几个运维命令确认是否为DNS解析阶段出现问题。
 

@@ -2,9 +2,9 @@
 
 既然本章的主题是构建足够快的网络服务，那么我们就需要对“快”有个基本了解。
 
-伯克利大学有个动态网页[^注1]可以查看每年计算机中各类操作耗时、延迟的变化。我汇总了 2020 年的数据供读者参考，了解这些延迟指标有助于设计和比较不同的解决方案以及评估服务质量。
+伯克利大学有个动态网页[^1]可以查看每年计算机中各类操作耗时、延迟的变化。笔者汇总了 2020 年的数据供读者参考，如表2-1所示，了解这些延迟指标有助于设计和比较不同的解决方案以及评估服务质量。
 
-<center><p>表2-1 计算机中各类延迟数据</p></center>
+<p>表2-1 计算机中各类延迟数据</p>
 
 操作|延迟
 :---|:--:|
@@ -23,10 +23,11 @@ SSD 随机读 | 16,000 ns  ≈ 16 μs
 磁盘寻址 | 2,000,000 ns ≈ 2 ms
 从美国发送到欧洲的数据包 | 150,000,000 ns ≈ 150 ms
 
-<div  align="center">
-	<img src="../assets/time.png" width = "300"  align=center />
-	<p>图 2-2 秒(s)、毫秒(ms)、微秒 (μs)、纳秒(ns)之间关系 </p>
-</div>
+
+秒(s)、毫秒(ms)、微秒 (μs)、纳秒(ns)之间关系：
+$$
+1s = 10{^3}ms=10{^6}μs=10{^9}ns
+$$
 
 
-> 注1: https://colin-scott.github.io/personal_website/research/interactive_latency.html
+[^1]: 参见 https://colin-scott.github.io/personal_website/research/interactive_latency.html

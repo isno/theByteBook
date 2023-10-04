@@ -23,6 +23,7 @@ export default defineUserConfig({
         mdEnhancePlugin({
           // 启用脚注
           footnote: true,
+          katex: true,
         }),
     ],
     theme: defaultTheme({
@@ -83,7 +84,7 @@ export default defineUserConfig({
                     '/network/latency.md',
                     '/http/latency.md',
                     {
-                        text: '2.3 DNS 应用实践',
+                        text: '2.4 DNS 应用实践',
                         link:  '/http/dns.md',
        
                         children: [

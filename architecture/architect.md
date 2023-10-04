@@ -1,23 +1,22 @@
 # 1.7 云原生时代对架构师的要求
 
-云原生架构是”优雅的、灵活的、弹性的...“，但云原生技术也过于抽象和复杂。云原生架构中，复杂只是被转移到云基础设施中，并没有无故消失。作为架构师，如果有志构建一个高可用的云原生架构，对能力要求已提升到史无前例的程度。总结来说，在云原生工程实践中除掌握 Docker 和 Kubernetes，还需要知晓以下几个领域：
-
-1. 容器和镜像：Docker、containerd、CRI-O、Nydus
-2. 镜像仓库：Harbor
-3. 容器编排：Kubernetes
-4. 应用封装：Kustomize、Helm
-5. 持续集成：Gitlab、Tekton
-6. 持续部署：FluxCD、argoCD
-7. 网关：Ingress-Nginx、APISIX、Kong
-8. 监控：Grafana
-9. 告警：Prometheus
-10. 日志：Fluentd
-11. 应用开发：Nocalhost
+云原生架构是”优雅的、灵活的、弹性的...“，但云原生技术也过于抽象和复杂。云原生架构中，复杂只是被转移到云基础设施中，并没有无故消失。作为架构师，如果有志构建一个高可用的云原生架构，对能力要求已提升到史无前例的程度。总结来说，在云原生工程实践中除掌握 Docker 和 Kubernetes，还需要知晓以下几个领域，如图1-39所示。
 
 <div  align="center">
 	<img src="../assets/cloud.svg" width = "650"  align=center />
 	<p>图 1-39 云原生代表技术栈</p>
 </div>
+
+1. 容器和镜像：Docker、containerd、CRI-O、
+2. 镜像仓库：Harbor、Nydus
+3. 应用封装：Kustomize、Helm
+4. 持续集成：Gitlab、Tekton
+5. 持续部署：FluxCD、argoCD
+6. 容器编排：Kubernetes
+7. 网关：Ingress-Nginx、APISIX
+8. 日志：Fluentd、Grafana loki
+9. 监控：Grafana、Prometheus
+10. 应用开发：Nocalhost
 
 
 行文至此，云原生技术概论的篇章已经结束，细心的读者会注意到一个小问题，本书的命名是”深入架构原理...“而不是“深入云原生架构...”，虽然云原生是一个足够宏观、广泛的课题，但对于构建高品质的软件产品而言，其影响服务质量还包括前端、网络、后端等等，云原生并不能涵盖所有环节（约束理论也是要求优化整体而不是单个的“孤岛）。
