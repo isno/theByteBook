@@ -90,7 +90,7 @@ Docker 的宣传口号是“Build，Ship and Run Any App，Anywhere”。“Run 
 	<p>图 1-6 XaaS 演进 </p>
 </div>
 
-对于XaaS的一路演进，可以简单归纳为：
+对于 XaaS 的一路演进，可以简单归纳为：
 
 - 有了 IaaS，客户不用关注物理机器，只需关注基础架构及应用程序。
 - 有了 PaaS，客户不用关注基础架构，只需关注应用程序。

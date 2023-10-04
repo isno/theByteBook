@@ -97,7 +97,7 @@ Cilium 认为，内核加上共享型代理的引入可以极大的减少代理�
 
 ## 4.Ambient Mesh 模式
 
-2022年9月 Istio 发布了一个名为 “Ambient Mesh” 的无边车数据平面模型，宣称用户可以弃用 Sidecar，以 Ambient Mesh 模式使用 Istio 的特性。
+2022年9月 Istio 发布了一个名为 “Ambient Mesh” 的无边车数据平面模型，宣称用户可以弃用 Sidecar，以 Ambient Mesh 模式使用 Istio 的特性[^2]。
 
 相比 Sidecar，Ambient Mesh 提供一种侵入性更低，升级管理更简单的选择，Ambient 将 Istio 的功能分成两个不同的层次，安全覆盖层（四层治理）和七层处理层（七层治理），如图1-28所示。
 
@@ -125,4 +125,5 @@ Ambient Mesh 可以被理解为一种无 Sidecar 模式，但笔者认为将其�
 随着新技术和创新观念的推动，服务网关的架构逐渐从最初的 Sidecar 模式发展至多元化。现阶段，谁将最终胜出仍难以预测，因为每种模式都具备其独特的优势和劣势，以及适用于不同的应用场景。正如编程语言一样，服务网格在未来可能不会走向标准化，而是各具特色，并在不断的自我完善过程中为用户提供更多的选择。
 
 [^1]: https://istio.io/v1.15/blog/2021/proxyless-grpc/
+[^2]: Istio Ambient 服务网格已合并到 Istio 的主分支 https://istio.io/latest/zh/blog/2023/ambient-merged-istio-main/
  

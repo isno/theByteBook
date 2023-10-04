@@ -1,20 +1,20 @@
 # 1.7 云原生时代对架构师的要求
 
-当布道者在大力推广云原生技术之时，总是毫不吝啬赞誉，称其云原生架构是”优雅的、灵活的、弹性的...“。但公开的宣讲似乎很少提及一个反面，那就是云原生技术过于抽象和复杂。
+当布道者在大力推广云原生技术之时，总是毫不吝啬赞誉，称其云原生架构是”优雅的、灵活的、弹性的...“，但公开的宣讲似乎很少提及一个反面，那就是云原生技术过于抽象和复杂。
 
-在云原生架构中，复杂只是被转移到云基础设施中，并没有无故消失。作为架构师，如果有志构建一个高可用的云原生架构，对能力要求已提升到史无前例的程度。总结来说，在云原生工程实践中除掌握 Docker 和 Kubernetes，还需要聚焦在下面几个领域：
+云原生架构中，复杂只是被转移到云基础设施中，并没有无故消失。作为架构师，如果有志构建一个高可用的云原生架构，对能力要求已提升到史无前例的程度。总结来说，在云原生工程实践中除掌握 Docker 和 Kubernetes，还需要知晓以下几个领域：
 
 1. 容器和镜像：Docker、containerd、CRI-O、Nydus
-2. 持续集成：Gitlab、Tekton
-3. 镜像仓库：Harbor
-4. 应用定义：Kustomize、Helm
-5. 持续部署：FluxCD、argoCD
-6. 容器编排：Kubernetes
-6. 网关：Ingress-Nginx、APISIX、Kong
-7. 监控：Grafana
-8. 告警：Prometheus
-9. 日志：Fluentd
-10. 应用开发：Nocalhost
+2. 镜像仓库：Harbor
+3. 容器编排：Kubernetes
+4. 应用封装：Kustomize、Helm
+5. 持续集成：Gitlab、Tekton
+6. 持续部署：FluxCD、argoCD
+7. 网关：Ingress-Nginx、APISIX、Kong
+8. 监控：Grafana
+9. 告警：Prometheus
+10. 日志：Fluentd
+11. 应用开发：Nocalhost
 
 <div  align="center">
 	<img src="../assets/tech.jpeg" width = "600"  align=center />
