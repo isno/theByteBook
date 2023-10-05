@@ -81,6 +81,7 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/http/background.md',
+                    '/http/net-layer.md',
                     '/network/latency.md',
                     '/http/latency.md',
                     {
@@ -104,7 +105,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '2.5 QUIC 协议理解与实践',
+                        text: '2.5 QUIC 理解与实践',
                         link:  '/http/http3.md',
                         children: [
                             '/http/quic.md',
@@ -380,7 +381,7 @@ export default defineUserConfig({
                 text: '第九章：服务治理变革 ServiceMesh',
                 collapsable: false,
                 sidebarDepth: 1,
-                link: '/MicroService/micro-service.md',
+                link: '/ServiceMesh/summary.md',
                 children: [
                     '/MicroService/micro-service-arc.md',
                     {

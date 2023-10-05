@@ -7,16 +7,16 @@
 	<p>图 1-39 云原生代表技术栈</p>
 </div>
 
-1. 容器和镜像：Docker、containerd、CRI-O、
-2. 镜像仓库：Harbor、Nydus
-3. 应用封装：Kustomize、Helm
-4. 持续集成：Gitlab、Tekton
-5. 持续部署：FluxCD、argoCD
-6. 容器编排：Kubernetes
-7. 网关：Ingress-Nginx、APISIX
-8. 日志：Fluentd、Grafana loki
-9. 监控：Grafana、Prometheus
-10. 应用开发：Nocalhost
+1. 容器和镜像：Docker、containerd、CRI-O、Kata Containers。
+2. 镜像仓库：Harbor、Nydus。
+3. 应用封装：Kustomize、Helm。
+4. 持续集成：Gitlab、Tekton。
+5. 持续部署：FluxCD、argoCD。
+6. 容器编排：Kubernetes。
+7. 网关：Ingress-Nginx、APISIX。
+8. 日志：Fluentd、Grafana loki。
+9. 监控：Grafana、Prometheus。
+10. 应用开发：Nocalhost。
 
 
 行文至此，云原生技术概论的篇章已经结束，细心的读者会注意到一个小问题，本书的命名是”深入架构原理...“而不是“深入云原生架构...”，虽然云原生是一个足够宏观、广泛的课题，但对于构建高品质的软件产品而言，其影响服务质量还包括前端、网络、后端等等，云原生并不能涵盖所有环节（约束理论也是要求优化整体而不是单个的“孤岛）。

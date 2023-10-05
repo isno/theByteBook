@@ -5,11 +5,3 @@
 
 未来已来，只是分布不均，让我们了解云原生，拥抱云原生。
 
-## 1.8.1 本章参考资料
-
-- https://skyao.io/learning-cloudnative/docs.html
-- https://pivotal.io/cloud-native 
-- https://github.com/cncf/toc/blob/main/DEFINITION.md
-- https://landscape.cncf.io/
-- https://icyfenix.cn/architecture/architect-history/post-microservices.html
-- https://mp.weixin.qq.com/s/ccFkJJz97KcuXdO3r5zdXA
