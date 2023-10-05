@@ -4,11 +4,11 @@ QUIC (Quick UDP Internet Connection, 快速 UDP 网络连接) 是一种基于 UD
 
 实际上推动替换 TCP 协议的先驱并不是 IETF，而是 Google 公司。早在 2013年，Google 在它的服务器（如Google.com、youtube.com）和 Chrome 浏览器中启用了名为 “快速 UDP 网络连接（QUIC）” 的全新传输协议。2015年，Google 将 QUIC 提交给 IETF，并在 IETF 的推动下对 QUIC 进行规范化。2018年末，IETF 正式批准了 HTTP over QUIC 使用HTTP/3的版本号，将其确立为最新一代的互联网标准。
 
-如图2-13所示，QUIC 在协议栈中的位置，基于 QUIC 承载的 HTTP 协议进一步被标准化为 HTTP/3。
+如图2-13所示，QUIC 整合了 TCP、TLS 和 HTTP/2 的优点，基于 QUIC 承载的 HTTP 协议进一步被标准化为 HTTP/3。
 
 <div  align="center">
 	<img src="../assets/quic.png" width = "420"  align=center />
-	<p>图 2-13 HTTP2 与 HTTP3 协议对比</p>
+	<p>图2-13 HTTP2 与 HTTP3 协议对比</p>
 </div>
 
 ## 1.QUIC 出现的背景
@@ -22,6 +22,7 @@ QUIC (Quick UDP Internet Connection, 快速 UDP 网络连接) 是一种基于 UD
 QUIC 在以上问题的背景中应用而生。
 
 ## 2.QUIC协议的特点
+
 
 QUIC 采用 UDP 作为其传输协议，与 TCP 相比没有丢包自动重传的特性，QUIC 的可靠性传输能力完全由自己实现。汲取 TCP 的设计经验以及现在的网络环境因素影响，QUIC 得以实现具有更低的延迟和更高的吞吐量。下面列举 QUIC 的部分重要特性，这些特性是 QUIC 被寄予厚望的关键。
 
@@ -45,9 +46,9 @@ QUIC 采用 UDP 作为其传输协议，与 TCP 相比没有丢包自动重传�
 
 ### 2.3可插拔拥塞控制
 
-TCP协议和内核绑定，要升级拥塞控制算法，必须升级内核才可以。而 QUIC 协议栈运行在用户态，支持可插拔的 Cubic、BBRv2 等拥塞控制算法，也可以根据具体场景定制私有算法。
+“构建在UDP之上”意味着可以不关心内核或者不用深入了解内核的开发，也可以灵活地调整可靠传输机制和拥塞控制算法等。QUIC 协议栈运行在用户态，支持可插拔的 cubic、BBR 等拥塞控制算法，也可以根据具体场景定制私有算法。
 
-笔者在内部业务中推进 BBR 拥塞控制算法时，相当难以推进，原因就是要升级内核。
+笔者在内部业务中推进 TCP 拥塞控制算法时，相当难以推进，原因就是要升级内核。
 
 ### 2.4降低对丢包的敏感度
 

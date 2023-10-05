@@ -81,8 +81,8 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/http/background.md',
-                    '/http/net-layer.md',
                     '/network/latency.md',
+                    '/http/net-layer.md',
                     '/http/latency.md',
                     {
                         text: '2.4 域名解析环节实践',
