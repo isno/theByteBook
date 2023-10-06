@@ -1,4 +1,4 @@
-# 3.3.3 连接跟踪 conntrack
+# 3.2.3 连接跟踪 conntrack
 
 连接跟踪（connection tracking，conntrack，CT）对连接状态进行跟踪并记录。
 
