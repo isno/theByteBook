@@ -112,7 +112,7 @@ export default defineUserConfig({
                     "/http/bbr.md",
                     '/http/Edge-Acceleration.md',
                     {
-                        text: '2.5 QUIC 理解与实践',
+                        text: '2.9 QUIC 理解与实践',
                         link:  '/http/http3.md',
                         children: [
                             '/http/quic.md',
@@ -121,7 +121,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '2.7 网络性能观测指南',
+                        text: '2.10 网络性能观测指南',
                         link: "/network/observation.md",
                         children: [
                             '/network/dperf.md',
