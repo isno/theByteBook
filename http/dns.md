@@ -1,10 +1,10 @@
-# 2.5 域名解析环节实践
+# 2.4 域名解析环节实践
 
-2021年期间，互联网发生了几起影响颇大的服务宕机故障：7月23日 Aakamai Edge DNS 故障，造成 PlayStation Network、HBO、UPS、Airbnb、Salesforce 等众多知名网站宕机。不久之后，10月4日 社交网络平台 Facebook 及旗下服务 Messenger、Instagram、WhatsApp、Mapillary 与 Oculus 发生全球性宕机。
+2021年期间，互联网发生了几起影响颇大的服务宕机故障：7月22日 Aakamai Edge DNS 故障，造成 PlayStation Network、HBO、UPS、Airbnb、Salesforce 等众多知名网站宕机[^1]。不久之后，10月4日 社交网络平台 Facebook 及旗下服务 Messenger、Instagram、WhatsApp、Mapillary 与 Oculus 发生全球性宕机[^2]。
 
 这些故障是怎么引起的？影响范围为何如此广泛？带着这些问题，我们开始域名解析篇节。
 
-## 2.5.1 DNS 域名解析的工作原理
+## 2.4.1 DNS 域名解析的工作原理
 
 DNS（Domain Name System）是将域名转换为IP地址的系统，我们在浏览器输入一个域名时，DNS 负责将该域名解析为相应的 IP 地址，以便后续与目标服务器建立 TCP/IP 连接。
 
@@ -34,11 +34,11 @@ DNS 解析流程中有两个环节容易发生问题，一个是 DNS 解析器�
 
 下面我们继续看看如果 DNS 解析出现故障了该如何排查。
 
-## 2.5.2 DNS 故障排查
+## 2.4.2 DNS 故障排查
 
 如果碰到服务不可用、Unknown host 等错误时，我们可以先用几个运维命令确认是否为 DNS 解析阶段出现问题。
 
-### 1 使用 nslookup 命令
+### 1. 使用 nslookup 命令
 
 第一个介绍的是 nslookup 命令，该命令用于查询 DNS 的记录、域名解析是否正常等。
 
@@ -58,7 +58,7 @@ Address: 110.40.229.45
 - Non-authoritative answer 因为 DNS 解析器只是转发权威解析服务器的记录，所以为非权威应答。
 - Address 为解析结果，上面的解析可以看到是一个A记录 110.40.229.45。
 
-### 2 使用 dig 命令
+### 2. 使用 dig 命令
 
 nslookup 返回的结果比较简单，如果想获取更多的信息，可以尝试使用 dig 命令。
 
@@ -103,3 +103,5 @@ Facebook 2021年10月宕机故障中，使用 dig 排查各个公共DNS解析器
 ;whatsapp.com.            IN    A
 ..
 ```
+[^1]: 参见 https://www.akamai.com/blog/news/akamai-summarizes-service-disruption-resolved
+[^2]: 参见 https://en.wikipedia.org/wiki/2021_Facebook_outage

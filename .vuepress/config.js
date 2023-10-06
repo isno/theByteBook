@@ -82,10 +82,9 @@ export default defineUserConfig({
                 children: [
                     '/http/background.md',
                     '/network/latency.md',
-                    '/http/net-layer.md',
                     '/http/latency.md',
                     {
-                        text: '2.5 域名解析环节实践',
+                        text: '2.4 域名解析环节',
                         link:  '/http/dns.md',
        
                         children: [
@@ -94,24 +93,23 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '2.6 应用层：HTTP服务优化',
+                        text: '2.5 HTTP 服务优化',
                         link:  '/http/http-performance.md',
        
                         children: [
                             '/http/compress.md',
                             '/http/protobuf.md',
-                            "/network/congestion-control.md",
-                            '/http/Edge-Acceleration.md',
                         ]
                     },
                     {
-                        text: '2.7 表现层：SSL优化实践',
+                        text: '2.6 HTTPS 原理及 SSL 优化',
                         link:  '/http/https-summary.md',
                         children: [
                             '/http/https.md',
                             '/http/ssl.md'
                         ]
                     },
+                    "/network/congestion-control.md",
                     {
                         text: '2.5 QUIC 理解与实践',
                         link:  '/http/http3.md',
@@ -121,6 +119,7 @@ export default defineUserConfig({
                             //'/http/quic-performance.md'
                         ]
                     },
+                    '/http/Edge-Acceleration.md',
                     {
                         text: '2.7 网络性能观测指南',
                         link: "/network/observation.md",
@@ -138,6 +137,7 @@ export default defineUserConfig({
                 link: '/network/summary.md',
                 sidebarDepth: 2,
                 children: [
+                    '/network/layer.md',
                     '/network/networking.md',
                     {
                         text: '3.3 Linux 内核网络框架分析',

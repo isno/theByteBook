@@ -1,8 +1,8 @@
-# 2.5.4 解决传统DNS解析器问题
+# 2.4.4 解决传统DNS解析器问题
 
 解决 Authoritative nameserver 的问题之后，我们再回过头看看 DNS 解析器（也就是LocalDNS）的问题。
 
-## 1.传统DNS解析器的问题
+## 1. 传统DNS解析器的问题
 
 当我们发出 DNS 解析请求时，首先，会先连接到运营商本地的DNS解析器，由这个服务器帮我们去整棵 DNS 树上进行解析，然后将解析的结果返回给客户端，但是本地的DNS解析器，往往有自己的“小心思”。
 
@@ -10,7 +10,7 @@
 
 HTTPDNS 模式在这样的背景下应运而生。
 
-## 2.使用HTTPDNS改善DNS解析
+## 2. 使用HTTPDNS改善DNS解析
 
 简而言之，HTTPDNS 就是使用 HTTP 协议向 DNS 的 Authoritative nameserver 进行请求，从而获取域名对应的 IP 地址。HTTPDNS 跳过默认系统 DNS 解析的过程，使用 HTTP(S) 协议绕过运营商的 Local DNS，避免域名劫持、也更准确地判断客户端地区和运营商，得到更精准的解析结果。
 
