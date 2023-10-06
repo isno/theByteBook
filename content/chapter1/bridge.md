@@ -47,7 +47,7 @@ $ ip -n ns2 link veth2 up
 $ ip link set veth1-peer up
 ```
 
-为 Network namespace 配置 IP 信息，位于同一个子网 172.16.1.0/24 中。
+为 Network namespace 配置 IP 信息，位于同一个子网 172.16.0.0/24 中。
 
 ```
 $ ip -n ns1 addr add local 172.16.0.1/24 dev veth1-peer

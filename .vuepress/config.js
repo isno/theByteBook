@@ -112,7 +112,7 @@ export default defineUserConfig({
                     "/http/bbr.md",
                     '/http/Edge-Acceleration.md',
                     {
-                        text: '2.9 QUIC 理解与实践',
+                        text: '2.9 使用 QUIC 协议',
                         link:  '/http/http3.md',
                         children: [
                             '/http/quic.md',
