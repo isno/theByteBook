@@ -109,7 +109,7 @@ export default defineUserConfig({
                             '/http/ssl.md'
                         ]
                     },
-                    "/network/congestion-control.md",
+                    "/http/bbr.md",
                     {
                         text: '2.5 QUIC 理解与实践',
                         link:  '/http/http3.md',
