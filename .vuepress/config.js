@@ -111,6 +111,7 @@ export default defineUserConfig({
                     },
                     "/http/bbr.md",
                     '/http/Edge-Acceleration.md',
+
                     {
                         text: '2.9 使用 QUIC 协议',
                         link:  '/http/http3.md',
@@ -120,26 +121,18 @@ export default defineUserConfig({
                             //'/http/quic-performance.md'
                         ]
                     },
-                    {
-                        text: '2.10 网络性能观测指南',
-                        link: "/network/observation.md",
-                        children: [
-                            '/network/dperf.md',
-                            '/network/mtr.md',
-                            '/network/tcpdump.md'
-                        ]
-                    },
+                    '/network/mtr.md'
                 ]
             },
             {
-                text: '第三章：深入Linux内核网络',
+                text: '第三章：Linux内核网络',
                 collapsable: true,
                 link: '/network/summary.md',
                 sidebarDepth: 2,
                 children: [
                     '/network/networking.md',
                     {
-                        text: '3.3 Linux 内核网络框架分析',
+                        text: '3.2 Linux 内核网络框架分析',
                         link: "/network/linux-kernel-networking.md",
                         children: [
                             '/network/XDP.md',
@@ -148,7 +141,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '3.4 内核参数优化指南',
+                        text: '3.3 内核参数优化',
                         link: '/network/kernel-performance.md',
                         children: [
                             "/network/RSS.md",
@@ -218,7 +211,16 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: "第五章：分布式系统理论与应用实践",
+                text: '第五章：分布式共识',
+                collapsable: true,
+                link: '/Consistency/summary.md',
+                sidebarDepth: 2,
+                children: [
+                    '/Consistency/Paxos.md'
+                ]
+            },
+            {
+                text: "第五章：分布式事务",
                 link: '/distributed-system/distributed-transaction.md',
                 children: [
                     '/distributed-system/BASE.md',
