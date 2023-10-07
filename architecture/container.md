@@ -25,26 +25,26 @@ chroot 被认为是最早的容器化技术之一，chroot 可以重定向进程
 
 2013年之前，云计算行业一直在为云原生发展方向而探索。2008年 Google 推出 GAE（Google App Engine），GAE 基于 LXC 技术，属于早期 PaaS 平台的探索，但是这些早期探索技术并没有形成大的行业趋势，局限在一些的特定的领域。直到 Docker 的出现，大家才如梦方醒，原来不是方向不对，而是应用分发和交付的手段不行。
 
-Docker 真正核心的创新是容器镜像（container image）：
+再来看 Docker 的核心创新“容器镜像（container image)”：
 
 - 容器镜像打包了整个容器运行依赖的环境，以避免依赖运行容器的服务器的操作系统，从而实现“build once，run anywhere”。
 - 容器镜像一但构建完成，就变成read only，成为不可变基础设施的一份子。
 - 操作系统发行版无关，核心解决的是容器进程对操作系统包含的库、工具、配置的依赖，但是容器镜像无法解决容器进程对内核特性的特殊依赖。
 
-容器镜像将应用运行环境，包括代码、依赖库、工具、资源文件和元信息等，打包成一种操作系统发行版无关的不可变更软件包么，从而实现一种新型的应用打包、分发和运行机制。
+容器镜像将应用运行环境，包括代码、依赖库、工具、资源文件和元信息等，打包成一种操作系统发行版无关的不可变更软件包，从而实现一种新型的应用打包、分发和运行机制。
 
-Docker 的宣传口号是“Build，Ship and Run Any App，Anywhere”，如图1-15所示。开发者基于镜像可以打包任何容器进程所依赖的环境，而不用改造应用来适配 PaaS 定义的运行环境，“Run Any App”一举打破了 PaaS 行业面临的困境，创造出了无限的可能性。所以说，促使 Docker 一问世就惊艳世间的，并不是什么黑科技式的秘密武器，而是它符合历史潮流的创意和设计理念，还有充分开放的生态运营。
+如图1-15所示，Docker 的宣传口号是“Build，Ship and Run Any App，Anywhere”，开发者基于镜像可以打包任何容器进程所依赖的环境，而不用改造应用来适配 PaaS 定义的运行环境，“Run Any App”一举打破了 PaaS 行业面临的困境，创造出了无限的可能性。所以说，促使 Docker 一问世就惊艳世间的，并不是什么黑科技式的秘密武器，而是它符合历史潮流的创意和设计理念，还有充分开放的生态运营。
 
 <div  align="center">
 	<img src="../assets/docker.png" width = "500"  align=center />
 	<p>图1-15 Docker 的愿景：Build, Ship, and Run Any App, Anywhere</p>
 </div>
 
-至此，容器技术体系已经解决了最核心的两个问题：如何发布软件和如何运行软件，云计算进入容器阶段。
+至此，容器技术体系已经解决了最核心的两个问题 “如何运行软件和如何发布软件”，云计算开始进入容器阶段。
 
 ## 3.标准化 OCI 阶段
 
-当容器技术的前景开始显现后，众多公司纷纷投入该领域进行探索。在 Docker 推出不久之后，CoreOS 就推出了自己的容器引擎 Rocket（简称 rkt），试图与 Docker 分庭抗礼，相互竞争的结果就是大家坐下来谈接口标准，避免出现“碎片化”的容器技术。
+当容器技术的前景显现后，众多公司纷纷投入该领域进行探索。Docker 推出不久之后，CoreOS 就推出了自己的容器引擎 Rocket（简称 rkt），试图与 Docker 分庭抗礼，相互竞争的结果就是大家坐下来谈接口标准，避免出现“碎片化”的容器技术。
 
 2015年6月，Docker 带头成立 OCI（Open Container Initiative，开放容器标准），OCI 组织着力解决容器的构建、分发和运行问题，其宗旨是制定并维护容器镜像格式和容器运行时的正式规范（OCI Specifications）。
 
@@ -54,9 +54,9 @@ OCI 其核心产出是：
 - OCI Image Spec（镜像格式规范）
 - OCI Distribution Spec（镜像分发规范）。
 
-OCI 项目启动后，为了符合 OCI 标准，Docker推动自身的架构持续向前演进。
+OCI 项目启动后，为了符合 OCI 标准，Docker 推动自身的架构持续向前演进。
 
-首先它将 libcontainer 独立出来，封装重构成 runC 项目，并捐赠给 Linux 基金会管理，runC 是 OCI Runtime 的首个参考实现，它提出了“让标准容器无处不在”（Make Standard Containers Available Everywhere）的口号。
+首先它将 libcontainer 独立出来，封装重构成 runC 项目，并捐赠给 Linux 基金会管理。runC 是 OCI Runtime 的首个参考实现，它提出了“让标准容器无处不在”（Make Standard Containers Available Everywhere）的口号。
 
 而为了能够兼容所有符合标准的 OCI Runtime 实现，Docker 进一步重构了 Docker Daemon 子系统，把其中与运行时交互的部分抽象为了containerd 项目。这是一个负责管理容器执行、分发、监控、网络、构建、日志等功能的核心模块，其内部会为每个容器运行时创建一个 containerd-shim 适配进程，默认与 runC 搭配工作，但也可以切换到其他 OCI Runtime 实现上（然而实际并没做到，最后 containerd 仍是紧密绑定于 runC）。
 
