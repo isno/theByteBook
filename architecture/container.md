@@ -15,11 +15,11 @@ chroot 被认为是最早的容器化技术之一，chroot 可以重定向进程
 
 ## 2.封装系统 Linux 容器阶段
 
-2006年，Google 推出 Process Container（进程容器） 用来对一组进程进行限制、记账、隔离资源（CPU、内存、磁盘 I/O、网络等），Process Container 推出后不久就进入了 Linux 内核主干，不过由于 Container 这一命名在 Kernel 具有许多不同的含义，所以为了避免代码命名的混乱，后来就将 Process Container 更名为了 Control Groups，简称：cgroups。
+2006年，Google 推出 Process Container（进程容器），Process Container 的目的非常直白，它希望能够像虚拟化技术那样给进程提供操作系统级别的资源限制、优先级控制、资源审计能力和进程控制能力。带着这样的设计思路，Process Container 推出不久就进入了 Linux 内核主干。不过由于 container 这一命名在内核中具有许多不同的含义，为了避免代码命名的混乱，后来就将 Process Container 更名为了 Control Groups，简称：cgroups。
 
-2008 年 Linux kernel 2.6.24 在刚刚开始提供 cgroups 的同一时间，社区开发者将 cgroups 的资源管理能力和 Linux namespace（命名空间）的资源隔离能力组合在一起，形成了完整的容器技术 LXC（Linux Container，Linux 容器），这就是如今被广泛应用的容器技术的实现基础。
+2008 年 Linux 内核 2.6.24 刚刚开始提供 cgroups 的同一时间，社区开发者将 cgroups 的资源管理能力和 Linux namespace（命名空间）的资源隔离能力组合在一起，形成了完整的容器技术 LXC（Linux Container，Linux 容器），这就是如今被广泛应用的容器技术的实现基础。
 
-至2013年，Linux 虚拟化技术已基本成型，通过 cgroups、namespace 以及安全防护机制，已经在大体上解决了容器核心技术中运行环境隔离技术的问题。虽然容器运行环境隔离技术的基础已经基本就位，但仍需等待另一项关键技术的出现，才能迎来容器技术的全面繁荣。
+至2013年，Linux 虚拟化技术已基本成型，通过 cgroups、namespace 以及安全防护机制，大体上解决了容器核心技术“运行环境隔离”。虽然容器运行环境隔离基础已经基本就位，但仍需等待另一项关键技术的出现，才能迎来容器技术的全面繁荣。
 
 ## 3.封装应用 Docker 阶段
 
