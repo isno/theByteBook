@@ -7,7 +7,7 @@
 一个完整、无任何缓存、未复用连接的 HTTPS 请求需要经过以下几个阶段：DNS 域名解析、TCP 握手、SSL 握手、服务器处理、内容传输，如图2-2所示。
 
 <div  align="center">
-	<img src="../content/assets/http-process.png" width = "500"  align=center />
+	<img src="../assets/http-process.png" width = "500"  align=center />
 	<p>图 2-2 HTTPS（使用 TLS1.2 协议）请求阶段分析</p>
 </div>
 
