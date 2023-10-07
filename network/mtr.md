@@ -1,8 +1,6 @@
-# 2.10 使用 mtr 探测网络质量
+# 2.10 使用 mtr 探测网络
 
-如果两个节点之间延迟很大，我们该如何定位中间的链路问题呢？
-
-这种情况我们可以使用 mtr 工具进行排查。mtr 的全称是 my traceroute，它综合 ping、traceroute、nslookup 等相关功能，能显示目的地之间中间链路不断更新的延迟和丢包信息，mtr 可让我们实时看到网络路径状况，更直观地排查网络问题。
+如果两个节点之间延迟很大，该如何定位中间的链路问题呢？本节内容推荐笔者经常使用的 mtr 工具。mtr 的全称是 my traceroute，它综合 ping、traceroute、nslookup 等相关功能，能显示目的地之间中间链路不断更新的延迟和丢包信息，mtr 可让我们实时看到网络路径状况，更直观地排查网络问题。
 
 ## 1. mtr 应用示例
 
@@ -11,13 +9,12 @@
 开启命令查看 MTR 报告
 
 ```
-mtr -z www.iq.com
+$ mtr -z www.iq.com
 ```
 <div  align="center">
 	<img src="../assets/mtr.png" width = "600"  align=center />
 	<p>图: MTR 报告</p>
 </div>
-
 
 ## 2. mtr 报告分析
 
