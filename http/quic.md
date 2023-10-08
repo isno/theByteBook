@@ -7,8 +7,8 @@ QUIC (Quick UDP Internet Connection, 快速 UDP 网络连接) 是一种基于 UD
 如图2-13所示，QUIC 整合了 TCP、TLS 和 HTTP/2 的优点，基于 QUIC 承载的 HTTP 协议进一步被标准化为 HTTP/3。
 
 <div  align="center">
-	<img src="../assets/quic.png" width = "420"  align=center />
-	<p>图2-13 HTTP2 与 HTTP3 协议对比</p>
+	<img src="../assets/http-quic.png" width = "550"  align=center />
+	<p>图2-13 HTTP协议对比</p>
 </div>
 
 ## 1.QUIC 出现的背景

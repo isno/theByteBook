@@ -1,4 +1,4 @@
-# 3.4 HTTPS 原理及 SSL 层优化实践
+# 2.5 HTTPS 原理及 SSL 层优化实践
 
 要进行 SSL 层优化，得先知道 HTTPS 是什么？简单理解就是 HTTP+SSL/TLS。
 
