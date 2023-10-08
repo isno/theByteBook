@@ -13,8 +13,6 @@
 - 有效利用云计算基础设施的特点，让服务可以按需快速伸缩。
 - 提高系统的弹性，从而获得高的可用性。
 
-
-
 ## 1.5.1 使用公有云服务
 
 目前，各大云厂商也都推出了自己的商业化容器编排托管服务。例如 Amazon 的 ECS（Amazon Elastic Container Service）、Azure 的 AKS（Azure Kubernetes Service）、阿里云的 ACK（Alibaba Cloud Container Service for Kubernetes)。
