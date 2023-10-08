@@ -12,7 +12,6 @@
 
 chroot 被认为是最早的容器化技术之一，chroot 可以重定向进程及其子进程的 root 目录到文件系统上的新位置，也就是说使用它可以分离每个进程的文件访问权限，使得该进程无法接触到外面的文件，因此这个被隔离出来的新环境也得到了一个非常形象的命名，叫做 Chroot Jail （监狱）。
 
-
 ## 2.封装系统 Linux 容器阶段
 
 2006年，Google 推出 Process Container（进程容器），Process Container 的目的非常直白，它希望能够像虚拟化技术那样给进程提供操作系统级别的资源限制、优先级控制、资源审计能力和进程控制能力。带着这样的设计思路，Process Container 推出不久就进入了 Linux 内核主干。不过由于 container 这一命名在内核中具有许多不同的含义，为了避免代码命名的混乱，后来就将 Process Container 更名为了 Control Groups，简称：cgroups。

@@ -1,4 +1,4 @@
-# 2.9.1 快速 UDP 网络连接
+# 2.8.1 快速 UDP 网络连接
 
 QUIC (Quick UDP Internet Connection, 快速 UDP 网络连接) 是一种基于 UDP 封装的安全、可靠传输协议，它的目标是取代 TCP 成为标准且效率更高的安全传输协议。
 

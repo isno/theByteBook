@@ -80,11 +80,10 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
-                    '/http/background.md',
                     '/network/latency.md',
                     '/http/latency.md',
                     {
-                        text: '2.4 域名解析环节',
+                        text: '2.3 域名解析环节',
                         link:  '/http/dns.md',
        
                         children: [
@@ -93,7 +92,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '2.5 HTTP 服务优化',
+                        text: '2.4 HTTP 服务优化',
                         link:  '/http/http-performance.md',
        
                         children: [
@@ -102,7 +101,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '2.6 HTTPS 原理及 SSL 优化',
+                        text: '2.5 HTTPS 原理及 SSL 优化',
                         link:  '/http/https-summary.md',
                         children: [
                             '/http/https.md',
@@ -113,7 +112,7 @@ export default defineUserConfig({
                     '/http/Edge-Acceleration.md',
 
                     {
-                        text: '2.9 使用 QUIC 协议',
+                        text: '2.8 使用 QUIC 协议',
                         link:  '/http/http3.md',
                         children: [
                             '/http/quic.md',

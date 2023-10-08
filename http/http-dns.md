@@ -1,4 +1,4 @@
-# 2.4.4 解决传统DNS解析器问题
+# 2.3.4 解决传统DNS解析器问题
 
 解决 Authoritative nameserver 的问题之后，我们再回过头看看 DNS 解析器（也就是LocalDNS）的问题。
 
