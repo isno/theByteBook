@@ -86,7 +86,7 @@ Docker 的宣传口号是“Build，Ship and Run Any App，Anywhere”。“Run 
 图1-6形象地概述了这二十年云计算的演进过程：从传统预制IT、托管到云，以及云服务模型不同的形态如 IaaS、PaaS、SaaS 等。
 
 <div  align="center">
-	<img src="../assets/xaas.png" width = "650"  align=center />
+	<img src="../assets/xaas.png" width = "750"  align=center />
 	<p>图 1-6 XaaS 演进 </p>
 </div>
 
