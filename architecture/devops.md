@@ -7,7 +7,7 @@ DevOps 包含很多不同的概念，用几个简短的语句解释 DevOps 无�
 早在 1970 年，Winston Royce 发表《Managing the development of large software systems》文章内就提出了瀑布模型，该模型下整个软件开发流程严格遵循需求、设计、开发、测试和部署几个阶段，在这个流程中，需要等上一个阶段完成工作后，才会进行下一阶段的工作。这种开发模型下项目开发的进程是由一个阶段“流动”到下一个阶段，如同瀑布流水一般，因而被称为瀑布模型（Waterfall Model），如图1-32所示。
 
 <div  align="center">
-	<img src="../assets/waterfall-model.jpg" width = "280"  align=center />
+	<img src="../assets/waterfall-model.svg" width = "280"  align=center />
 	<p>图1-32 瀑布模型</p>
 </div>
 
