@@ -117,7 +117,7 @@ export default defineUserConfig({
                         children: [
                             '/http/quic.md',
                             '/http/nginx-quic.md',
-                            //'/http/quic-performance.md'
+                            '/http/quic-performance.md'
                         ]
                     },
                     '/network/mtr.md'
