@@ -1,6 +1,6 @@
 # 3.2 Linux 内核网络框架分析
 
-本章节从理论学习、技术铺垫的角度介绍 Linux 内核数据包处理流程，熟悉 Linux 内核网络有助于我们理解上层网络模型、负载均衡等各类应用。
+本章节从理论学习、技术铺垫的角度介绍 Linux 内核数据包处理流程，熟悉 Linux 内核网络有助于我们理解上层各类的网络应用。
 
 <div  align="center">
 	<img src="../assets/Netfilter-packet-flow.svg" width = "800"  align=center />
