@@ -131,7 +131,7 @@ export default defineUserConfig({
                 children: [
                     '/network/networking.md',
                     {
-                        text: '3.2 Linux 内核网络框架分析',
+                        text: '3.2 Linux 内核网络框架',
                         link: "/network/linux-kernel-networking.md",
                         children: [
                             '/network/XDP.md',
