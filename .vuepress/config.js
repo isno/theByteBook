@@ -116,11 +116,9 @@ export default defineUserConfig({
                         link:  '/http/http3.md',
                         children: [
                             '/http/quic.md',
-                            '/http/nginx-quic.md',
                             '/http/quic-performance.md'
                         ]
                     },
-                    '/network/mtr.md'
                 ]
             },
             {
@@ -145,13 +143,12 @@ export default defineUserConfig({
                         children: [
                             "/network/RSS.md",
                             "/network/netstack-performance.md",
+                            '/network/C10M.md',
                             
                         ]
                     },
-                    '/network/C10M.md',
-                    /*
                     {
-                        text: '2.5 Linux 网络虚拟化',
+                        text: '3.4 Linux 网络虚拟化',
                         link: "/network/net-virtual.md",
                         children: [
                             '/content/chapter1/network-namespace.md',
@@ -160,16 +157,7 @@ export default defineUserConfig({
                             '/content/chapter1/tun.md',
                             '/content/chapter1/vxlan.md'
                         ]
-                    },
-                    {
-                        text: '2.6 网络互联理解及应用',
-                        link: "/network/internet.md",
-                        children: [
-                            '/content/chapter1/bgp.md',
-                            '/content/chapter1/anycast.md',
-                           
-                        ]
-                    }*/
+                    }
                 ]
             },
             
