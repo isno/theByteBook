@@ -5,7 +5,7 @@
 Network Namespace（后续简称 netns） 是 Linux 内核提供的用于实现网络虚拟化的核心，它能创建多个隔离的网络空间，该网络空间内的防火墙、网卡、路由表、邻居表、协议栈与外部独立，不管是虚拟机还是容器，当运行在独立的命名空间时，就像是一台单独的物理主机。
 
 <div  align="center">
-	<img src="../../assets/network-namespace.svg" width = "550"  align=center />
+	<img src="../assets/network-namespace.svg" width = "550"  align=center />
 	<p>图 2-21 Network namespace</p>
 </div>
 

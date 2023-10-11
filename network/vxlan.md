@@ -5,7 +5,7 @@
 SDN（Software Definded Network，软件定义网络）在云计算和分布式时代下应运而生。SDN 的核心思想是在物理网络之上，再构建一层虚拟化的网络，通过上层控制平面参与对网络的控制管理，以满足业务网络运维的需求。SDN 位于下层的物理网络被称为 Underlay，它着重解决网络的连通性，位于上层的逻辑网络被称为 overlay，它着重为应用提供与软件需求相符的传输服务和拓扑结构。
 
 <div  align="center">
-	<img src="../../assets/overlay.svg" width = "500"  align=center />
+	<img src="../assets/overlay.svg" width = "500"  align=center />
 	<p>图 2-26 SDN 网络模型</p>
 </div>
 
@@ -20,14 +20,14 @@ VXLAN 完美地弥补了 VLAN 的上述不足，一方面通过 VXLAN 中的 24 
 虽然从名字上看，VXLAN是VLAN的一种扩展协议，但 VXLAN 构建虚拟隧道的本领已经与 VLAN 迥然不同了。
 
 <div  align="center">
-	<img src="../../assets/vxlan-data.png" width = "300"  align=center />
+	<img src="../assets/vxlan-data.png" width = "300"  align=center />
 	<p>图 2-27 VXLAN 报文结构</p>
 </div>
 
 从上图中可以发现，VXLAN 本质上是一种隧道封装技术，它使用 TCP/IP 协议栈的惯用手法“封装/解封装技术”，将 L2 的以太网帧（Ethernet frames）封装成 L4 的 UDP 数据报，然后在 L3 的网络中传输，效果就像 L2 的以太网帧在一个广播域中传输一样，不再受数据中心传输的限制。
 
 <div  align="center">
-	<img src="../../assets/VXLAN.png" width = "500"  align=center />
+	<img src="../assets/VXLAN.png" width = "500"  align=center />
 	<p>图 2-28 VXLAN 通信概览</p>
 </div>
 

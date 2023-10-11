@@ -3,14 +3,14 @@
 Linux 内核支持网络命名空间的同时，也提供了专门的虚拟以太网 Veth（Virtual Ethernet），用来让两个隔离的 Network Namespace 可以互相通信。veth 总是成对出现，因此也常被称作 veth pair（虚拟网卡对）。简单理解 Veth 就是一根带两个 Ethernet 网卡的`网线`，从一头发数据，另一头收数据，如果 veth-1 和 veth-2 是一对 veth 设备，veth-1 发送的数据会由 veth-2 收到，反之亦然。
 
 <div  align="center">
-	<img src="../../assets/veth.svg" width = "450"  align=center />
+	<img src="../assets/veth.svg" width = "450"  align=center />
 	<p>图 2-22</p>
 </div>
 
 因为 veth 这个特性，它常常充当着一个桥梁，连接着宿主机内的虚拟网络，典型的例子像两个 Network namespace 之间的连接、Bridge 和 OVS （Open vSwitch）之间的连接等，通过这种方式，从而构建出复杂的虚拟网络拓扑架构。我们在 Kubernetes 集群中的宿主机总能看到一堆 veth 开头的网卡设备信息，这些就是为不同 Pod 之间通信而创建的虚拟网卡。
 
 <div  align="center">
-	<img src="../../assets/cni0.svg" width = "550"  align=center />
+	<img src="../assets/cni0.svg" width = "550"  align=center />
 	<p>图 2-23</p>
 </div>
 

@@ -7,7 +7,7 @@ Linux Bridge 是 Linux kernel 2.2 版本开始提供的二层转发工具，与�
 我们在部署 Docker 或者 Kubernetes 时，宿主机内的 cni0、docker0 就是它们创建的虚拟 bridge 设备。
 
 <div  align="center">
-    <img src="../../assets/linux-bridge.svg" width = "500"  align=center />
+    <img src="../assets/linux-bridge.svg" width = "500"  align=center />
     <p>图 2-24 conntrack 示例</p>
 </div>
 

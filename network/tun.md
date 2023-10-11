@@ -6,7 +6,7 @@ tun 和 tap 是 Linux 提供的两个相对独立的虚拟网络设备，其中 
 我们可以把 tun/tap 理解为一端连着网络协议栈，另一端连着用户态程序。tun/tap 设备可以将 TCP/IP 协议栈处理好的网络包发送给任何一个使用 tun/tap 驱动的进程，只要协议栈中的数据包能被用户态程序截获并加工处理，就能实现例如数据压缩、流量加密、透明代理等功能。
 
 <div  align="center">
-	<img src="../../assets/tun.svg" width = "400"  align=center />
+	<img src="../assets/tun.svg" width = "400"  align=center />
 	<p>图 2-25 VPN 中数据流动示意图</p>
 </div>
 

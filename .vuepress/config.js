@@ -151,11 +151,11 @@ export default defineUserConfig({
                         text: '3.4 Linux 网络虚拟化',
                         link: "/network/net-virtual.md",
                         children: [
-                            '/content/chapter1/network-namespace.md',
-                            '/content/chapter1/veth-pair.md',
-                            '/content/chapter1/bridge.md',
-                            '/content/chapter1/tun.md',
-                            '/content/chapter1/vxlan.md'
+                            '/network/network-namespace.md',
+                            '/network/veth-pair.md',
+                            '/network/bridge.md',
+                            '/network/tun.md',
+                            '/network/vxlan.md'
                         ]
                     }
                 ]
