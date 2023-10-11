@@ -4,7 +4,7 @@
 
 由于 Linux 内核协议栈（TCP/IP Stack）更加注重通用性，所以在网络性能需求场景中存在一定的瓶颈，随着 100G、200/400G 高速率网卡的出现，这种性能瓶颈就变得无法接受了。
 
-2010 年，由 Intel 领导的 DPDK 实现了一个内核旁路（Bypass Kernel）的高性能网络应用开发解决方案，并逐渐成为了独树一帜的成熟技术体系。但是 DPDK 也由于 内核旁路这一前提，使其天然就无法与内核技术生态很好的结合。2016 年，在 Linux Netdev 会议上，David S. Miller 喊出了 “DPDK is not Linux” 的口号。同年，伴随着 eBPF 技术的成熟，Linux 内核终于迎来了属于自己的高速公路 —— XDP（AF_XDP），其具有足以媲美 DPDK 的性能以及背靠内核的多种独特优势。
+2010 年，由 Intel 领导的 DPDK 实现了一个内核旁路（Bypass Kernel）思想的高性能网络应用开发解决方案，并逐渐成为了独树一帜的成熟技术体系。但是 DPDK 也由于 内核旁路这一前提，使其天然就无法与内核技术生态很好的结合。2016 年，在 Linux Netdev 会议上，David S. Miller 喊出了 “DPDK is not Linux” 的口号。同年，伴随着 eBPF 技术的成熟，Linux 内核终于迎来了属于自己的高速公路 —— XDP（AF_XDP），其具有足以媲美 DPDK 的性能以及背靠内核的多种独特优势。
 
 ## 2. XDP 概述
 
