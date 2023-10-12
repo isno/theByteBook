@@ -8,9 +8,7 @@ Istio 中对流量的转发处理都是通过 Envoy 实现的。
 
 Envoy 作为 Sidecar 和每个服务容器部署在同一个 pod 中，Sidecar 在注入到 pod 之后，将原有服务调用从源容器 -> 目标容器的通信方式改变为源容器 -> Sidecar (源端) -> Sidecar (目的端) -> 目的容器
 
-<div  align="center">
-	<img src="../assets/sidecar.png" width = "350"  align=center />
-</div>
+
 
 
 ## Istio的架构原理
