@@ -17,15 +17,15 @@ Linux ip 工具的子命令 netns 集成了 Network namespace 的增删查改功
 
 创建新的 Network namespace。
 
-```
+```plain
 ip netns add ns1
 ```
 
 当 ip 命令创建一个 Network namespace 时，系统会在 /var/run/netns 生成一个挂载点。挂载点的作用是方便对 namespace 进行管理，另一方面也使得 namespace 即使没有进程运行也能持续存在。
 
-查询该 namespace 的基本信息，由于没有任何配置，因此该 namespace 下只有一块状态为 DOWN 的本地回环设备lo。
+查询该 namespace 的基本信息，由于没有任何配置，因此该 namespace 下只有一块状态为 DOWN 的本地回环设备 lo。
 
-```
+```plain
 $ ip netns exec ns1 ip link list 
 1: lo: <LOOPBACK> mtu 65536 qdisc noop state DOWN mode DEFAULT group default qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
@@ -33,7 +33,7 @@ $ ip netns exec ns1 ip link list
 
 继续查看该 netns 下 iptables 规则配置，由于是一个初始化的 namespace，所以也并没有任何规则。
 
-```
+```plain
 $ ip netns exec ns1 iptables -L -n
 Chain INPUT (policy ACCEPT)
 target     prot opt source               destination         

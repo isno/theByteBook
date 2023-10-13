@@ -3,12 +3,12 @@
 对于 Nginx 来说，部署 HTTP/3 服务目前有两种方案可以选择：Cloudflare 的分支版本、官方 Nginx-quic 项目。常规方式部署需要安装 BoringSSL 等依赖，这里我们直接使用 docker 镜像 nginx-http3 进行部署。
 
 1. 拉取镜像
-```
+```plain
 $ docker pull macbre/nginx-http3:latest
 ```
 
-2. 运行容器并查看Nginx配置信息
-```
+2. 运行容器并查看 Nginx 配置信息
+```plain
 $ docker run -it macbre/nginx-http3 nginx -V
 
 nginx version: nginx/1.21.1 (quic-d0ef43a53a51)
@@ -24,7 +24,7 @@ configure arguments:
 ```
 nginx.conf 配置信息：
 
-```
+```plain
 server {
     # quic and http/3
     listen 443 http3 reuseport;

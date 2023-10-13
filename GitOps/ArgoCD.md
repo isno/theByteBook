@@ -4,7 +4,7 @@ Argo CD 是以 Kubernetes 作为基础设施，遵循声明式 GitOps 理念的�
 
 > Argo CD 是 Intuit 公司开源出来的属于整个 Argo 项目中的其中一个子项目，整个 Argo 项目中还包括 Argo-event、argo-workflow、Argo-Rollout
 
-在介绍 Argo CD之前，我们先需要清楚为什么使用 Argo CD？ 以及能给我们带来什么好处？
+在介绍 Argo CD 之前，我们先需要清楚为什么使用 Argo CD？ 以及能给我们带来什么好处？
 
 ## 传统的 CD 工作流
 
@@ -17,7 +17,7 @@ Argo CD 是以 Kubernetes 作为基础设施，遵循声明式 GitOps 理念的�
 - 无法感知部署状态，这也就无法感知期望状态与实际状态产生的偏差，只能接触额外方案来保障一致性。
 
 
-我们在继续以Argo CD 为例，来看看遵循声明式的 GitOps 理念的 CD 流程。
+我们在继续以 Argo CD 为例，来看看遵循声明式的 GitOps 理念的 CD 流程。
 
 ## 使用 Argo CD 的 CD 工作流
 
@@ -27,15 +27,15 @@ Argo CD 首先会被部署在 Kubernetes 集群中，使用的是基于 Pull 的
 	<img src="../assets/ArgoCD-1.webp" width = "400"  align=center />
 </div>
 
-无论是通过CI流水线触发更新 Kubernetes 编排文件，还是 运维工程师直接修改 Kubernetes 编排文件，ArgoCD 都会自动拉取最新的配置并应用到 Kubernetes 集群中。
+无论是通过 CI 流水线触发更新 Kubernetes 编排文件，还是 运维工程师直接修改 Kubernetes 编排文件，ArgoCD 都会自动拉取最新的配置并应用到 Kubernetes 集群中。
 
 
-## Argo CD 主要优势有：
+## Argo CD 主要优势有
 
 
 ### Git 作为应用唯一的真实来源
 
-所有 Kubernetes 声明式配置都保存在 Git 中么，并把Git作为应用的唯一来源，我们不再需要手动更新应用（例如执行 kubectl apply、helm install ...），只需要通过统一的接口（Git）来更新应用。
+所有 Kubernetes 声明式配置都保存在 Git 中么，并把 Git 作为应用的唯一来源，我们不再需要手动更新应用（例如执行 kubectl apply、helm install ...），只需要通过统一的接口（Git）来更新应用。
 
 此外 Argo CD 不仅监控 Git 仓库中声明的期望状态，还会监控集群中应用状态，并对两种状态进行比较、修正。这就保证了即使有人修改了集群中的应用状态，Argo CD 还是会将其恢复到之前的状态。 这也确保了 Git 仓库编排文件作为集群状态的唯一真实来源。
 
@@ -44,7 +44,7 @@ Argo CD 首先会被部署在 Kubernetes 集群中，使用的是基于 Pull 的
 
 Argo CD 会定期拉取最新配置并应用到集群中，一旦最新的配置导致应用出现故障，我们则可以用过 Git History 将应用状态快速恢复到上一个可用状态。
 
-如果有多个 Kubernetes 集群使用同一个 Git仓库，这种优势更为明显，出现故障时，不需要分别在不同集群 helm uninstall 等手动方式回滚，只需要将 Git仓库回滚到上一个可用版本， Argo CD 便会自动同步至所有集群。
+如果有多个 Kubernetes 集群使用同一个 Git 仓库，这种优势更为明显，出现故障时，不需要分别在不同集群 helm uninstall 等手动方式回滚，只需要将 Git 仓库回滚到上一个可用版本， Argo CD 便会自动同步至所有集群。
 
 ### 集群灾备
 
@@ -74,7 +74,7 @@ Argo CD 中的 Application 定义了 Kubernetes 资源的来源（Source）和�
 
 Application 的配置清单示例：
 
-```
+```plain
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:

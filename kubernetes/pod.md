@@ -6,7 +6,7 @@
 
 ## 创建一个 Pod
 
-```
+```plain
 apiVersion: v1                      # Kubernetes的API Version
 kind: Pod                           # Kubernetes的资源类型
 metadata:
@@ -26,8 +26,8 @@ spec:                               # Pod的具体规格（specification）
   - name: default-secret
 ```
 
-Pod创建完成后，可以使用kubectl get pods命令查询Pod的状态，如下所示。
-```
+Pod 创建完成后，可以使用 kubectl get pods 命令查询 Pod 的状态，如下所示。
+```plain
 $ kubectl get pods
 
 NAME           READY   STATUS    RESTARTS   AGE
@@ -42,16 +42,16 @@ nginx          1/1     Running   0          40s
 | Running| Pod 中所有的容器都已创建，并且至少有一个容器正在运行|
 | Succeeded | Pod 中所有的容器都被成功终止，并且不会重启，这个主要是执行 job 任务|
 | Failed | Pod 中所有的容器都已经终止，并且至少有一个容器是非正常终止|
-|Unknown| 无法获取 pod状态，通常是由于 Pod 节点通信出错，或者 kubelet 宕机所致|
+|Unknown| 无法获取 pod 状态，通常是由于 Pod 节点通信出错，或者 kubelet 宕机所致|
 
 
 
 ## Pod 的网络
 
-以 Calico 为例，Kubernetes会默认为每个pod分配一个IP地址，所有的Pod IP地址在同一个网段， kubeadm 在初始化时指定网段参数
+以 Calico 为例，Kubernetes 会默认为每个 pod 分配一个 IP 地址，所有的 Pod IP 地址在同一个网段， kubeadm 在初始化时指定网段参数
 
-```
+```plain
 kubeadm init --pod-network-cidr=192.168.2.0/24
 ```
 
-Pod 中所有的容器会共享该 Pod 的IP地址，因此 Pod 内容器间通信，直接用 locahost+port 即可。
+Pod 中所有的容器会共享该 Pod 的 IP 地址，因此 Pod 内容器间通信，直接用 locahost+port 即可。

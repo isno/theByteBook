@@ -21,14 +21,14 @@
 
 ## 1. conntrack 原理
 
-当加载内核模块nf_conntrack后，conntrack机制就开始工作，如图，椭圆形方框 conntrack 在内核中有两处位置(PREROUTING和OUTPUT之前)能够跟踪数据包。
+当加载内核模块 nf_conntrack 后，conntrack 机制就开始工作，如图，椭圆形方框 conntrack 在内核中有两处位置(PREROUTING 和 OUTPUT 之前)能够跟踪数据包。
 
-对于每个通过conntrack的数据包，内核都为其生成一个conntrack条目用以跟踪此连接，对于后续通过的数据包，内核会判断若此数据包属于一个已有的连接，则更新所对应的conntrack条目的状态(比如更新为ESTABLISHED状态)，否则内核会为它新建一个conntrack条目。所有的conntrack条目都存放在一张表里，称为连接跟踪表
+对于每个通过 conntrack 的数据包，内核都为其生成一个 conntrack 条目用以跟踪此连接，对于后续通过的数据包，内核会判断若此数据包属于一个已有的连接，则更新所对应的 conntrack 条目的状态(比如更新为 ESTABLISHED 状态)，否则内核会为它新建一个 conntrack 条目。所有的 conntrack 条目都存放在一张表里，称为连接跟踪表
 
 连接跟踪表存放于系统内存中，可以用 cat /proc/net/nf_conntrack 查看当前跟踪的所有 conntrack 条目。conntrack 维护的所有信息都包含在这个条目中，通过它就可以知道某个连接处于什么状态。
 
 如下示例 表示一条状态为 ESTABLISHED 的 TCP 连接。
-```
+```plain
 ipv4     2 tcp      6 88 ESTABLISHED src=10.0.12.12 dst=10.0.12.14 sport=48318 dport=27017 src=10.0.12.14 dst=10.0.12.12 sport=27017 dport=48318 [ASSURED] mark=0 zone=0 use=2
 ```
 
@@ -61,9 +61,9 @@ NAT（Network Address Translation，网络地址转换）, 即对（数据包的
 
 ### 2.2 conntrack 与 LVS DR 模式
 
-在 LVS 机器上应用 iptables 时需要注意一个问题就是，LVS-DR(或LVS-Tun)模式下，不能在 director 上使用 iptables 状态匹配(NEW，ESTABLISHED，INVALID...)，LVS-DR模式下，client访问director，director转发流量到realserver，realserver直接回复client，不经过director，这种情况下，client与direcotr处于tcp半连接状态
+在 LVS 机器上应用 iptables 时需要注意一个问题就是，LVS-DR(或 LVS-Tun)模式下，不能在 director 上使用 iptables 状态匹配(NEW，ESTABLISHED，INVALID...)，LVS-DR 模式下，client 访问 director，director 转发流量到 realserver，realserver 直接回复 client，不经过 director，这种情况下，client 与 direcotr 处于 tcp 半连接状态
 
-因此如果在director机器上启用conntrack，此时conntrack只能看到client–>director的数据包，因为响应包不经过direcotr，conntrack无法看到反方向上的数据包，就表示iptables中的ESTABLISHED状态永远无法匹配，从而可能发生DROP
+因此如果在 director 机器上启用 conntrack，此时 conntrack 只能看到 client–>director 的数据包，因为响应包不经过 direcotr，conntrack 无法看到反方向上的数据包，就表示 iptables 中的 ESTABLISHED 状态永远无法匹配，从而可能发生 DROP
 
 <div  align="center">
 	<img src="../assets/conntrack-lvs.png" width = "350"  align=center />

@@ -1,13 +1,13 @@
 # 资源对象
 
-Kubernetes 是基于 REST （Representational State Transfer，表现层状态转化） 设计的，REST是网络应用中的一种设计原则，凡是符合 REST 原则的架构，就可以称之为 RESTful 架构。Kubernetes 就是 RESTful 架构。
+Kubernetes 是基于 REST （Representational State Transfer，表现层状态转化） 设计的，REST 是网络应用中的一种设计原则，凡是符合 REST 原则的架构，就可以称之为 RESTful 架构。Kubernetes 就是 RESTful 架构。
 
-因为 Kubernetes 遵循 REST 原则，每个 Resource 在 Kubernetes 中的位置用 REST 路径来表示，对于Resource的管理，Kubernetes 内部、外部之间交互都采用统一方式的接口， 称之为 REST API。
+因为 Kubernetes 遵循 REST 原则，每个 Resource 在 Kubernetes 中的位置用 REST 路径来表示，对于 Resource 的管理，Kubernetes 内部、外部之间交互都采用统一方式的接口， 称之为 REST API。
 
 kubectl 等命令调用使用的就是 REST API。我们也可以直接按照规范访问这些 API，实现企业内部平台。例如 Pod 资源的 REST 路径为 /api/v/pods, 使用 REST 路径，再加上 HTTP POST、GET、DELETE、PUT 等就可以完成指定资源的管理工作。
 
 查看 Kubernetes 支持的资源信息。
-```
+```plain
 $ kubectl api-resources
 NAME                              SHORTNAMES   APIVERSION            NAMESPACED   KIND
 bindings                                       v1                    true         Binding
@@ -19,7 +19,7 @@ limitranges                       limits       v1                    true       
 ...
 ```
 
-以上即为 整个 Kubernetes 的API，和一页又一页的API接口函数比较，实在简洁太多。 这就是基于 REST 风格来设计架构所带来的好处。
+以上即为 整个 Kubernetes 的 API，和一页又一页的 API 接口函数比较，实在简洁太多。 这就是基于 REST 风格来设计架构所带来的好处。
 
 
 ## Kubernetes 常用的资源
@@ -42,7 +42,7 @@ RESTful 架构下，Kubernetes 中所有内容都被抽象为“资源”，如 
 
 查看 resource 具体的结构信息
 
-```
+```plain
 $ kubectl explain pod
 KIND:     Pod
 VERSION:  v1

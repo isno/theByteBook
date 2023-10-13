@@ -7,13 +7,13 @@ RuntimeClass 是 v1.12 引入的新 API 对象，用来支持多容器运行时�
 
 RuntimeClass 表示一个运行时对象，在使用前需要开启特性开关 RuntimeClass，并创建 RuntimeClass CRD：
 
-```
+```plain
 kubectl apply -f https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/runtimeclass/runtimeclass_crd.yaml
 ```
 
 然后就可以定义 RuntimeClass 对象
 
-```
+```plain
 apiVersion: node.k8s.io/v1alpha1  # RuntimeClass is defined in the node.k8s.io API group
 kind: RuntimeClass
 metadata:
@@ -27,7 +27,7 @@ spec:
 在 Pod 中定义使用哪个 RuntimeClass：
 
 
-```
+```plain
 apiVersion: v1
 kind: Pod
 metadata:

@@ -1,6 +1,6 @@
 # 3.2 Linux 内核网络框架
 
-笔者在1.5.3节提到过 Cilium 利用 eBPF 实现的无边车服务网格（sidecarless service mesh）模式，其次在 Kubernetes 节点中查看 iptables 规则，总能看到一堆奇怪的 “KUBE-SVC-XXX”，不熟悉的同学估计会一头雾水。不过我相信，看完3.2节内容读者一定感叹“原来如此”。
+笔者在 1.5.3 节提到过 Cilium 利用 eBPF 实现的无边车服务网格（sidecarless service mesh）模式，其次在 Kubernetes 节点中查看 iptables 规则，总能看到一堆奇怪的 “KUBE-SVC-XXX”，不熟悉的同学估计会一头雾水。不过我相信，看完 3.2 节内容读者一定感叹“原来如此”。
 
 本节从理论学习、技术铺垫的角度介绍 Linux 内核数据包处理流程，目的是帮助我们理解上层各类的网络应用。
 
@@ -20,4 +20,4 @@
 </div>
 
 
-对Linux内核网络有了基本的了解之后，我们先看数据经过的第一个模块，XDP。
+对 Linux 内核网络有了基本的了解之后，我们先看数据经过的第一个模块，XDP。

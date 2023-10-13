@@ -32,7 +32,7 @@ docker 镜像构建步骤如下：
 |MAINTAINER| 镜像的维护信息                                   |
 |RUN | 构建镜像时运行的指令                                |
 |COPY| 复制文件或目录到镜像内（只能在构建镜像的主机上读取资源）              |
-|ADD| 支持从远程服务器读取资源，复制到镜像内，同时支持自动解压tar, zip等压缩文件 |
+|ADD| 支持从远程服务器读取资源，复制到镜像内，同时支持自动解压 tar, zip 等压缩文件 |
 |ENV| 环境变量设置                                    |
 |USER| 指定运行 RUN、CMD COPY 等指令的用户                  |
 |EXPOSE| 容器运行的端口                                   |
@@ -46,7 +46,7 @@ docker 镜像构建步骤如下：
 
 熟悉常用的 Dockerfile 指令之后，我们可以开始尝试通过 Dockerfile 构建一个 Nginx 镜像。
 
-```
+```plain
 #第1阶段
 FROM skillfir/alpine:gcc AS builder01
 RUN wget https://nginx.org/download/nginx-1.24.0.tar.gz -O nginx.tar.gz && \
@@ -66,25 +66,25 @@ EXPOSE 80
 CMD ["./sbin/nginx","-g","daemon off;"]
 ```
 制作镜像
-```
+```plain
 docker build -t alpine:nginx .
 ```
 查看镜像产物
-```
+```plain
 $ docker images 
 REPOSITORY                TAG             IMAGE ID       CREATED          SIZE
 alpine                    nginx           ca338a969cf7   17 seconds ago   23.4MB
 ```
 
 测试镜像
-```
+```plain
 docker run --rm --name nginx -p 80:80 alpine:nginx
 ```
 
 构建镜像最有挑战性之一的就是使用镜像尽可能小，小的镜像不论在大规模集群部署、故障转移、存储成本方面都有巨大的优势，以下是一些镜像构建的小技巧：
 * 选用精简的基础镜像
 * 使用多阶段构建
-* COPY ADD和RUN命令都会增加镜像层数，所以构建镜像时可以通过合并RUN指令减少叠加层，同时RUN命令最后可以通过一些工具的清理命令如`yum clean` `conda clean --all`来清理缓存，以此来减小RUN层的大小
+* COPY ADD 和 RUN 命令都会增加镜像层数，所以构建镜像时可以通过合并 RUN 指令减少叠加层，同时 RUN 命令最后可以通过一些工具的清理命令如`yum clean` `conda clean --all`来清理缓存，以此来减小 RUN 层的大小
 * 在高层 layer 删除某文件时，该文件依然低层 layer 可见
-* 尽量使用COPY命令而非ADD命令，可以在RUN命令中使用wget curl等命令替代ADD
-* 改动不频繁的layer尽量往前在Dockerfile的前面
+* 尽量使用 COPY 命令而非 ADD 命令，可以在 RUN 命令中使用 wget curl 等命令替代 ADD
+* 改动不频繁的 layer 尽量往前在 Dockerfile 的前面

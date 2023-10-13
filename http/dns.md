@@ -1,12 +1,12 @@
 # 2.3 域名解析环节实践
 
-2021年期间，互联网发生了几起影响颇大的服务宕机故障：7月22日 Aakamai Edge DNS 故障，造成 PlayStation Network、HBO、UPS、Airbnb、Salesforce 等众多知名网站宕机[^1]。不久之后的10月4日，社交网络平台 Facebook 及旗下服务 Messenger、Instagram、WhatsApp、Mapillary 与 Oculus 发生全球性宕机[^2]。
+2021 年期间，互联网发生了几起影响颇大的服务宕机故障：7 月 22 日 Aakamai Edge DNS 故障，造成 PlayStation Network、HBO、UPS、Airbnb、Salesforce 等众多知名网站宕机[^1]。不久之后的 10 月 4 日，社交网络平台 Facebook 及旗下服务 Messenger、Instagram、WhatsApp、Mapillary 与 Oculus 发生全球性宕机[^2]。
 
 这些故障是怎么引起的？影响范围为何如此广泛？带着这些问题，我们开始域名解析篇节。
 
 ## 2.3.1 域名解析的工作原理
 
-域名解析靠的是 DNS，我们在浏览器输入一个域名时，DNS 负责将该域名解析为相应的 IP 地址，以便后续与目标服务器建立 TCP/IP 连接。要清楚 DNS 的工作原理，得先理解域名是一个树状结构。如图2-2所示，最顶层的域名是根域名（注意是一个点“.”，它是 .root的含义），然后是顶级域名（top-level domain，简写 TLD），再是一级域名、二级域名、三级域名。
+域名解析靠的是 DNS，我们在浏览器输入一个域名时，DNS 负责将该域名解析为相应的 IP 地址，以便后续与目标服务器建立 TCP/IP 连接。要清楚 DNS 的工作原理，得先理解域名是一个树状结构。如图 2-2 所示，最顶层的域名是根域名（注意是一个点“.”，它是 .root 的含义），然后是顶级域名（top-level domain，简写 TLD），再是一级域名、二级域名、三级域名。
 
 <div  align="center">
 	<img src="../assets/dns-tree.webp" width = "350"  align=center />
@@ -14,7 +14,7 @@
 </div>
 
 
-了解域名结构之后，我们再看看域名时如何进行解析，DNS 解析流程如图2-4所示。
+了解域名结构之后，我们再看看域名时如何进行解析，DNS 解析流程如图 2-4 所示。
 
 <div  align="center">
 	<img src="../assets/dns-example.png" width = "420"  align=center />
@@ -39,7 +39,7 @@ DNS 解析流程中有两个环节容易发生问题：一个是 DNS 解析器�
 第一个介绍的是 nslookup 命令，该命令用于查询 DNS 的记录、域名解析是否正常等。
 
 nslookup 命令示例：
-```
+```plain
 $ nslookup thebyte.com.cn        
 Server:		8.8.8.8
 Address:	8.8.8.8#53
@@ -50,16 +50,16 @@ Address: 110.40.229.45
 ```
 返回信息说明：
 
-- 第一行的 Server 为当前使用的 DNS解析器。
+- 第一行的 Server 为当前使用的 DNS 解析器。
 - Non-authoritative answer 因为 DNS 解析器只是转发权威解析服务器的记录，所以为非权威应答。
-- Address 为解析结果，上面的解析可以看到是一个A记录 110.40.229.45。
+- Address 为解析结果，上面的解析可以看到是一个 A 记录 110.40.229.45。
 
 2. 使用 dig 命令
 
 nslookup 返回的结果比较简单，如果想获取更多的信息，可以尝试使用 dig 命令。
 
-dig命令示例：
-```
+dig 命令示例：
+```plain
 $ dig thebyte.com.cn
 
 ; <<>> DiG 9.10.6 <<>> thebyte.com.cn
@@ -87,10 +87,10 @@ thebyte.com.cn.		599	IN	A	110.40.229.45
 - 第一段 opcode 为 QUERY，表示执行查询操作，status 为 NOERROR，表示解析成功。
 - 第二段 QUESTION SECTION 部分显示了发起的 DNS 请求参数，A 表示我们默认查询 A 类型记录。
 - 第三段 ANSWER SECTION 部分为 DNS 查询结果，可以看到 thebyte.com.cn. 的解析结果为 110.40.229.45。
-- 最后一段为查询所用的DNS解析器、耗时等信息。
+- 最后一段为查询所用的 DNS 解析器、耗时等信息。
 
-Facebook 2021年10月宕机故障中，使用 dig 排查各个公共DNS解析器，全部出现 SERVFAIL 错误，这说明是权威解析服务器出现了问题。
-```
+Facebook 2021 年 10 月宕机故障中，使用 dig 排查各个公共 DNS 解析器，全部出现 SERVFAIL 错误，这说明是权威解析服务器出现了问题。
+```plain
 ➜  ~ dig @1.1.1.1 facebook.com
 ;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 31322
 ;facebook.com.            IN    A

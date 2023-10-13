@@ -4,11 +4,11 @@ netfilter 是 Linux 内核 2.4 版本中引入的数据包处理框架。netfilt
 
 图 2-3 中，可以看到 netfilter 框架是如何处理通过不同协议栈路径上的数据包，netfilter 既可以处理网络层（network Layer）IP 数据包，也可以在链路层（Link Layer）处理以太网帧。
 
-我们看到在链路层（Link Layer）也有一些 iptables 的表和链标识，这意味着 iptables 配置的规则也可以对链路层数据生效，这种机制是保证同数据包不会因网桥和IP层差异导致通信失败。例如，搭建 kubernetes 环境要求设置 net.bridge.bridge-nf-call-iptables = 1，就是以上原因。
+我们看到在链路层（Link Layer）也有一些 iptables 的表和链标识，这意味着 iptables 配置的规则也可以对链路层数据生效，这种机制是保证同数据包不会因网桥和 IP 层差异导致通信失败。例如，搭建 kubernetes 环境要求设置 net.bridge.bridge-nf-call-iptables = 1，就是以上原因。
 
 ## 1. netfilter 与 iptables 
 
-Linux 上最常用的防火墙工具是 iptables，可用于检测、修改转发、重定向以及丢弃 IPv4 数据包。同时，iptables 也是众多上层应用，例如 SLB（Server Load Balancer，负载均衡）、容器网络、kube-proxy iptables模式等实现基础，所以在本节我们介绍 netfilter 与 iptables 的关系。
+Linux 上最常用的防火墙工具是 iptables，可用于检测、修改转发、重定向以及丢弃 IPv4 数据包。同时，iptables 也是众多上层应用，例如 SLB（Server Load Balancer，负载均衡）、容器网络、kube-proxy iptables 模式等实现基础，所以在本节我们介绍 netfilter 与 iptables 的关系。
 
 iptables 的底层实现是 netfilter，iptables 在用户空间管理数据包处理规则，内核中 netfilter 根据 iptables 的配置对数据包进行处理。iptables 与 netFilter 的关系如图 2-5 所示。
 
@@ -38,7 +38,7 @@ netfilter 框架在内核协议栈的不同位置实现了 5 个 hook 点，每�
 
 iptables 使用 table（表）来组织规则，并将不同功能的规则分为不同 table，例如，如果规则是处理网络地址转换的，那会放到 nat table，如果是判断是否允许包继续向前，那可能会放到 filter table。
 
-在每个 table 内部，规则被进一步组织成 chain（链），内置的 chain 由内置的 hook 触发。内核中有 5 个 hook，也内置了 5 个 chain，并和 hook 一一对应。内置的 5个 chain 为 PREROUTING、INPUT、FORWARD、OUTPUT、POSTROUTING。
+在每个 table 内部，规则被进一步组织成 chain（链），内置的 chain 由内置的 hook 触发。内核中有 5 个 hook，也内置了 5 个 chain，并和 hook 一一对应。内置的 5 个 chain 为 PREROUTING、INPUT、FORWARD、OUTPUT、POSTROUTING。
 
 ## 4. iptables 规则
 
@@ -63,7 +63,7 @@ iptables 规则放置在特定 table 的特定 chain 中。当 chain 被调用�
 
 我们看一条 iptbales 的规则示例。
 
-```
+```plain
 iptables -A INPUT -i eth0 -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT
 ```
 

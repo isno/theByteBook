@@ -10,7 +10,7 @@ RX/TX 中 RX 为收到的数据、TX 为发送的数据，当网卡收到数据�
 
 查询网卡收包情况 (RX 为收到的数据、TX 为发送的数据)。
 
-```
+```plain
 $ ifconfig eth0 | grep -E 'RX|TX'
 
 RX packets 490423734  bytes 193802774970 (180.4 GiB)
@@ -30,7 +30,7 @@ RSS（receive side steering，多队列处理）利用网卡多队列特性，�
 
 查询 RX/TX 队列配置和使用情况。
 
-```
+```plain
 $ ethtool -l eth0
 
 Channel parameters for eth0:
@@ -47,7 +47,7 @@ Combined:	4
 ```
 
 可以看到硬件最多支持 6 个，当前使用了 4 个。将 RX/TX 队列数量都设为 8。
-```
+```plain
 $ ethtool -L eth0 combined 8
 ```
 
@@ -57,7 +57,7 @@ $ ethtool -L eth0 combined 8
 
 查看队列大小。
 
-```
+```plain
 $ ethtool -g eth0
 
 Ring parameters for eth0:
@@ -75,8 +75,8 @@ TX:		512
 以上输出显示网卡最多支持 1024 个 RX/TX 数据包大小，但是现在只用到了 512 个。
 
 ethtool -G 修改队列大小。
-```
+```plain
 $ ethtool -G eth0 rx 1024
 ```
 
-但是注意开启多核并发特性，会挤压业务代码的执行时间，如果业务属于 CPU 密集型，会导致业务性能下降。是否开启多核处理，需要根据业务场景考虑，根据笔者的经验来看，例如此类负载均衡服务器、网关、集群核心转发节点等网络I/O 密集型场景可以尝试优化 RSS、RPS 等配置。
+但是注意开启多核并发特性，会挤压业务代码的执行时间，如果业务属于 CPU 密集型，会导致业务性能下降。是否开启多核处理，需要根据业务场景考虑，根据笔者的经验来看，例如此类负载均衡服务器、网关、集群核心转发节点等网络 I/O 密集型场景可以尝试优化 RSS、RPS 等配置。

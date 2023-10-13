@@ -4,7 +4,7 @@
 
 ## 1. TCP 握手流程
 
-如图 2-6所示，握手流程中有两个队列较为关键，当队列满时多余的连接将会被丢弃。
+如图 2-6 所示，握手流程中有两个队列较为关键，当队列满时多余的连接将会被丢弃。
 
 <div  align="center">
 	<img src="../assets/TCP.svg" width = "550"  align=center />
@@ -15,7 +15,7 @@
 - Accept Queue 被称为全连接队列，是一个 socket 上等待应用程序 accept 的最大队列长度，取值为 min(backlog，net.core.somaxconn)。
 
 backlog 为创建 TCP 连接时设置，如下代码。
-```
+```plain
 int listen(int sockfd, int backlog)
 ```
 
@@ -38,7 +38,7 @@ TCP 建立连接后会有个发送一个空 ACK 的探测行为来保持连接�
 	<p>图 2-7 TCP 挥手概览</p>
 </div>
 
-挥手流程中的主要优化为 TIME_WAIT 参数调整。TIME_WAIT 是 TCP 挥手的最后一个状态，当收到被动方发来的 FIN 报文后，主动方回复 ACK，表示确认对方的发送通道已经关闭，继而进入TIME_WAIT 状态 ，等待 2MSL 时间后关闭连接。
+挥手流程中的主要优化为 TIME_WAIT 参数调整。TIME_WAIT 是 TCP 挥手的最后一个状态，当收到被动方发来的 FIN 报文后，主动方回复 ACK，表示确认对方的发送通道已经关闭，继而进入 TIME_WAIT 状态 ，等待 2MSL 时间后关闭连接。
 
 如果发起连接一方的 TIME_WAIT 状态过多，会占满了所有端口资源，则会导致无法创建新连接，可以尝试调整以下参数减小 TIME_WAIT 影响。
 
@@ -51,7 +51,7 @@ TIME_WAIT 的问题在反向代理中比较明显，例如 Nginx 默认行为下
 
 笔者整理了部分内核参数配置，以供读者参考。但需注意，根据使用场景不同和机器配置不同，相关的配置起到的作用也不尽相同，生产环境中的参数调优，需要在理解原理的基础上，根据实际情况进行调整。
 
-```
+```plain
 net.ipv4.tcp_tw_recycle = 0
 net.ipv4.tcp_tw_reuse = 1
 net.ipv4.ip_local_port_range = 1024 65535

@@ -8,7 +8,7 @@ kubecost 目前支持 阿里云、AWS 等云厂商对接，它能够提供集群
 ## 安装 Kubecost
 
 安装 Kubecost 建议使用 Helm 进行安装，使用以下命令：
-```
+```plain
 helm repo add kubecost https://kubecost.github.io/cost-analyzer/
 helm repo update
 helm upgrade --install kubecost kubecost/cost-analyzer --namespace kubecost --create-namespace
@@ -16,7 +16,7 @@ helm upgrade --install kubecost kubecost/cost-analyzer --namespace kubecost --cr
 
 几分钟后，检查以确保 Kubecost 已启动并运行：
 
-```
+```plain
 kubectl get pods -n kubecost
 # Connect to the Kubecost dashboard UI
 kubectl port-forward -n kubecost svc/kubecost-cost-analyzer 9090:9090

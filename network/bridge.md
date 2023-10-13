@@ -17,21 +17,21 @@ Linux Bridge 是 Linux kernel 2.2 版本开始提供的二层转发工具，与�
 
 创建两个 Network namespace。
 
-```
+```plain
 $ ip netns add ns1
 $ ip netns add ns2
 ```
 
 创建一个 Linux bridge，并启动设备。
 
-```
+```plain
 $ brctl addbr bridge0
 $ ip link set bridge0 up
 ```
 
 创建 veth，将 veth 一端加入到 Network namespace，另一端加入到网桥上。
 
-```
+```plain
 $ ip link add veth1 type veth peer name veth1-peer
 
 $ ip link set veth1 netns ns1
@@ -49,14 +49,14 @@ $ ip link set veth1-peer up
 
 为 Network namespace 配置 IP 信息，位于同一个子网 172.16.0.0/24 中。
 
-```
+```plain
 $ ip -n ns1 addr add local 172.16.0.1/24 dev veth1-peer
 $ ip -n ns2 addr add local 172.16.0.2/24 dev veth2-peer
 ```
 
 通过以上的操作，我们便完成了 namespace 和 Linux bridge 的连接， 我们检查通信是否正常。
 
-```
+```plain
 $ ip netns exec ns1 ping 172.16.0.2
 
 PING 172.16.1.2 (172.16.0.2) 56(84) bytes of data.

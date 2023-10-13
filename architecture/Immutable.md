@@ -2,7 +2,7 @@
 
 在故障的排查解决中，经常会先出现这么几个画面，开发工程师 “我本地跑好好的啊”，运维工程师 “我只是升级了一个依赖库啊”。对于这类问题，在本节，我们聊聊问题的本源 -- 基础设施。
 
-2013年6月，Chad Fowler 在自己的博客中撰写一篇 《Trash Your Servers and Burn Your Code: Immutable Infrastructure and Disposable Components》 的文章，提出了 Immutable Infrastructure（不可变基础设施） 的概念[^1]。这一前瞻性的构想，伴随着 Docker 容器技术的兴起、微服务架构的流行，得到了事实上的检验。
+2013 年 6 月，Chad Fowler 在自己的博客中撰写一篇 《Trash Your Servers and Burn Your Code: Immutable Infrastructure and Disposable Components》 的文章，提出了 Immutable Infrastructure（不可变基础设施） 的概念[^1]。这一前瞻性的构想，伴随着 Docker 容器技术的兴起、微服务架构的流行，得到了事实上的检验。
 
 不过谈论不可变基础设施之前，我们先了解不可变（Immutable）和可变（Mutable）的区别。
 
@@ -24,7 +24,7 @@
 
 不可变基础设施的核心思想是任何基础设施的实例一旦创建之后就变成只读状态。如需修改或升级，应该先修改基础设施的配置模版（例如 yaml 配置），修改配置模版之后使用新的实例进行替换。
 
-不可变基础设施的系统中如果有新的变更需求，如上面的 Nginx 升级案例，就应该准备一个新的 Nginx 基础设施，而不是在原有的基础上做原地更新，如图1-30所示。
+不可变基础设施的系统中如果有新的变更需求，如上面的 Nginx 升级案例，就应该准备一个新的 Nginx 基础设施，而不是在原有的基础上做原地更新，如图 1-30 所示。
 
 <div  align="center">
 	<img src="../assets/Immutable.png" width = "580"  align=center />
