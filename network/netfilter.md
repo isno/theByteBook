@@ -1,10 +1,6 @@
 # 3.2.2 数据包处理框架 netfilter
 
-netfilter 是 Linux 内核 2.4 版本中引入的数据包处理框架。netfilter 在内核协议栈的不同位置实现了 5 个 hook 点，其它内核模块(例如 iptables、IPVS 等)可以向这些 hook 点注册处理函数，当数据包经过这些 hook 点时，注册处理函数被依次调用，进而实现对数据包过滤、修改、SNAT/DNAT 等各类功能。
-
-图 2-3 中，可以看到 netfilter 框架是如何处理通过不同协议栈路径上的数据包，netfilter 既可以处理网络层（network Layer）IP 数据包，也可以在链路层（Link Layer）处理以太网帧。
-
-我们看到在链路层（Link Layer）也有一些 iptables 的表和链标识，这意味着 iptables 配置的规则也可以对链路层数据生效，这种机制是保证同数据包不会因网桥和IP层差异导致通信失败。例如，搭建 kubernetes 环境要求设置 net.bridge.bridge-nf-call-iptables = 1，就是以上原因。
+Netfilter 实际上就是一个过滤器框架，Netfilter 在网络包收发以及路由的“管道”中，一共切了5个口（hook），分别是 PREROUTING、FORWARD、POSTROUTING、INPUT 以及 OUTPUT，其它内核模块(例如 iptables、IPVS 等)可以向这些 hook 点注册处理函数，当数据包经过这些 hook 点时，注册处理函数被依次调用，从而实现对数据包过滤、修改、SNAT/DNAT 等各类功能。
 
 ## 1. netfilter 与 iptables 
 
