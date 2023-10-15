@@ -20,14 +20,14 @@
 	<p>图3-4 Kubernetes 服务本的质</p>
 </div>
 
-以 Kubernetes 网络模型说明 netfilter 的作用，如图 2-10 示例，当一个 Pod 跨 Node 进行通信时，数据包从 Pod 网络 Veth 接口发送到 cni0 虚拟网桥，进入主机协议栈之后，首先会经过 PREROUTING hook，调用相关的链做 DNAT，经过 DNAT 处理后，数据包目的地址变成另外一个 Pod 地址，再继续转发至 eth0，发给正确的集群节点。
+如图3-5 Kubernetes 网络模型说明示例，当一个 Pod 跨 Node 进行通信时，数据包从 Pod 网络 Veth 接口发送到 cni0 虚拟网桥，进入主机协议栈之后，首先会经过 PREROUTING hook，调用相关的链做 DNAT，经过 DNAT 处理后，数据包目的地址变成另外一个 Pod 地址，再继续转发至 eth0，发给正确的集群节点。
 
 <div  align="center">
-	<img src="../assets/netfilter-k8s.png" width = "550"  align=center />
-	<p>图 2-10 kubernetes 网络模型</p>
+	<img src="../assets/netfilter-k8s.svg" width = "550"  align=center />
+	<p>图3-5 kubernetes 网络模型</p>
 </div>
 
 
-对Linux内核网络有了基本的了解之后，我们先看数据经过的第一个模块，XDP。
+对 Linux 内核网络基本了解之后，我们再来看看 NetFilter 和它的上层应用 iptables。
 
 [^1]: 参见 https://en.wikipedia.org/wiki/Netfilter

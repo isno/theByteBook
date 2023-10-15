@@ -1,23 +1,15 @@
-# 3.2.2 数据包处理框架 netfilter
+# 3.2.1 iptables 与 Netfilter
 
-Netfilter 实际上就是一个过滤器框架，Netfilter 在网络包收发以及路由的“管道”中，一共切了5个口（hook），分别是 PREROUTING、FORWARD、POSTROUTING、INPUT 以及 OUTPUT，其它内核模块(例如 iptables、IPVS 等)可以向这些 hook 点注册处理函数，当数据包经过这些 hook 点时，注册处理函数被依次调用，从而实现对数据包过滤、修改、SNAT/DNAT 等各类功能。
-
-## 1. netfilter 与 iptables 
-
-Linux 上最常用的防火墙工具是 iptables，可用于检测、修改转发、重定向以及丢弃 IPv4 数据包。同时，iptables 也是众多上层应用，例如 SLB（Server Load Balancer，负载均衡）、容器网络、kube-proxy iptables模式等实现基础，所以在本节我们介绍 netfilter 与 iptables 的关系。
-
-iptables 的底层实现是 netfilter，iptables 在用户空间管理数据包处理规则，内核中 netfilter 根据 iptables 的配置对数据包进行处理。iptables 与 netFilter 的关系如图 2-5 所示。
+作为 Linux 上最常用的防火墙工具 -- iptables，是众多的应用 SLB（Server Load Balancer，负载均衡）、容器网络、Kube-Proxy iptables 模式等实现基础。而 iptables 的底层实现则是 Netfilter，iptables 在用户空间管理数据包处理规则，内核中 Netfilter 根据 iptables 的配置对数据包进行处理，它们的关系如图3-6 所示。
 
 <div  align="center">
 	<img src="../assets/iptables.png" width = "320"  align=center />
-	<p>图 2-11 iptables 与 netfilter 的关系</p>
+	<p>图2-11 iptables 与 netfilter 的关系</p>
 </div>
 
-## 2. netfilter hooks
+iptables 使用 table（表）来组织规则，并将不同功能的规则分为不同 table，例如，如果规则是处理网络地址转换的，那会放到 nat table，如果是判断是否允许包继续向前，那可能会放到 filter table。在每个 table 内部，规则被进一步组织成 chain（链），内置的 chain 由内置的 hook 触发。内核中有 5 个 hook，也内置了 5 个 chain，并和 hook 一一对应。
 
-netfilter 框架在内核协议栈的不同位置实现了 5 个 hook 点，每个进入网络系统的数据包经过协议栈时会触发注册在这里的 hook 处理函数 。数据包触发哪个 hook 取决于数据包的方向（ingress/egress）、目的地址、上一个 hook 点是被丢弃还是拒绝等等。
-
-下面几个 hook 是内核协议栈中已经定义好的：
+几个内核协议栈定义好的 hook 功能如下：
 
 - **NF_IP_PRE_ROUTING:** 接收到的包进入协议栈后立即触发此 hook，在进行任何路由判断 （将包发往哪里）之前。
 - **NF_IP_LOCAL_IN:** 接收到的包经过路由判断，如果目的是本机，将触发此 hook。
@@ -25,20 +17,8 @@ netfilter 框架在内核协议栈的不同位置实现了 5 个 hook 点，每�
 - **NF_IP_LOCAL_OUT:** 本机产生的准备发送的包，在进入协议栈后立即触发此 hook。
 - **NF_IP_POST_ROUTING:** 本机产生的准备发送的包或者转发的包，在经过路由判断之后，将触发此 hook。
 
-<div  align="center">
-	<img src="../assets/netfilter.png" width = "550"  align=center />
-	<p>图 2-12 数据包经过内核 hook </p>
-</div>
 
-## 3. iptables 表和链
-
-iptables 使用 table（表）来组织规则，并将不同功能的规则分为不同 table，例如，如果规则是处理网络地址转换的，那会放到 nat table，如果是判断是否允许包继续向前，那可能会放到 filter table。
-
-在每个 table 内部，规则被进一步组织成 chain（链），内置的 chain 由内置的 hook 触发。内核中有 5 个 hook，也内置了 5 个 chain，并和 hook 一一对应。内置的 5个 chain 为 PREROUTING、INPUT、FORWARD、OUTPUT、POSTROUTING。
-
-## 4. iptables 规则
-
-iptables 规则放置在特定 table 的特定 chain 中。当 chain 被调用的时候，数据包依次匹配 chain 里面的规则。每条规则都有一个匹配部分和一个动作部分。规则的匹配部分指定了一些条件，数据包必须满足这些条件才会和相应的将要执行的动作 `target`进行关联。target 分为两种类型：
+当 chain 被调用的时候，数据包依次匹配 chain 里面的规则。每条规则都有一个匹配部分和一个动作部分。规则的匹配部分指定了一些条件，数据包必须满足这些条件才会和相应的将要执行的动作 `target`进行关联。target 分为两种类型：
 
 - 终止目标（terminating targets）：这种 target 会终止 chain 的匹配，将控制权转移回 netfilter hook。根据返回值的不同，hook 或者将包丢弃，或者允许包进行下一阶段的处理。
 - 非终止目标（non-terminating targets）：非终止目标执行动作，然后继续 chain 的执行。虽然每个 chain 最终都会回到一个终止目标，但是在这之前，可以执行任意多个非终止目标。

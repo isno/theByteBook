@@ -132,9 +132,9 @@ export default defineUserConfig({
                         text: '3.2 Linux 内核网络框架',
                         link: "/network/linux-kernel-networking.md",
                         children: [
-                            '/network/XDP.md',
                             '/network/netfilter.md',
                             '/network/conntrack.md',
+                            '/network/XDP.md',
                         ]
                     },
                     {
