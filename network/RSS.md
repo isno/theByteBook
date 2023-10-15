@@ -1,8 +1,10 @@
-# 3.3.1 RX/TX Ring 优化
+# 3.3.1 网卡多队列优化
 
-RX/TX 中 RX 为收到的数据、TX 为发送的数据，当网卡收到数据时，会通过 DMA 的方式拷贝到 Ring Buffer（也就是 RX Ring 实例）以待处理。从 图 2-5 得知，处理一个数据包会有各类的中断处理、繁琐的流程，当收到的数据包速率大于单个 CPU 处理速度的时，因为分配给 RX/TX 队列的空间是有限的，Ring Buffer 可能被占满并导致新数据包被自动丢弃。
+根据图3-2 Linux ingress 架构分析，处理一个数据包会有各类的中断处理、繁琐的流程，当收到的数据包速率大于单个 CPU 处理速度的时，因为分配给 RX/TX 队列的空间是有限的，Ring Buffer 可能被占满并导致新数据包被自动丢弃。
 
-一个 CPU 去处理 Ring Buffer 数据会很低效，这个时候就产生 RSS、RPS 等多核并发机制来提升内核网络包的处理能力。
+如果在多核 CPU 的服务器上，网卡内部会有多个 Ring Buffer，NIC 负责将传进来的数据分配给不同的 Ring Buffer，同时触发的 IRQ 也可以分配到多个 CPU 上，这样存在多个 Ring Buffer 的情况下 Ring Buffer 缓存的数据也同时被多个 CPU 处理，就能提高数据的并行处理能力。
+
+当然，要实现“NIC 负责将传进来的数据分配给不同的 Ring Buffer”，NIC 网卡必须支持 Receive Side Scaling(RSS) 或者叫做 multiqueue 的功能。RSS 除了会影响到 NIC 将 IRQ 发到哪个 CPU 之外，不会影响别的逻辑。
 
 ## 1. 判断是否需进行优化
 
@@ -20,7 +22,6 @@ TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 ```
 
 以上查询结果中，RX dropped 表示数据包已经进入了 Ring Buffer，但是由于内存不够等系统原因，导致在拷贝到内存的过程中被丢弃，RX overruns 错误为 Ring Buffer 传输的 IO 大于 kernel 能够处理的 IO 导致，为 CPU 无法及时处理中断而造成 Ring Buffer 溢出。
-
 
 ## 2. RSS 下的多队列调整
 
