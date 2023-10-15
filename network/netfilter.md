@@ -7,7 +7,7 @@
 	<p>图3-6 iptables 与 Netfilter 的关系</p>
 </div>
 
-## 1. iptables 的表和链
+## 1. iptables 表和链
 
 iptables 包括了“tables（表）”、“chain（链）”和“rules（规则）”三个层面。iptables 使用表来组织规则，如果规则是处理网络地址转换的，那会放到 nat 表，如果是判断是否允许包继续向前，那可能会放到 filter 表。每个表内部规则被进一步组织成链，链由内置的 hook 触发后数据包依次匹配里面的规则。
 
@@ -26,7 +26,7 @@ iptables 包括了“tables（表）”、“chain（链）”和“rules（规�
 	<p>图3-7 iptables 中 chain 和 table 关系</p>
 </div>
 
-## 2. 自定义链
+## 2. iptables 自定义链
 
 iptables 规则允许数据包跳转到其他链继续处理，同时 iptables 也支持创建自定义链，不过自定义链没有注册到 Netfilter hook，所以自定义链只能通过从另一个规则跳转到它。
 
@@ -44,7 +44,15 @@ kubernetes 中 kube-proxy 组件的 iptables 模式就是利用自定义链模�
 	<p>图3-9 kube-porxy 自定义链</p>
 </div>
 
-## 3. iptables 应用问题
+如下命令，查看 kube-proxy 创建的规则。
+```
+$ iptables -S -t nat
+-A PREROUTING -m -comment --comment "kubernetes service portals" -j KUBE-SERVICES
+-A OUTPUT -m -comment --comment "kubernetes service portals" -j KUBE-SERVICES
+-A POSTROUTING -m -comment --comment "kubernetes postrouting rules " -j KUBE-POSTROUTING
+```
+
+## 3. iptables 性能问题
 
 Kubernetes 中 Kube-Proxy 组件有两种模式：iptables 和 IPVS。不过 iptables 的规则匹配是线性的，匹配的时间复杂度是 O(N)。规则更新是非增量式的，哪怕增加/删除一条规则，也是整体修改 iptables 规则表，当集群内 Service 数量较多，则会有较大的性能问题。而 IPVS 则专门用于高性能负载均衡，实现上使用了更高效的哈希表，时间复杂度为 O(1)，性能与规模无关。
 
