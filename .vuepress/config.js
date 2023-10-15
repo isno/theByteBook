@@ -143,8 +143,7 @@ export default defineUserConfig({
                         children: [
                             "/network/RSS.md",
                             "/network/netstack-performance.md",
-                            '/network/C10M.md',
-                            
+                            '/network/kernel-bypass.md',
                         ]
                     },
                     {
