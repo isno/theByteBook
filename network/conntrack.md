@@ -36,8 +36,6 @@ ipv4     2 tcp      6 88 ESTABLISHED src=10.0.12.12 dst=10.0.12.14 sport=48318 d
 
 连接跟踪是许多网络应用的基础，常用的使用场景如 NAT、iptables 的状态匹配等。
 
-### 2.1 NAT
-
 NAT（Network Address Translation，网络地址转换）, 即对（数据包的）网络地址（IP + Port）进行转换。
 
 <div  align="center">
@@ -59,13 +57,11 @@ NAT（Network Address Translation，网络地址转换）, 即对（数据包的
 	<p>图 2-18</p>
 </div>
 
-### 2.2 conntrack 与 LVS DR 模式
 
-在 LVS 机器上应用 iptables 时需要注意一个问题就是，LVS-DR(或LVS-Tun)模式下，不能在 director 上使用 iptables 状态匹配(NEW，ESTABLISHED，INVALID...)，LVS-DR模式下，client访问director，director转发流量到realserver，realserver直接回复client，不经过director，这种情况下，client与direcotr处于tcp半连接状态
+例如，搭建 kubernetes 环境有一条配置 `net.bridge.bridge-nf-call-iptables = 1`，很多同学不明其意，如果结合图3-2解释
 
-因此如果在director机器上启用conntrack，此时conntrack只能看到client–>director的数据包，因为响应包不经过direcotr，conntrack无法看到反方向上的数据包，就表示iptables中的ESTABLISHED状态永远无法匹配，从而可能发生DROP
+不管是 iptables 还是 ipvs 转发模式，Kubernetes 中访问 Service 都会进行 DNAT，将原本访问 ClusterIP:Port 的数据包 DNAT 成 Service 的某个 Endpoint (PodIP:Port)，然后内核将连接信息插入 conntrack 表以记录连接，目的端回包的时候内核从 conntrack 表匹配连接并反向 NAT，这样原路返回形成一个完整的连接链路。
 
-<div  align="center">
-	<img src="../assets/conntrack-lvs.png" width = "350"  align=center />
-	<p>图 2-19 conntrack 示例</p>
-</div>
+但是 Linux 网桥是一个虚拟的二层转发设备，而 iptables conntrack 是在三层上，所以如果直接访问同一网桥内的地址，就会直接走二层转发，不经过 conntrack，由于没有原路返回，客户端与服务端的通信就不在一个 "频道" 上，不认为处在同一个连接，也就无法正常通信。
+
+启用 bridge-nf-call-iptables 这个内核参数 (置为 1)，表示 bridge 设备在二层转发时也去调用 iptables 配置的三层规则 (包含 conntrack)，所以开启这个参数就能够解决上述 Service 同节点通信问题，这也是为什么在 Kubernetes 环境中，大多都要求开启 bridge-nf-call-iptables 的原因。
