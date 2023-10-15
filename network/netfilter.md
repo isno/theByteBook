@@ -7,6 +7,8 @@
 	<p>图3-6 iptables 与 netfilter 的关系</p>
 </div>
 
+## 1. table 与 chain
+
 iptables 使用 table（表）来组织规则，并将不同功能的规则分为不同 table，如果规则是处理网络地址转换的，那会放到 nat table，如果是判断是否允许包继续向前，那可能会放到 filter table。每个 table 内部，规则被进一步组织成 chain（规则链）当 chain 被调用的时候，数据包依次匹配 chain 里面的规则。
 
 内置的 chain 由内置的 hook 触发，内核中有 5 个 定义好的 hook 和内置的 chain一一对应。这几个内置 chain 功能如下：
@@ -35,7 +37,7 @@ iptables -A INPUT -i eth0 -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j 
 	<p>图3-7 iptables 中 chain 和 table 关系</p>
 </div>
 
-## 2. 用户自定义 chain
+## 2. 自定义 chain
 
 iptables 规则允许数据包跳转（jump）到其他 chain 继续处理，同时 iptables 也支持创建自定义的 chain，不过自定义 chain 没有注册到 Netfilter hook，所以用户定义 chain 只能通过从另一个规则跳转（jump）到它。
 
@@ -55,7 +57,7 @@ kubernetes 中 kube-proxy 组件 iptbales 模式就是利用自定义 chain 模�
 
 ## 3. iptables 应用问题
 
-在 Kubernetes 中 Kube-Proxy 组件有两种模式：iptables 和 IPVS。这两者都基于 netfilter，不过 iptables 定位是为防火墙而设计，iptables 的规则链是一种线性表，时间复杂度为 O(n) ，规则的遍历和更新成线性延时，当集群内 Service 数量较多，则会有较大的性能问题。而 IPVS 则专门用于高性能负载均衡，实现上使用了更高效的哈希表，时间复杂度为 O(1)，性能与规模无关，如表 2-1 所示。
+在 Kubernetes 中 Kube-Proxy 组件有两种模式：iptables 和 IPVS。不过 iptables 定位是为防火墙而设计，iptables 的规则链是一种线性表，时间复杂度为 O(n) ，规则的遍历和更新成线性延时，当集群内 Service 数量较多，则会有较大的性能问题。而 IPVS 则专门用于高性能负载均衡，实现上使用了更高效的哈希表，时间复杂度为 O(1)，性能与规模无关，如表 2-1 所示。
 
 表 2-3 不同模式、规模下增加规则的延迟
 
