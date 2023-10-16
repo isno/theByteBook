@@ -16,7 +16,7 @@ XDP 程序在内核提供的网卡驱动中直接取得网卡收到的数据帧�
 
 <div  align="center">
 	<img src="../assets/XDP.svg" width = "500"  align=center />
-	<p>图3-14 XDP 流程概念</p>
+	<p>图 3-14 XDP 流程概念</p>
 </div>
 
 ## 2. XDP 应用示例
@@ -33,7 +33,7 @@ XDP 程序在内核提供的网卡驱动中直接取得网卡收到的数据帧�
 
 <div  align="center">
 	<img src="../assets/cilium.svg" width = "500"  align=center />
-	<p>图3-15 conntrack Cilium 方案</p>
+	<p>图 3-15 conntrack Cilium 方案</p>
 </div>
 
 由于 Cilium 方案的连接跟踪机制独立于 Netfilter ，因此它的 conntrack 和 NAT 信息也没有存储在内核中的 conntrack table 和 NAT table 中，常规的 conntrack/netstats/ss/lsof 等工具看不到 nat、conntrack 数据，所以需要另外使用 Cilium 的命令查询，例如：
