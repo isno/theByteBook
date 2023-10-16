@@ -20,9 +20,9 @@ HPA 依赖 Metrics-Server 捕获 CPU、内存数据来提供资源使用测量�
 
 由上图看出，HPA 持续监控 Metrics-Server 的指标情况，然后计算所需的副本数动态调整资源副本，实现设置目标资源值的水平伸缩。
 
-下面示例，创建一个 HPA, 期望CPU的利用率为 70%，副本数的范围是1-10，操作对象名 nginx-deployment 为 Deployment 。
+下面示例，创建一个 HPA, 期望 CPU 的利用率为 70%，副本数的范围是 1-10，操作对象名 nginx-deployment 为 Deployment 。
 
-```
+```plain
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:

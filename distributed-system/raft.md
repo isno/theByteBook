@@ -6,7 +6,7 @@ Raft 是工程上使用较为广泛的强一致性、去中心化、高可用的
 
 Raft 将系统中的角色分为领导者（Leader）、跟从者（Follower）和候选者（Candidate）
 
-- **Leader**：接受客户端请求，并向 Follower 同步请求日志，当日志同步到大多数节点上后高速Follower提交日志。
+- **Leader**：接受客户端请求，并向 Follower 同步请求日志，当日志同步到大多数节点上后高速 Follower 提交日志。
 - **Follower**：接受并持久化 Leader 同步的日志，在 Leader 告知日志可以提交后，提交日志。当 Leader 出现故障时，主动推荐自己为候选人。
 - **Candidate**：Leader 选举过程中的临时角色。向其他节点发送请求投票信息，如果获得大多数选票，则晋升为 Leader
 
@@ -17,7 +17,7 @@ Raft 算法将分布式一致性分解为多个子问题，包括 Leader 选举�
 	<img src="../assets/raft.png" width = "300"  align=center />
 </div>
 
-Raft算法将时间划分为不定长度的任期Terms，Terms为连续的数字。每个Term以选举开始，如果选举成功，则由当前leader负责出块，如果选举失败，并没有选举出新的单一Leader，则会开启新的Term，重新开始选举。
+Raft 算法将时间划分为不定长度的任期 Terms，Terms 为连续的数字。每个 Term 以选举开始，如果选举成功，则由当前 leader 负责出块，如果选举失败，并没有选举出新的单一 Leader，则会开启新的 Term，重新开始选举。
 
 <div  align="center">
 	<img src="../assets/raft-term.png" width = "350"  align=center />
@@ -25,7 +25,7 @@ Raft算法将时间划分为不定长度的任期Terms，Terms为连续的数字
 
 ### Leader 选举
 
-Raft使用心跳机制来触发领导者选举，当服务器启动时，初始化都是Follower身份，由于没有Leader，Followers无法与 Leader 保持心跳，因此 Followers 会认为 Leader 已经下线，进而转为 Candidate 状态，然后 Candidate 向集群其他节点请求投票，同意自己成为 Leader，如果 Candidate 收到超过半数节点的投票(N/2 +1)，它将获胜成为 Leader。
+Raft 使用心跳机制来触发领导者选举，当服务器启动时，初始化都是 Follower 身份，由于没有 Leader，Followers 无法与 Leader 保持心跳，因此 Followers 会认为 Leader 已经下线，进而转为 Candidate 状态，然后 Candidate 向集群其他节点请求投票，同意自己成为 Leader，如果 Candidate 收到超过半数节点的投票(N/2 +1)，它将获胜成为 Leader。
 
 <div  align="center">
 	<img src="../assets/raft-vote.png" width = "500"  align=center />
@@ -39,12 +39,12 @@ Leader 向所有 Follower 周期性发送 heartbeat，如果 Follower 在选举�
 
 ### 日志同步
 
-Raft算法实现日志同步的具体过程如下：
+Raft 算法实现日志同步的具体过程如下：
 
-- Leader收到来自客户端的请求，将之封装成log entry并追加到自己的日志中；
-- Leader并行地向系统中所有节点发送日志复制消息；
-- 接收到消息的节点确认消息没有问题，则将log entry追加到自己的日志中，并向Leader返回ACK表示接收成功；
-- Leader若在随机超时时间内收到大多数节点的ACK,则将该log entry应用到状态机并向客户端返回成功。
+- Leader 收到来自客户端的请求，将之封装成 log entry 并追加到自己的日志中；
+- Leader 并行地向系统中所有节点发送日志复制消息；
+- 接收到消息的节点确认消息没有问题，则将 log entry 追加到自己的日志中，并向 Leader 返回 ACK 表示接收成功；
+- Leader 若在随机超时时间内收到大多数节点的 ACK,则将该 log entry 应用到状态机并向客户端返回成功。
 
 <div  align="center">
 	<img src="../assets/raft-log.png" width = "500"  align=center />
@@ -55,7 +55,7 @@ Raft算法实现日志同步的具体过程如下：
 
 Raft 拥有不同的开发语言多种实现，如下表展示了部分 Raft 工程实现
 
-| 项目 | 开发语言 | Leader选举+日志复制 | 持久化 |成员变更| 日志复制 |
+| 项目 | 开发语言 | Leader 选举+日志复制 | 持久化 |成员变更| 日志复制 |
 |--:|:--|:--|:--|:--|:--|
 | etcd/raft | Go | 支持| 支持| 支持| 支持|
 | RethinkDB |  C++ | 支持| 支持| 支持|支持|

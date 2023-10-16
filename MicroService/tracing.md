@@ -8,7 +8,7 @@
 
 ## 调用链追踪系统
 
-链路追踪系统开源的软件有 Jaeger、SkyWalking、Pinpoint、Zipkin、Spring Cloud Sleuth等。它们在微服务层实现链路追踪功能，总体思想是从请求发起端到后端数据库存储层，所有层都通过一个 TraceId 串起来，期间每经过的一个节点叫作 Span，调用的耗时、错误等信息均附属在节点上，总而实现对一个全链路的追踪、观测。
+链路追踪系统开源的软件有 Jaeger、SkyWalking、Pinpoint、Zipkin、Spring Cloud Sleuth 等。它们在微服务层实现链路追踪功能，总体思想是从请求发起端到后端数据库存储层，所有层都通过一个 TraceId 串起来，期间每经过的一个节点叫作 Span，调用的耗时、错误等信息均附属在节点上，总而实现对一个全链路的追踪、观测。
 
 ## 调用链系统基本架构
 
@@ -21,4 +21,4 @@
 
 ## 小结
 
-调用链不局限于模块、微服务之间的调用关系，也涉及内部逻辑与函数的调用关系，Linux系统中 Profiling、Strace、tcpdump，Java中的 Stace 等都是追踪领域相关的技术。
+调用链不局限于模块、微服务之间的调用关系，也涉及内部逻辑与函数的调用关系，Linux 系统中 Profiling、Strace、tcpdump，Java 中的 Stace 等都是追踪领域相关的技术。

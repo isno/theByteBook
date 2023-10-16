@@ -4,7 +4,7 @@
 
 
 
-Envoy 是一个由 C++ 开发的高性能七层代理，和 Nginx 的技术架构相似，也采用了 多线程 + 非阻塞 + 异步IO（Libevent） 的架构。Envoy 核心是一个 L3/L4 代理，以 NetFilter hook 的形式执行 TCP/UDP 的相关任务，例如 TCP 转发，TLS 认证等。现在 Envoy 的功能已经非常完善 在 L3/L4 之上，Envoy 实现了 HTTP L7 代理、HTTP/2、gRPC、服务发现、负载均衡、Tracing、动态配置等等高级功能。	
+Envoy 是一个由 C++ 开发的高性能七层代理，和 Nginx 的技术架构相似，也采用了 多线程 + 非阻塞 + 异步 IO（Libevent） 的架构。Envoy 核心是一个 L3/L4 代理，以 NetFilter hook 的形式执行 TCP/UDP 的相关任务，例如 TCP 转发，TLS 认证等。现在 Envoy 的功能已经非常完善 在 L3/L4 之上，Envoy 实现了 HTTP L7 代理、HTTP/2、gRPC、服务发现、负载均衡、Tracing、动态配置等等高级功能。	
 
 Envoy 通常以 sidecar 的方式和应用服务并行运行，透明地代理应用服务发出/接收的流量。在这种机制下，应用服务只需要和 Envoy 通信，无需知道其他微服务应用在哪里。
 
@@ -17,13 +17,13 @@ Proxy 有四个关键组件
 - **路由（Router）：** 路由用来将流量转发到具体的目标实例，目标实例在 Envoy 中被定义为集群。
 - **集群（Cluster）：** 集群定义了流量的目标端点，同时还包括一些其他可选配置，如负载均衡策略等
 
-## Envoy的运作流程
+## Envoy 的运作流程
 
 笔者在本文以静态配置的方式来进一步解读 Envoy 运作流程。
 
 Envoy 配置的第一行定义了正在使用的接口配置，在这里我们将配置静态 API，因此第一行为
 
-```
+```plain
 static_resources:
 ```
 
@@ -31,7 +31,7 @@ static_resources:
 
 一个 Envoy 可以启动多个监听器，下面的配置项将创建一个新的监听器并将其绑定到 8080 端口。
 
-```
+```plain
 listeners:
 - name: listener_0
   address:
@@ -44,7 +44,7 @@ listeners:
 
 通过 Envoy 监听传入的流量，下一步是定义如何处理这些请求。每个监听器都有一组过滤器，并且不同的监听器可以具有一组不同的过滤器。
 
-```
+```plain
 filter_chains:
 - filters:
   - name: envoy.http_connection_manager
@@ -79,7 +79,7 @@ Nginx upstream 配置项在 Envoy 中被定义为 Cluster。
 
 Cluster 中的 hosts 列表用来处理被过滤器转发的流量，其中 hosts 的访问策略（例如超时）也在 Cluster 中进行配置，这有利于更精细化地控制超时和负载均衡。
 
-```
+```plain
 clusters:
 - name: targetCluster
   connect_timeout: 0.25s
@@ -101,7 +101,7 @@ Envoy 提供了一个管理视图，可以让我们去查看配置、统计信�
 
 我们可以通过添加其他的资源定义来配置 admin，其中也可以定义管理视图的端口，不过需要注意该端口不要和其他监听器配置冲突。
 
-```
+```plain
 admin:
   access_log_path: /tmp/admin_access.log
   address:
@@ -115,7 +115,7 @@ admin:
 
 下面的命令将通过容器启动 Envoy Proxy，该命令将 Envoy 容器暴露在 80 端口上以监听入站请求，但容器内的 Envoy Proxy 监听在 8080 端口上,
 
-```
+```plain
 $ docker run --name=envoy -p 80:8080 \
 	--user 1000:1000 \
 	-v /root/envoy.yaml:/etc/envoy/envoy.yaml \
@@ -125,7 +125,7 @@ $ docker run --name=envoy -p 80:8080 \
 
 启动后，我们可以在本地的 80 端口上去访问应用 curl 来测试代理是否成功
 
-```
+```plain
  curl -H "Host: thebyte.com.cn" localhost -i
 ```
 

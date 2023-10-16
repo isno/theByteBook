@@ -9,7 +9,7 @@ Kube-proxy 是 kubernetes 工作节点上的一个网络代理组件，运行在
 
 
 
-从iptables 的分析来看，集群内 iptables 规则的数量和集群内Pod数据成正比。 不难想象，当集群Pod数量很大的情况下，iptables规则数量很大，而 Linux 系统不断地刷新成百上千条iptables 规则会大量消耗 CPU 资源，甚至引起宿主机的卡死。
+从 iptables 的分析来看，集群内 iptables 规则的数量和集群内 Pod 数据成正比。 不难想象，当集群 Pod 数量很大的情况下，iptables 规则数量很大，而 Linux 系统不断地刷新成百上千条 iptables 规则会大量消耗 CPU 资源，甚至引起宿主机的卡死。
 
 虽然基于 iptables 的代理在性能上优于基于用户空间的代理，但在集群服务过多的情况下也会导致性能严重下降。
 

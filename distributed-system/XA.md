@@ -4,9 +4,9 @@ XA 规范 （eXtended Architecture） 是 X/Open 组织定义的分布式事务�
 
 ## 1. XA 规范概述
 
-XA 规范是由 X/Open 组织定义的一套分布式事务处理的接口规范，旨在为应用程序和数据库管理系统（DBMS）提供一致的接口，以支持分布式事务处理。XA 规范定义了一组API，应用程序可以使用这些 API 来管理分布式事务。
+XA 规范是由 X/Open 组织定义的一套分布式事务处理的接口规范，旨在为应用程序和数据库管理系统（DBMS）提供一致的接口，以支持分布式事务处理。XA 规范定义了一组 API，应用程序可以使用这些 API 来管理分布式事务。
 
-XA规范主要涉及到以下三个角色：
+XA 规范主要涉及到以下三个角色：
 
 - 应用程序（Application Program，AP）：执行业务逻辑，并发起或参与分布式事务。
 - 事务管理器（Transaction Manager， TM）：负责管理分布式事务的整个生命周期，包括事务的提交、回滚和恢复等。
@@ -22,11 +22,11 @@ XA规范主要涉及到以下三个角色：
 
 ## 2. 支持 XA 规范的数据库
 
-很多关系型数据库都支持XA协议。以下是一些主流数据库的支持情况：
+很多关系型数据库都支持 XA 协议。以下是一些主流数据库的支持情况：
 
-- MySQL: 支持 XA 事务，并实现了XA接口。
-- PostgreSQL: 从版本8.0开始支持XA事务，通过插件接口实现。
-- Oracle: 支持 XA 事务，使用 OracleXADataSource 提供XA接口。
+- MySQL: 支持 XA 事务，并实现了 XA 接口。
+- PostgreSQL: 从版本 8.0 开始支持 XA 事务，通过插件接口实现。
+- Oracle: 支持 XA 事务，使用 OracleXADataSource 提供 XA 接口。
 - SQL Server: 支持 XA 事务，使用 MSDTC 提供 XA 接口。
-- DB2: 支持 XA 事务，使用 DB2 Universal JDBC 驱动器提供XA接口。
+- DB2: 支持 XA 事务，使用 DB2 Universal JDBC 驱动器提供 XA 接口。
 - Sybase ASE: 支持 XA 事务，使用 JConnect 提供 XA 接口。

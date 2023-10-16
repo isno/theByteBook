@@ -5,7 +5,7 @@
 
 容器镜像设计中，为了解决各类依赖以及依赖共享，正是利用 UnionFs 实现了镜像分层，再结合 bootfs、rootfs，一层层继承、叠加。启动容器时把相关的层挂载到一个目录，作为容器的根文件系统，这就是容器镜像的原理。
 
-- bootfs（boot file system）：包含操作系统 bootloader 和 kernel。用户不能修改bootfs，在内核启动后，bootfs 会被卸载。
+- bootfs（boot file system）：包含操作系统 bootloader 和 kernel。用户不能修改 bootfs，在内核启动后，bootfs 会被卸载。
 - rootfs（root file system）：包含系统常见的目录结构，如/dev 、/lib、/proc、/bin、/etc/、/bin 等
 
 <div  align="center">

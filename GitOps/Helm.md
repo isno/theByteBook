@@ -5,7 +5,7 @@ Helm 是由 Deis 公司开发的一种系统性管理和封装 Kubernetes 应用
 Helm 一开始的目标就很明确：如果说 Kubernetes 是云原生操作系统的话，那 Helm 就是要成为这个操作系统之上的应用商店和包管理工具。
 
 
-相信读者朋友们知道 Linux下的包管理工具和封装格式， 如 Debian 系的 apt-get命令和 dpkg 格式，RHEL 洗的 yum 命令和 rpm 格式。在 Linux 系统中，有了包管理工具，我们只要知道应用的名称，就可以很方便地从应用仓库中下载、安装、升级、回滚等，而且包管理工具掌握着应用的依赖信息和版本变更情况，具备完整的自管理能力，每个应用依赖哪些前置的第三方库，在安装时都会一并处理好。
+相信读者朋友们知道 Linux 下的包管理工具和封装格式， 如 Debian 系的 apt-get 命令和 dpkg 格式，RHEL 洗的 yum 命令和 rpm 格式。在 Linux 系统中，有了包管理工具，我们只要知道应用的名称，就可以很方便地从应用仓库中下载、安装、升级、回滚等，而且包管理工具掌握着应用的依赖信息和版本变更情况，具备完整的自管理能力，每个应用依赖哪些前置的第三方库，在安装时都会一并处理好。
 
 Helm 模拟的就是这种做法，它提出了与 Linux 包管理直接对应的 Chart 格式 和 Repoistory 应用仓库，另外针对 Kubernetes 中特有的一个应用要部署多个版本的特点，又提出了 Release 的专有观念。
 
@@ -19,7 +19,7 @@ Helm 模拟的就是这种做法，它提出了与 Linux 包管理直接对应�
 
 ## Helm 的概念
 
-在使用Helm之前，我们先需要理解如下几个核心概念
+在使用 Helm 之前，我们先需要理解如下几个核心概念
 
 | 概念|描述|
 |:--|:--|
@@ -35,7 +35,7 @@ Helm 模拟的就是这种做法，它提出了与 Linux 包管理直接对应�
 
 - 开发者首先创建并编辑 chart 配置
 - 接着打包并发布到 Helm 的仓库
-- 当管理员使用helm 命令安装时， 相关的依赖会从仓库中下载
+- 当管理员使用 helm 命令安装时， 相关的依赖会从仓库中下载
 - 接着 Helm 会根据下载的配置部署资源到 kubernetes 中
 
 <div  align="center">
@@ -44,7 +44,7 @@ Helm 模拟的就是这种做法，它提出了与 Linux 包管理直接对应�
 
 ## Chart 应用示例
 
-```
+```plain
 WordPress
 .
 ├── Chart.lock
@@ -78,19 +78,19 @@ Helm 提供了二进制以及脚本安装，我们这里使用二进制的方式
 
 添加一个 chart 仓库。
 
-```
+```plain
 helm repo add azure https://mirror.azure.cn/kubernetes/charts
 ```
-搜索chart
+搜索 chart
 
-```
+```plain
 $ helm search repo redis
 NAME                           	CHART VERSION	APP VERSION	DESCRIPTION                                       
 azure/prometheus-redis-exporter	3.5.1        	1.3.4      	DEPRECATED Prometheus exporter for Redis metrics  
 azure/redis                    	10.5.7       	5.0.7      	DEPRECATED Open source, advanced key-value stor...
 ```
 
-```
+```plain
 # 拉取chart包到本地
 $ helm pull bitnami/redis-cluster --version 8.1.2
 # 安装redis-ha集群，取名redis-ha，需要指定持存储类

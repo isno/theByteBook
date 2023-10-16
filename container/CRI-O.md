@@ -1,13 +1,13 @@
-# Kubernetes专用运行时：CRI-O
+# Kubernetes 专用运行时：CRI-O
 
-CRI-O 是一个由 redhat 发起并开源且由社区驱动的容器运行时，其主要目的就是为 Kubernetes 实现更轻量容器运行实现，CRI-O 符合 CRI（Container Runtime Interface）标准，并且支持对接 oci-runtime （runc、kata等）
+CRI-O 是一个由 redhat 发起并开源且由社区驱动的容器运行时，其主要目的就是为 Kubernetes 实现更轻量容器运行实现，CRI-O 符合 CRI（Container Runtime Interface）标准，并且支持对接 oci-runtime （runc、kata 等）
 
 
 
 
 ## CRI-O 工作流程
 
-CRI-O 架构组合了很多开源的基础组件，下面我们结合 Kubernetes，来看一下CRI-O的工作流程：
+CRI-O 架构组合了很多开源的基础组件，下面我们结合 Kubernetes，来看一下 CRI-O 的工作流程：
 
 
 <div  align="center">

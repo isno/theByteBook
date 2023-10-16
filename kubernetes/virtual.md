@@ -17,20 +17,20 @@ CPU 资源的设定也可以表达带小数 CPU 的请求。当设置为 0.5 时
 
 内存的约束和请求以字节为单位，你可以使用普通的不带单位的字节，或者带有具体单位的数字来表示内存：E、P、T、G、M、k。 你也可以使用对应的 2 的幂数：Ei、Pi、Ti、Gi、Mi、Ki。 例如，以下表达式所代表的是大致相同的值：
 
-```
+```plain
 128974848, 129e6, 129M, 123Mi
 ```
 
 注意 `123 Mi = 123*1204*1204B = 129 M`
 
-什么是 2 的幂数？举个例子 M（（Megabyte）） 和 Mi（Mebibyte） ，1M 就是`1*1000*1000` 字节，1Mi 就是`1*1024*1024`字节，所以1M < 1Mi，显然带这个小i的更准确。
+什么是 2 的幂数？举个例子 M（（Megabyte）） 和 Mi（Mebibyte） ，1M 就是`1*1000*1000` 字节，1Mi 就是`1*1024*1024`字节，所以 1M < 1Mi，显然带这个小 i 的更准确。
 
 
-以上的资源信息有 Node节点中的 kubelet 负责上报，节点内定义了固定的资源总和、Kubernetes可分配资源信息等。
+以上的资源信息有 Node 节点中的 kubelet 负责上报，节点内定义了固定的资源总和、Kubernetes 可分配资源信息等。
 
 ## 3. Node 资源抽象
 
-在 kubernetes 中把资源分为 allocatable（宿主机上pods资源）、eviction-threshold（节点驱逐阈值）、system-reserved（节点资源预留值）、kube-reserved（kubernetes 守护进程如 kubelet 等），调度器会根据每个节点上 node allocatable 的使用情况分配 pod，调度器不会超额申请过多的资源。
+在 kubernetes 中把资源分为 allocatable（宿主机上 pods 资源）、eviction-threshold（节点驱逐阈值）、system-reserved（节点资源预留值）、kube-reserved（kubernetes 守护进程如 kubelet 等），调度器会根据每个节点上 node allocatable 的使用情况分配 pod，调度器不会超额申请过多的资源。
 
 通过 kubectl describe node 命令查看 Node 中资源配置信息。
 
@@ -38,7 +38,7 @@ CPU 资源的设定也可以表达带小数 CPU 的请求。当设置为 0.5 时
 - Allocatable 为可供 Kubernetes 分配的总资源量。显然，Allocatable 不会超过 Capacity。
 - Allocated resources 为目前已经分配出去的资源量。注意其中的 message ：node 可能会超分。
 
-```
+```plain
 $ kubectl describe node `<node>`
 
 Capacity:

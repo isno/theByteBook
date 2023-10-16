@@ -4,7 +4,7 @@
 
 ## 7.4.1 容器镜像的组成
 
-镜像主要是由镜像层和运行时配置两大部分组成。镜像层和运行时配置各自有一个唯一 Hash，这些 Hash 会被写进一个叫 Manifest的 JSON 文件里，在 Pull 镜像时实际就是先拉取 Manifest 文件，然后再根据 Hash 去 Registry 拉取对应的镜像层/容器运行时配置。
+镜像主要是由镜像层和运行时配置两大部分组成。镜像层和运行时配置各自有一个唯一 Hash，这些 Hash 会被写进一个叫 Manifest 的 JSON 文件里，在 Pull 镜像时实际就是先拉取 Manifest 文件，然后再根据 Hash 去 Registry 拉取对应的镜像层/容器运行时配置。
 
 <div  align="center">
   <img src="../assets/oci-image.png" width = "200"  align=center />
@@ -21,7 +21,7 @@ OCIv1 镜像主要包括以下几块内容：
 
 我们把一个 Redis 解压之后，查看其目录结构，可以看到 有 oci-layout、index.json 以及 blobs 下 layer 配置信息等。
 
-```
+```plain
 $ tree redis
 .
 ├── blobs
@@ -36,7 +36,7 @@ $ tree redis
 
 其中，oci-layout 是 OCI 镜像的布局文件，主要说明它所遵循的镜像规范标准。
 
-```
+```plain
 $ cat oci-layout | jq
 {
   "imageLayoutVersion": "1.0.0"
@@ -44,7 +44,7 @@ $ cat oci-layout | jq
 ```
 此处可以看到，该镜像遵循的标准为 OCI 1.0.0 布局规范。index.json 描述了 OCI 镜像的实际配置和其中 Layer 的信息，对其中 blobs 第一个 layer 进行解压查看，会发现是这一个 rootfs 目录，这也印证了我们前面所说镜像的本质。
 
-```
+```plain
 $ tar xzvf f03b40093957615593f2ed142961afb6b540507e0b47e3f7626ba5e02efbbbf1 -C test
 
 $ cd test && ls 
