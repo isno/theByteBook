@@ -8,7 +8,7 @@ Protocol Buffers（简称 Protobuf 或者 pb）是 Google 公司开发的一种�
 
 开发人员如果要进行低版本、新旧协议兼容，会写如下类似逻辑的代码，虽然能实现多版本协议支持，不过代码比较丑陋。
 
-```
+```plain
 if (version == 1.0) {
    ...
 } else if (version > 2.0) {
@@ -17,7 +17,7 @@ if (version == 1.0) {
    ...
 }
 ```
-使用明确的格式协议处理服务端新旧协议（APP高低版本）等兼容性问题，会使新协议的迭代变得非常复杂，开发人员必须确保历史版本都能被兼容、理解，然后才能切换开关开启新协议。
+使用明确的格式协议处理服务端新旧协议（APP 高低版本）等兼容性问题，会使新协议的迭代变得非常复杂，开发人员必须确保历史版本都能被兼容、理解，然后才能切换开关开启新协议。
 
 Protobuf 的出现就是为了解决这种向后兼容问题。
 
@@ -27,7 +27,7 @@ Protobuf 的出现就是为了解决这种向后兼容问题。
 
 1. 定义一个 message（如果开头第一行不声明 `syntax = "proto3";` 则默认使用 proto2 进行解析）。
 
-```
+```plain
 syntax = "proto3"; // pb 版本声明
 
 message Person  { 
@@ -38,13 +38,13 @@ message Person  {
 
 2. 定义完 message 结构体之后，生成 java 可调用的类文件。
 
-```
+```plain
 proto --java_out = / Person.proto
 ```
 
 3. 在 Java 中使用 Protobuf 定义的结构进行序列化数据（需要提前安装 protobuf 依赖库）。
 
-```
+```plain
 //1、 创建Builder
 PersonProto.Person.Builder builder = PersonProto.Person.newBuilder();
 //2、 设置Person的属性
@@ -57,7 +57,7 @@ byte[] data = person.toByteArray();
 ```
 
 4. 序列化后的数据，可以通过 RPC、HTTP 等方式传递，接收方获取数据后进行反序列化。
-```
+```plain
 PersonProto.Person person = PersonProto.Person.parseFrom(data);
 System.out.println(person.getAge());
 System.out.println(person.getName());
@@ -71,15 +71,15 @@ Protobuf 介绍中说序列化后的数据比 JSON、XML 更紧凑，那么思�
 
 ### 3.1 Varint 编码
 
-Varint 是一种使用一个或多个字节序列化整数的方法，会把整数编码为变长字节。除了最后一个字节外，Varint 编码中的每个字节都设置了最高有效位（most significant bit，msb），msb 为1则表明后面的字节还是属于当前数据的，如果是0那么这是当前数据的最后一个字节数据。
+Varint 是一种使用一个或多个字节序列化整数的方法，会把整数编码为变长字节。除了最后一个字节外，Varint 编码中的每个字节都设置了最高有效位（most significant bit，msb），msb 为 1 则表明后面的字节还是属于当前数据的，如果是 0 那么这是当前数据的最后一个字节数据。
 
 如下面这个例子，1 用一个字节就可以表示，所以 msb 为 0。
-```
+```plain
 0000 0001
 ```
 如果需要多个字节表示，msb 就应该设置为 1 ，例如 300，如果用 Varint 表示的话：
 
-```
+```plain
 1010 1100 0000 0010
 ```
 
@@ -93,7 +93,7 @@ Varint 是一种使用一个或多个字节序列化整数的方法，会把整�
 
 Protobuf 还有个很重要的特性：向后兼容。
 
-想搞明白 Protocol buffer 如何做到向后兼容，得解析 message 的结构设计。如图2-11所示，Protobuf 的 message 是一系列键值对，message 的二进制版本只是使用字段号(field's number 和 wire_type) 作为 key。每个字段的名称和声明类型只能在解码端通过引用消息类型的定义（即 .proto 文件）来确定，这一点也是人们常常说的 protocol buffer 比 JSON，XML 安全一点的原因，如果没有数据结构描述 .proto 文件，拿到数据以后无法解释成正常的数据。
+想搞明白 Protocol buffer 如何做到向后兼容，得解析 message 的结构设计。如图 2-11 所示，Protobuf 的 message 是一系列键值对，message 的二进制版本只是使用字段号(field's number 和 wire_type) 作为 key。每个字段的名称和声明类型只能在解码端通过引用消息类型的定义（即 .proto 文件）来确定，这一点也是人们常常说的 protocol buffer 比 JSON，XML 安全一点的原因，如果没有数据结构描述 .proto 文件，拿到数据以后无法解释成正常的数据。
 
 <div  align="center">
 	<img src="../assets/protobuf_example.png" width = "550"  align=center />

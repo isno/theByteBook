@@ -12,10 +12,10 @@ Linux 通过对内核资源进行封装抽象，提供了八类系统资源的�
 |  类型   | 用途  |
 |  ----  | ----  |
 | Cgroup  | Cgroup root directory cgroup 根目录 |
-| IPC  | System V IPC, POSIX message queues信号量，消息队列 |
+| IPC  | System V IPC, POSIX message queues 信号量，消息队列 |
 | Network  | Network devices, stacks, ports, etc.网络设备，协议栈，端口等等 |
-| Mount  | Mount points挂载点 |
-| PID  | Process IDs进程号 |
+| Mount  | Mount points 挂载点 |
+| PID  | Process IDs 进程号 |
 | User  | 用户和组 ID |
 | UTS  | 系统主机名和 NIS(Network Information Service) 主机名（有时称为域名） |
 | Time  | 时钟 |

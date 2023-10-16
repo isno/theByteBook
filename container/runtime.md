@@ -13,7 +13,7 @@
 
 目前较为流行说法根据不同的功能实现将容器运行时分成了低层运行时（low-level）和高层运行时（high-level）两类。
 
-通常只关注如 Namespace、Cgroups、镜像拆包等基础的容器运行时实现被称为**低层运行时**（low-level container  runtime）。而支持更多高级功能（如镜像管理和CRI实现）的运行时通常称为**高层运行时**（high-level container runtime）。
+通常只关注如 Namespace、Cgroups、镜像拆包等基础的容器运行时实现被称为**低层运行时**（low-level container  runtime）。而支持更多高级功能（如镜像管理和 CRI 实现）的运行时通常称为**高层运行时**（high-level container runtime）。
 
 而特殊的 Docker 容器引擎，可以说是 high-high-level container runtime 。
 

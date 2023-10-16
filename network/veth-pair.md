@@ -15,7 +15,7 @@ Linux 内核支持网络命名空间的同时，也提供了专门的虚拟以�
 </div>
 
 在 Kubernetes 宿主机中查看网卡设备。
-```
+```plain
 $ ip addr
 7: veth9c0be5b3@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue master cni0 state UP group default 
     link/ether e2:7c:c8:36:d7:14 brd ff:ff:ff:ff:ff:ff link-netnsid 2
@@ -29,24 +29,24 @@ $ ip addr
 
 首先创建两个 Network namespace。
 
-```
+```plain
 $ ip netns add ns1
 $ ip netns add ns2
 ```
 
 创建一对虚拟以太网卡，名为 veth1 和 veth1-peer。
-```
+```plain
 $ ip link add veth1 type veth peer name veth1-peer
 ```
 把 veth 分别放入 ns1 和 ns2 中。
-```
+```plain
 $ ip link set veth1 netns ns1
 $ ip link set veth1-peer netns ns2
 ```
 
 设置 veth 设备为 UP 状态，并分配 IP 地址。
 
-```
+```plain
 $ ip netns exec ns1 ip addr add 172.16.0.1/24 dev veth1
 $ ip netns exec ns1 ip link set dev veth1 up
 
@@ -56,7 +56,7 @@ $ ip netns exec ns2 ip link set dev veth1-peer up
 
 配置完基本信息之后，我们查看 veth 设备是否正常，如下所示 veth MAC 地址、IP 地址 以及设备状态均处于正常状态。
 
-```
+```plain
 $ ip netns exec ns1 ip addr
 13: veth1@if12: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
     link/ether 92:02:64:b0:9f:0e brd ff:ff:ff:ff:ff:ff link-netnsid 1
@@ -66,7 +66,7 @@ $ ip netns exec ns1 ip addr
 
 现在我们测试这两个 namespace 是否可以相互通信：
 
-```
+```plain
 $ ip netns exec ns1 ping 172.16.0.2
 PING 172.16.0.2 (172.16.0.2) 56(84) bytes of data.
 64 bytes from 172.16.0.2: icmp_seq=1 ttl=64 time=0.309 ms

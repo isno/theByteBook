@@ -2,7 +2,7 @@
 
 在本书各个篇章出现了较多的术语缩写，在初次引用时，会注明释义。但为了读者查阅方便，我按分类整理成以下表格，供读者参阅。
 
-表1 网络类
+表 1 网络类
 
 |术语|名词全称|释义|
 |:--|:--|:--|
@@ -19,7 +19,7 @@
 | 南北流量 | NORTH-SOUTH traffic | 用户访问服务器的流量 |
 | 东西流量 | EAST-WEST traffic | 集群中服务与服务之间的流量 |
 
-表2 云技术类
+表 2 云技术类
 
 |术语|名词全称|释义|
 |:--|:--|:--|
@@ -37,18 +37,18 @@
 | CI/CD|  Continuous Intergration + Continuous Deployment | 持续集成 + 持续交付 |
 
 
-表3 Kubernetes 相关类
+表 3 Kubernetes 相关类
 
 |术语|名词全称|释义|
 |:--|:--|:--|
 | CNCF | Cloud Native Computing Foundation | 云原生计算基金会 |
-| OCI | Open Container Initiative | Linux基金主导的开放容器标准 |
+| OCI | Open Container Initiative | Linux 基金主导的开放容器标准 |
 | CRI | Container Runtime Interface | Kubernetes 定义的容器运行时接口 |
 | CNI | Container Network Interface | Kubernetes 定义的容器网络接口 |
 | CRD | Custom Resource Definition | 自定义资源的定义，用来扩展 Kubernetes 资源 |
 | Operator | CRD + AdmissionWebhook + Controller | 用来解决某个应用场景的 Kubernetes 扩展 |
 
-表4 业务类
+表 4 业务类
 
 |术语|名词全称|释义|
 |:--|:--|:--|

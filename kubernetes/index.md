@@ -4,12 +4,12 @@
 
 解决上面的问题，就需要一个从集群角度进行整体规划，实现容器部署、迁移、管理、扩展和联网等等自动化的系统，即容器编排系统。这也是 Kubernetes 出现的背景。
 
-Kubernetes 起源于 Google 的 Borg 系统，Borg 是在 2003年 开发的一个大规模集群管理系统，用于支持 Google 内部成千上万的应用服务，Kubernetes 的设计思想完全沿用了 Borg 的设计思路，也就是说 Kubernetes 开源之前，Google 已经在容器以及容器治理方便已经有十几年的经历和探索了。
+Kubernetes 起源于 Google 的 Borg 系统，Borg 是在 2003 年 开发的一个大规模集群管理系统，用于支持 Google 内部成千上万的应用服务，Kubernetes 的设计思想完全沿用了 Borg 的设计思路，也就是说 Kubernetes 开源之前，Google 已经在容器以及容器治理方便已经有十几年的经历和探索了。
 
 
 ## Kubernetes 与云原生
 
-典型的云原生技术包括：容器、服务网格、微服务、不可变基础设施、声明式API 等。
+典型的云原生技术包括：容器、服务网格、微服务、不可变基础设施、声明式 API 等。
 
-为了构建和推行云原生技术， Google 牵头成立了 CNCF （Cloud Native Computing Foundation, 云原生基金会），Kubernetes 就是 CNCF的首个项目。Kubernetes 作为一个基础平台，整合并支持这些核心云原生技术，例如采用容器作为底层引擎，采用不可变基础设施进行构建和运行应用，采用声明式API对外提供服务，支持 Service mesh 对服务进行扩展等等，因为 Kubernetes 是云原生架构的核心和基石。
+为了构建和推行云原生技术， Google 牵头成立了 CNCF （Cloud Native Computing Foundation, 云原生基金会），Kubernetes 就是 CNCF 的首个项目。Kubernetes 作为一个基础平台，整合并支持这些核心云原生技术，例如采用容器作为底层引擎，采用不可变基础设施进行构建和运行应用，采用声明式 API 对外提供服务，支持 Service mesh 对服务进行扩展等等，因为 Kubernetes 是云原生架构的核心和基石。
 

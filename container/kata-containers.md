@@ -9,10 +9,10 @@ Kata Containers 安全容器的诞生解决了许多普通容器场景无法解�
 
 Kata Containers 的特点包括：
 
-- 容器和虚拟机二合一：Kata Containers结合了容器和虚拟机的优点，既具有高性能和高效管理的特点，又拥有独立隔离性和安全性；
-- 安全性：Kata Containers使用轻量级虚拟化技术，为每个容器创建一个轻量级虚拟机，可以实现容器级别的隔离和安全；
-- 可扩展性：Kata Containers支持与多种容器管理工具，如Docker和Kubernetes集成，可以与现有的容器环境无缝集成；
-- 兼容性：Kata Containers能够支持OCI（Open Container Initiative）规范，与现有的容器镜像和工具兼容。
+- 容器和虚拟机二合一：Kata Containers 结合了容器和虚拟机的优点，既具有高性能和高效管理的特点，又拥有独立隔离性和安全性；
+- 安全性：Kata Containers 使用轻量级虚拟化技术，为每个容器创建一个轻量级虚拟机，可以实现容器级别的隔离和安全；
+- 可扩展性：Kata Containers 支持与多种容器管理工具，如 Docker 和 Kubernetes 集成，可以与现有的容器环境无缝集成；
+- 兼容性：Kata Containers 能够支持 OCI（Open Container Initiative）规范，与现有的容器镜像和工具兼容。
 
 
 <div  align="center">

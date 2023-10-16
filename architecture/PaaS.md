@@ -26,7 +26,7 @@
 	<p>图 1-10 阿里云容器服务 ACK 产品线整体架构</p>
 </div>
 
-对于中小型规模（300 节点以下）的集群建议优先使用云商托管的服务。使用完全托管的服务会有例如 NAT 转发、SLB 等额外费用，对于大型规模的集群（1000节点以上）需要注意这部分费用。另外大规模的应用一旦与云商绑定，再进行迁移会耗费很大的成本。
+对于中小型规模（300 节点以下）的集群建议优先使用云商托管的服务。使用完全托管的服务会有例如 NAT 转发、SLB 等额外费用，对于大型规模的集群（1000 节点以上）需要注意这部分费用。另外大规模的应用一旦与云商绑定，再进行迁移会耗费很大的成本。
 
 <div  align="center">
 	<img src="../assets/ali-ack-fee.png" width = "580"  align=center />
@@ -37,7 +37,7 @@
 
 如果集群规模较大的情况，企业也可以选择使用一些开源方案进行自建集群。开源的方案包括但不限于 Kubeshpere、Rancher 等，我们这里以 Rancher 为例进行讲解。
 
-Rancher 是一家容器产品及解决方案服务商，Rancher 最初目标就是为了支持多种容器编排引擎而构建。随着 Kubernetes 的兴起， Rancher 2.x 也开始彻底转向了 Kubernetes。使用 Rancher 可以选择使用 RKE（Rancher Kubernetes Engine）创建 Kubernetes 集群，也可以使用 TKE、ACK、AKS 等云厂商的 Kubernetes 服务。由于 Rancher 仅需要主机有CPU、内存、本地磁盘和网络资源，因此可以使用任何公有云或者本地主机资源。
+Rancher 是一家容器产品及解决方案服务商，Rancher 最初目标就是为了支持多种容器编排引擎而构建。随着 Kubernetes 的兴起， Rancher 2.x 也开始彻底转向了 Kubernetes。使用 Rancher 可以选择使用 RKE（Rancher Kubernetes Engine）创建 Kubernetes 集群，也可以使用 TKE、ACK、AKS 等云厂商的 Kubernetes 服务。由于 Rancher 仅需要主机有 CPU、内存、本地磁盘和网络资源，因此可以使用任何公有云或者本地主机资源。
 
 Rancher 提供了一个简单直接的用户界面给 DevOps 工程师管理他们的应用程序，用户不需要对 Kubernetes 有深入的了解，即可使用 Rancher。如图 Rancher 在 IT 管理团队和 DevOps 开发团队示意图。
 
@@ -48,7 +48,7 @@ Rancher 提供了一个简单直接的用户界面给 DevOps 工程师管理他�
 
 总结 Rancher 方案的特点：
 
-- 基础设施编排：Rancher 为容器化的应用提供了灵活的基础设施服务，包括网络、存储、负载均衡、DNS模块。
+- 基础设施编排：Rancher 为容器化的应用提供了灵活的基础设施服务，包括网络、存储、负载均衡、DNS 模块。
 - 容器编排和调度：Rancher 包含 Docker Swarm、Kubernetes、Mesos 等主要的编排调度引擎，用户可以基于需要创建多种集群。
 - 企业级权限管理：支持 Active Directory、LDAP、RBAC 的权限管理。
 - CI/CD：提供简易的 CD/CD 流水线，同时支持与企业已有的流线线对接。
@@ -60,7 +60,7 @@ Rancher 提供了一个简单直接的用户界面给 DevOps 工程师管理他�
 
 选择何种方案，更多取决于当前团队所处的环境，包括是否有影响的资源投入（人力、时间），是否能忍受自研方案初期的可靠性阵痛问题等。表 1-2 整理了各个方案的对比，供读者参考。
 
-表 1-2 PaaS平台建设方案对比
+表 1-2 PaaS 平台建设方案对比
 
 |对比项| 开源方案| 公有云服务|自研方案|
 |:--|:--|:--|:--|

@@ -12,7 +12,7 @@
 
 Nydus 是阿里云发起的基于延迟加载原理的镜像加速项目，配合 Dragonfly 做 P2P 加速，能够极大缩短镜像下载时间、提升效率，从而让用户能够更安全快捷地启动容器应用。
 
-Nydus 提供了容器镜像按需加载的能力，在生产环境支撑了每日百万级别的加速镜像容器创建，在启动性能，镜像空间优化，端到端数据一致性，内核态支持等方面相比 OCIv1 有巨大优势。Nydus 符合 OCI标准，与 containerd、CRI-O、Kata-containers 等流行的运行时有良好的兼容性。
+Nydus 提供了容器镜像按需加载的能力，在生产环境支撑了每日百万级别的加速镜像容器创建，在启动性能，镜像空间优化，端到端数据一致性，内核态支持等方面相比 OCIv1 有巨大优势。Nydus 符合 OCI 标准，与 containerd、CRI-O、Kata-containers 等流行的运行时有良好的兼容性。
 
 <div  align="center">
 	<img src="../assets/nydus.png" width = "550"  align=center />

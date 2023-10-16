@@ -4,7 +4,7 @@
 
 如果没有一个集中处理控制的地方，每个服务中就要单独实现，诸多要求和实现逻辑会令开发者繁琐不堪，根本没有整体架构可言。如果把这些功能统一前移某一层独立支持，实现 API Gateway as a Service，让各个服务直接接入，在管理平台上管理，可视化配置等等, 这样就实现了一个全局的视图统一管理这些功能。这就是 API Gateway。
 
-一般情况下会要求API Gateway提供请求路由、服务注册、负载均衡、安全认证、弹力设计(容灾、流控、熔断)、日志等功能。除了上面的定义外，微服务网关和传统意义上的 API 网关还有一些不同。
+一般情况下会要求 API Gateway 提供请求路由、服务注册、负载均衡、安全认证、弹力设计(容灾、流控、熔断)、日志等功能。除了上面的定义外，微服务网关和传统意义上的 API 网关还有一些不同。
 
 - 动态更新：微服务的架构下，服务经常频繁的变化，如横向扩充、故障恢复、热备、切换等，Kubernetes 下 Pod 节点等频繁变动。
 - 更低延迟： 通常动态会要求一定的延迟，因为复杂度增加。在微服务里面，对于延迟要求比较高。
@@ -16,9 +16,9 @@ API Gateway 在业内已经有非常多的成熟开源方案，如果按实现�
 
 |语言|网关|特点|
 |:--|:--|:--|
-|Nginx + LuaJIT|OpenResty| 原始Web开发平台 |
-|Nginx + Lua| Kong| 社区活跃、成熟度高、Postgres存储、二次开发成本高 |
+|Nginx + LuaJIT|OpenResty| 原始 Web 开发平台 |
+|Nginx + Lua| Kong| 社区活跃、成熟度高、Postgres 存储、二次开发成本高 |
 |Nginx + Lua| Apache/APISIX | 云原生化、使用 etcd 存储、性能高、二次开发成本低|
-|Java|Spring Cloud Alibaba| Spring Cloud生态、社区成熟度高、国内应用广泛|
+|Java|Spring Cloud Alibaba| Spring Cloud 生态、社区成熟度高、国内应用广泛|
 
 因为作者接触的都为 Nginx + Lua 方案的网关方案，在后面章节中将通过讲解 Nginx、Lua、OpenResty 相关的原理概念，最后再讲解及实践 Apache/Apisix 应用。
