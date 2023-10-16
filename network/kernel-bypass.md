@@ -1,8 +1,8 @@
 # 3.3.3 内核旁路技术
 
-一个大规模的云架构中，核心节点的数据处理能力已经将 C10K 的问题发展到C10M（单机并发 1000 万），面对东西向 Gbp/s 级别的数据流量，Linux 网络协议栈进行的各种优化策略，对性能提升并没有太大的效果。网络协议栈的冗长流程才是最主要的性能负担，内核才是高并发的瓶颈所在。
+笔者 3.2.2 节介绍了半 kernel bypass 的 XDP 技术，这一节，我们再介绍完全 kernel bypass 的技术。
 
-既然内核是瓶颈所在，那很明显解决方案就是想办法绕过内核。经很多前辈先驱的研究，目前业内已经出现了很多优秀内核旁路（kernel bypass）思想的高性能网络数据处理框架，如 6wind、windriver、netmap、dpdk 等。其中，Intel 的 dpdk 在众多方案脱颖而出，一骑绝尘。
+高并发下网络协议栈的冗长流程是最主要的性能负担，也就是说内核才是高并发的瓶颈所在。既然内核是瓶颈所在，那很明显解决方案就是想办法绕过内核。经很多前辈先驱的研究，目前业内已经出现了很多优秀内核旁路（kernel bypass）思想的高性能网络数据处理框架，如 6wind、windriver、netmap、dpdk 等。其中，Intel 的 dpdk 在众多方案脱颖而出，一骑绝尘。
 
 dpdk 为 Intel 处理器架构下用户空间高效的数据包处理提供了库函数和驱动的支持，它不同于 Linux 系统以通用性设计为目的，而是专注于网络应用中数据包的高性能处理。也就是 dpdk 绕过了 Linux 内核协议栈对数据包的处理过程，在用户空间实现了一套数据平面来进行数据包的收发与处理。
 
@@ -12,13 +12,13 @@ dpdk 为 Intel 处理器架构下用户空间高效的数据包处理提供了�
 - 右边是 dpdk 方式：基于 UIO（Userspace I/O）旁路数据。数据从网卡 -> dpdk 轮询模式-> dpdk 基础库 -> 业务。
 
 <div  align="center">
-	<img src="../assets/dpdk.png" width = "550"  align=center />
+	<img src="../assets/dpdk.png" width = "500"  align=center />
 	<p>图 3-18 DPDK 与传统内核网络对比</p>
 </div>
 
 很多企业如 Facebook 的 Katran、美团的 MGW、爱奇艺的 dpvs 等使用 dpdk、eBPF 技术进行 kernel bypass，直接全部在用户态进行数据包的处理，正是基于此，才得以实现单机千万并发的性能指标。
 
-以下为 dpvs 传统 lvs 在 PPS 转发上的指标对比，性能提升约 300%；
+如图 3-19 所示，dpvs 与 lvs 在 PPS 转发上的指标对比，dvps 性能提升约 300%。
 
 <div  align="center">
 	<img src="../assets/dpvs-performance.png" width = "550"  align=center />
