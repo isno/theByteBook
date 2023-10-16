@@ -26,7 +26,7 @@
 连接跟踪表存放于系统内存中，可用 cat /proc/net/nf_conntrack 命令查看当前跟踪的所有 conntrack 条目，conntrack 维护的所有信息都包含在这个条目中，通过它就可以知道某个连接处于什么状态。
 
 如下则为表示一条状态为 ESTABLISHED 的 TCP 连接。
-```
+```plain
 $ cat /proc/net/nf_conntrack
 ipv4     2 tcp      6 88 ESTABLISHED src=10.0.12.12 dst=10.0.12.14 sport=48318 dport=27017 src=10.0.12.14 dst=10.0.12.12 sport=27017 dport=48318 [ASSURED] mark=0 zone=0 use=2
 ```

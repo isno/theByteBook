@@ -27,7 +27,6 @@
 	<p>图3-5 kubernetes 网络模型</p>
 </div>
 
-
 对 Linux 内核网络基本了解之后，我们再来看看 NetFilter 和它的上层应用 iptables。
 
 [^1]: 参见 https://en.wikipedia.org/wiki/Netfilter
