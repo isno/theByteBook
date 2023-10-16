@@ -1,6 +1,6 @@
 # 3.2.2 连接跟踪 conntrack
 
-连接跟踪（connection tracking，conntrack，CT）对连接状态进行跟踪并记录。如图3-11所示，这是一台 IP 地址为 10.1.1.3 的 Linux 机器，我们能看到这台机器上有两条连接：
+连接跟踪（connection tracking，conntrack，CT）对连接状态进行跟踪并记录。如图 3-11 所示，这是一台 IP 地址为 10.1.1.3 的 Linux 机器，我们能看到这台机器上有两条连接：
 
 - 机器访问外部 HTTP 服务的连接（目的端口 80）。
 - 机器访问外部 DNS 服务的连接（目的端口 53）。

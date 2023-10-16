@@ -1,6 +1,6 @@
 # 3.2 Linux 内核网络框架
 
-笔者在 1.5.3 节提到过 Cilium 利用 eBPF 实现的无边车服务网格（sidecarless service mesh）模式，其次在 Kubernetes 节点中查看 iptables 规则，总能看到一堆奇怪的 “KUBE-SVC-XXX”，不熟悉的同学估计会一头雾水。不过我相信，看完3.2节内容读者一定感叹“原来如此”。
+网络协议栈的处理是一套相对固定和封闭的流程，整套处理过程中，除了网络设备层能看到一点点程序以设备的形式介入处理的空间外，其他过程似乎就没有什么可提供程序插手的空间了。然而事实并非如此，从 Linux Kernel 2.4 版本起，内核就开放了一套通用的，可提供代码干预数据在协议栈流转的过滤框架。
 
 如图 3-3 所示，该架构图来自 Netfilter 项目[^1]，图片名称为 《Packet flow in NetFilter and General Networking》，该设计图较全面介绍了内核网络设计原理，包含了 XDP、NetFilter 和 traffic control 部分。带颜色的部分为 NetFilter 模块，有着更细节的内核协议栈各 hook 点位置和 iptables 规则优先级的经典配图。
 
