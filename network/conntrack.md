@@ -42,14 +42,14 @@ ipv4     2 tcp      6 88 ESTABLISHED src=10.0.12.12 dst=10.0.12.14 sport=48318 d
 
 <div  align="center">
 	<img src="../assets/nat.png" width = "400"  align=center />
-	<p>图3-12</p>
+	<p>图 3-12</p>
 </div>
 
 当 NAT 网关收到内部网络的请求包之后，会做 SNAT，同时将本次连接记录保存到连接跟踪表，当收到响应包之后，就可以根据连接跟踪表确定目的主机，然后做 DNAT，DNAT + SNAT 其实就是 Full NAT，如图3-13所示。
 
 <div  align="center">
 	<img src="../assets/conntrack-nat.png" width = "450"  align=center />
-	<p>图3-13 FullNAT</p>
+	<p>图 3-13 FullNAT</p>
 </div>
 
 
