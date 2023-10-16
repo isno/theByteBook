@@ -138,7 +138,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '3.3 内核参数优化',
+                        text: '3.3 内核参数优化实践',
                         link: '/network/kernel-performance.md',
                         children: [
                             "/network/RSS.md",
