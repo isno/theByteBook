@@ -40,7 +40,7 @@ spec:
 为此 Kubernetes 结合 DNS 的。CoreDNS 安装成功后会成为 DNS 服务器，当创建 Service 后，CoreDNS 会将 Service 的名称与 IP 记录起来，这样 Pod 就可以通过向 CoreDNS 查询 Service 的名称获得 Service 的 IP 地址。
 
 
-coreDNS 提供格式如 `<service-name>.<namespace-name>.svs.cluster.local` 的服务，访问改地址，集群内的域名解析解析服务器会返回该服务所对应的 A 记录。实际使用中，同一个命名空间下可以省略`<namespace>.svc.cluster.local`，直接使用 ServiceName 即可。
+coreDNS 提供格式如 `<service-name>.<namespace-name>.svs.cluster.local` 的服务，访问该地址，集群内的域名解析解析服务器会返回该服务所对应的 A 记录。实际使用中，同一个命名空间下可以省略`<namespace>.svc.cluster.local`，直接使用 ServiceName 即可。
 
 例如上面创建的名为 nginx 的 Service，直接通过 `nginx:8080` 就可以访问到 Service，进而访问 Pod， 这样无需感知具体 Service 的 IP 地址。
 
