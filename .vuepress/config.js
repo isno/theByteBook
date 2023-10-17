@@ -146,6 +146,7 @@ export default defineUserConfig({
                             '/network/kernel-bypass.md',
                         ]
                     },
+                    /*
                     {
                         text: '3.4 Linux 网络虚拟化',
                         link: "/network/net-virtual.md",
@@ -156,7 +157,7 @@ export default defineUserConfig({
                             '/network/tun.md',
                             '/network/vxlan.md'
                         ]
-                    }
+                    }*/
                 ]
             },
             
