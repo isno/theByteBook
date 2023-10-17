@@ -185,16 +185,6 @@ export default defineUserConfig({
                             '/api-gateway/nginx-conf.md'
                         ]
                     },
-                    {
-                        text: "网关的理解与实践",
-                        link: '/api-gateway/api-gateway.md',
-                        children: [
-                            '/api-gateway/OpenResty.md',
-                            '/api-gateway/limit.md',
-                            '/api-gateway/openresty-module.md',
-                            '/api-gateway/openresty-fire.md'
-                        ]
-                    },
                 ]
             },
             {
