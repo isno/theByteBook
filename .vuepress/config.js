@@ -163,26 +163,26 @@ export default defineUserConfig({
             
             {
                 text: '第四章：负载均衡概论与实践',
-                link: '/api-gateway/intro.md',
+                link: '/balance/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
-                '/api-gateway/balance.md',
-                '/api-gateway/balance-topology.md',
+                '/balance/balance.md',
+                '/balance/balance-topology.md',
                 {
                         text: "4.1 四层负载均衡",
-                        link: '/api-gateway/balance4.md',
+                        link: '/balance/balance4.md',
                         children: [
-                            '/api-gateway/LVS.md',
-                            '/api-gateway/lvs-mod.md',
-                            '/api-gateway/lvs-balance.md'
+                            '/balance/LVS.md',
+                            '/balance/lvs-mod.md',
+                            '/balance/lvs-balance.md'
                         ]
                     },
                     {
                         text: "七层负载均衡",
-                        link: '/api-gateway/balance7.md',
+                        link: '/balance/balance7.md',
                         children: [
-                            '/api-gateway/nginx-conf.md'
+                            '/balance/nginx-conf.md'
                         ]
                     },
                 ]
