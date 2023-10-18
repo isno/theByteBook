@@ -7,6 +7,6 @@
 以上，就是我们要了解内核网络的原因。
 
 <div  align="center">
-	<img src="../assets/network-summary.png" width = "680"  align=center />
+	<img src="../assets/network-summary.png" width = "500"  align=center />
 	<p>图3-1 本章内容导图 </p>
 </div>
