@@ -168,8 +168,9 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                 '/balance/balance.md',
-                '/balance/balance-feature.md',
                 '/balance/balance-topology.md',
+                '/balance/balance-feature.md',
+                
                 {
                         text: "4.1 四层负载均衡",
                         link: '/balance/balance4.md',
