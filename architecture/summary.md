@@ -6,7 +6,7 @@
 
 
 <div  align="center">
-	<img src="../assets/cloud-summary.png" width = "500"  align=center />
+	<img src="../assets/cloud-summary.png" width = "450"  align=center />
 	<p>图 1-1 本章内容导读</p>
 </div>
 
