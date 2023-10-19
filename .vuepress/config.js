@@ -174,6 +174,7 @@ export default defineUserConfig({
                         text: "4.3 四层负载均衡概论",
                         link: '/balance/balance4.md',
                         children: [
+                            '/balance/balance4-ha.md',
                             '/balance/LVS.md',
                             '/balance/lvs-mod.md',
                             '/balance/lvs-balance.md'
@@ -183,6 +184,7 @@ export default defineUserConfig({
                         text: "七层负载均衡",
                         link: '/balance/balance7.md',
                         children: [
+                            '/balance/balancer7-feature.md',
                             '/balance/nginx-conf.md'
                         ]
                     },
