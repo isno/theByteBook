@@ -3,7 +3,7 @@ import { mdEnhancePlugin } from "vuepress-plugin-md-enhance";
 
 export default defineUserConfig({
     lang: 'zh-CN',
-    title: '深入云架构原理与实践',
+    title: '深入云架构原理',
     description: '构建高可用的分布式云原生架构',
     head: [
         ['link', { rel: "shortcut icon", href: "/assets/favicon.ico" }],
