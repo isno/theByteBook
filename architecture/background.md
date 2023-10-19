@@ -10,7 +10,7 @@ Mark Andreessen 是风险投资公司 Andreessen-Horowitz 的联合创始人和�
 </div>
 
 
-在 2011 年 8 月 20 日的华尔街日报上，Mark Andreessen 发表了名为 “Why Software Is Eating the World” 的文章。文章阐述了软件如何影响各个行业，援引原文部分内容：
+2011 年 8 月 20 日华尔街日报上，Mark Andreessen 发表了名为 “Why Software Is Eating the World” 的文章，文章阐述了软件如何影响各个行业，援引原文部分内容：
 
 :::tip <i></i>
 
