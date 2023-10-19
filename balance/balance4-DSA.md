@@ -1,8 +1,6 @@
 # DSA
 
-与 NAT 不同，负载均衡器通常使用 GRE（Generic Routing Encapsulation）将 IP 包封装发送到后端。后端收到后进行解封装后可以拿到原始的 IP 包，里面有客户端的 IP 和 port 信息，因此后端可以直接将应答包发给客户端而不需要再经过 L4LB。
-
-只有请求经过负载均衡器，而服务的响应无需从负载均衡器原路返回的工作模式中，整个请求、转发、响应的链路形成一个“三角关系”，所以这种模式也被形象的称为“三角传输模式”（Direct Server Return，DSR），也称为“单臂模式”（Single Legged Model）或者 LVS 中的 DR 模式（Direct Routing，直接路由）。
+与 NAT 不同，负载均衡器通常使用 GRE（Generic Routing Encapsulation）将 IP 包封装发送到后端。后端收到后进行解封装后可以拿到原始的 IP 包，里面有客户端的 IP 和 port 信息，因此后端可以直接将应答包发给客户端而不需要再经过 L4LB。只有请求经过负载均衡器，而服务的响应无需从负载均衡器原路返回的工作模式中，整个请求、转发、响应的链路形成一个“三角关系”，所以这种模式也被形象的称为“三角传输模式”（Direct Server Return，DSR），也称为“单臂模式”（Single Legged Model）或者 LVS 中的 DR 模式（Direct Routing，直接路由）。
 
 设计 DSR 的主要原因是：在一些场景中，响应的流量要远远大于请求的流量（例如典型的 HTTP request/response 模式）。假设请求占 10% 的流量，响应占 90%，使用 DSR 技术，只需 1/10 的带宽就可以满足系统需求，这种类型的优化可以极大地节省成本，还提高了负载均衡器的可靠性（流量越低肯定越好）。
 
