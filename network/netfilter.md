@@ -2,7 +2,7 @@
 
 以 Netfilter 为基础的应用很多，其中使用最广泛的无疑要数 Xtables 系列工具，譬如iptables、ebtables、arptables 等。 用过 Linux 系统的开发人员或多或少都使用过 iptables，它常被称为 Linux 系统”自带的防火墙“，然而 iptables 能做的事情已经远超防火墙的范畴，严谨地讲，iptables 的定位应是能够代替 netfilter 多数常规功能的 IP 包过滤工具。
 
-Netfilter 的钩子回调固然强大，但仍要通过程序编码才能使用，并不适合系统管理员日常运维，而设计 iptables 的目的便是以配置去实现原本用 Netfilter 编码 才能做到的事情。iptables 在用户空间管理数据包处理规则，内核中 Netfilter 根据 iptables 的配置对数据包进行处理，它们的关系如图 3-6 所示。
+Netfilter 的钩子回调固然强大，但仍要通过程序编码才能使用，并不适合系统管理员日常运维，而设计 iptables 的目的便是以配置的方式实现原本用 Netfilter 编码才能做到的事情。iptables 在用户空间管理数据包处理规则，内核中 Netfilter 根据 iptables 的配置对数据包进行处理，它们的关系如图 3-6 所示。
 
 <div  align="center">
 	<img src="../assets/iptables.png" width = "320"  align=center />
