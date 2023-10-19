@@ -5,7 +5,7 @@
 Mark Andreessen 是风险投资公司 Andreessen-Horowitz 的联合创始人和合伙人（如图 1-7 所示），该公司投资了 Facebook、Groupon、Skype、Twitter、Zynga、Foursquare 等公司。
 
 <div  align="center">
-	<img src="../assets/SoftwareEatingTheWorld.jpg" width = "620"  align=center />
+	<img src="../assets/SoftwareEatingTheWorld.jpg" width = "550"  align=center />
 	<p>图1-7 Software is Eating The World —— by Mark Andreessen, in 2011。</p>
 </div>
 
@@ -43,7 +43,7 @@ Mark Andreessen 是风险投资公司 Andreessen-Horowitz 的联合创始人和�
 - 网络规模的互联网企业（Web-Scale）：规模大，变化快，软硬件或者说所有东西都会出问题。
 
 <div  align="center">
-	<img src="../assets/ppt4.jpg" width = "620"  align=center />
+	<img src="../assets/ppt4.jpg" width = "550"  align=center />
 	<p>图1-8 Netflix按照规模和变更速度对软件企业划分的总结</p>
 </div>
 
