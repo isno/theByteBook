@@ -1,7 +1,7 @@
 # 4.3 四层负载均衡概论
 
 <div  align="center">
-	<img src="../assets/blancer4.webp" width = "600"  align=center />
+	<img src="../assets/balancer4.svg" width = "600"  align=center />
 	<p>图4-3 TCP L4负载均衡</p>
 </div>
 
