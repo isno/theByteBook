@@ -116,6 +116,6 @@ SSL 层的优化手段除了软件层面还有一些硬件加速的方案，例�
 
 从 SSL 加速的结果上看，使用 ECC 证书较 RSA 证书性能提升很多，即使 RSA 使用了 QAT 加速比起 ECC 还是存在差距。另外 QAT 方案的硬件成本、维护成本较高，综合考虑建议使用 TLS1.3 + ECC 证书方式。
 
-[^1]: 参加 https://wiki.openssl.org/index.php/TLS1.3
+[^1]: 参见 https://wiki.openssl.org/index.php/TLS1.3
 [^2]: 参见 https://datatracker.ietf.org/doc/html/rfc6066#section-8
 [^3]: 英特尔® Quick Assist Technology（简称 QAT）是 Intel 公司推出的一种专用硬件加速技术，可以用来提高 Web 服务器中计算密集的公钥加密以及数据压缩解压的吞吐率以及降低 CPU 负载。
