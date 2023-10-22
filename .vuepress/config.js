@@ -174,9 +174,9 @@ export default defineUserConfig({
                         text: "4.3 四层负载均衡概论",
                         link: '/balance/balance4.md',
                         children: [
-                            '/balance/balance4-NAT.md',
                             '/balance/balance4-DSA.md',
-                            
+                            '/balance/balance4-NAT.md',
+                            '/balance/balance4-tunnel.md',
                             
                             '/balance/balance4-ha.md',
                             '/balance/LVS.md',
