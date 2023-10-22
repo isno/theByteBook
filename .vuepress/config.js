@@ -146,6 +146,7 @@ export default defineUserConfig({
                             '/network/kernel-bypass.md',
                         ]
                     },
+                    '/network/conclusion.md',    
                     /*
                     {
                         text: '3.4 Linux 网络虚拟化',
@@ -176,8 +177,6 @@ export default defineUserConfig({
                         children: [
                             '/balance/balance4-DSA.md',
                             '/balance/balance4-net.md',
-                            '/balance/balance4-NAT.md',
-                            '/balance/balance4-tunnel.md',
                             
                             '/balance/balance4-ha.md',
                             '/balance/LVS.md',
