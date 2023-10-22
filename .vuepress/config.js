@@ -175,6 +175,7 @@ export default defineUserConfig({
                         link: '/balance/balance4.md',
                         children: [
                             '/balance/balance4-DSA.md',
+                            '/balance/balance4-net.md',
                             '/balance/balance4-NAT.md',
                             '/balance/balance4-tunnel.md',
                             
