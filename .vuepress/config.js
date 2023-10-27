@@ -179,8 +179,6 @@ export default defineUserConfig({
                             '/balance/balance4-net.md',
                             '/balance/balance4-ha.md',
                             '/balance/balance4-conclusion.md',    
-                            '/balance/LVS.md',
-                            '/balance/lvs-mod.md',
                             '/balance/lvs-balance.md'
                         ]
                     },
