@@ -163,7 +163,7 @@ export default defineUserConfig({
             },
             
             {
-                text: '第四章：负载均衡概论与实践',
+                text: '第四章：负载均衡概论',
                 link: '/balance/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
@@ -171,7 +171,7 @@ export default defineUserConfig({
                 '/balance/balance.md',
                 '/balance/balance-topology.md',
                 {
-                    text: "4.3 四层负载均衡概论",
+                    text: "4.3 四层负载均衡",
                     link: '/balance/balance4.md',
                     children: [
                         '/balance/balance4-principle.md',
