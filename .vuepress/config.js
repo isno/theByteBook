@@ -182,7 +182,7 @@ export default defineUserConfig({
                     ]
                 },
                 {
-                    text: "七层负载均衡",
+                    text: "4.4 七层负载均衡",
                     link: '/balance/balance7.md',
                     children: [
                         '/balance/balancer7-feature.md',
