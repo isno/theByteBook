@@ -4,7 +4,7 @@ import { mdEnhancePlugin } from "vuepress-plugin-md-enhance";
 export default defineUserConfig({
     lang: 'zh-CN',
     title: '深入架构原理与实践',
-    description: '构建高可用的分布式云原生架构',
+    description: '构建大规模高可用的分布式系统',
     head: [
         ['link', { rel: "shortcut icon", href: "/assets/favicon.ico" }],
 
@@ -183,15 +183,15 @@ export default defineUserConfig({
                     text: "4.4 七层负载均衡",
                     link: '/balance/balance7.md',
                     children: [
+                        '/balance/nginx-conf.md',
                         '/balance/balancer7-feature.md',
-                        '/balance/nginx-conf.md'
                     ]
                 },
                 '/balance/balance-algorithm.md',
                 ]
             },
             {
-                text: '第五章：分布式共识',
+                text: '第五章：分布式基石概论',
                 collapsable: true,
                 link: '/Consistency/summary.md',
                 sidebarDepth: 2,
@@ -316,8 +316,6 @@ export default defineUserConfig({
                             '/kubernetes/pv.md',
                         ]
                     },
-                   
-                    
                     {
                         text: '8.5 资源限制模型以及 QoS',
                         link: '/kubernetes/capacity.md',
