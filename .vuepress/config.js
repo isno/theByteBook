@@ -170,7 +170,6 @@ export default defineUserConfig({
                 children: [
                 '/balance/balance.md',
                 '/balance/balance-topology.md',
-                '/balance/balance-feature.md',
                 {
                     text: "4.3 四层负载均衡概论",
                     link: '/balance/balance4.md',
