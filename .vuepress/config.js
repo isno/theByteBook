@@ -172,24 +172,24 @@ export default defineUserConfig({
                 '/balance/balance-topology.md',
                 '/balance/balance-feature.md',
                 {
-                        text: "4.3 四层负载均衡概论",
-                        link: '/balance/balance4.md',
-                        children: [
-                            '/balance/balance4-DSA.md',
-                            '/balance/balance4-net.md',
-                            '/balance/balance4-ha.md',
-                            '/balance/balance4-conclusion.md',    
-                            '/balance/lvs-balance.md'
-                        ]
-                    },
-                    {
-                        text: "七层负载均衡",
-                        link: '/balance/balance7.md',
-                        children: [
-                            '/balance/balancer7-feature.md',
-                            '/balance/nginx-conf.md'
-                        ]
-                    },
+                    text: "4.3 四层负载均衡概论",
+                    link: '/balance/balance4.md',
+                    children: [
+                        '/balance/balance4-DSA.md',
+                        '/balance/balance4-net.md',
+                        '/balance/balance4-ha.md',
+                        '/balance/balance4-conclusion.md',    
+                    ]
+                },
+                {
+                    text: "七层负载均衡",
+                    link: '/balance/balance7.md',
+                    children: [
+                        '/balance/balancer7-feature.md',
+                        '/balance/nginx-conf.md'
+                    ]
+                },
+                '/balance/balance-algorithm.md',
                 ]
             },
             {
