@@ -191,7 +191,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第五章：分布式基石概论',
+                text: '第五章：分布式系统共识概论',
                 collapsable: true,
                 link: '/Consistency/summary.md',
                 sidebarDepth: 2,
