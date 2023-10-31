@@ -188,6 +188,7 @@ export default defineUserConfig({
                     ]
                 },
                 '/balance/balance-algorithm.md',
+                '/balance/conclusion.md',
                 ]
             },
             {
