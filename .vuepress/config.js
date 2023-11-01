@@ -198,6 +198,7 @@ export default defineUserConfig({
                 sidebarDepth: 2,
                 children: [
                     '/consensus/consensus.md',
+                    '/consensus/The-Byzantine-General-Problem.md',
                     '/consensus/Paxos.md'
                 ]
             },
