@@ -1,19 +1,8 @@
-# 4.4.1 Nginx 应用指南
+# 4.4.1 Nginx 代理指南
 
-Nginx 是一款轻量级、高性能 HTTP 和反向代理的 Web 服务器软件。除了可以作为反向代理，Nginx 也可以做负载均衡、正向代理等服务。
-
-Nginx 使用基于事件驱动的架构能够并发处理百万级别的 TCP 连接，高度模块化的设计和自由的许可证（最自由的 2-clause BSD-like license 许可）使得扩展 Nginx 功能的第三方模块层出不穷，而且优秀的设计带来了极佳的稳定性，因此其作为 Web 服务器被广泛应用到大流量的网站上。
+七层负载均衡的实现相信读者们已经非常熟悉，没错，它就是 Nginx。使用 Nginx 七层负载均衡能识别应用层协议，可以通过对 HTTP 头、URL、Cookie 做复杂的逻辑处理，实现更灵活的控制。互联网技术架构中，通常 7 层负载均衡的核心是 Nginx，结合 Lua 插件技术，如 OpenResty，能扩展实现功能丰富且性能较高的网关方案。
 
 
-## Nginx 的工作模式
-
-Nginx 的工作模式是 Master-Worker 模式。
-
-在这种工作模式下，Master 进程的作用读取并验证配置文件 nginx.conf、管理 worker 进程。而 Worker 进程维护一个线程（避免线程切换）处理连接和请求。（Worker 进程的个数由配置文件决定，一般和 CPU 个数相关（降低进程之间上下文切换带来的损耗，配置几个就有几个 Worker 进程），当求到来时，每个 Worker 工作进程都会监听到，通过争抢机制最终只会有一个 Worker 进程会接受并处理。
-
-<div  align="center">
-	<img src="../assets/nginx.png" width = "450"  align=center />
-</div>
 
 ## Nginx 配置指导
 

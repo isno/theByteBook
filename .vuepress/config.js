@@ -202,7 +202,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: "第五章：分布式事务",
+                text: "第六章：分布式事务",
                 link: '/distributed-system/distributed-transaction.md',
                 children: [
                     '/distributed-system/BASE.md',
