@@ -6,7 +6,7 @@ Mark Andreessen 是风险投资公司 Andreessen-Horowitz 的联合创始人和�
 
 <div  align="center">
 	<img src="../assets/SoftwareEatingTheWorld.jpg" width = "550"  align=center />
-	<p>图1-7 Software is Eating The World —— by Mark Andreessen, in 2011。</p>
+	<p>图1-7 Software is Eating The World —— by Mark Andreessen, in 2011</p>
 </div>
 
 
