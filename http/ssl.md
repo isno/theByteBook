@@ -26,12 +26,16 @@ SSL 层中的证书验证也是一个比较耗时的环节：服务器需要把�
 
 ### 2.1 证书传输优化
 
-客户端验证证书过程中，需要判断证书是否被被撤销失效等，需要再去访问 CA 下载 CRL 或者 OCSP 数据，这又会产生 DNS 查询、建立连接、收发数据等一系列网络通信，增加多个 RTT。
+客户端在验证证书过程中，需要判断当前证书状态[^2]，是否被撤销/过期等，需要再去访问 CA 下载 CRL 或者 OCSP 数据，这又会产生 DNS 查询、建立连接、收发数据等一系列网络通信，增加多个 RTT。
 
-OCSP stapling（Online Certificate Status Protocol stapling）是一种改进的证书状态确认方法，用于减轻证书吊销检查的负载和提高数据传输的私密性[^2]。OCSP stapling 将原本需要客户端实时发起的 OCSP 请求转嫁给服务端，服务端通过预先访问 CA 获取 OCSP 响应，然后在握手时随着证书一起发给客户端，免去了客户端连接 CA 服务器查询的环节。
+:::tip
+- CRL（Certificate Revocation List）证书撤销列表，是由 CA 机构维护的一个列表，列表中包含已经被吊销的证书序列号和吊销时间。
+- OCSP（Online Certificate Status Protocol）在线证书状态协议，是一种改进的证书状态确认方法，用于减轻证书吊销检查的负载和提高数据传输的私密性，相比于 CRL ，OCSP提供了实时验证证书状态的能力。[^3]
+- OCSP Stapling 是 OCSP 的改进方案，将原本需要客户端实时发起的 OCSP 请求转嫁给服务端，服务端通过预先访问 CA 获取 OCSP 响应，然后在握手时随着证书一起发给客户端，免去了客户端连接 CA 服务器查询的环节，解决了 OCSP 的隐私和性能问题。[^4]
+:::
 
-1. 在 Nginx 中配置 OCSP stapling 服务。
-```plain
+1. 在 Nginx 中配置 OCSP Stapling 服务。
+```nginx configuration
 server {
     listen 443 ssl;
     server_name  thebyte.com.cn;
@@ -44,14 +48,15 @@ server {
     ssl_stapling on;
     ssl_stapling_verify on;# 启用OCSP响应验证，OCSP信息响应适用的证书
     ssl_trusted_certificate /path/to/xxx.pem;# 若 ssl_certificate 指令指定了完整的证书链，则 ssl_trusted_certificate 可省略。
-    resolver 8.8.8.8 valid=60s;#添加resolver解析OSCP响应服务器的主机名，valid表示缓存。
-    resolver_timeout 2s；# resolver_timeout表示网络超时时间
+    resolver 8.8.8.8 valid=60s;# 添加resolver解析OSCP响应服务器的主机名，valid表示缓存。
+    resolver_timeout 2s;# resolver_timeout表示网络超时时间
+}
 ```
 
 
 2. 检查服务端是否已开启 OCSP Stapling。
 
-```plain 
+```shell 
 openssl s_client -connect thebyte.com.cn:443 -servername thebyte.com.cn -status -tlsextdebug < /dev/null 2>&1 | grep "OCSP" 
 ```
 若结果中存在”successful“，则表示已开启 OCSP Stapling 服务。
@@ -101,7 +106,7 @@ ssl_session_tickets off;
 
 ## 3.SSL 优化效果
 
-SSL 层的优化手段除了软件层面还有一些硬件加速的方案，例如使用支持 AES-NI 特性的 CPU、专用 QAT 加速卡[^3]。如表 2-2，通过对 ECC、RSA、TLS1.2、TLS1.3 等不同维度的测试，以获取最佳的配置方案。
+SSL 层的优化手段除了软件层面还有一些硬件加速的方案，例如使用支持 AES-NI 特性的 CPU、专用 QAT 加速卡[^5]。如表 2-2，通过对 ECC、RSA、TLS1.2、TLS1.3 等不同维度的测试，以获取最佳的配置方案。
 
 表 2-2 HTTPS 不同维度的性能测试
 
@@ -117,5 +122,7 @@ SSL 层的优化手段除了软件层面还有一些硬件加速的方案，例�
 从 SSL 加速的结果上看，使用 ECC 证书较 RSA 证书性能提升很多，即使 RSA 使用了 QAT 加速比起 ECC 还是存在差距。另外 QAT 方案的硬件成本、维护成本较高，综合考虑建议使用 TLS1.3 + ECC 证书方式。
 
 [^1]: 参见 https://wiki.openssl.org/index.php/TLS1.3
-[^2]: 参见 https://datatracker.ietf.org/doc/html/rfc6066#section-8
-[^3]: 英特尔® Quick Assist Technology（简称 QAT）是 Intel 公司推出的一种专用硬件加速技术，可以用来提高 Web 服务器中计算密集的公钥加密以及数据压缩解压的吞吐率以及降低 CPU 负载。
+[^2]: 参见 https://datatracker.ietf.org/doc/html/rfc3280
+[^3]: 参见 https://datatracker.ietf.org/doc/html/rfc6960
+[^4]: 参见 https://datatracker.ietf.org/doc/html/rfc6066#section-8
+[^5]: 英特尔® Quick Assist Technology（简称 QAT）是 Intel 公司推出的一种专用硬件加速技术，可以用来提高 Web 服务器中计算密集的公钥加密以及数据压缩解压的吞吐率以及降低 CPU 负载。
