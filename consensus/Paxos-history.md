@@ -27,7 +27,7 @@ Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文�
 
 然而，这篇论文还是非常难以理解，我们引用另一篇文章中关 于Paxos 算法的描述，摘自 USENIX ATC 2013 的 Best paper《In Search of an Understandable Consensus Algorithm》，大致含义说：Paxos真的太难懂了，很少有人不付出极大努力就能完全理解。在另一个高水平会议 NSDI 上，不少人对 Paxos 感到不爽。连点评者自己都和它做了很久的斗争，所以他这篇文章取名为“寻找一种易懂的一致性算法”...意思是还在寻找中，根本不像 Lamport 说的那么简单。后人无不感到 Lamport 深深的恶意。
 
-直到 Google 的 Chubby 横空出世，使用 Paxos 解决了分布式共识的问题，并将其整理成正式的论文发表之后，得益于 Google 的行业影响力，辅以 Chubby 作者 Mike Burrows 那略显夸张但足够吸引眼球的评价推波助澜，Paxos 开始从理论界进入工业实践，并逐渐被大家熟知和认可。Lamport 凭借他在分布式领域的贡献，最终于 2013 年获得图灵奖。
+直到 Google 的 Chubby 横空出世，使用 Paxos 解决了分布式共识的问题，并将其整理成正式的论文发表之后，得益于 Google 的行业影响力，辅以 Chubby 作者 Mike Burrows 那略显夸张但足够吸引眼球的评价推波助澜，Paxos 开始从理论界进入工业实践，并逐渐被大家熟知和认可。Lamport 凭借他在分布式领域的贡献，于 2013 年获得图灵奖。
 
 讲完 Paxos 这段有趣的历史，下面我们逐层讲解 Paxos 算法。
 
