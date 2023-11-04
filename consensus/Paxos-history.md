@@ -1,14 +1,14 @@
 # 5.3.1 Paxos 起源
 
-Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文就是“兼职会议”，如果不事先说明，也许你根本不会认识到这一篇关于分布式的论文。
+Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文就是“兼职会议”，论文描述了一个虚构的古希腊岛屿考古发现故事 -- 一个叫做 Paxos 的希腊岛屿上民主政治的故事，Paxos 岛上的人们通过民主投票的方式确定他们自己的法律。
 
-Lamport 写这篇论文时，采用了一个虚构的古希腊岛屿（岛屿名称 Paxos，这也是 Paxos 算法名称的来源）上发生的故事来描述这个算法。为了说明这个算法以及演讲效果，Lamport 的演讲中还扮演了几次《夺宝奇兵》中印第安纳·琼斯风格的考古学家。不幸的是 Paxos 论文中采用希腊民主议会的比喻很明显失败了，Lamport 像写小说一样，把一个复杂的数学问题弄成了一篇带有考古色彩的历史小说，听众没有记住 Paxos 算法，仅仅记住了印第安纳·琼斯。
+如果不事先说明，也许你根本不会认识到这一篇关于分布式的论文。为了说明这个算法以及演讲效果，Lamport 的演讲中还扮演了几次《夺宝奇兵》中印第安纳·琼斯风格的考古学家。不幸的是 Paxos 论文中采用希腊民主议会的比喻很明显失败了，Lamport 像写小说一样，把一个复杂的数学问题弄成了一篇带有考古色彩的历史小说，听众没有记住 Paxos 算法，仅仅记住了印第安纳·琼斯。
 
 1990 年，Lamport 将这篇论文提交给 TOCS。根据 Lamport 自己的描述[^2]，TOCS 的三个审稿人看过 Lamport 的论文后认为“该论文虽然不怎么重要但还有些意思，但应该把所有 Paxos 相关的故事背景删掉”。Lamport 对这些缺乏幽默感的人颇为不爽，他不打算对论文做任何修改，从而论文的发表被搁置。
 
-虽然论文没有发表，但并不代表没有人关注这个算法。Bulter W.Lampson（1991年图灵奖获得者）认识到这个算法的重要性，并在他的论文中《How to Build a Highly Availability System using Consensus》对 Paxos 进行了描述。此后，De Prisco、Lynch 和 Lampson 联合在 TCS（Theoretical Computer Science）发表了他们对 Paxos 算法描述和证明的一篇论文《Revisiting the PAXOS algorithm》。正是经过 Lampson 等人的大力宣传，该算法才逐渐为理论研究界的人们所重视。
+虽然论文没有发表，但并不代表没有人关注这个算法。Bulter W.Lampson（1991 年图灵奖获得者）认识到这个算法的重要性，并在他的论文中《How to Build a Highly Availability System using Consensus》对 Paxos 进行了描述。此后，De Prisco、Lynch 和 Lampson 联合在 TCS（Theoretical Computer Science）发表了他们对 Paxos 算法描述和证明的一篇论文《Revisiting the PAXOS algorithm》。正是经过 Lampson 等人的大力宣传，该算法才逐渐为理论研究界的人们所重视。
 
-另一方面，这些论文的发表使 Lamport 觉得论文重新发表的时间到了。或许作为一种玩笑的延续，也或许为保留原有的工作（更直白的说法是 Lamport 本人认为该论文内容的描述和证明足够清晰，根本不需要修改），这次发布仅增加了一段 Keith Marzullo（TOCS 编辑）注释，《The Part-Time Parliament》[^3] 最终在 1998 年公开发表。这次发布 Keith Marzullo 也风趣了一把：
+另一方面，这些论文的发表使 Lamport 觉得论文重新发表的时间到了。或许作为一种玩笑的延续，也或许为保留原有的工作（更直白的说法是 Lamport 本人认为该论文内容的描述和证明足够清晰，根本不需要修改），这次发布仅增加了一段 Keith Marzullo（TOCS 编辑）注释，《The Part-Time Parliament》[^3] 最终在 1998 年公开发表。这次发布 Keith Marzullo 在注解上也风趣了一把：
 
 :::tip Keith Marzullo 的注解
 
@@ -22,9 +22,7 @@ Lamport 写这篇论文时，采用了一个虚构的古希腊岛屿（岛屿名
 	<img src="../assets/paxos.png" width = "350"  align=center />
 </div>
 
-这是一篇很短的论文，摘要只有一句话 “The Paxos algorithm, when presented in plain English, is very simple.”！它的语气掩盖了作者对 Paxos 的策略没有完全奏效的失望。
-
-然而，这篇论文还是非常难以理解，我们引用 Diego Ongaro 和 John Ousterhout 的设计 Raft 时发表的论文[^5]中对 Paxos 的描述：
+这是一篇很短的论文，摘要只有一句话 “The Paxos algorithm, when presented in plain English, is very simple.”！它的语气掩盖了作者对 Paxos 的策略没有完全奏效的失望。然而，这篇论文还是非常难以理解，我们引用 Diego Ongaro 和 John Ousterhout 的设计 Raft 时发表的论文[^5]中对 Paxos 的描述：
 
 :::tip Paxos 一点也不 simple
 
