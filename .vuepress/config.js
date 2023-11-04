@@ -199,7 +199,15 @@ export default defineUserConfig({
                 children: [
                     '/consensus/consensus.md',
                     '/consensus/The-Byzantine-General-Problem.md',
-                    '/consensus/Paxos.md'
+                    {
+                        text: "5.3 共识算法 Paxos",
+                        link: '/consensus/Paxos.md',
+                        children: [
+                            '/consensus/Paxos-history.md',
+                            '/consensus/Paxos-define.md',
+                        ]
+                    },
+                   
                 ]
             },
             {
@@ -210,7 +218,7 @@ export default defineUserConfig({
                     '/distributed-system/cap.md',
                     '/distributed-system/ACID.md',
                     '/distributed-system/idempotent.md',
-                     {
+                    {
                         text: "5.5 分布式事务协议与解决",
                         link: '/distributed-system/transaction.md',
                         children: [
