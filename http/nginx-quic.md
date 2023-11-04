@@ -24,7 +24,7 @@ configure arguments:
 ```
 nginx.conf 配置信息：
 
-```plain
+```nginx configuration
 server {
     # quic and http/3
     listen 443 http3 reuseport;

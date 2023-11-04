@@ -7,7 +7,7 @@ Istio 是由 Google、IBM 和 Lyft 发起的开源 Service Mesh 框架。Istio �
 
 Istio 为微服务应用提供了一个完整的解决方案，可以以统一的方式去检测和管理微服务。同时，它还提供了管理流量、实施访问策略、收集数据等功能，而所有这些功能都对业务代码透明，即不需要修改业务代码就能实现。有了 Istio，就几乎可以不需要其他的微服务框架，也不需要自己去实现服务治理等功能，只要把网络层委托给 Istio，它就能帮助完成这一系列的功能。
 
-由于 Istio 构建与 Kubernetes 之上，因此它自然可以运行于提供  Kubernetes 容器服务的云平台环境中， 也因此成为大部分云平台 ServiceMesh 实现方案。
+由于 Istio 构建于 Kubernetes 之上，因此它自然可以运行于提供  Kubernetes 容器服务的云平台环境中， 也因此成为大部分云平台 ServiceMesh 实现方案。
 
 ## Linkerd2
 
