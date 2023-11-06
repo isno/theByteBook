@@ -43,14 +43,14 @@ Basic Paxos 的问题背景相信已经讲清楚了，那怎么解决？
 
 为了克服单点故障问题，我们借鉴多数派（Quorum）的机制，思路就是写入一半以上的节点。如果集群中有 N 个节点，客户端需要写入 W >= N/2 + 1 个节点，那么使用多数派的机制最多可容忍 (N-1)/2 个节点故障。但是问题还是存在，**每个决策节点该接受几个提案呢**? 
 
-我们先看第一种情况，**按时序决策节点只接受它收到的第一个提案**。但考虑多个提议节点同时对一个提案进行提议，最后可能没有一个提议能够取得多数的投票，出现了平票问题（Split Votes）。如下图所示，red 和 blue 对等，没办法确定谁被选择？ 这也就意味着我们无法保证在一轮投票中达成共识，这就无法实现活性（liveness）需求。
+我们先看第一种情况，**按时序决策节点只接受它收到的第一个提案**。但考虑多个提议节点同时对一个提案进行提议，最后可能没有一个提议能够取得多数的投票，出现了平票问题（Split Votes）。如下图所示，red 和 blue 各有 2 票，没办法确定谁被选择？ 这也就意味着我们无法保证在一轮投票中达成共识，这就无法实现活性（liveness）需求。
 
 <div  align="center">
 	<img src="../assets/paxos_split_votes.png" width = "500"  align=center />
 	<p>split_votes 平票问题</p>
 </div>
 
-再看第二种情况，决策节点就需要允许接受多个不同的提案，用多数派的机制解决 Split Votes 的问题。但新的问题是有了少数服从多数原则，就会碰到冲突的问题。例如，不同提案节点提议不同的值，可能都会被选择（S3 收到了 blue 和 red，S3 该确认选择哪个值？ ），这就破坏了每个提案只有一个值的原则，这违背了安全性（safety）的需求。
+再看第二种情况，决策节点就需要允许接受多个不同的提案，用多数派的机制解决 Split Votes 的问题。但新的问题是有了少数服从多数原则，就会碰到冲突的问题。例如，不同提案节点提议不同的值，可能都会被选择（S~3~ 收到了 blue 和 red，S~3~ 该确认选择哪个值？ ），这就破坏了每个提案只有一个值的原则，这违背了安全性（safety）的需求。
 
 <div  align="center">
 	<img src="../assets/paxos_conflict_choices.png" width = "500"  align=center />
@@ -61,7 +61,7 @@ Basic Paxos 的问题背景相信已经讲清楚了，那怎么解决？
 Once a value has been chosen, future proposals must propose the same value.
 :::
 
-也就是说，我们讨论的 Basic-Paxos 只会 Chosen 一个值。基于此，就需要一个两阶段（2-phase）协议，对于已经 Chosen 的值，后面的提案要放弃自己的提议，提出已经被选中的值。例如，S5 发起提案之前，先广播给 S4、S4、S5 三个节点，询问是否是否已经有接受的提案，如果已有，则撤销自己的提案，S5 的题案由 blue 改为 red，这一阶段在 Basic Paxos 称为准备（prepare）阶段。
+也就是说，我们讨论的 Basic-Paxos 只会 Chosen 一个值。基于此，就需要一个两阶段（2-phase）协议，对于已经 Chosen 的值，后面的提案要放弃自己的提议，提出已经被选中的值。例如，S~5~ 发起提案之前，先广播给 S~3~、S~4~、S~5~3 个节点，询问是否是否已经有接受的提案，如果已有，则撤销自己的提案，S~5~ 的题案由 blue 改为 red，这一阶段在 Basic Paxos 称为准备（prepare）阶段。
 
 :::tip 第一阶段实际是分布式抢占锁的过程
 
@@ -71,7 +71,7 @@ Once a value has been chosen, future proposals must propose the same value.
 
 :::
 
-仅单纯使用二阶段协议仍然无法解决这个问题，分布式系统中的网络延迟无法忽视。如图所示，S1 和 S5 在第一个阶段都发现没有其他的值被选中，因此提出自己的提案，但在这个时序下会有两个不同的值被选中。
+仅单纯使用二阶段协议仍然无法解决这个问题，分布式系统中的网络延迟无法忽视。如图所示，S~1~ 和 S~5~ 在第一个阶段都发现没有其他的值被选中，因此提出自己的提案，但在这个时序下会有两个不同的值被选中。
 
 <div  align="center">
 	<img src="../assets/paxos_2pc_choice.png" width = "500"  align=center />
@@ -85,7 +85,7 @@ Once a value has been chosen, future proposals must propose the same value.
 答案：也是 1，因为要形成发现矛盾的交集对于 4 来说，要达到 3/4，才能构成大多数，这就是为什么集群选单数的原因，因为双数从算法的角度来说没什么帮助。
 :::
 
-如图 S3 应该拒绝 S1 的提案，这样就可以保证 S5 的提案成功，S1 的提案因为冲突而失败。这种方式我们需要对提案进行排序，有了排序，决策节点就可以拒绝老的提议。如果你熟悉分布式系统，应该能想到 "Time, Clocks and the Ordering of Events in a Distributed System" 这篇论文，我们不能简单用时间来判断提案的先后顺序。
+如图 S~3~ 应该拒绝 S~1~ 的提案，这样就可以保证 S~5~ 的提案成功，S~1~的提案因为冲突而失败。这种方式我们需要对提案进行排序，有了排序，决策节点就可以拒绝老的提议。如果你熟悉分布式系统，应该能想到 "Time, Clocks and the Ordering of Events in a Distributed System" 这篇论文，我们不能简单用时间来判断提案的先后顺序。
 
 
 
@@ -96,14 +96,7 @@ Once a value has been chosen, future proposals must propose the same value.
 
 Basic Paxos 对于此问题的解决方案是，定义一个 Proposal Number 来标识唯一的提案。
 
-一个简单的 Proposal Number 的定义为：
-
-<div  align="center">
-	<img src="../assets/proposal_number.png" width = "200"  align=center />
-	<p></p>
-</div>
-
-Round Number 可以是一个自增的 ID，同时为了避免崩溃重启，必须能在本地持久化存储，最后再拼接上 Service ID，确保是分布式系统中唯一 ID。
+一个简单的 Proposal Number 的定义为：`<seq_id, server_id>`，seq_id 可以是一个自增的 ID，同时为了避免崩溃重启，必须能在本地持久化存储，最后再拼接上 server_id，确保是分布式系统中唯一 ID。
 
 当决策节点收到这个提案后，将会给两个承诺一个应答。
 
@@ -129,7 +122,7 @@ Round Number 可以是一个自增的 ID，同时为了避免崩溃重启，必�
 
 ## 3. Basic Paxos 验证
 
-那这样的一个二阶段提交，看看能不能解决前面的问题。假设一个分布式系统中有五个节点，分别是 S1、S2、S3、 S4、S5，这5个节点同时扮演着提案节点和决策节点的角色。此时，有两个并发请求希望将同一个值分别设定为 X（由 S5 作为提案节点提出） 和 Y（由 S5 作为提案节点提出），以 P 代表准备阶段，以 A 代表批准阶段，这时会发生以下几种情况。
+那这样的一个二阶段提交，看看能不能解决前面的问题。假设一个分布式系统中有五个节点，分别是 S~1~、S~2~、S~3~、S~4~、S~5~，这5个节点同时扮演着提案节点和决策节点的角色。此时，有两个并发请求希望将同一个值分别设定为 X（由 S~3~ 作为提案节点提出） 和 Y（由 S~5~ 作为提案节点提出），以 P 代表准备阶段，以 A 代表批准阶段，这时会发生以下几种情况。
 
 ### 3.1 情况一：提案已 Chosen
 
@@ -138,7 +131,7 @@ Round Number 可以是一个自增的 ID，同时为了避免崩溃重启，必�
 	<p></p>
 </div>
 
-- S1 收到客户端提案请求 X，于是 S1 向 S1-S3 发起 Prepare(3.1) 请求，PROMISE() 响应返回没有提案被 Chosen
+- S~1~ 收到客户端提案请求 X，于是 S~1~ 向 S1-S3 发起 Prepare(3.1) 请求，PROMISE() 响应返回没有提案被 Chosen
 - 由于 S1-S3 没有任何提案被 Chosen，S1 继续向 S1-S3 发送 Accept(3.1, X) 请求，提案被成功 Chosen
 - 在提案被 Chosen 后，S5 收到客户端提案值为 Y 的请求，向 S3-S5 发送 Prepare(4.5) 请求，由于编号 4 > 3 会收到提案值为 X 已经被 Chosen 的 PROMISE() 响应
 - 于是 S5 将提案值 Y 替换成 X，向 S1-S3 发送 Accept(4.5, X) 请求，提案再次被 Chosen
@@ -154,9 +147,7 @@ Round Number 可以是一个自增的 ID，同时为了避免崩溃重启，必�
 
 情况 2 和情况 1 类似，在 S3 Chosen 了提案后，S5 收到来自 S3 的 PROMISE() 响应包含了已经 Chosen 的提案值 X，所以同样会将提案值替换成 X，最终所有 Acceptor 对 X 达成共识。
 
-**情况 3：提案未提交，Proposer 不可见**
-
-
+### 3.3 情况 3：提案未提交，Proposer 不可见
 
 <div  align="center">
 	<img src="../assets/paxos-conflict3.png" width = "500"  align=center />

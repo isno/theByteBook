@@ -24,6 +24,7 @@ export default defineUserConfig({
           // 启用脚注
           footnote: true,
           katex: true,
+          sub: true,
         }),
     ],
     theme: defaultTheme({
