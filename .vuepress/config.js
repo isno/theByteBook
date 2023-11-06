@@ -206,6 +206,7 @@ export default defineUserConfig({
                             '/consensus/Paxos-history.md',
                             '/consensus/Paxos-define.md',
                             '/consensus/Basic-Paxos.md',
+                            '/consensus/Multi-Paxos.md',
                         ]
                     },
                 ]
