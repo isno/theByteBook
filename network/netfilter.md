@@ -15,13 +15,13 @@ iptables 包括了“tables（表）”、“chain（链）”和“rules（规�
 
 这几个内置链的功能如下：
 
-- **PRETOUTING:** 接收到的包进入协议栈后立即触发此链，在进行任何路由判断（将包发往哪里）之前。
+- **PREROUTING:** 接收到的包进入协议栈后立即触发此链，在进行任何路由判断（将包发往哪里）之前。
 - **INPUT:** 接收到的包经过路由判断，如果目的是本机，将触发此链。
 - **FORWARD** 接收到的包经过路由判断，如果目的是其他机器，将触发此链。
 - **OUTPUT:** 本机产生的准备发送的包，在进入协议栈后立即触发此链。
 - **POSTROUTING:** 本机产生的准备发送的包或者转发的包，在经过路由判断之后，将触发此链。
 
-如图3-7所示，一个目的是本机的数据包依次经过 PRETOUTING 链上面的 mangle、nat 表，然后再依次经过 INPUT 链的 mangle、filter、nat表，最后到达本机某个具体应用。
+如图3-7所示，一个目的是本机的数据包依次经过 PREROUTING 链上面的 mangle、nat 表，然后再依次经过 INPUT 链的 mangle、filter、nat表，最后到达本机某个具体应用。
 
 <div  align="center">
 	<img src="../assets/iptables-chain.png" width = "450"  align=center />
