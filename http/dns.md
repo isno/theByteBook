@@ -13,7 +13,7 @@
 	<p>图2-3 DNS域名结构</p>
 </div>
 
-了解域名结构之后，我们再看看域名时如何进行解析，DNS 解析流程如图2-4所示。
+了解域名结构之后，我们再看看域名是如何进行解析，DNS 解析流程如图2-4所示。
 
 <div  align="center">
 	<img src="../assets/dns-example.png" width = "420"  align=center />
