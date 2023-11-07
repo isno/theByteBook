@@ -94,13 +94,12 @@ OCI 和 CNCF 这两个围绕容器的基金会对云原生生态的发展发挥�
 	<p>图1-17 容器编排生态</p>
 </div>
 
-在容器编排大战期间，以 kubernetes 为核心的 CNCF 生态系统也得以迅猛发展，云原生成为云计算市场的技术新热点。迄今为止，CNCF 在其公布的云原生全景图中，如图 1-5 所示，显示了目前近 30 个领域、数百个项目的繁荣发展，几乎包揽了所有云计算相关开源项目。
+在容器编排大战期间，以 kubernetes 为核心的 CNCF 生态系统也得以迅猛发展，云原生成为云计算市场的技术新热点。迄今为止，CNCF 在其公布的云原生全景图中，如图 1-5 所示，显示了目前近 30 个领域、数百个项目的繁荣发展，从数据存储、消息传递，到持续集成、服务编排，乃至网络管理，如稼轩先生有言，“溪边照影行，天在清溪底。天上有行云，人在行云里”。
 
 <div  align="center">
 	<img src="../assets/landscape.png" width = "100%"  align=center />
 	<p>图1-18 CNCF 云原生项目 Landscape </p>
 </div>
 
-至 2023 年，CNCF graduated 级别项目中已包括 Kubernetes、Prometheus、Helm、argo、etcd、istio、Envoy、Harbor 等众多应用，孵化级别的项目更是数不胜数。
 
 现在，CNCF 早已超出了 Kubernetes 的范畴，而是旨在建立在 Kubernetes 为底层资源调度和应用生命周期管理之上的生态系统。
