@@ -16,7 +16,7 @@ Netfilter 实际上就是一个过滤器框架，Netfilter 在网络包收发以
 
 <div  align="center">
 	<img src="../assets/k8s-service.svg" width = "450"  align=center />
-	<p>图 3-4 Kubernetes 服务本的质</p>
+	<p>图 3-4 Kubernetes 服务的本质</p>
 </div>
 
 如图 3-5 Kubernetes 网络模型说明示例，当一个 Pod 跨 Node 进行通信时，数据包从 Pod 网络 Veth 接口发送到 cni0 虚拟网桥，进入主机协议栈之后，首先会经过 PREROUTING hook，调用相关的链做 DNAT，经过 DNAT 处理后，数据包目的地址变成另外一个 Pod 地址，再继续转发至 eth0，发给正确的集群节点。
