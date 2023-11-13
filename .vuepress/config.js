@@ -193,7 +193,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第五章：分布式系统概论',
+                text: '第五章：分布式系统共识概论',
                 collapsable: true,
                 link: '/consensus/summary.md',
                 sidebarDepth: 2,
@@ -210,6 +210,7 @@ export default defineUserConfig({
                             '/consensus/Multi-Paxos.md',
                         ]
                     },
+                    '/consensus/raft.md',
                     '/consensus/conclusion.md',
                 ]
             },

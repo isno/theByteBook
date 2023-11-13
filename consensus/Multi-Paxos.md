@@ -52,8 +52,8 @@ Lamport 的第一个想法是**选择一个 Leader，任意时刻只有一个 Pr
 
 在讨论如何减少 Prepare 请求之前，先讨论下 Prepare 阶段的作用，需要 Prepare 有两个原因：
 
-- 屏蔽老的提案：但 Basic Paxos 只作用在日志的一条记录
-- 检查可能已经被 chosen 的 value 来代替原本的提案值：多个 Proposer 并发进行提案的时候，新的 Proposal 要确保提案的值相同
+- 拒绝老的 Proposal 提议
+- 返回可能被chosen的Proposal（包括值和id）
 
 我们依然是需要 Prepare 的。我们要做的是减少大部分 Prepare 请求，首先要搞定这两个功能。
 
