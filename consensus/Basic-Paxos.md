@@ -61,7 +61,7 @@ Basic Paxos 的问题背景相信已经讲清楚了，那怎么解决？
 Once a value has been chosen, future proposals must propose the same value.
 :::
 
-也就是说，我们讨论的 Basic-Paxos 只会 Chosen 一个值。基于此，就需要一个两阶段（2-phase）协议，对于已经 Chosen 的值，后面的提案要放弃自己的提议，提出已经被选中的值。例如，S~5~ 发起提案之前，先广播给 S~3~、S~4~、S~5~ 这 3 个节点，询问是否是否已经有接受的提案，如果已有，则撤销自己的提案，S~5~ 的题案由 blue 改为 red，这一阶段在 Basic Paxos 称为准备（Prepare）阶段。
+也就是说，我们讨论的 Basic-Paxos 只会 Chosen 一个值。基于此，就需要一个两阶段（2-phase）协议，对于已经 Chosen 的值，后面的提案要放弃自己的提议，提出已经被选中的值。例如，S~5~ 发起提案之前，先广播给 S~3~、S~4~、S~5~ 这 3 个节点，询问是否已经有接受的提案，如果已有，则撤销自己的提案，S~5~ 的题案由 blue 改为 red，这一阶段在 Basic Paxos 称为准备（Prepare）阶段。
 
 :::tip 第一阶段实际是分布式抢占锁的过程
 
