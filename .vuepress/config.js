@@ -72,7 +72,7 @@ export default defineUserConfig({
                     },
                     '/architecture/arc.md',
                     '/architecture/architect.md',
-                    '/architecture/conclusion.md',    
+                    '/architecture/conclusion.md', 
                 ]
             },
             {
@@ -210,6 +210,7 @@ export default defineUserConfig({
                             '/consensus/Multi-Paxos.md',
                         ]
                     },
+                    '/consensus/conclusion.md',
                 ]
             },
             {
