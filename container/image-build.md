@@ -46,7 +46,7 @@ docker 镜像构建步骤如下：
 
 熟悉常用的 Dockerfile 指令之后，我们可以开始尝试通过 Dockerfile 构建一个 Nginx 镜像。
 
-```plain
+```dockerfile
 #第1阶段
 FROM skillfir/alpine:gcc AS builder01
 RUN wget https://nginx.org/download/nginx-1.24.0.tar.gz -O nginx.tar.gz && \
@@ -66,18 +66,18 @@ EXPOSE 80
 CMD ["./sbin/nginx","-g","daemon off;"]
 ```
 制作镜像
-```plain
+```bash
 docker build -t alpine:nginx .
 ```
 查看镜像产物
-```plain
+```bash
 $ docker images 
 REPOSITORY                TAG             IMAGE ID       CREATED          SIZE
 alpine                    nginx           ca338a969cf7   17 seconds ago   23.4MB
 ```
 
 测试镜像
-```plain
+```bash
 docker run --rm --name nginx -p 80:80 alpine:nginx
 ```
 

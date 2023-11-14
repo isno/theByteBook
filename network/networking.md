@@ -7,7 +7,7 @@
 	<p>图3-2 Linux ingress 架构概览 </p>
 </div>
 
-如图 3-4 所示，Linux 系统收包流程如下：
+如图 3-2 所示，Linux 系统收包流程如下：
 
 1. 网卡 eth0 收到数据包。
 2. 网卡通过 DMA 将数据包拷贝到内存的环形缓冲区(Ring Buffer，在网卡中有 RX Ring 和 TX Ring 两种缓冲)。
