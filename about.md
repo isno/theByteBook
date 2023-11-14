@@ -11,7 +11,11 @@
 
 ## 交个朋友 
 
+打赏给我，我将更有动力撰写。
+
 <div  align="center">
-	<img src="./assets/webchat.jpg" width = "450"  align=center />
+	<img src="./assets/pay.jpg" width = "250"  align=center />  | 
+	<img src="./assets/webchat.jpg" width = "250"  align=center />
+	
 	<p></p>
 </div>
