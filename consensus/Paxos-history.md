@@ -1,6 +1,6 @@
 # 5.3.1 Paxos 起源
 
-Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文就是“兼职会议”，论文描述了一个虚构的古希腊岛屿考古发现故事。
+Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文就是“兼职议会”，论文描述了一个虚构的古希腊岛屿考古发现故事。
 
 :::tip The Part-Time Parliament
 
