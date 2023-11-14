@@ -12,6 +12,6 @@
 ## 交个朋友 
 
 <div  align="center">
-	<img src="../assets/webchat.jpg" width = "450"  align=center />
+	<img src="./assets/webchat.jpg" width = "450"  align=center />
 	<p></p>
 </div>
