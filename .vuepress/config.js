@@ -251,7 +251,6 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/container/container-history.md',
-                    '/container/container.md',
                     {
                         text: '7.2 容器技术的核心原理',
                         link: '/container/principle.md',
