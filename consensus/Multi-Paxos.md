@@ -26,6 +26,7 @@ lamport 的论文中对于 Multi Paxos 的描述称之为**Implementing a State 
 
 Replicated log 类似一个数组，因此我们需要知道当次请求是在写日志的第几位，Multi-Paxos 做的第一个调整就是要添加一个日志的 index 参数到 Prepare 和 Accept 阶段，表示这轮 Paxos 正在决策哪一条日志记录。
 
+
 下面我们举个例子说明，我们知道三台机可以容忍一台故障，假设此时是 S~3~ 宕机，当 S~1~ 收到客户端的请求命令 jmp（提案）时：
 
 - 找到第一个没有 chosen 的日志记录：图示中是第 3 条 cmp 命令。
@@ -39,23 +40,18 @@ Replicated log 类似一个数组，因此我们需要知道当次请求是在�
 	<p></p>
 </div>
 
-通过上面的流程可以看出，每个提案在最优情况下需要 2 个 RTT。当多个节点同时进行提议的时候，对于 index 的争抢会比较严重，会造成 Split Votes。为了解决 Split Votes，节点需要进行随机超时回退，这样写入延迟就会增加。针对这个问题，该怎么解决呢？
+通过上面的流程可以看出，每个提案在最优情况下需要 2 个 RTT。当多个节点同时进行提议的时候，对于 index 的争抢会比较严重，会造成 Split Votes。为了解决 Split Votes，节点需要进行随机超时回退，这样写入延迟就会增加。我们思考一下，针对这个问题，该怎么解决呢？
 
-Lamport 的第一个想法是**选择一个 Leader，任意时刻只有一个 Proposer，这样可以避免冲突，降低延迟**。有很多办法可以进行选举，Lamport 提出了一种简单的方式：让 server_id 最大的节点成为 Leader（在上篇说到提案编号由自增 id 和 server_id 组成，就是这个 server_id）。既然每台服务器都有一个 server_id，我们就直接让 server_id 最大的服务器成为 Leader，这意味着每台服务器需要知道其它服务器的 server_id。为此，每个节点每隔 Tms 向其它服务器发送心跳，如果一个节点在 2Tms 时间内没有收到比自己 server_id 更大的心跳，那它自己就转为 Leader，这意味着该节点处理客户端请求，该节点同时担任 Proposer 和 Acceptor。如果一个节点收到比自己 server_id 更大的服务器的心跳，那么它就不能成为 Leader，这意味着该节点拒绝掉客户端请求，或者将请求重定向到 Leader，该节点只能担任 Acceptor。
+Lamport 的第一个想法是**选择一个 Leader，任意时刻只有一个 Proposer，这样就可以避免冲突**。关于 Leader 的选举，Lamport 提出了一种简单的方式：让 server_id 最大的节点成为 Leader（在上篇说到提案编号由自增 id 和 server_id 组成，就是这个 server_id）。如此，节点之间就要维持 T 间隔的心跳，如果一个节点在 2T 时间内没有收到比自己 server_id 更大的心跳，那它自己就转为 Leader，担任 Proposer 和 Acceptor 的职责，并开始处理客户端请求。那些非 Leader 的节点如果收到客户端的请求，要么丢弃要么将请求重定向到 Leader 节点。
 
-值得注意的是，这是非常简单的策略，这种方式系统中有同时存在两个 Leader 的概率（概率较小）。不过即使是系统中有两个 Leader，Paxos 也是能正常工作的，只是冲突的概率就大了很多，效率也会降低。
+Lamport 提出的选举方案是一种很简单的策略，这种方式系统存在同时 2 个 Leader 的概率，不过即使是系统中有 2 个 Leader，Paxos 也是能正常工作的，只是冲突的概率就大了很多。
 
+除了选主的优化方式，另外一个思路就是**优化二阶段提交的次数**，在讨论减小 Prepare 请求之前，我们先讨论一下 Prepare 的作用：
 
-- 消除大部分 Prepare，只需要对整个 Log 进行一次 Prepare，后面大部分 Log 可以通过一次 Accept 被 chosen
+- 阻止那些更老的还未完成的提案被选中
+- 看看有没有已经被选中的值，如果有，提议者的提议就应该使用这个值
 
-## 2. 减少 Prepare 请求
-
-在讨论如何减少 Prepare 请求之前，先讨论下 Prepare 阶段的作用，需要 Prepare 有两个原因：
-
-- 拒绝老的 Proposal 提议
-- 返回可能被chosen的Proposal（包括值和id）
-
-我们依然是需要 Prepare 的。我们要做的是减少大部分 Prepare 请求，首先要搞定这两个功能。
+减少大部分 Prepare 请求，首先要搞定这两个功能。
 
 对于 1，我们不再让提案编号只屏蔽一个 index 位置，而是让它变成全局的，即屏蔽整个日志。一旦 Prepare 成功，整个日志都会阻塞（值得注意的是，Accept 阶段还是只能写在对应的 index 位置上）。
 
