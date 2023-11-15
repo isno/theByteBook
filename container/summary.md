@@ -6,6 +6,7 @@
 
 发展到云原生时代，OCI 容器技术标准规范逐步成为行业共识，各类工业级容器运行时如 runc、containerd、Kata Containers 也不断涌现。
 
+“八卦”也能引起读者的好奇心，我们不妨从容器技术之争的故事开始。
 
 <div  align="center">
   <img src="../assets/container-summary.png" width = "550"  align=center />
