@@ -27,13 +27,11 @@ lamport 的论文中对于 Multi Paxos 的描述称之为**Implementing a State 
 Replicated log 类似一个数组，因此我们需要知道当次请求是在写日志的第几位，Multi-Paxos 做的第一个调整就是要添加一个日志的 index 参数到 Prepare 和 Accept 阶段，表示这轮 Paxos 正在决策哪一条日志记录。
 
 
-下面我们举个例子说明，我们知道三台机可以容忍一台故障，假设此时是 S~3~ 宕机，当 S~1~ 收到客户端的请求命令 jmp（提案）时：
+下面我们举个例子说明，当 S~1~ 收到客户端的请求命令 jmp（提案）时（假设此时是 S~3~ 宕机）：
 
-- 找到第一个没有 chosen 的日志记录：图示中是第 3 条 cmp 命令。
-- 这时候 S~1~ 会尝试让 jmp 作为第 3 条的 chosen 值，运行 Paxos。
-- 因为 S~1~ 的决策者已经接受了 cmp，所以在 Prepare 阶段会返回 cmp，接着用 cmp 作为提案值跑完这轮 Paxos，S~2~ 也将接受 cmp，S~1~ 的 cmp 变为 chosen 状态。继续找下一个没有 chosen 的位置 —— 也就是第 4 位。
-- S~2~ 的第 4 个位置已经接受了 sub，所以在 Prepare 阶段会返回 sub，S~1~ 第 4 位会 chosen sub，继续接着往下找。
-- 第 5 位 S~1~ 和 S~2~ 都为空，不会返回 acceptedValue，所以第 5 个位置就确定为 jmp 命令的位置，运行 Paxos，并返回请求。
+- 会先尝试日志项 3，发现已经写入了 cmp（但 cmp 还未被选中），于是运行 Basic Paxos 在日志项 3 放置 cmp。
+- 继续找下一个没有选中的位置 —— 也就是第 4 位，由于 S~2~ 已经存在 sub，产生冲突，最终 sub 在日志项 4 达成共识。
+- S~1~ 继续尝试下一个日志项，直到给 jmp 找到一个可以达成共识的位置（日志项 4）。
 
 <div  align="center">
 	<img src="../assets/multi_paxos.png" width = "650"  align=center />
