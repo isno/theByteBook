@@ -245,11 +245,12 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第七章：容器技术概论与实践',
+                text: '第七章：容器技术概论',
                 link: '/container/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
+                    '/container/container-history.md',
                     '/container/container.md',
                     {
                         text: '7.2 容器技术的核心原理',
