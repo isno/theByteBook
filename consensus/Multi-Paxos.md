@@ -4,7 +4,7 @@
 lamport 提到的 Multi Paxos 是一种思想，所以 Multi Paxos 算法实际上是个统称，Multi Paxos 算法是指基于 Multi Paxos 思想，通过多个 Basic Paxos 实例实现的一系列值的共识算法。
 :::
 
-lamport 的论文中对于 Multi Paxos 的描述称之为**Implementing a State Machine**，我们从理论转向现实问题，浅浅解释下分布式中的 State Machine。
+lamport 的论文中对于 Multi Paxos 的描述称之为**Implementing a State Machine**，我们从理论转向现实问题，浅薄地解释下分布式中的 State Machine。
 
 在分布式环境中，如果我们要让一个服务具有容错能力，那么最常用最直接的办法就是让一个服务的多个副本同时运行在不同的节点上。但是，当一个服务的多个副本都在运行的时候，我们如何保证它们的状态都是同步的呢，或者说，如果让客户端看起来无论请求发送到哪一个服务副本，最后都能得到相同的结果？实现这种同步方法就是所谓的**状态机复制**（State Machine Replication）。
 

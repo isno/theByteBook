@@ -250,7 +250,7 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
-                    '/container/container-history.md',
+                    '/container/Container-Orchestration-Wars.md',
                     {
                         text: '7.2 容器技术的核心原理',
                         link: '/container/principle.md',
