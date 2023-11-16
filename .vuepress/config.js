@@ -123,7 +123,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第三章：Linux内核网络',
+                text: '第三章：Linux 内核网络',
                 collapsable: true,
                 link: '/network/summary.md',
                 sidebarDepth: 2,
@@ -233,15 +233,7 @@ export default defineUserConfig({
                             '/distributed-system/Saga.md',
                             '/distributed-system/Seata.md'
                         ]
-                    },
-                    {
-                        text: "5.6 分布式集群共识问题",
-                        link: '/distributed-system/consistency.md',
-                        children: [
-                            '/distributed-system/consensus.md',
-                            '/distributed-system/raft.md',
-                        ]
-                    },
+                    }
                 ]
             },
             {
