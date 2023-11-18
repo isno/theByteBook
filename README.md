@@ -22,7 +22,7 @@
 我会持续更新这个仓库的内容，如果想要关注可以点 `star` 。
 
 <div  align="center">
-	<img src="./assets/star-history-2023928.png" width = "460"  align=center />
+	<img src="./assets/star-history-20231117.png" width = "460"  align=center />
 	<p><a href="https://github.com/isno/theByteBook">https://github.com/isno/theByteBook</a></p>
 </div>
 

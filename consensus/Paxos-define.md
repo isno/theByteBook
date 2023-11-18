@@ -8,7 +8,7 @@ Paxos 算法包含两个部分，其中一部分是核心算法；另外一部�
 
 《The Part-Time Parliament》发表之后，很多人详细完整地重新阐述了这个算法，其中比较知名的就是前面提过的 Bulter W.Lampson。Lampson 很善于把复杂的问题讲清楚，在他的论文中《Revisiting the PAXOS algorithm Bulter》将核心算法和完整算法分别命名为 **Basic Paxos** 和 **Multi-Paxos**，这也是目前行业内广泛采用的命名。
 
-Lamport 在 2001 年发表的 “Paxos Made Simple” 论文中又重新阐述了一遍 Paxos 算法，不过该论文仍然没有给出两个算法的正式命名，不过 Lamport 将算法所起的作用作为论文小节的标题。其中核心算法的小节标题是 “**The Consensus Algorithm**”（共识算法），完整算法的小节标题是“**Implementing a State Machine**”（实现一个状态机）。从这两个小节标题可以看出：Paxos 核心算法解决了分布式领域最重要的基础问题，也就是共识问题；完整算法是用来实现状态机的算法。在论文中，Lamport 也用 **Paxos Consensus Algorithm**、**Paxos Algorithm** 来分别称呼核心算法和完整算法。
+Lamport 在 2001 年发表的 “Paxos Made Simple” 论文中又重新阐述了一遍 Paxos 算法，该论文仍然没有给出两个算法的正式命名，不过 Lamport 将算法所起的作用作为论文小节的标题。其中核心算法的小节标题是 “**The Consensus Algorithm**”（共识算法），完整算法的小节标题是“**Implementing a State Machine**”（实现一个状态机）。从这两个小节标题可以看出：Paxos 核心算法解决了分布式领域最重要的基础问题，也就是共识问题；完整算法是用来实现状态机的算法。在论文中，Lamport 也用 **Paxos Consensus Algorithm**、**Paxos Algorithm** 来分别称呼核心算法和完整算法。
 
 因行业多采用 Lampson 的命名，本文沿用这种惯例。不过为避免歧义，笔者将 Paxos 算法名称汇总，以供参考。
 

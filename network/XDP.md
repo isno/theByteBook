@@ -8,7 +8,7 @@
 
 ## 1. XDP 概述
 
-XDP（eXpress Data Path，快速数据路径）本质上是 Linux 内核网络模块中的一个 BPF Hook，能够动态挂载 eBPF 程序逻辑，使得 Linux 内核能够在数据报文到达 L2（网卡驱动层）时就对其进行针对性高速处理，无需再`循规蹈矩`地进入到内核网络协议栈。用虚拟化领域的完全虚拟化和半虚拟化概念类比，如果 DPDK 是”完全 Kernel bypass”，那么 AF_XDP 就是 “半 Kernel bypass”。
+XDP (eXpress Data Path，快速数据路径) 本质上是 Linux 内核网络模块中的一个 BPF Hook，能够动态挂载 eBPF 程序逻辑，使得 Linux 内核能够在数据报文到达 L2（网卡驱动层）时就对其进行针对性高速处理，无需再`循规蹈矩`地进入到内核网络协议栈。用虚拟化领域的完全虚拟化和半虚拟化概念类比，如果 DPDK 是”完全 Kernel bypass”，那么 AF_XDP 就是 “半 Kernel bypass”。
 
 更详细地说，AF_XDP 和 AF_INET 一样，也是 address family 的一种，AF_XDP 就相当于 socket 底层通讯方式的不同实现，AF_INET 可以用于 IPv4 类型地址的通讯，AF_XDP 则是一套基于 XDP 的通讯的实现。
 
