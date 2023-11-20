@@ -5,7 +5,6 @@
 故事让内容变得有趣，在容器技术变革的浪潮中，曾发生过一场”史诗大战“，业界称之为 ”容器编排之争（Container Orchestration Wars）“，在当时或许认为是偶然的事件，站在尘埃落地的今天看起来却又全是必然。我们回顾这段历史，从宏观角度去理解 Kubernetes 的诞生与演变的驱动力。
 
 
-
 IaaS 时代的虚拟机还是太过于笨重。每一台虚拟机都需要消耗CPU、内存等计算资源才能支撑应用的运行。即便应用再小，系统的开销都是固定的成本。如何为 IaaS 减肥，让虚拟机系统的开销降到最低？这个答案得云计算要发展到 PaaS 时代才能找到。
 
 2013 年开始，云计算正式进入了 PaaS 时代。在 PaaS 时代，云计算所销售的单元，从虚拟机变成了应用运行平台。云厂商提供的服务更多，资源利用率自然也更高。
@@ -32,23 +31,52 @@ Cloud Foundry 最核心的组件就是应用的打包和分发机制，这也是
 
 从这一刻开始，PaaS 的市场已经完全是 Docker 的天下。
 
-## Docker 降世
+## Google 入局
 
-每一波技术浪潮都会带来新的机会，科技的进步与商机是一对相辅相成的孪生兄弟。Docker 项目利用自己创新的 Docker Image 瞬间爆红，众多厂商也从中发现商机，纷纷推出自己的容器产品，想在市场中分一杯羹。CoreOS 推出了 Rocket（rkt）容器，Google 也开源了自己的容器项目 lmctfy（Let Me Container That For You）等。
+每一波技术浪潮都会带来新的机会，科技的进步与商机是一对相辅相成的孪生兄弟。Docker 项目利用自己创新的 Docker Image 瞬间爆红，众多厂商也从中发现商机，开始围绕容器编排做一些思考和布局，这其中就包括云计算概念的最早提出者 Google 公司。虽然 Google 公司名声显赫，有强大的技术实力和资金实力，但在当时提到云计算，人们首先想到的却是 AWS，Google 也一直想法设法扭转局面，随着 Docker 的成功，他们从大火的容器市场看到了新的机会。
 
-但是面对 Docker 项目的强势，就算是 Google 这种大佬也毫无招架之力。因此 Google 打算和 Docker 公司开展合作，关停自己的容器项目，并且和 Docker 公司一同维护开源的容器运行，但是 Docker 公司方面很强势的拒绝了这个明显会削弱自己地位的合作。
+Google 对容器并不算陌生，2007 年提交了 cgroup 到 Linux 内核，如今已经演变成容器运行时的基础。2008 年 PaaS 平台 GAE 就已经采用了 LXC，并且开发了一套进行容器编排和调度的内部工具，也就是 Kubernetes 的前身 -- Borg。
 
-此时 Docker 公司也意识到自己仅仅是云计算技术栈中的幕后英雄，只能当做平台最终部署应用的载体，单纯解决应用打包并没有价值，企业需要真正解决的是应用部署的问题。于是 Dcoker 公司迅速调整战略方向，再度向 PaaS 生态进军。
+Borg 是 Google 公司整个基础设施体系中的一部分，Google 也发布了多篇关于 Borg 的论文作为其理论支持。其上承载了比如 MapReduce、BigTable 等诸多业界的头部技术，Borg 项目当仁不让地位居整个基础设施技术栈的最底层。因此 Borg 系统一直以来都被誉为 Google 公司内部最强大的“秘密武器”，也是 Google 公司最不可能开源的项目，Kubernetes 项目从一开始就比较幸运地站上了一个他人难以企及的高度。
 
-凭借在容器引擎市场的巨大成功以及先天的 PaaS 基因，Docker 进入容器编排领域是手到擒来。2014 年 7 月，Docker 收购了 OrchardLabs，正式开始涉足容器编排领域。Orchard Labs 的容器编排工具 fig 当时很有名，这个 fig 就是 DockerCompose 的前身。
+凭借多年运行 GCP 和 Borg 的经验，使得 Google 非常认可容器技术，也深知目前 Docker 在规模化使用场景下的不足。如果 Google 率先做好这件事不仅能让自己在云计算市场扳回一局，而且也能抓住一些新的商业机会。比如，在 AWS 上运行的应用有可能自由地移植到 GCP 上运行，这对于 Google 的云计算业务无疑是有利的。
+
+为了使 Google 能够抓住这次机会，2013 年夏天，Kubernetes 联合创始人 Craig McLuckie、Joe Beda 和 Brendan Burns 开始讨论容器编排系统的开发，并决定采用开源的方式来开发这个系统
+
+Kubernetes 项目获批后，Google 在 2014 年 6 月的 DockerCon 大会上正式宣布将其开源，也标志着容器编排的竞赛正式拉开帷幕。
+
+## Docker Swarm 入场
+
+实际上，当时并不是只有 Google 看到了容器市场的机会。在 DockerCon 2014 大会上，有多家公司推出了自己的容器编排系统，我们今天所熟知的项目几乎有一半都是在这次大会上宣布发布或开源的。而 Google 的进场让竞争变得更加激烈。
+
+随着 DockerCon 2014 大会的落幕，Docker 公司也意识到自己仅仅是云计算技术栈中的幕后英雄，容器平台化能力才是致胜的关键，单纯解决应用打包并没有价值，只能当做平台最终部署应用的载体，企业真正需要解决的是应用部署问题。于是迅速调整了战略方向，再度向 PaaS 进军。
+
+凭借在容器引擎市场的巨大成功以及先天的 PaaS 基因，Docker 进入容器编排领域是手到擒来。2014 年 7 月，Docker 收购了 OrchardLabs，正式涉足容器编排领域。Orchard Labs 的容器编排工具 fig 当时很有名，而这个 fig 就是 DockerCompose 的前身。
 
 Docker Compose 虽然能编排多个容器，但是只能对单个服务器上的容器进行操作，而不能实现在多个机器上进行容器的创建和管理。于是 Docker 在 2014 年底又发布了 Swarm 项目，并且不断招兵买马，充实着自己的平台化能力。如果说 Docker Compose 和 Kubernetes 还不算正面竞争的话，那么 Docker Swarm 的发布，则是正式向 Kubernetes 宣战了。
 
+Docker Swarm 可以在多个服务器上创建容器集群服务，而且依然保持着 Docker 的友好命令风格，几个命令就可以完成多机集群部署。在容器规模较小的场景下，许多用户更喜欢使用 Docker Swarm，因为它平滑地内置于 Docker 平台中。如果 Docker Swarm 能成功，那 Docker 就将通吃容器市场，此时的 Docker 掌握着容器的绝对话语权。
 
 
-Kubernetes 是 Google 公司早在 2014 年就发布开源的一个容器基础设施编排框架，和其他拍脑袋想出来的技术不同，Kubernetes 的技术是有理论依据的，即 -- Borg。
+## Mesos 备受追捧
 
-Borg 是 Google 公司整个基础设施体系中的一部分，Google 也发布了多篇关于 Borg 的论文作为其理论支持。其上承载了比如 MapReduce、BigTable 等诸多业界的头部技术，Borg 项目当仁不让地位居整个基础设施技术栈的最底层。因此 Borg 系统一直以来都被誉为 Google 公司内部最强大的“秘密武器”，也是 Google 公司最不可能开源的项目，Kubernetes 项目从一开始就比较幸运地站上了一个他人难以企及的高度。
+Mesos 是当时容器编排市场上另一个主要玩家，在 DockerCon 2014 大会之前就已经有很多公司在使用了。Mesos 最初是加州伯克利大学 RAD 实验室 2009 年启动的一个学术研究项目，目标是创建下一代集群管理器，致力于提高集群的利用效率和性能。作为一个面向资源管理的项目，容器编排其实只是其中的一个名叫 Marathon 的功能模块。
+
+2010 年，Twitter 正值苦不堪言的时候，他们看到了 Mesos 这个项目，随后马上应用到了 Twitter，成为 Twitter 自定义 PaaS 的实现基础，管理着 Twitter 超过 30 万台服务器上的应用部署。Benjamin Hindman（Mesos 项目负责人）当时也加入了 Twitter，负责开发和部署 Mesos。Twitter 的这套基于 Mesos 的 PaaS 解决方案就是后来的 Apache Aurora。
+
+2013 年，Benjamin Hindman 离开 Twitter 成立了一个名为 Mesosphere 的公司，专注于打造生产级商业化 Mesos 平台，Mesosphere 正式成为 Mesos 背后的公司。在后期的 Mesos 开发、商业化运营、与 Kubernetes 的竞争中几乎都由 Mesosphere 在主导和支撑。Mesosphere 成立后就备受资本的追捧，自 2014 年 6 月至 2018 年 5 月共完成 A 到 D 轮四轮融资，金额分别为 1050 万美元、3600 万美元、7350 万美元和 1.25 亿美元，投资方包括 A16Z、Fuel Capital、微软等。Mesosphere 最高估值是 D 轮之后达到 7.75 亿美金。
+
+Mesos 在 2014 年成为首批支持 Docker 容器的容器编排框架之一。实际上，Mesos 并不关心谁会在它的基础上运行。Mesos 可以为 Java 应用服务器提供集群服务，也可以为 Docker 容器提供编排能力。当时，Mesos 的最大优势是它在运行关键任务时的成熟度，它比其他许多的容器技术更成熟、更可靠。
+
+Mesos 在 Twitter 的成功应用后，也吸引了全世界其他知名公司的采纳，比如 Airbnb、eBay 和 Netflix 等等，甚至 2015 年 Apple 的 Siri 就是运行在 Mesos 上，Mesos 也因此曾经火极一时。至于微软，他不仅投资了 Mesosphere，还让他的 Azure 平台率先支持了 Mesos。
+
+
+## Kubernetes 扭转局势
+
+面对激烈的竞争，Kubernetes 入局较晚，但后发优势明显。它是借鉴 Google 内部项目 Borg 运行多年的宝贵经验构建起来的，并非完全从 0 开始。
+
+与其他容器编排工具相比，Kubernetes 提供了更加全面和完整的解决方案，涵盖了应用部署、伸缩、负载均衡、存储管理、监控和日志管理等方面。此外，Kubernetes 还具有高度可扩展性和强大的自动化能力，使得它可以适应不同规模的部署场景，从单机到大规模分布式系统都可以轻松应对。
+
 
 <div  align="center">
 	<img src="../assets/borg.jpeg" width = "600"  align=center />
@@ -57,12 +85,31 @@ Borg 是 Google 公司整个基础设施体系中的一部分，Google 也发布
 
 面对 Kubernetes 的出现，一场 Docker 和 Kubernetes 之间的容器之战就此打响。
 
-在这场对抗之初，由于 Kubernetes 开发灵感和设计思想来源于 Borg，Kubernetes项 目在刚发布时就被称为曲高和寡。太过超前的思想让开发者无法理解，同时由于 Kubernetes 项目一直由 Google 的工程师自行维护，所以在发布之初并没有获得太多的关注和成长。
+在这场对抗之初，由于 Kubernetes 开发灵感和设计思想来源于 Borg，Kubernetes 项目在刚发布时就被称为曲高和寡。太过超前的思想让开发者无法理解，同时由于 Kubernetes 项目一直由 Google 的工程师自行维护，所以在发布之初并没有获得太多的关注和成长。
 
-然而，CNCF 的成立改变了这一切，RedHat 的长处就是有着成熟的社区管理体系，并且也有足够多的工程能力，这使得 Kubernetes 项目在交由社区维护开始迅速发展，并且逐渐开始和 Docker 分庭抗礼。并且和 Docker 的封闭商业模式不同，Kubernetes 反其道而行之主打开源和民主化，每一个重要功能都给用户提供了可定制化的接口，并且普通用户也可以无权限拉取修改 Kubernetes 的代码，社区有专门的 reviewer 以及 approver，只要你的 PR 通过了代码审核和批准，就会被合并到 Kubernetes 的主干，这也大大的增加了 Kubernetes 的活力。并且，依托于开放性接口，基于 Kubernetes 的开源项目和插件比比皆是，并且依托于优秀的架构设计，微服务等新兴的技术理念也迅速落地，最终形成了一个百花齐放的稳定庞大的生态。
+虽然 Kubernetes 受到广泛的关注，但也有不少人担心 Kubernetes 的开源策略。因为 Kubernetes 开源项目的实际控制权仍然是 Google。比如，项目参与者要签版权协议，仍然是 Google 的版权，而一些大公司并不愿意自己的员工签署这样的协议。为了让 Kubernetes 项目被更多组织接受，Google、红帽等企业在 2015 年 7 月共同发起成立了 CNCF（Cloud Native Computing Foundation）的基金会，希望以 Kubernetes 项目为基础，建立一个按照开源基金会方式运营的开源社区，来对抗以 Docker 公司为核心的容器商业生态。
 
-反观 Docker 只能通过自己的工程师修改，在这一点上与 Kubernetes 相比就与远落下风。
+RedHat 的长处就是有着成熟的社区管理体系，并且也有足够多的工程能力，这使得 Kubernetes 项目在交由社区维护开始迅速发展，并且逐渐开始和 Docker 分庭抗礼。并且和 Docker 的封闭商业模式不同，Kubernetes 反其道而行之主打开源和民主化，每一个重要功能都给用户提供了可定制化的接口，并且普通用户也可以无权限拉取修改 Kubernetes 的代码，社区有专门的 reviewer 以及 approver，只要你的 PR 通过了代码审核和批准，就会被合并到 Kubernetes 的主干，这也大大的增加了 Kubernetes 的活力。并且，依托于开放性接口，基于 Kubernetes 的开源项目和插件比比皆是，并且依托于优秀的架构设计，微服务等新兴的技术理念也迅速落地，最终形成了一个百花齐放的稳定庞大的生态。
 
-面对 Kubernetes 社区的崛起和壮大，Docker 公司不得不承认自己的豪赌以失败告终，从 2017 年开始，Docker 将 Docker 项目的容器运行时部分 Containerd 捐赠给了 CNCF 社区，并且在当年 10 月宣布将在自己的 Docker 企业版中内置 Kubernetes 项目，这也标志着持续了近两年的容器编排之战落下帷幕。
 
-2018年1月，RedHat 公司宣布斥资 2.5 亿美元收购 CoreOS，2018 年 3 月，这一切纷争的始作俑者 Docker 公司的 CTO Solomon Hykes 宣布辞职，至此，纷扰的容器技术圈尘埃落定，天下归一。
+Docker 为应对 Kubernetes 在容器商业生态方面的布局，决定背水一战。2015 年 6 月，Docker 与 CoreOS、Google、红帽等公司联合发起制定了一套容器和镜像的标准与规范 —— OCI（Open Container Initiative），Docker 还将自己容器运行时 Libcontainer 捐出，并改名为 RunC 项目，交由 Linux 基金会管理。
+
+OCI 标准意在将容器运行时和镜像的实现从 Docker 项目中完全剥离出来，这样做很显然对 Docker 不利。但从另一方面看，这对于 Docker 自身的发展也是有益的，因为它能够借助更加成熟和广泛的容器生态系统，为自己的 Swarm 等产品提供更加完整和丰富的支持，从而在生态方面能够与 Kubernetes 继续抗衡。
+
+可惜 Docker 这番操作不但没有改变现有局势，反倒让自己陷入到更加被动的局面。2016 年 12 月 CNCF 发布了 CRI（Container Runtime Interface，容器运行时接口），直接目的就是要支持 CoreOS 的容器运行时项目 rkt。当时为了支持 rkt 要写很多兼容的代码，为了避免后续兼容其他运行时带来的维护工作，所以发布了统一的 CRI 接口，以后凡是支持 CRI 的运行时，皆可直接作为 Kubernetes 的底层运行时。
+
+
+这样一来，相当于 Docker 曾经领先的容器技术被 OCI 剥离了运行时和镜像部分，而且其他运行时也都逐渐支持了 CRI，进一步增加了 RunC 的可替代性。Swarm 相较 Kubernetes 在容器编排层面的优势被削弱了，再加上 Swarm 项目自身的复杂度和封闭性，更进一步限制了其后来的发展。
+
+
+## Kubernetes 最终胜出
+
+经过设计理念、架构、标准、生态等多方面的较量之后，Docker 在与 Kubernetes 的竞争中逐渐落败。Mesos 因其侧重在传统的资源管理，导致它在应对多云和集群管理时面临很多挑战。后来的 Mesos 项目发展也并不好，其标杆客户 Twitter 最后也放弃了 Mesos 改用 Kubernetes。
+
+2017 年 10 月的 DockerCon 欧洲大会上，Docker 官方正式宣布支持 Kubernetes，决定将在自己的主打产品 Docker 企业版中内置 Kubernetes，并将 Docker 项目的容器运行时部分 Containerd 捐赠给了 CNCF 社区。
+
+2017 年 11 月 29 日，AWS 宣布了他们的 Kubernetes 弹性容器服务 (EKS)。在 Amazon 宣布之前，Mesosphere、Pivotal 和 Docker 也宣布了对 Kubernetes 的原生支持。
+
+2019 年 8 月 5 号，Mesosphere 宣布改名为 D2iQ，开启新的重生之旅。
+
+2019年11月，Mirantis 收购了 Docker 的企业部门，至此，纷扰的容器技术圈尘埃落定，天下归一。
