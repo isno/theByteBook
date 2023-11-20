@@ -193,29 +193,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第五章：分布式系统共识概论',
-                collapsable: true,
-                link: '/consensus/summary.md',
-                sidebarDepth: 2,
-                children: [
-                    '/consensus/consensus.md',
-                    '/consensus/The-Byzantine-General-Problem.md',
-                    {
-                        text: "5.3 共识算法 Paxos",
-                        link: '/consensus/Paxos.md',
-                        children: [
-                            '/consensus/Paxos-history.md',
-                            '/consensus/Paxos-define.md',
-                            '/consensus/Basic-Paxos.md',
-                            '/consensus/Multi-Paxos.md',
-                        ]
-                    },
-                    '/consensus/raft.md',
-                    '/consensus/conclusion.md',
-                ]
-            },
-            {
-                text: "第六章：分布式事务",
+                text: "第五章：分布式系统可用性",
                 link: '/distributed-system/distributed-transaction.md',
                 children: [
                     '/distributed-system/BASE.md',
@@ -237,7 +215,36 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第七章：容器技术概论',
+                text: '第六章：分布式系统共识',
+                collapsable: true,
+                link: '/consensus/summary.md',
+                sidebarDepth: 2,
+                children: [
+                    '/consensus/consensus.md',
+                    '/consensus/The-Byzantine-General-Problem.md',
+                    {
+                        text: "5.3 共识算法 Paxos",
+                        link: '/consensus/Paxos.md',
+                        children: [
+                            '/consensus/Paxos-history.md',
+                            '/consensus/Paxos-define.md',
+                            '/consensus/Basic-Paxos.md',
+                            '/consensus/Multi-Paxos.md',
+                        ]
+                    },
+                    '/consensus/raft.md',
+                    '/consensus/conclusion.md',
+                ]
+            },
+            {
+                text: "第七章：分布式事务",
+                link: '/distributed-transaction/summary.md',
+                children: [
+                   
+                ]
+            },
+            {
+                text: '第八章：容器技术概论',
                 link: '/container/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
