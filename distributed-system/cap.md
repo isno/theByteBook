@@ -1,6 +1,11 @@
-# 5.2 CAP 定理
+# 5.1 CAP 定理
 
-首先，CAP 是学术描述性的理论，它并不解决工程问题。在设计分布式系统架构中，通常基于 CAP 理论，并结合业务特点进行设计指导，通过适当取舍最大限度提升整体架构可用性。
+CAP 这个词最早出现在 Eric A.Brewer 1999 年发表的论文 “Harvest, Yield, and Scalable Tolerant Systems”，在这篇论文中 CAP 被称为 CAP 原则（CAP principle）。一年之后，在 2000 年的 PODC 大会上，Eric A.Brewer 演讲了名为“Towards robust distributed systems”的主题[^2]，在这个演进中 CAP 理论开始广泛流传。
+
+虽然 Eric A.Brewer 提出了 CAP，但仅是提出了一种假设，并没有证明 CAP 就是正确的。在 2002 年，Seth Gilbert 和 Nancy Lynch 联合发表了一篇论文，在这篇论文中证明了 CAP 的正确性，此后 CAP 真正成为一个定理，并开始深远地影响着分布式系统领域。
+
+
+
 
 CAP 是在 ACID 的一致性（Consistency，简写 C），BASE 的可用性（Availability，简写 A）两者基础上扩展出了一个新的维度：即分区容错性（Partition tolerance，简写 P），以此组成 CAP 定理。
 
@@ -26,3 +31,6 @@ CAP 的指导作用是在架构设计中，不要浪费精力去设计一个满�
 对于一个分布式系统而言，因为网络必然会出现异常情况，一旦发生分区错误，整个分布式系统就完全无法使用，分区容错性也就成了必然要面对和解决的问题，因此系统架构师往往需要把精力花在如何根据业务特点在 C(一致性)和 A（可用性）之间寻求平衡。
 
 而根据一致性和可用性的选择不同，开源的分布式系统往往又被分为 CP 系统和 AP 系统。例如 CP 系统 Zookeeper，任何时刻对 ZooKeeper 的访问请求保证能得到一致的数据结果，而另外的 AP 系统 Eureka，则保证 A，当分区发生故障时，保证可用性但无法保证数据一致性。
+
+
+[^2]: 参见 https://dl.acm.org/doi/10.1145/343477.343502

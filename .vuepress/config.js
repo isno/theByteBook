@@ -194,10 +194,11 @@ export default defineUserConfig({
             },
             {
                 text: "第五章：分布式系统可用性",
-                link: '/distributed-system/distributed-transaction.md',
+                link: '/distributed-system/summary.md',
                 children: [
+                    '/distributed-system/CAP.md',
                     '/distributed-system/BASE.md',
-                    '/distributed-system/cap.md',
+                    
                     '/distributed-system/idempotent.md',
                     {
                         text: "5.5 分布式事务协议与解决",
