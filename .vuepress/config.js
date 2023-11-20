@@ -198,7 +198,6 @@ export default defineUserConfig({
                 children: [
                     '/distributed-system/BASE.md',
                     '/distributed-system/cap.md',
-                    '/distributed-system/ACID.md',
                     '/distributed-system/idempotent.md',
                     {
                         text: "5.5 分布式事务协议与解决",
@@ -209,7 +208,6 @@ export default defineUserConfig({
                             '/distributed-system/XA.md',
                             '/distributed-system/TCC.md',
                             '/distributed-system/Saga.md',
-                            '/distributed-system/Seata.md'
                         ]
                     }
                 ]
@@ -240,7 +238,7 @@ export default defineUserConfig({
                 text: "第七章：分布式事务",
                 link: '/distributed-transaction/summary.md',
                 children: [
-                   
+                    '/distributed-transaction/ACID.md',
                 ]
             },
             {
