@@ -6,14 +6,14 @@
 
 <div  align="center">
 	<img src="../assets/quic-1.png" width = "660"  align=center />
-	<p>图2-18 协议耗时表现</p>
+	<p>图2-18 各网络质量下的协议耗时表现</p>
 </div>
 
 不过这次测试也发现了另外一个问题：综合来看网络请求成功率的对比， HTTP3 或 H3-29 的失败率更高。
 
 <div  align="center">
 	<img src="../assets/quic-3.png" width = "660"  align=center />
-	<p>图2-19 协议成功率表现</p>
+	<p>图2-19 各网络质量下的协议成功率表现</p>
 </div>
 
 最后总结，综合来看无论是在客户端还是服务端，QUIC 协议的集成并非一件易事，下面让我们来看看客户端和服务端在集成 QUIC 时需要考虑的问题：
