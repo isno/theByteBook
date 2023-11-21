@@ -6,7 +6,7 @@
 
 <div  align="center">
 	<img src="../assets/balancer-ha.svg" width = "600"  align=center />
-	<p>图4-4 负载均衡主备设计</p>
+	<p>图4-11 负载均衡主备设计</p>
 </div>
 
 主备方式的方案在现今的分布式系统中仍然有大量应用，但这种方式存在明显的缺陷。主备方式平稳状态下 50% 的容量是空闲的，备用服务器一直空转，**资源利用率不足**。其次，现代分布式系统设计**一直追求更高的容错性**。例如，理想情况下一个系统有多个实例同时挂掉仍能继续运行，而主备实例同时挂掉时，服务就彻底挂了。
@@ -15,7 +15,7 @@
 
 <div  align="center">
 	<img src="../assets/balancer-ha-2.svg" width = "650"  align=center />
-	<p>图4-4 负载均衡高可用设计</p>
+	<p>图4-12 负载均衡高可用设计</p>
 </div>
 
 - 多个边缘路由器以相同的 BGP 权重通告所有 Anycast VIP，通过 ECMP（Equal-cost, Multi-path routing）保证每个 flow 的所有包都会到达同一个边缘路由器。

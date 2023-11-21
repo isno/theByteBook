@@ -18,7 +18,7 @@ route add -host 1.1.1.1 dev lo  //  目标地址是 VIP 的数据包从本机 lo
 
 <div  align="center">
 	<img src="../assets/balancer4-dsr.svg" width = "550"  align=center />
-	<p>图4-2 链路层 DSA 模式负载均衡</p>
+	<p>图4-7 链路层 DSA 模式负载均衡</p>
 </div>
 
 设计 DSR 的主要原因是：在一些场景中，响应的流量要远远大于请求的流量（例如典型的 HTTP request/response 模式）。假设请求占 10% 的流量，响应占 90%，使用 DSR 技术，只需 1/10 的带宽就可以满足系统需求，这种类型的优化可以极大地节省成本，还提高了负载均衡器的可靠性（流量越低肯定越好）。
@@ -32,7 +32,7 @@ route add -host 1.1.1.1 dev lo  //  目标地址是 VIP 的数据包从本机 lo
 
 <div  align="center">
 	<img src="../assets/ip.svg" width = "350"  align=center />
-	<p>图4-2 ip 数据包结构</p>
+	<p>图4-8 ip 数据包结构</p>
 </div>
 
 在本文，我们无需太关注 Header 头部信息，只要知道 Header 内有源地址（Source address）和目的地地址（Destination address）即可。既然数据链层负载均衡可以通过改写 MAC 地址来实现数据包转发，到了网络层，我们也可以继续沿用改写 MAC 相似的思路修改网络层的 IP 数据包地址信息来实现数据转发。
@@ -47,7 +47,7 @@ LVS 的 Tunnel、NAT 模式都属于网络层负载均衡，只不过因为对 I
 
 <div  align="center">
 	<img src="../assets/balancer4-tunnel.svg" width = "550"  align=center />
-	<p>图4-2 tunnel 模式</p>
+	<p>图4-9 tunnel 模式</p>
 </div>
 
 IP 隧道模式相当于 DR 模式的升级（支持了跨网），不过由于使用隧道模式，所以要求真实服务器支持隧道协议，真实服务器只局限在部分 Linux 系统上（不过笔者也没见过四层负载均衡使用非 Linux 系统的案例）；其次，只要是三角模式（LVS 的 DR 模式或者 Tunnel 模式）必须要保证真实服务器与负载均衡服务器有相同的虚拟 IP 地址，因为回复客户端时，必须使用这个虚拟的 IP 作为数据包的源地址，这样客户端收到数据包之后才能正常解析；最后，因为真实服务器和客户端对接，所以真实服务器得能访问外网。
@@ -59,7 +59,7 @@ IP 数据包的另外一种改写方式是直接改变 IP 数据包的 Header �
 
 <div  align="center">
 	<img src="../assets/balancer4-NAT.svg" width = "550"  align=center />
-	<p>图4-2 NAT 模式负载均衡</p>
+	<p>图4-10 NAT 模式负载均衡</p>
 </div>
 
 这种类型中，TCP 连接在负载均衡器建立连接跟踪和网络地址转换（NAT）之后直接转发给选中的后端。例如，假设客户端正在和负载均衡器 1.1.1.1:80 通信，选中的后端是 10.0.0.2:8080。当客户端的 TCP 包到达负载均衡器时，负载均衡器会将包的目的 IP/port （从 1.1.1.1:80）换成 10.0.0.2:8080，以及将源 IP/port 换成负载均衡器自己的 IP/port。当应答包回来的时候，负载均衡器再做相反的转换。

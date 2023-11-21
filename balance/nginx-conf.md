@@ -12,6 +12,7 @@ Nginx 的主配置文件是 nginx.conf，这个配置文件一共由三部分组
 
 <div  align="center">
 	<img src="../assets/nginx-conf.png" width = "450"  align=center />
+    <p>图4-14 Nginx 配置</p>
 </div>
 
 配置文件支持大量可配置的指令，绝大多数指令不是特定属于某一个块的。
