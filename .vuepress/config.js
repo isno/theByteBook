@@ -198,7 +198,6 @@ export default defineUserConfig({
                 children: [
                     '/distributed-system/CAP.md',
                     '/distributed-system/BASE.md',
-                    
                     '/distributed-system/idempotent.md',
                     {
                         text: "5.5 分布式事务协议与解决",
@@ -206,7 +205,6 @@ export default defineUserConfig({
                         children: [
                             '/distributed-system/compensate.md',
                             '/distributed-system/2PC.md',
-                            '/distributed-system/TCC.md',
                             '/distributed-system/Saga.md',
                         ]
                     }
