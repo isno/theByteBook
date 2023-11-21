@@ -6,7 +6,6 @@ CAP 这个词最早出现在 Eric A.Brewer 1999 年发表的论文 “Harvest, Y
 
 
 
-
 CAP 是在 ACID 的一致性（Consistency，简写 C），BASE 的可用性（Availability，简写 A）两者基础上扩展出了一个新的维度：即分区容错性（Partition tolerance，简写 P），以此组成 CAP 定理。
 
 CAP 定理的核心思想是：一个分布式系统其一致性（C）、可用性（A）和分区容错性（P），最多只能同时满足其中两项。

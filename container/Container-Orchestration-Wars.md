@@ -83,7 +83,6 @@ OCI 标准意在将容器运行时和镜像的实现从 Docker 项目中完全�
 
 可惜 Docker 这番操作不但没有改变现有局势，反倒让自己陷入到更加被动的局面。2016 年 12 月 CNCF 发布了 CRI（Container Runtime Interface，容器运行时接口），直接目的就是要支持 CoreOS 的容器运行时项目 rkt。当时为了支持 rkt 要写很多兼容的代码，为了避免后续兼容其他运行时带来的维护工作，所以发布了统一的 CRI 接口，以后凡是支持 CRI 的运行时，皆可直接作为 Kubernetes 的底层运行时。
 
-
 这样一来，相当于 Docker 曾经领先的容器技术被 OCI 剥离了运行时和镜像部分，而且其他运行时也都逐渐支持了 CRI，进一步增加了 RunC 的可替代性。Swarm 相较 Kubernetes 在容器编排层面的优势被削弱了，再加上 Swarm 项目自身的复杂度和封闭性，更进一步限制了其后来的发展。
 
 ## 7. Kubernetes 最终胜出
@@ -94,6 +93,6 @@ OCI 标准意在将容器运行时和镜像的实现从 Docker 项目中完全�
 
 2017 年 11 月 29 日，AWS 宣布了他们的 Kubernetes 弹性容器服务 (EKS)。在 Amazon 宣布之前，Mesosphere、Pivotal 和 Docker 也宣布了对 Kubernetes 的原生支持。
 
-2019 年 8 月 5 号，Mesosphere 宣布改名为 D2iQ，开启新的重生之旅。
+2019 年 8 月 5 号，Mesosphere 宣布改名为 D2iQ，开启了围绕 Kubernetes 生命周期管理、混合云、多云的重生之旅。
 
-2019年11月，Mirantis 收购了 Docker 的企业部门，至此，纷扰的容器技术圈尘埃落定，天下归一。
+2019 年 11 月，Mirantis 收购了 Docker 的企业部门，至此，纷扰的容器技术圈尘埃落定，天下归一。
