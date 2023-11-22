@@ -42,7 +42,7 @@
 - IaaS（Infrastructure as a service，基础设施即服务）的出现：通过按时计费的方式租借服务器（**卖资源**），将资本支出转变为运营支出，这使得云计算得以大规模兴起和普及。
 - PaaS（Platform as a service，平台即服务）的出现：使开发者不必费心考虑操作系统和开发工具更新或者硬件维护，云服务提供商由 IaaS 阶段的卖资源进阶为**卖服务**。
 - 开源 IaaS 的出现：云计算开始进入**开源时代**。
-- 开源 PaaS 的出现：云计算开始推动容器技术兴起。
+- 开源 PaaS 的出现：**云计算开始推动容器技术兴起** （详见本书 [8.1 容器编排之战](/container/Container-Orchestration-Wars.md))。
 - FaaS（Function as a Service，功能即服务）的出现：通过 FaaS，物理硬件、虚拟机操作系统和 Web 服务器软件管理等等都由云服务提供商自动处理。无服务器（Serverless）的概念已经初现，开发者将无需再关注任何服务、资源等基础设施。
 
 
