@@ -253,6 +253,9 @@ export default defineUserConfig({
                         collapsable: false,
                         sidebarDepth: 1,
                         children: [
+                            '/container/network-namespace.md',
+                            '/container/linux-virtual-device.md',
+                            '/container/vxlan.md',
                         ]
                     },
                     {

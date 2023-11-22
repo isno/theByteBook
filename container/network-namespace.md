@@ -11,8 +11,6 @@ Network Namespace（后续简称 netns） 是 Linux 内核提供的用于实现�
 
 由于每个容器都有自己的网络服务, 在 Network namespace 的作用下，这就使得一个主机内运行两个同时监听 80 端口的 Nginx 服务成为可能（当然，外部访问还需宿主机 NAT）。
 
-## 1. Network namespace 操作实践
-
 Linux ip 工具的子命令 netns 集成了 Network namespace 的增删查改功能，我们使用 ip 命令进行操作实践，以便读者了解其过程。
 
 创建新的 Network namespace。
