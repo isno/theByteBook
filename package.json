@@ -9,7 +9,7 @@
     "build": "vuepress build ."
   },
   "devDependencies": {
-    "vuepress": "2.0.0-rc.0",
+    "vuepress": "2.0.0-rc.61",
     "vuepress-plugin-md-enhance": "^2.0.0-beta.237"
   }
 }
