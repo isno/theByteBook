@@ -193,7 +193,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: "第五章：分布式系统可用性",
+                text: "第五章：分布式系统概论",
                 link: '/distributed-system/summary.md',
                 children: [
                     '/distributed-system/eight-question.md',
@@ -201,9 +201,10 @@ export default defineUserConfig({
                     '/distributed-system/BASE.md',
                     '/distributed-system/idempotent.md',
                     {
-                        text: "5.5 分布式事务协议与解决",
+                        text: "5.5 分布式事务",
                         link: '/distributed-system/transaction.md',
                         children: [
+                            '/distributed-system/ACID.md',
                             '/distributed-system/compensate.md',
                             '/distributed-system/2PC.md',
                         ]
@@ -211,7 +212,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第六章：分布式系统共识',
+                text: '第六章：分布式系统共识算法',
                 collapsable: true,
                 link: '/consensus/summary.md',
                 sidebarDepth: 2,
@@ -233,14 +234,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: "第七章：分布式事务",
-                link: '/distributed-transaction/summary.md',
-                children: [
-                    '/distributed-transaction/ACID.md',
-                ]
-            },
-            {
-                text: '第八章：容器技术概论',
+                text: '第七章：容器技术概论',
                 link: '/container/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
