@@ -47,7 +47,7 @@ Other:		0
 Combined:	4
 ```
 
-可以看到硬件最多支持 6 个，当前使用了 4 个。将 RX/TX 队列数量都设为 8。
+可以看到硬件最多支持 8 个，当前使用了 4 个。将 RX/TX 队列数量都设为 8。
 ```plain
 $ ethtool -L eth0 combined 8
 ```
