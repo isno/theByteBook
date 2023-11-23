@@ -43,7 +43,7 @@ Consistency 中文叫做"一致性"。意思是写操作之后的读操作，必
 
 <div  align="center">
 	<img src="../assets/cap7.svg" width = "240"  align=center />
-	<img src="../assets/cap9.svg" width = "220"  align=center />
+	
 </div>
 
 问题是，用户有可能向 G2 发起读操作，由于 G2 的值没有发生变化，因此返回的是 v0。G1 和 G2 读操作的结果不一致，这就不满足一致性了。
