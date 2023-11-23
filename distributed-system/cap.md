@@ -1,4 +1,4 @@
-# 5.1 CAP 定理
+# 5.2 CAP 定理
 
 1999 年，Eric A.Brewer 发表的论文 “Harvest, Yield, and Scalable Tolerant Systems”[^1] 中，首次提出了 CAP 原理（CAP principle）。一年之后，Eric A.Brewer 又在 PODC 大会上演讲了名为“Towards robust distributed systems”的主题[^2]，会上又详细介绍了 CAP 原理，之后 CAP 的概念开始流传。
 
