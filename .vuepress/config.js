@@ -196,6 +196,7 @@ export default defineUserConfig({
                 text: "第五章：分布式系统可用性",
                 link: '/distributed-system/summary.md',
                 children: [
+                    '/distributed-system/eight-question.md',
                     '/distributed-system/CAP.md',
                     '/distributed-system/BASE.md',
                     '/distributed-system/idempotent.md',
