@@ -387,6 +387,18 @@ export default defineUserConfig({
                     '/MicroService/Istio.md'
                 ]
             },
+             {
+                text: '第十章：架构可观测性',
+                link: '/observability/summary.md',
+                collapsable: false,
+                sidebarDepth: 1,
+                children: [
+                    '/observability/history.md',
+                    '/observability/monitor-upgrade.md',
+                    '/observability/metrics.md',
+                    '/observability/tracing.md'
+                ]
+            },
             {
                 text: '第十章：GitOps 的落地与实施',
                 link: '/GitOps/summary.md',
@@ -421,17 +433,7 @@ export default defineUserConfig({
                     },
                 ]
             },
-            {
-                text: '第十一章：架构可观测性',
-                link: '/Observability/summary.md',
-                collapsable: false,
-                sidebarDepth: 1,
-                children: [
-                    '/Observability/monitor-upgrade.md',
-                    '/Observability/metrics.md',
-                    '/MicroService/tracing.md'
-                ]
-            },
+           
             {
                 text: '第十二章：FinOps云成本管理',
                 link: '/FinOps/summary.md',
