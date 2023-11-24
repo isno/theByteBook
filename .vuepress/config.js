@@ -197,6 +197,7 @@ export default defineUserConfig({
                 link: '/distributed-system/summary.md',
                 children: [
                     '/distributed-system/eight-question.md',
+                    '/distributed-system/ACID.md',
                     '/distributed-system/CAP.md',
                     '/distributed-system/BASE.md',
                     '/distributed-system/idempotent.md',
@@ -204,7 +205,8 @@ export default defineUserConfig({
                         text: "5.5 分布式事务",
                         link: '/distributed-system/transaction.md',
                         children: [
-                            '/distributed-system/ACID.md',
+                            '/distributed-system/TCC.md',
+                            '/distributed-system/Saga.md',
                             '/distributed-system/compensate.md',
                             '/distributed-system/2PC.md',
                         ]
