@@ -193,22 +193,20 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: "第五章：分布式系统概论",
+                text: "第五章：分布式事务",
                 link: '/distributed-system/summary.md',
                 children: [
-                    '/distributed-system/eight-question.md',
                     '/distributed-system/ACID.md',
-                    '/distributed-system/CAP.md',
-                    '/distributed-system/BASE.md',
-                    '/distributed-system/idempotent.md',
+                    '/distributed-system/CAP.md',       
                     {
-                        text: "5.5 分布式事务",
+                        text: "5.3 分布式事务的实现",
                         link: '/distributed-system/transaction.md',
                         children: [
+                            '/distributed-system/BASE.md',
                             '/distributed-system/TCC.md',
                             '/distributed-system/Saga.md',
+                            '/distributed-system/idempotent.md',
                             '/distributed-system/compensate.md',
-                            '/distributed-system/2PC.md',
                         ]
                     }
                 ]
