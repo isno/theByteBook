@@ -212,7 +212,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第六章：分布式系统共识算法',
+                text: '第六章：分布式共识',
                 collapsable: true,
                 link: '/consensus/summary.md',
                 sidebarDepth: 2,
