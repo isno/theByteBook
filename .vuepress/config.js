@@ -207,8 +207,8 @@ export default defineUserConfig({
                             '/distributed-system/Saga.md',
                             '/distributed-system/idempotent.md',
                         ]
-                    }
-                   
+                    },
+                    '/distributed-system/conclusion.md'
                 ]
             },
             {
@@ -220,7 +220,7 @@ export default defineUserConfig({
                     '/consensus/consensus.md',
                     '/consensus/The-Byzantine-General-Problem.md',
                     {
-                        text: "5.3 共识算法 Paxos",
+                        text: "5.3 Paxos 算法",
                         link: '/consensus/Paxos.md',
                         children: [
                             '/consensus/Paxos-history.md',
