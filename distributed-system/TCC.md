@@ -1,4 +1,4 @@
-# 5.3.4 TCC
+# 5.3.2 TCC
 
 2007 年，数据库专家 Pat Helland 发表了一篇名为 “Life beyond Distributed Transactions:an Apostate’s Opinion” 的论文[^1]，提出了 TCC（Try-Confirm-Cancel）的概念，不过该论文中 TCC 还是以 Tentative-Confirmation-Cancellation 作为名称。在国内经历阿里程立博士的传道之后，TCC 逐渐被大家广为了解并接受。
 
