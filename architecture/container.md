@@ -26,7 +26,7 @@ chroot 被认为是最早的容器化技术之一，chroot 可以重定向进程
 
 2013 年之前，云计算行业一直在为云原生发展方向而探索。2008 年 Google 推出 GAE（Google App Engine），GAE 基于 LXC 技术，属于早期 PaaS 平台的探索，但是这些早期探索技术并没有形成大的行业趋势，局限在一些的特定的领域。直到 Docker 的出现，大家才如梦方醒，原来不是方向不对，而是应用分发和交付的手段不行。
 
-再来看 Docker 的核心创新“容器镜像（container image)”：
+再来看 Docker 的核心创新“容器镜像（container image）”：
 
 - 容器镜像打包了整个容器运行依赖的环境，以避免依赖运行容器的服务器的操作系统，从而实现“build once，run anywhere”。
 - 容器镜像一但构建完成，就变成 read only，成为不可变基础设施的一份子。
