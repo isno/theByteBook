@@ -220,7 +220,7 @@ export default defineUserConfig({
                     '/consensus/consensus.md',
                     '/consensus/The-Byzantine-General-Problem.md',
                     {
-                        text: "5.3 Paxos 算法",
+                        text: "6.3 Paxos 算法",
                         link: '/consensus/Paxos.md',
                         children: [
                             '/consensus/Paxos-history.md',

@@ -1,4 +1,4 @@
-# 5.1 分布式的核心：共识
+# 6.1 认识共识
 
 受翻译影响，网上很多讨论 paxos 或 raft 的内容多使用“分布式一致性协议”或者“分布式一致性算法”这样的描述字眼。例如，Mike Burrows 对 Paxos 的评价原话是 “There is only one consensus protocol...”，很多文章翻译成 “世界上只有一种一致性算法...” 。
 

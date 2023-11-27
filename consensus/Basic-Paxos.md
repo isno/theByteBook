@@ -1,6 +1,4 @@
-# 5.3.3 Basic Paxos
-
-## 1. 问题背景
+# 6.3.3 Basic Paxos
 
 :::tip 背景设定
 
@@ -88,9 +86,7 @@ Once a value has been chosen, future proposals must propose the same value.
 如图 S~3~ 应该拒绝 S~1~ 的提案，这样就可以保证 S~5~ 的提案成功，S~1~的提案因为冲突而失败。这种方式我们需要对提案进行排序，有了排序，决策节点就可以拒绝老的提议。如果你熟悉分布式系统，应该能想到 "Time, Clocks and the Ordering of Events in a Distributed System"[^1] 这篇论文，我们不能简单用时间来判断提案的先后顺序。
 
 
-
-
-## 2. Basic Paxos 算法描述
+## 1. Basic Paxos 算法描述
 
 现在我们终于可以开始描述 Paxos 算法了。
 
@@ -117,7 +113,7 @@ Basic Paxos 对于此问题的解决方案是，定义一个 Proposal Number 来
 	<p></p>
 </div>
 
-## 3. Basic Paxos 验证
+## 2. Basic Paxos 验证
 
 那这样的一个二阶段提交，看看能不能解决前面的问题。假设一个分布式系统中有五个节点，分别是 S~1~、S~2~、S~3~、S~4~、S~5~，这5个节点同时扮演着提案节点和决策节点的角色。此时，有两个并发请求希望将同一个值分别设定为 X（由 S~3~ 作为提案节点提出） 和 Y（由 S~5~ 作为提案节点提出），以 P 代表准备阶段，以 A 代表批准阶段，这时会发生以下几种情况。
 
