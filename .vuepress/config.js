@@ -206,9 +206,9 @@ export default defineUserConfig({
                             '/distributed-system/TCC.md',
                             '/distributed-system/Saga.md',
                             '/distributed-system/idempotent.md',
-                            '/distributed-system/compensate.md',
                         ]
                     }
+                   
                 ]
             },
             {
