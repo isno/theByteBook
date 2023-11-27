@@ -229,7 +229,16 @@ export default defineUserConfig({
                             '/consensus/Multi-Paxos.md',
                         ]
                     },
-                    '/consensus/Raft.md',
+                    {
+                        text: "6.4 Raft 算法",
+                        link: '/consensus/Raft.md',
+                        children: [
+                            '/consensus/raft-leader-election.md',
+                            '/consensus/raft-log-replication.md',
+                            '/consensus/raft-safety.md',
+                        ]
+                    },
+                    
                     '/consensus/conclusion.md',
                 ]
             },
