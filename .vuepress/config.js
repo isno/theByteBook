@@ -229,7 +229,7 @@ export default defineUserConfig({
                             '/consensus/Multi-Paxos.md',
                         ]
                     },
-                    '/consensus/raft.md',
+                    '/consensus/Raft.md',
                     '/consensus/conclusion.md',
                 ]
             },
