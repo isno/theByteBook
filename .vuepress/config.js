@@ -238,7 +238,6 @@ export default defineUserConfig({
                             '/consensus/raft-safety.md',
                         ]
                     },
-                    
                     '/consensus/conclusion.md',
                 ]
             },
