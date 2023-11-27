@@ -15,7 +15,7 @@
 - 敏捷（Agility）：快速响应市场需求。
 - 成本（Cost）：充分有效的利用资源。
 
-这 4 个核心目标之间，存在彼此冲突的情况，如图-14 所示。
+这 4 个核心目标之间，存在彼此冲突的情况，如图1-14 所示。
 
 <div  align="center">
 	<img src="../assets/cloud-native-goals-2.png" width = "520"  align=center />
