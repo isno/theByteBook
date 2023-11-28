@@ -286,7 +286,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '7.5 容器运行时',
+                        text: '7.5 从容器运行时到 CRI',
                         link: '/container/runtime.md',
                         collapsable: false,
                         sidebarDepth: 1,
@@ -377,7 +377,6 @@ export default defineUserConfig({
                             '/kubernetes/controller-manager-scheduler.md',
                             '/kubernetes/etcd-ha.md'                        ]
                     },
-
                 ]
             },
             {
@@ -394,7 +393,7 @@ export default defineUserConfig({
                 ]
             },
              {
-                text: '第十章：架构可观测性',
+                text: '第十章：系统可观测性建设',
                 link: '/observability/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
