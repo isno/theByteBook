@@ -257,9 +257,17 @@ export default defineUserConfig({
                         collapsable: false,
                         sidebarDepth: 1,
                         children: [
-                            '/container/network-namespace.md',
-                            '/container/linux-virtual-device.md',
-                            '/container/vxlan.md',
+                            {
+                                text: '7.3.1 Linux 网络虚拟化',
+                                link: '/container/linux-vnet.md',
+                                collapsable: false,
+                                sidebarDepth: 1,
+                                children: [
+                                    '/container/network-namespace.md',
+                                    '/container/linux-virtual-device.md',
+                                    '/container/vxlan.md'
+                                ]
+                            },
                         ]
                     },
                     {
@@ -268,7 +276,6 @@ export default defineUserConfig({
                         collapsable: false,
                         sidebarDepth: 1,
                         children: [
-                            '/container/namespace.md',
                             '/container/cgroups.md',
                             '/container/unionfs.md'
                         ]

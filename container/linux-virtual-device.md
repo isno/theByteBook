@@ -1,4 +1,4 @@
-# 7.3.2 Linux 虚拟设备
+# Linux 虚拟设备
 
 Linux 内核支持网络命名空间的同时，也提供了专门的虚拟以太网 Veth（Virtual Ethernet），用来让两个隔离的 Network Namespace 可以互相通信。veth 总是成对出现，因此也常被称作 veth pair（虚拟网卡对）。简单理解 Veth 就是一根带两个 Ethernet 网卡的`网线`，从一头发数据，另一头收数据，如果 veth-1 和 veth-2 是一对 veth 设备，veth-1 发送的数据会由 veth-2 收到，反之亦然。
 
