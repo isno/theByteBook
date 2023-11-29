@@ -250,7 +250,16 @@ export default defineUserConfig({
                     '/container/Container-Orchestration-Wars.md',
                     '/container/orchestration.md',
                     '/container/application-centric.md',
-                    '/container/image.md',
+                    {
+                        text: '7.4 容器运行时',
+                        link:'/container/runtime.md',
+                        collapsable: false,
+                        sidebarDepth: 1,
+                        children: [
+                            '/container/CRI-in-Kubernetes.md',
+                            '/container/kata-containers.md',
+                        ]
+                    },
                     {
                         text: '7.3 容器间网络',
                         link: '/container/network.md',
@@ -271,18 +280,6 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '7.2 容器技术的核心原理',
-                        link: '/container/principle.md',
-                        collapsable: false,
-                        sidebarDepth: 1,
-                        children: [
-                            '/container/cgroups.md',
-                            '/container/unionfs.md'
-                        ]
-                    },
-
-                    '/container/OCI.md',
-                    {
                         text: '7.4 容器镜像',
                         link: '/container/image.md',
                         collapsable: false,
@@ -290,17 +287,6 @@ export default defineUserConfig({
                         children: [
                             '/container/image-build.md',
                             '/container/Nydus-image.md',
-                        ]
-                    },
-                    {
-                        text: '7.5 从容器运行时到 CRI',
-                        link: '/container/runtime.md',
-                        collapsable: false,
-                        sidebarDepth: 1,
-                        children: [
-                            '/container/low-level-runtime.md',
-                            '/container/high-level-runtime.md',
-                            '/container/kata-containers.md',
                         ]
                     },
                     {
@@ -313,18 +299,6 @@ export default defineUserConfig({
                             '/container/dragonfly.md'
                         ]
                     },
-                    {
-                        text: '7.7 容器与kubernetes',
-                        link: '/container/container-in-kubernetes.md',
-                        collapsable: false,
-                        sidebarDepth: 1,
-                        children: [
-                            '/container/CRI-in-Kubernetes.md',
-                            '/container/Docker-Kubernetes.md',
-                            '/container/RuntimeClass.md'
-                        ]
-                    },
-                    
                 ]
             },
             {

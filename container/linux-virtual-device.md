@@ -7,14 +7,15 @@ Linux 内核支持网络命名空间的同时，也提供了专门的虚拟以�
 	<p>图 2-22</p>
 </div>
 
-因为 veth 这个特性，它常常充当着一个桥梁，连接着宿主机内的虚拟网络，典型的例子像两个 Network namespace 之间的连接、Bridge 和 OVS （Open vSwitch）之间的连接等，通过这种方式，从而构建出复杂的虚拟网络拓扑架构。我们在 Kubernetes 集群中的宿主机总能看到一堆 veth 开头的网卡设备信息，这些就是为不同 Pod 之间通信而创建的虚拟网卡。
+因为 veth 这个特性，它常常充当着一个桥梁，连接着宿主机内的虚拟网络，典型的例子像两个 Network namespace 之间的连接、Bridge 和 OVS （Open vSwitch）之间的连接等，通过这种方式，从而构建出复杂的虚拟网络拓扑架构。
 
 <div  align="center">
 	<img src="../assets/cni0.svg" width = "550"  align=center />
 	<p>图 2-23</p>
 </div>
 
-在 Kubernetes 宿主机中查看网卡设备。
+我们在 Kubernetes 集群中的宿主机总能看到一堆 veth 开头的网卡设备信息，这些就是为不同 Pod 之间通信而创建的虚拟网卡，在 Kubernetes 宿主机中查看网卡设备。
+
 ```plain
 $ ip addr
 7: veth9c0be5b3@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue master cni0 state UP group default 

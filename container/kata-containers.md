@@ -1,4 +1,4 @@
-# 7.5.3 安全容器运行时：Kata Containers 
+# 7.5.3 安全容器运行时
 
 尽管容器有许多技术优势，然而传统以 runc 为代表基于共享内核技术进行的软隔离还是存在一定的风险性。如果某个恶意程序利用系统缺陷从容器中逃逸，就会对宿主机造成严重威胁，尤其是公有云环境，安全威胁很可能会波及到其他用户的数据和业务。
 
@@ -20,8 +20,6 @@ Kata Containers 的特点包括：
 	<img src="../assets/kata-container.jpeg" width = "550"  align=center />
 </div>
 
-
-## 1. Kata Containers in  Kubernetes
 
 Kata Containers  运行符合 OCI 规范，同时兼容 Kubernetes CRI （虚拟机级别的 Pod 实现）。为了高效地和 Kubernetes CRI 集成，现在的 Kata-Container 为了缩短容器的调用链直接将 containerd-shim 和 kata-shim 以及 kata-proxy 融合到一起。
 

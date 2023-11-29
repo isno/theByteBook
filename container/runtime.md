@@ -1,24 +1,3 @@
-# 7.5 容器运行时
+# 7.4 容器运行时
 
-容器运行时（container runtime），对于 runtime 理解是：“为了运行特定语言而提供的特定实现和设计”。 具体到容器运行时的理解，通俗地讲就是：容器从拉取镜像创建、启动、运行管理、销毁的一个完整生命周期。
-
-以 Docker 为例，作为一个整体容器运行时实现，主要提供的功能如下：
-
-- 制定容器镜像格式
-- 构建容器镜像
-- 运行容器
-- ...
-
-## 1. 容器运行时分类
-
-目前较为流行说法根据不同的功能实现将容器运行时分成了低层运行时（low-level）和高层运行时（high-level）两类。
-
-通常只关注如 Namespace、Cgroups、镜像拆包等基础的容器运行时实现被称为**低层运行时**（low-level container  runtime）。而支持更多高级功能（如镜像管理和 CRI 实现）的运行时通常称为**高层运行时**（high-level container runtime）。
-
-而特殊的 Docker 容器引擎，可以说是 high-high-level container runtime 。
-
-两类运行时按照各自的分工，共同协作完成容器整个生命周期的管理工作。
-
-<div  align="center">
-	<img src="../assets/container-runtime-relative.png" width = "280"  align=center />
-</div>
+容器本质上就是一个特殊的进程，通过 namespace 实现资源（网络、文件系统等）隔离，通过 cgroups 实现资源（CPU、内存）限制。要把进程运行在容器中，还需要有便捷的 SDK 或命令来调用 Linux 的系统功能，从而创建出容器。在程序中有个 runtime 的概念，代码范畴的runtime 指的是为了运行特定语言而提供的特定实现和设计，而到容器中涉及拉取镜像创建、启动、运行、销毁等范畴的生命周期管理，这便是 container runtime（容器运行时）。
