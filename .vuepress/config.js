@@ -344,9 +344,7 @@ export default defineUserConfig({
                         collapsable: false,
                         sidebarDepth: 1,
                         children: [
-                            '/kubernetes/CNI.md',
-                            '/kubernetes/CRI.md',
-                        ]
+                            '/kubernetes/CNI.md',                        ]
                     },
                     {
                         text: '生产级 Kubernetes 高可用部署方案',
