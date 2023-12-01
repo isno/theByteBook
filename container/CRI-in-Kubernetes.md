@@ -64,7 +64,7 @@ CRI 实现上是一套通过 Protocol Buffer 定义的 API，如下图：
 2017 年，由 Google、RedHat、Intel、SUSE、IBM 联合发起的 CRI-O（Container Runtime Interface Orchestrator）项目发布了首个正式版本。从名字就可以看出，它非常纯粹, 就是兼容 CRI 和 OCI, 做一个 Kubernetes 专用的轻量运行时。
 
 <div  align="center">
-	<img src="../assets/k8s-cri-o.png" width = "480"  align=center />
+	<img src="../assets/k8s-cri-o.png" width = "440"  align=center />
 </div>
 
 虽然 CRI-O 摆出了直接挖掉 Docker 根基手段，但此时 Docker 在容器引擎中的市场份额仍然占有绝对优势，对于普通用户来说，如果没有明确的收益，并没有什么动力要把 Docker 换成别的引擎。不过我们也能够想像此时 Docker 心中肯定充斥了难以言喻的危机感。
@@ -75,7 +75,7 @@ CRI 实现上是一套通过 Protocol Buffer 定义的 API，如下图：
 由于 Docker 的“固执己见”且 Docker 是当时容器技术主流存在，Kuberentes 虽然提出了 CRI 接口规范，仍然需要去适配 CRI 与 Docker 的对接，因此它需要一个中间层或 shim（垫片）来对接 Kubelet 和 Docker 运行时实现。这时 Kubernetes 里就出现了两种调用链：第一种是用 CRI 接口调用 dockershim，然后 dockershim 调用 Docker，Docker 再走 containerd 去操作容器。第二种是用 CRI 接口直接调用 containerd 去操作容器。
 
 <div  align="center">
-	<img src="../assets/k8s-runtime-v2.png" width = "600"  align=center />
+	<img src="../assets/k8s-runtime-v2.png" width = "500"  align=center />
 </div>
 
 在这个阶段 **Kubelet 的代码和 dockershim 都是放在一个 Repo**。这也就意味着 Dockershim 是由 Kubernetes 进行组织开发和维护！由于 Docker 的版本发布 Kubernetes 无法控制和管理，所以每次 Docker 发布新的 Release，Kubernetes 都要集中精力去快速地更新维护 Dockershim。同时如果 Docker 仅作为 runtime 实现也过于庞大，Kubernetes 弃用 Dockershim 有了足够的理由和动力。
@@ -85,10 +85,10 @@ Kubernetes 在 v1.24 版本正式删除和弃用 dockershim。这件事情的本
 
 2018 年，由 Docker 捐献给 CNCF 的 containerd，在 CNCF 的精心孵化下发布了 1.1 版，1.1 版与 1.0 版的最大区别是此时它已完美地支持了 CRI 标准，这意味着原本用作 CRI 适配器的 cri-containerd 从此不再需要。
 <div  align="center">
-	<img src="../assets/k8s-runtime-v3.png" width = "550"  align=center />
+	<img src="../assets/k8s-runtime-v3.png" width = "500"  align=center />
 </div>
 
-此时，再观察 Kubernetes 到容器运行时的调用链，你会发现调用步骤会比通过 DockerShim、Docker Engine 与 containerd 交互的步骤要减少两步，这又意味着用户只要愿意抛弃掉 Docker 情怀的话，在容器编排上便可至少省略一次 HTTP 调用，获得性能上的收益。
+Kubernetes 从 1.10 版本宣布开始支持 containerd 1.1，在调用链中已经能够完全抹去 Docker Engine 的存在。此时，再观察 Kubernetes 到容器运行时的调用链，你会发现调用步骤会比通过 DockerShim、Docker Engine 与 containerd 交互的步骤要减少两步，这又意味着用户只要愿意抛弃掉 Docker 情怀的话，在容器编排上便可至少省略一次 HTTP 调用，获得性能上的收益。
 
 从 Kubernetes 角度看，选择 containerd 作为运行时的组件，它调用链更短，组件更少，更稳定，占用节点资源更少，根据 Kubernetes 官方给出的测试数据[^1]，containerd1.1 相比当时的 Docker 18.03，Pod 的启动延迟降低了大约 20%，CPU 使用率降低了 68%，内存使用率降低了 12%，这是一个相当大的性能改善，对于云厂商非常有诱惑力。
 
