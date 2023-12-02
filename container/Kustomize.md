@@ -10,8 +10,6 @@ Kustomize 使用 Kustomization 文件来组织与应用相关的所有资源，K
 
 Kustomize 的价值在于根据环境来生成不同的部署配置，只要建立多个 Kustomization 文件，开发人员就能基于基准派生的方式，对应用不同模式（开发、测试），不同的项目（客制）定制出不同的资源整合包。
 
-
-
 ```plain
 ~/someApp
 ├── base
@@ -28,7 +26,7 @@ Kustomize 的价值在于根据环境来生成不同的部署配置，只要建�
         ├── kustomization.yaml
         └── replica_count.yaml
 ```
-从上面的目录结构中，可以可以观察到一个由 Kustomize 管理的应用结构，它主要由 base 和 overlays 组成。
+从上面的目录结构中，可以观察到一个由 Kustomize 管理的应用结构，它主要由 base 和 overlays 组成。
 
 ```plain
 kustomize build ~/someApp/overlays/production
@@ -37,8 +35,8 @@ kustomize build ~/someApp/overlays/production
 从效果上看，使用 Kustomize 编译生成的 All-in-One 整合包来部署应用相当方便，只要执行一行命令，就能够把应用所涉及的所有服务一次性安装好。
 
 
-Kustomize 毕竟只是一个`小工具`性质的辅助功能， 对于开发人员而言，使用 Kustomize 只能简化应用针对不同情况的重复配置，它其实并没有做到真正解决应用管理复杂的问题。
+Kustomize 毕竟只是一个`小工具`性质的辅助功能，对于开发人员而言，使用 Kustomize 只能简化应用针对不同情况的重复配置，它其实并没有做到真正解决应用管理复杂的问题。对于运维人员而言，应用的维护不仅仅只是部署，应用的整个生命周期除了部署还有更新、回滚、卸载、多版本、多实例、依赖维护等诸多工作。
 
-对于运维人员而言，应用的维护不仅仅只是部署，应用的整个生命周期除了部署还有更新、回滚、卸载、多版本、多实例、依赖维护等诸多工作。所以，要想解决这些问题，还需要更加强大的工具，这就是下面要介绍的 Helm。
+所以，要想解决以上问题，还需要更加强大的工具，这就是下面要介绍的 Helm。
 
 
