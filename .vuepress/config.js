@@ -248,8 +248,16 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/container/Container-Orchestration-Wars.md',
-                    '/container/orchestration.md',
-                    '/container/application-centric.md',
+                    '/container/orchestration.md',                    
+                    {
+                        text: '7.3 以应用为中心进行封装',
+                        link:'/container/application-centric.md',
+                        collapsable: false,
+                        sidebarDepth: 1,
+                        children: [
+                           '/container/Kustomize.md',
+                        ]
+                    },
                     {
                         text: '7.4 容器运行时',
                         link:'/container/runtime.md',
