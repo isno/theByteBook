@@ -236,6 +236,7 @@ export default defineUserConfig({
                             '/consensus/raft-leader-election.md',
                             '/consensus/raft-log-replication.md',
                             '/consensus/raft-safety.md',
+                            '/consensus/raft-ConfChange.md',
                         ]
                     },
                     '/consensus/conclusion.md',
