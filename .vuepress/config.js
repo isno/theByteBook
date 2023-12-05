@@ -287,6 +287,7 @@ export default defineUserConfig({
                             },
                         ]
                     },
+                    '/container/resource-limit.md',
                     {
                         text: '7.4 容器镜像',
                         link: '/container/image.md',
@@ -309,13 +310,13 @@ export default defineUserConfig({
                     },
                 ]
             },
+            /*
             {
                 text: '第八章：容器编排系统 Kubernetes',
                 link: '/kubernetes/index.md',
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
-                    '/kubernetes/declarative-api.md',
                     '/kubernetes/namespace.md',
                     '/kubernetes/component.md',
                     {
@@ -337,15 +338,10 @@ export default defineUserConfig({
                         collapsable: false,
                         sidebarDepth: 1,
                         children: [
-                            '/kubernetes/virtual.md',
-                            '/kubernetes/requests-limits.md',
-                            '/kubernetes/Qos.md',
                         ]
                     },
                     '/kubernetes/AutoScaling.md',
                     '/kubernetes/CRD-Operator.md',
-
-                    '/kubernetes/monitor.md',
                     {
                         text: 'Kubernetes 进阶',
                         link: '/kubernetes/AutoScaling.md',
@@ -365,9 +361,9 @@ export default defineUserConfig({
                             '/kubernetes/etcd-ha.md'                        ]
                     },
                 ]
-            },
+            },*/
             {
-                text: '第九章：服务治理变革 ServiceMesh',
+                text: '第八章：服务治理变革 ServiceMesh',
                 collapsable: false,
                 sidebarDepth: 1,
                 link: '/ServiceMesh/summary.md',
@@ -380,7 +376,7 @@ export default defineUserConfig({
                 ]
             },
              {
-                text: '第十章：系统可观测性建设',
+                text: '第九章：系统可观测性建设',
                 link: '/observability/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
