@@ -388,7 +388,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第十章：GitOps 的落地与实施',
+                text: '第十章：GitOps 的落地实践',
                 link: '/GitOps/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
@@ -422,7 +422,7 @@ export default defineUserConfig({
             },
            
             {
-                text: '第十二章：FinOps云成本管理',
+                text: '第十一章：FinOps云成本管理',
                 link: '/FinOps/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
