@@ -47,7 +47,7 @@ chroot 被认为是最早的容器化技术之一，chroot 可以重定向进程
 
 当容器技术的前景显现后，众多公司纷纷投入该领域进行探索。Docker 推出不久之后，CoreOS 就推出了自己的容器引擎 Rocket（简称 rkt），试图与 Docker 分庭抗礼，相互竞争的结果就是大家坐下来谈接口标准，避免出现“碎片化”的容器技术。
 
-2015 年 6 月，Docker 带头成立 OCI（Open Container Initiative，开放容器标准），OCI 组织着力解决容器的构建、分发和运行问题，其宗旨是制定并维护容器镜像格式和容器运行时的正式规范（OCI Specifications）。
+2015 年 6 月，Linux 基金会联合 Docker 带头成立 OCI（Open Container Initiative，开放容器标准），OCI 组织着力解决容器的构建、分发和运行问题，其宗旨是制定并维护容器镜像格式和容器运行时的正式规范（OCI Specifications）。
 
 OCI 其核心产出是：
 
@@ -74,7 +74,7 @@ OCI 项目启动后，为了符合 OCI 标准，Docker 推动自身的架构持�
 
 尽管早在 2013 年，Pivotal 就提出了“云原生”的概念，但是要实现服务化、具备韧性（Resilience）、弹性（Elasticity）、可观测性（Observability）的软件系统依旧十分困难，在当时基本只能依靠架构师和程序员高超的个人能力，云计算本身还帮不上什么忙。直到 Kubernetes 横空出世，大家才终于等到了破局的希望，**认准了这就是云原生时代的操作系统，是让复杂软件在云计算下获得韧性、弹性、可观测性的最佳路径，也是为厂商们推动云计算时代加速到来的关键引擎之一**。
 
-Kubernetes 发布之后，作为回应，Docker 公司在 2015 年发布的 Docker 1.12 版本中也加入了一个容器集群管理系统 Docker swarm，力图构建完善的容器编排系统，和 Kubernetes 展开正面竞争，随后市场上又出现了 Apache Mesos，容器编排系统开始出现 Kubernetes、Docker Swarm 和 Apache Mesos 三国并立。
+Kubernetes 发布之后，作为回应，Docker 公司在 2015 年发布的 Docker 1.12 版本中也加入了一个容器集群管理系统 Docker swarm，力图构建完善的容器编排系统和 Kubernetes 展开正面竞争，随后市场上又出现了 Apache Mesos，容器编排系统开始出现 Kubernetes、Docker Swarm 和 Apache Mesos 三国并立。
 
 与 Docker Swarm 和 Mesos 等容器编排框架相比，虽然 Kubernetes 出道晚，但后发优势明显，Kubernetes 脱胎于已经在 Google 内部运行了多年的 Borg 项目，但并没有直接延用 Borg，而是在这些宝贵经验的基础上从零开始设计，使得其能采用最先进的设计理念而没有任何历史包袱。Kubernetes 设计了一套稳定可扩展的 API 接口、预置服务发现、容器网络、及可扩展等关键特性，其概念抽象非常符合理想的分布式调度系统。
 
