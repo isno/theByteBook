@@ -24,7 +24,7 @@ Cloud Foundry 最核心的组件就是应用的打包和分发机制，这也是
 
 滑稽的是，在 Docker 刚开源的时候，Cloud Foundry 的产品经理 James Bayer 就在社区做了一次详细的对比，告诉用户 Docker 和 Cloud Foundry 一样，都是使用了 Namespace 和 Cgroups 技术的沙箱而已，无需值得关注。事实上，Docker 也确实就和他所说的一样，采用了这个“传统”的技术方案，但是 Docker 与 Cloud Foundry 相比，做了一点”小小的创新“，而这个创新无不体现 Solumon Hykes 的远见，**从 dotCloud 创建开始，Solumon Hykes 就一直在考虑应用打包的一致性与复用性问题，并提出了创新的解决方案，最终对 Cloud Foundry 造成了毁灭性的打击，这个解决方案就是 Docker 镜像**。
 
-正式 Docker Image 这个“微不足道的创新”，让 Docker 席卷整个 PaaS 领域。比起 Cloud Foundry 那种执行文件+启动脚本的打包方式，**Docker 镜像完美解决了两个问题：本地环境和服务器环境的差异、同一份镜像可以让所有的机器进行复用**。
+正是 Docker Image 这个“微不足道的创新”，让 Docker 席卷整个 PaaS 领域。比起 Cloud Foundry 那种执行文件+启动脚本的打包方式，**Docker 镜像完美解决了两个问题：本地环境和服务器环境的差异、同一份镜像可以让所有的机器进行复用**。
 
 从这一刻开始，PaaS 的市场已经完全是 Docker 的天下。
 
