@@ -1,6 +1,6 @@
 # 分布式事务
 
-提起分布式事务，最早指涉及的是多个资源的数据库事务问题，我们先来看看 WIKI 的定义。
+提起分布式事务，最早指涉及的是多个资源的数据库事务问题。对于分布式事物的定义，我们先来看看 WIKI 百科的解释。
 
 :::tip 分布式事务
 A distributed transaction is a database transaction in which two or more network hosts are involved.

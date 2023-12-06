@@ -235,7 +235,6 @@ export default defineUserConfig({
                         children: [
                             '/consensus/raft-leader-election.md',
                             '/consensus/raft-log-replication.md',
-                            '/consensus/raft-safety.md',
                             '/consensus/raft-ConfChange.md',
                         ]
                     },
