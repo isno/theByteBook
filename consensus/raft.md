@@ -17,6 +17,22 @@ Paxos 算法描述与工程实现之间存在巨大的鸿沟，最终实现的�
 Raft 的本意是 R{eliable|plicated|dundant} And Fault-Tolerant（可靠、复制、冗余和容错），组合起来的单词 raft 有筏的含义，隐喻这是一艘可以帮助你逃离 Paxos 小岛的救生筏（Raft）。
 :::
 
-如果要用一句话总结 Raft，笔者觉得可以这样定义：**从本质上说，Raft 是通过一切以强 Leader 为准的方式实现的一系列值的共识和各个节点日志的一致**。这句话比较抽象，有点不太好理解，笔者再举个例子：Leader 就是 Raft 算法中的 “霸道总裁”，霸道总裁一贯的做法是“你们别说话，都听我的”，Raft 用这种方式决定了日志中命令的值，也实现了各个节点日志的一致。
+raft 的论文开篇就是这么一段话，
+
+:::tip 
+
+Raft is a consensus algorithm for managing a replicated log. It produces a result equivalent to (multi-)Paxos, and it is as efficient as Paxos, but its structure is different from Paxos;
+
+:::
+
+raft 证明和 paxos 等价，所以说 raft 天生就是 paxos 协议的工程化，着眼点就是日志和状态机的方向
+
+
+<div  align="center">
+	<img src="../assets/raft-state-machine.png" width = "450"  align=center />
+	<p>raft </p>
+</div>
+
+
 
 Raft 算法论文中包含领导者选举、日志复制、成员变更几个核心，在本节，笔者以这几个核心问题为线索讲解 Raft 算法的原理。
