@@ -6,18 +6,19 @@
 
 日志项是一种数据格式，它包含以下几个关键数据：
 
-- 指令: 一条由客户端请求转换成状态机需要执行的指令。
-- 索引值：日志项对应的整数索引值，用于标识日志项，是一个连续、单调递增的整数。如此，raft 可以不用关注空洞日志，也可以通过最大日志索引定位缺失的数据。
-- 任期编号：创建这个日志项的 Leader 任期编号。
+- **指令**: 一条由客户端请求转换成状态机需要执行的指令。
+- **索引值**：日志项对应的整数索引值，用于标识日志项，是一个连续、单调递增的整数。如此，raft 可以不用关注空洞日志，也可以通过最大日志索引定位缺失的数据。
+- **任期编号**：创建这个日志项的 Leader 任期编号。
 
 <div  align="center">
 	<img src="../assets/raft-log.svg" width = "450"  align=center />
 	<p>日志项</p>
 </div>
 
-在 Raft 集群中，每个服务器可以看成是一个复制状态机（Replicated State Machine），如下图。
-复制状态机通常基于复制日志（replicated log）实现。每个服务器存储一个包含一系列指令的日志，并且按顺序执行指令。由于日志都包含相同顺序的指令，状态机会按照相同的顺序执行指令，由于状态机是确定的（deterministic），因此状态机会产生相同的结果。
+:::tip 复制状态机
 
+在 Raft 集群中，每个服务器可以看成是一个复制状态机（Replicated State Machine）。
+复制状态机通常基于复制日志（replicated log）实现。每个服务器存储一个包含一系列指令的日志，并且按顺序执行指令。由于日志都包含相同顺序的指令，状态机会按照相同的顺序执行指令，由于状态机是确定的，因此状态机会产生相同的结果。
 
 <div  align="center">
 	<img src="../assets/raft-state-machine.png" width = "450"  align=center />
@@ -25,6 +26,8 @@
 </div>
 
 图：复制状态机工作过程：1. 客户端请求；2. 共识模块执行共识算法进行日志复制，将日志复制至集群内各个节点；3. 日志应用到状态机；4. 服务端返回请求结果
+
+:::
 
 
 ## 日志复制
@@ -49,7 +52,7 @@ raft 是强 leader 模型的算法，日志项只能由 leader 复制给其他�
 当 Leader 收到多数派的 follower 的成功响应后，Leader 将提交该日志项，并更新 committedIndex，同时在下一个心跳或者下一个日志协商的 AppendEntries 消息中携带 committedIndex。follower 无论收到哪一类消息，都会从中获取 committedIndex，因此在 follower 的本地日志中，所有小于或者等于 committedIndex 的日志均可以执行提交操作。
 
 
-## 日志对齐
+## 实现日志的一致性
 
 实际上日志项的管理不只是简单地追加，当一个 follow 新加入集群或者 leader 刚晋升之时，leader 并不知道要同步哪些日志给 follow，同时旧的 leader 转变为 follower 时，也会携带一些上一任 term 中仅在本地被 committed 的日志项，而当前新的 leader 并不存在这些日志项。
 
@@ -77,6 +80,10 @@ raft 是强 leader 模型的算法，日志项只能由 leader 复制给其他�
 - 领导者收到跟随者成功返回后，知道在索引值为 6 的位置之前的所有日志项，均与自己的相同。于是通过日志复制 RPC ，复制并覆盖索引值为 6 之后的日志项，以达到跟随者的日志与领导者的日志一致
 
 
+<div  align="center">
+	<img src="../assets/raft-log-fix-action.svg" width = "450"  align=center />
+	<p>领导者处理不一致日志</p>
+</div>
 
+从上面的步骤看到，leader 通过日志复制 RPC 消息的一致性检查，比较 index 和 term，从而找到 follower 节点上与自己相同日志项的最大索引值，然后复制并更新该索引值之后的日志项，实现各个节点日志自动趋于一致。
 
-只需要比较 index 和 term，通过这种方式，新加入的 follower 节点只需要通过 AppendEntries 消息就能使 follower 的数据自动趋于一致。
