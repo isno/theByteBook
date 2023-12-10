@@ -379,8 +379,6 @@ export default defineUserConfig({
                 children: [
                     '/observability/history.md',
                     '/observability/monitor-upgrade.md',
-                    '/observability/metrics.md',
-                    '/observability/tracing.md'
                 ]
             },
             {
