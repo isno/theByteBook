@@ -372,7 +372,7 @@ export default defineUserConfig({
                 ]
             },
              {
-                text: '第九章：系统可观测性建设',
+                text: '第九章：系统可观测性',
                 link: '/observability/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
