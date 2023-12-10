@@ -23,4 +23,4 @@ raft 的论文开篇就是这么一段话，首先就说明了 raft 证明和 pa
 Raft is a consensus algorithm for managing a replicated log. It produces a result equivalent to (multi-)Paxos, and it is as efficient as Paxos, but its structure is different from Paxos;
 :::
 
-Raft 作为一个强 leader 模型算法，在本节笔者就以领导者选举、日志复制几个核心问题为线索讲解 Raft 算法的原理。
+作为一个强 leader 模型算法，本节笔者就以其中领导者选举、日志复制几个核心问题为线索讲解 Raft 算法的原理。

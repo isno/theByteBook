@@ -368,11 +368,7 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 link: '/ServiceMesh/summary.md',
                 children: [
-                    '/MicroService/micro-service-arc.md',
-                    '/MicroService/ServiceMesh-implement.md',
-                    '/MicroService/ServiceMesh-Kubernetes.md',
-                    '/MicroService/Envoy.md',
-                    '/MicroService/Istio.md'
+                    '/ServiceMesh/MicroService-history.md',
                 ]
             },
              {
