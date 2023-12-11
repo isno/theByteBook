@@ -300,58 +300,6 @@ export default defineUserConfig({
                     },
                 ]
             },
-            /*
-            {
-                text: '第八章：容器编排系统 Kubernetes',
-                link: '/kubernetes/index.md',
-                collapsable: false,
-                sidebarDepth: 1,
-                children: [
-                    '/kubernetes/namespace.md',
-                    '/kubernetes/component.md',
-                    {
-                        text: '8.4 Kubernetes 核心资源',
-                        link: '/kubernetes/resource.md',
-                        collapsable: false,
-                        sidebarDepth: 1,
-                        children: [
-                            '/kubernetes/pod.md',
-                            '/kubernetes/deployment.md',
-                            '/kubernetes/service.md',
-                            '/kubernetes/ingress.md',
-                            '/kubernetes/pv.md',
-                        ]
-                    },
-                    {
-                        text: '8.5 资源限制模型以及 QoS',
-                        link: '/kubernetes/capacity.md',
-                        collapsable: false,
-                        sidebarDepth: 1,
-                        children: [
-                        ]
-                    },
-                    '/kubernetes/AutoScaling.md',
-                    '/kubernetes/CRD-Operator.md',
-                    {
-                        text: 'Kubernetes 进阶',
-                        link: '/kubernetes/AutoScaling.md',
-                        collapsable: false,
-                        sidebarDepth: 1,
-                        children: [
-                            '/kubernetes/CNI.md',                        ]
-                    },
-                    {
-                        text: '生产级 Kubernetes 高可用部署方案',
-                        link: '/kubernetes/install.md',
-                        collapsable: false,
-                        sidebarDepth: 1,
-                        children: [
-                            '/kubernetes/api-server-ha.md',
-                            '/kubernetes/controller-manager-scheduler.md',
-                            '/kubernetes/etcd-ha.md'                        ]
-                    },
-                ]
-            },*/
             {
                 text: '第八章：服务治理变革 ServiceMesh',
                 collapsable: false,
