@@ -273,17 +273,7 @@ export default defineUserConfig({
                         collapsable: false,
                         sidebarDepth: 1,
                         children: [
-                            {
-                                text: '7.3.1 Linux 网络虚拟化',
-                                link: '/container/linux-vnet.md',
-                                collapsable: false,
-                                sidebarDepth: 1,
-                                children: [
-                                    '/container/network-namespace.md',
-                                    '/container/linux-virtual-device.md',
-                                    '/container/vxlan.md'
-                                ]
-                            },
+                           "/container/linux-vnet.md"
                         ]
                     },
                     '/container/resource-limit.md',
