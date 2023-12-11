@@ -21,3 +21,5 @@ Lamport 在 2001 年发表的 “Paxos Made Simple” 论文中又重新阐述�
 在笔者看来 Basic Paxos 是 Multi-Paxos 思想的核心，说直接点 Multi-Paxos 就是多执行几次 Basic Paxos，所以掌握了 Basic Paxos，我们便能更好的理解后面基于 Multi-Paxos 思想的共识算法（比如 raft）。
 
 那么我们就先来看看 Basic Paxos 是如何解决共识问题的。
+
+[^1]: 参见 https://ongardie.net/static/raft/userstudy/paxos.pdf 
