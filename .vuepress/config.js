@@ -273,7 +273,8 @@ export default defineUserConfig({
                         collapsable: false,
                         sidebarDepth: 1,
                         children: [
-                           "/container/linux-vnet.md"
+                           "/container/linux-vnet.md",
+                           "/container/container-network.md"
                         ]
                     },
                     '/container/resource-limit.md',
