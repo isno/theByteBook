@@ -255,6 +255,8 @@ export default defineUserConfig({
                         sidebarDepth: 1,
                         children: [
                            '/container/Kustomize.md',
+                           '/container/Helm.md',
+                           '/container/OAM.md',
                         ]
                     },
                     {
@@ -286,18 +288,9 @@ export default defineUserConfig({
                         children: [
                             '/container/image-build.md',
                             '/container/Nydus-image.md',
-                        ]
-                    },
-                    {
-                        text: '7.6 镜像仓库',
-                        link: '/container/registry.md',
-                        collapsable: false,
-                        sidebarDepth: 1,
-                        children: [
-                            '/container/harbor.md',
                             '/container/dragonfly.md'
                         ]
-                    },
+                    }
                 ]
             },
             {
@@ -317,6 +310,9 @@ export default defineUserConfig({
                 children: [
                     '/observability/history.md',
                     '/observability/monitor-upgrade.md',
+                    '/observability/metrics.md',
+                    '/observability/logging.md',
+                    '/observability/tracing.md',
                 ]
             },
             {
@@ -331,7 +327,6 @@ export default defineUserConfig({
                         text: "基础设施即代码",
                         link: '/GitOps/IaC.md',
                         children: [
-                            '/GitOps/Helm.md',
                         ]
                     },
                     '/GitOps/CICD.md',
@@ -350,20 +345,6 @@ export default defineUserConfig({
                            '/GitOps/Flagger.md'
                         ]
                     },
-                ]
-            },
-           
-            {
-                text: '第十一章：FinOps云成本管理',
-                link: '/FinOps/summary.md',
-                collapsable: false,
-                sidebarDepth: 1,
-                children: [
-                    '/FinOps/finops-define.md',
-                    '/FinOps/framework.md',
-                    '/FinOps/finops-for-kubernetes.md',
-                    '/FinOps/kubecost.md',
-                    '/FinOps/conclusion.md'
                 ]
             }
         ]

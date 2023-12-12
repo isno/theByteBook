@@ -72,16 +72,15 @@ CRI 实现上是一套通过 Protocol Buffer 定义的 API，如下图：
 
 不过 Docker 也没有“坐以待毙”，与其将来被人分离或者抛弃不用，不如我主动革新。于是 Docker 采取了“断臂求生”的策略推动自身的重构，把原本单体架构的 Docker Engine 拆分成了多个模块，其中的 Docker daemon 部分就捐献给了 CNCF，形成了 containerd 与 Kubernetes 深度绑定在一起。containerd 作为 CNCF 的托管项目，自然符合 CRI 标准的。但 Docker 出于自己诸多原因的考虑，它只是在 Docker Engine 里调用了 containerd，外部的接口仍然保持不变，也就是说还不与 CRI 兼容。
 
-由于 Docker 的“固执己见”且 Docker 是当时容器技术主流存在，Kuberentes 虽然提出了 CRI 接口规范，仍然需要去适配 CRI 与 Docker 的对接，因此它需要一个中间层或 shim（垫片）来对接 Kubelet 和 Docker 运行时实现。这时 Kubernetes 里就出现了两种调用链：第一种是用 CRI 接口调用 dockershim，然后 dockershim 调用 Docker，Docker 再走 containerd 去操作容器。第二种是用 CRI 接口直接调用 containerd 去操作容器。
+由于 Docker 的“固执己见”且 Docker 是当时容器技术主流存在，Kuberentes 虽然提出了 CRI 接口规范，仍然需要去适配 CRI 与 Docker 的对接，因此它需要一个中间层（shim，垫片）来对接 Kubelet 和 Docker 运行时实现。此时，Kubernetes 里就出现了两种调用链：第一种是用 CRI 接口调用 dockershim，然后 dockershim 调用 Docker，Docker 再走 containerd 去操作容器。第二种是用 CRI 接口直接调用 containerd 去操作容器。
 
 <div  align="center">
 	<img src="../assets/k8s-runtime-v2.png" width = "500"  align=center />
 </div>
 
-在这个阶段 **Kubelet 的代码和 dockershim 都是放在一个 Repo**。这也就意味着 Dockershim 是由 Kubernetes 进行组织开发和维护！由于 Docker 的版本发布 Kubernetes 无法控制和管理，所以每次 Docker 发布新的 Release，Kubernetes 都要集中精力去快速地更新维护 Dockershim。同时如果 Docker 仅作为 runtime 实现也过于庞大，Kubernetes 弃用 Dockershim 有了足够的理由和动力。
+在这个阶段 **Kubelet 的代码和 dockershim 都是放在一个 Repo**。这也就意味着 dockershim 是由 Kubernetes 进行组织开发和维护！由于 Docker 的版本发布 Kubernetes 无法控制和管理，所以 Docker 每次发布新的 Release，Kubernetes 都要集中精力去快速地更新维护 dockershim。同时 Docker 仅作为容器运行时也过于庞大，Kubernetes 弃用 dockershim 有了足够的理由和动力。
 
-Kubernetes 在 v1.24 版本正式删除和弃用 dockershim。这件事情的本质是废弃了内置的 dockershim 功能转而直接对接 containerd。从上图可以看出在 containerd 1.0 中，对 CRI 的适配是通过一个单独的 CRI-Containerd 进程来完成的，这是因为最开始 containerd 还会去适配其他的系统（比如 swarm），所以没有直接实现 CRI，所以这个对接工作就交给 CRI-Containerd 这个 shim 了。
-
+Kubernetes 在 v1.24 版本正式删除和弃用 dockershim，这件事情的本质是废弃了内置的 dockershim 功能转而直接对接 containerd。从上图可以看出在 containerd 1.0 中，对 CRI 的适配是通过一个单独的 CRI-Containerd 进程来完成的，这是因为最开始 containerd 还会去适配其他的系统（比如 swarm），所以没有直接实现 CRI，这个对接工作就交给 CRI-Containerd 这个 shim 了。
 
 2018 年，由 Docker 捐献给 CNCF 的 containerd，在 CNCF 的精心孵化下发布了 1.1 版，1.1 版与 1.0 版的最大区别是此时它已完美地支持了 CRI 标准，这意味着原本用作 CRI 适配器的 cri-containerd 从此不再需要。
 <div  align="center">
