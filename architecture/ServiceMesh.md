@@ -4,9 +4,9 @@ CNCF 最新云原生定义中，服务网格的概念和微服务并列，这表
 
 ## 1.服务网格的定义
 
-服务网格（Service Mesh）的概念最早由 Buoyant CEO William Morgan 在 2016 年首次提出，2017 年 4 月该公司发布了第一个 Service Mesh 产品 Linkerd。 同年发表了文章《What’s a service mesh？And why do I need one?》，被公认是 Service Mesh 的权威定义。
+服务网格（Service Mesh）的概念最早由 Buoyant CEO William Morgan 在 2016 年首次提出，2017 年 4 月该公司发布了第一个 Service Mesh 产品 Linkerd。 同年发表了文章《What’s a service mesh？And why do I need one?》[^1]，被公认是 Service Mesh 的权威定义。
 
-:::tip  文章内 William Morgan 对 ServiceMesh 的定义
+:::tip William Morgan 对 ServiceMesh 的定义
 
 “A service mesh is a dedicated infrastructure layer for handling service-to-service communication. It’s responsible for the reliable delivery of requests through the complex topology of services that comprise a modern, cloud native application. In practice, the service mesh is typically implemented as an array of lightweight network proxies that are deployed alongside application code, without the application needing to be aware.”
 
@@ -55,7 +55,7 @@ Sidecar 本质上是一个服务代理，通过劫持发送到应用容器的流
 
 Proxyless 理念是服务间总是要选择一种协议进行通信，就必然要依赖于该协议的类库（SDK）进行编解码工作。既然如此，那么将协议的类库扩展，使其具有流量控制的能力，不就能代替 Sidecar 代理了吗？且 SDK 和应用同属于同一进程，必然有更优秀的性能表现，Sidecar 最为诟病的延迟问题也会迎刃而解。
 
-2021 年 Istio 官方博客发表了一篇基于 gRPC 实现 Proxyless 的文章[^1]，详细阐述了其工作原理以及如何在 Istio 中使用它。在这种模式中，核心的流控能力被集成在 gRPC 库中，不再使用代理进行数据面通信。但它仍然需要一个 Agent 进行初始化并与控制平面交互，负责告知 gRPC 库如何连接到 istiod，如何获取证书，并作为 xDS 代理，代表应用与 istiod 进行连接和认证。
+2021 年 Istio 官方博客发表了一篇基于 gRPC 实现 Proxyless 的文章[^2]，详细阐述了其工作原理以及如何在 Istio 中使用它。在这种模式中，核心的流控能力被集成在 gRPC 库中，不再使用代理进行数据面通信。但它仍然需要一个 Agent 进行初始化并与控制平面交互，负责告知 gRPC 库如何连接到 istiod，如何获取证书，并作为 xDS 代理，代表应用与 istiod 进行连接和认证。
 
 <div  align="center">
 	<img src="../assets/proxyless.svg" width = "520"  align=center />
@@ -97,7 +97,7 @@ Cilium 认为，内核加上共享型代理的引入可以极大的减少代理�
 
 ## 4.Ambient Mesh 模式
 
-2022 年 9 月 Istio 发布了一个名为 “Ambient Mesh” 的无边车数据平面模型，宣称用户可以弃用 Sidecar，以 Ambient Mesh 模式使用 Istio 的特性[^2]。
+2022 年 9 月 Istio 发布了一个名为 “Ambient Mesh” 的无边车数据平面模型，宣称用户可以弃用 Sidecar，以 Ambient Mesh 模式使用 Istio 的特性[^3]。
 
 相比 Sidecar，Ambient Mesh 提供一种侵入性更低，升级管理更简单的选择，Ambient 将 Istio 的功能分成两个不同的层次，安全覆盖层（四层治理）和七层处理层（七层治理），如图 1-28 所示。
 
@@ -124,6 +124,7 @@ Ambient Mesh 可以被理解为一种无 Sidecar 模式，但笔者认为将其�
 
 随着新技术和创新观念的推动，服务网关的架构逐渐从最初的 Sidecar 模式发展至多元化。现阶段，谁将最终胜出仍难以预测，因为每种模式都具备其独特的优势和劣势，以及适用于不同的应用场景。正如编程语言一样，服务网格在未来可能不会走向标准化，而是各具特色，并在不断的自我完善过程中为用户提供更多的选择。
 
-[^1]: 参见 https://istio.io/v1.15/blog/2021/proxyless-grpc/
-[^2]: 参见 https://istio.io/latest/zh/blog/2023/ambient-merged-istio-main/
+[^1]: 参见 https://www.infoq.cn/news/2017/11/WHAT-SERVICE-MESH-WHY-NEED/
+[^2]: 参见 https://istio.io/v1.15/blog/2021/proxyless-grpc/
+[^3]: 参见 https://istio.io/latest/zh/blog/2023/ambient-merged-istio-main/
  

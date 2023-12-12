@@ -249,18 +249,7 @@ export default defineUserConfig({
                     '/container/Container-Orchestration-Wars.md',
                     '/container/orchestration.md',                    
                     {
-                        text: '7.3 以应用为中心进行封装',
-                        link:'/container/application-centric.md',
-                        collapsable: false,
-                        sidebarDepth: 1,
-                        children: [
-                           '/container/Kustomize.md',
-                           '/container/Helm.md',
-                           '/container/OAM.md',
-                        ]
-                    },
-                    {
-                        text: '7.4 容器运行时',
+                        text: '7.3 容器运行时',
                         link:'/container/runtime.md',
                         collapsable: false,
                         sidebarDepth: 1,
@@ -270,7 +259,18 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '7.3 容器间网络',
+                        text: '7.4 容器镜像',
+                        link: '/container/image.md',
+                        collapsable: false,
+                        sidebarDepth: 1,
+                        children: [
+                            '/container/image-build.md',
+                            '/container/Nydus-image.md',
+                            '/container/dragonfly.md'
+                        ]
+                    },
+                    {
+                        text: '7.5 容器间网络',
                         link: '/container/network.md',
                         collapsable: false,
                         sidebarDepth: 1,
@@ -281,14 +281,14 @@ export default defineUserConfig({
                     },
                     '/container/resource-limit.md',
                     {
-                        text: '7.4 容器镜像',
-                        link: '/container/image.md',
+                        text: '7.7 以应用为中心进行封装',
+                        link:'/container/application-centric.md',
                         collapsable: false,
                         sidebarDepth: 1,
                         children: [
-                            '/container/image-build.md',
-                            '/container/Nydus-image.md',
-                            '/container/dragonfly.md'
+                           '/container/Kustomize.md',
+                           '/container/Helm.md',
+                           '/container/OAM.md',
                         ]
                     }
                 ]
