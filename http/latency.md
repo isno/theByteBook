@@ -7,17 +7,17 @@
 一个完整、无任何缓存、未复用连接的 HTTPS 请求需要经过以下几个阶段：DNS 域名解析、TCP 握手、SSL 握手、服务器处理、内容传输。
 
 <div  align="center">
-	<img src="../assets/http-process.png" width = "500"  align=center />
+	<img src="../assets/http-process.png" width = "450"  align=center />
 	<p>图2-2 HTTPS（使用 TLS1.2 协议）请求阶段分析</p>
 </div>
 
-如图 2-2 所示，一个 HTTPS 请求共需要 5 个 RTT = 1 RTT（域名解析） + 1 RTT（TCP 握手）+ 2 RTT（SSL 握手）+ 1 RTT（HTTP 内容请求传输）。
+如图 2-2 所示（素材来源 [^1]），一个 HTTPS 请求共需要 5 个 RTT = 1 RTT（域名解析） + 1 RTT（TCP 握手）+ 2 RTT（SSL 握手）+ 1 RTT（HTTP 内容请求传输）。
 
 举个例子，说明接口延迟的计算和影响：假设北京到美国洛杉矶的 RTT 延迟为 190 毫秒，我们从北京访问美国洛杉矶的一个 HTTP 服务，整个交互过程时延计算是`5*190+后端业务延时`。其中，"5"代表的是 HTTPS 请求的 5 个环节，每个环节都需要一个 RTT 的时间。因为网络延迟始终会受到物理环境的制约，无论使用什么技术、如何优化，950ms 的指标将会很难突破，所以我们的优化策略也是以减少请求环节、链路优化、降低 SSL 计算量为主。
 
 ## 2.2.2 请求阶段耗时分析
 
-HTTPS 请求的各个阶段可以使用 curl 命令进行详细的耗时分析[^1]。如表 2-2 所示， curl 提供了详细的耗时分析选项，这样我们就可以更准确地掌握每一个环节的消耗时间，进一步提升网络优化的效率和精度。
+HTTPS 请求的各个阶段可以使用 curl 命令进行详细的耗时分析[^2]。如表 2-2 所示， curl 提供了详细的耗时分析选项，这样我们就可以更准确地掌握每一个环节的消耗时间，进一步提升网络优化的效率和精度。
 
 
 表 2-2 curl 网络请求阶段分析
@@ -64,5 +64,7 @@ time_total=0.088744
 
 优化工作的第一步，我们先开始处理域名解析环节。
 
-[^1]: curl 操作参见 https://catonmat.net/cookbooks/curl
+[^1]: 参见 https://blog.cloudflare.com/a-question-of-timing/
+[^2]: curl 操作参见 https://catonmat.net/cookbooks/curl
+
 
