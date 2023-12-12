@@ -288,6 +288,7 @@ export default defineUserConfig({
                         children: [
                            '/container/Kustomize.md',
                            '/container/Helm.md',
+                           '/container/CRD-Operator.md',
                            '/container/OAM.md',
                         ]
                     }
