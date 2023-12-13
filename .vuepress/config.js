@@ -242,7 +242,6 @@ export default defineUserConfig({
                         collapsable: false,
                         sidebarDepth: 1,
                         children: [
-                            '/container/image-build.md',
                             '/container/Nydus-image.md',
                             '/container/dragonfly.md'
                         ]
@@ -268,7 +267,9 @@ export default defineUserConfig({
                            "/container/container-network.md"
                         ]
                     },
+                    '/container/storage.md',
                     '/container/resource-limit.md',
+                    '/container/auto-scaling.md',
                     {
                         text: '7.7 以应用为中心进行封装',
                         link:'/container/application-centric.md',
