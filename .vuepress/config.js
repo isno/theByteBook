@@ -235,19 +235,9 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/container/Container-Orchestration-Wars.md',
-                    '/container/orchestration.md',                    
+                    '/container/orchestration.md',
                     {
-                        text: '7.3 容器运行时',
-                        link:'/container/runtime.md',
-                        collapsable: false,
-                        sidebarDepth: 1,
-                        children: [
-                            '/container/CRI-in-Kubernetes.md',
-                            '/container/kata-containers.md',
-                        ]
-                    },
-                    {
-                        text: '7.4 容器镜像',
+                        text: '7.3 容器镜像',
                         link: '/container/image.md',
                         collapsable: false,
                         sidebarDepth: 1,
@@ -256,7 +246,18 @@ export default defineUserConfig({
                             '/container/Nydus-image.md',
                             '/container/dragonfly.md'
                         ]
+                    },                
+                    {
+                        text: '7.4 容器运行时',
+                        link:'/container/runtime.md',
+                        collapsable: false,
+                        sidebarDepth: 1,
+                        children: [
+                            '/container/CRI-in-Kubernetes.md',
+                            '/container/kata-containers.md',
+                        ]
                     },
+                    
                     {
                         text: '7.5 容器间网络',
                         link: '/container/network.md',
