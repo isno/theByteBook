@@ -31,7 +31,7 @@ export default defineUserConfig({
             provider: "Giscus",
             repo:"isno/thebytebook",
             repoId:"R_kgDOIKTmzQ", 
-            category:"General", 
+            category:"Announcements", 
             categoryId:"DIC_kwDOIKTmzc4CV4OL"
         }),
     ],

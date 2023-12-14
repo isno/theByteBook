@@ -40,10 +40,10 @@
     $ git clone https://github.com/isno/theByteBook.git && cd theByteBook
 
     # 安装工程依赖
-    $ yarn install
+    $ npm install
 
     # 运行网站，地址默认为 http://localhost:8080
-    $ yarn dev
+    $ npm run dev
     ```
 
 
