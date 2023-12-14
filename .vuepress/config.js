@@ -1,5 +1,6 @@
 import { defineUserConfig, defaultTheme } from 'vuepress';
 import { mdEnhancePlugin } from "vuepress-plugin-md-enhance";
+import { commentPlugin } from "vuepress-plugin-comment2";
 
 export default defineUserConfig({
     lang: 'zh-CN',
@@ -26,13 +27,13 @@ export default defineUserConfig({
           katex: true,
           sub: true,
         }),
-        "@vssue/vuepress-plugin-vssue",{
-            platform: 'github',
-            owner: 'isno',
-            repo: 'thebytebook',
-            clientId: 'f716721bffa238b19f32',
-            clientSecret: '04345664b10a5cdd6127dc9d88db0f500d5d868a',
-        }
+       commentPlugin({
+            provider: "Giscus",
+            repo:"isno/thebytebook",
+            repoId:"R_kgDOIKTmzQ", 
+            category:"General", 
+            categoryId:"DIC_kwDOIKTmzc4CV4OL"
+        }),
     ],
     theme: defaultTheme({
         navbar: [{
