@@ -26,6 +26,13 @@ export default defineUserConfig({
           katex: true,
           sub: true,
         }),
+        "@vssue/vuepress-plugin-vssue",{
+            platform: 'github',
+            owner: 'isno',
+            repo: 'thebytebook',
+            clientId: 'f716721bffa238b19f32',
+            clientSecret: '04345664b10a5cdd6127dc9d88db0f500d5d868a',
+        }
     ],
     theme: defaultTheme({
         navbar: [{
