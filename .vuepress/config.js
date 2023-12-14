@@ -1,6 +1,7 @@
 import { defineUserConfig, defaultTheme } from 'vuepress';
 import { mdEnhancePlugin } from "vuepress-plugin-md-enhance";
 import { commentPlugin } from "vuepress-plugin-comment2";
+import { readingTimePlugin } from "vuepress-plugin-reading-time2";
 
 export default defineUserConfig({
     lang: 'zh-CN',
@@ -33,6 +34,9 @@ export default defineUserConfig({
             repoId:"R_kgDOIKTmzQ", 
             category:"Announcements", 
             categoryId:"DIC_kwDOIKTmzc4CV4OL"
+        }),
+        readingTimePlugin({
+        // your options
         }),
     ],
     theme: defaultTheme({
