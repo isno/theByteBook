@@ -1,5 +1,12 @@
 # 6.3.3 Basic Paxos
 
+希望你没有对前篇 Paxos 的“复杂”做的铺垫所吓倒，反正又不是要读论文，也不是要实现它。放弃严谨、简化掉最繁琐的分支细节和特殊情况的话 Paxos 还是可以能通俗地理解的。这一节，我们从故事回到算法本身，正式开始学习 Paxos。
+
+Paxos 算法包含两个部分，其中一部分是核心算法（Basic Paxos）；另外一部分是基于核心算法扩展的完整算法（Multi Paxos）。在笔者看来 Basic Paxos 是 Multi-Paxos 思想的核心，说直接点 Multi-Paxos 就是多执行几次 Basic Paxos，所以掌握了 Basic Paxos，我们便能更好的理解后面基于 Multi-Paxos 思想的共识算法（比如 raft）。
+
+那么我们就先来看看 Basic Paxos 是如何解决共识问题的。
+
+
 :::tip 背景设定
 
 很久以前，在遥远的爱琴海上，有一座与世隔绝的小岛，叫做 Paxos。。。算了，还是换个更对口味的例子吧。
