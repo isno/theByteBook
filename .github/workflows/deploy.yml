@@ -15,8 +15,8 @@ jobs:
           node-version: 20.0.0  
       - name: Install and Build   
         run: |
-          npm install
-          npm build
+          yarn install
+          yarn build
       # 部署到阿里云
       - name: Deploy to Aliyun
         uses: easingthemes/ssh-deploy@v4.1.8
