@@ -213,6 +213,7 @@ export default defineUserConfig({
                 link: '/consensus/summary.md',
                 sidebarDepth: 2,
                 children: [
+                    '/consensus/consensus.md',
                     '/consensus/The-Byzantine-General-Problem.md',
                     {
                         text: "6.3 Paxos 算法",
