@@ -59,16 +59,16 @@
     padding: 0;
   }
   .page-info {
-   display:flex;
-   justify-content:  space-between;
-    margin-top: 15px;
+    display:flex;
+    justify-content:  space-between;
+    margin-top:30px;
     border-bottom: 1px solid #eaecef;
   }
   .star {
-    float:left;
+
   }
   .last-updated {
-    float:right;
+   
     text-align:right;
     font-size: .9em;
     margin-bottom: 10px;
