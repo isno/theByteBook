@@ -268,7 +268,6 @@ export default defineUserConfig({
                             '/container/kata-containers.md',
                         ]
                     },
-                    
                     {
                         text: '7.5 容器间网络',
                         link: '/container/network.md',

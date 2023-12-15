@@ -9,13 +9,9 @@
 - Networking
 - Container、Kubernetes、Service Mesh
 
-## 交个朋友 
+## 公众号
 
-打赏给我，我将更有动力撰写。
-
-<div  align="center">
-	<img src="./assets/pay.jpg" width = "200"  align=center />  | 
-	<img src="./assets/webchat.jpg" width = "200"  align=center />
-	
-	<p></p>
+发一些我的闲唠叨，有兴趣的可以关注。
+<div  align="left">
+	<img src="./assets/webchat.jpg" width = "250"  align=center />
 </div>

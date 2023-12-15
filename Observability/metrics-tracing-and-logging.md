@@ -8,5 +8,4 @@
 	<img src="../assets/observability.png" width = "350"  align=center />
 </div>
 
-
 [^1]: 参见 https://peter.bourgon.org/blog/2017/02/21/metrics-tracing-and-logging.html
