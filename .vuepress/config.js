@@ -312,10 +312,20 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/observability/history.md',
-                    '/observability/monitor-upgrade.md',
-                    '/observability/metrics.md',
-                    '/observability/logging.md',
-                    '/observability/tracing.md',
+                    {
+                        text: '可观测性的三大支柱',
+                        link:'/observability/metrics-tracing-and-logging.md',
+                        collapsable: false,
+                        sidebarDepth: 1,
+                        children: [
+                            '/observability/metrics.md',
+                            '/observability/logging.md',
+                            '/observability/tracing.md',
+                        ]
+                    }
+
+                    
+                   
                 ]
             },
             {
