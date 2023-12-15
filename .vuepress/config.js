@@ -323,9 +323,6 @@ export default defineUserConfig({
                             '/observability/tracing.md',
                         ]
                     }
-
-                    
-                   
                 ]
             },
             {
