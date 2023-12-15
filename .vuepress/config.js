@@ -344,8 +344,8 @@ export default defineUserConfig({
                         text: "持续集成",
                         link: '/GitOps/CI.md',
                         children: [
+                            '/GitOps/container-image-build.md',
                             '/GitOps/SonarQube.md',
-                            '/GitOps/container-image-build.md'
                         ]
                     },
                     {
