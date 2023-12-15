@@ -14,7 +14,7 @@
 </div>
 
 - SYN Queue（半连接队列）是内核保持未被 ACK 的 SYN 包最大队列长度，通过内核参数 net.ipv4.tcp_max_syn_backlog 设置。
-- Accept Queue（全连接队列） 是 socket 上等待应用程序 accept 的最大队列长度，取值为 min(backlog，net.core.somaxconn)。
+- Accept Queue（全连接队列）是 socket 上等待应用程序 accept 的最大队列长度，取值为 min(backlog，net.core.somaxconn)。
 
 backlog 创建 TCP 连接时设置，用法如下。
 ```plain

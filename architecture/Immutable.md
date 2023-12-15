@@ -2,7 +2,7 @@
 
 解决生产环境中的故障场景下，经常会先出现这么几个画面：开发工程师 “我本地跑好好的，怎么到你那就不行？”；运维工程师 “谁又改了配置文件...”。本节，我们聊聊此类问题的本源 -- 基础设施。
 
-2013 年 6 月，Chad Fowler 在自己的博客中撰写一篇 《Trash Your Servers and Burn Your Code: Immutable Infrastructure and Disposable Components》 的文章，提出了 Immutable Infrastructure（不可变基础设施） 的概念[^1]。这一前瞻性的构想，伴随着 Docker 容器技术的兴起、微服务架构的流行，得到了事实上的检验。
+2013 年 6 月，Chad Fowler 在自己的博客中撰写一篇 《Trash Your Servers and Burn Your Code: Immutable Infrastructure and Disposable Components》 的文章，提出了 Immutable Infrastructure（不可变基础设施）的概念[^1]。这一前瞻性的构想，伴随着 Docker 容器技术的兴起、微服务架构的流行，得到了事实上的检验。
 
 不过谈论不可变基础设施之前，我们先了解不可变（Immutable）和可变（Mutable）的区别。
 

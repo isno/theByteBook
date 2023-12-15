@@ -6,7 +6,7 @@
 
 ## 1.微服务的定义
 
-微服务概念被提出之后，在很长的一段时间内并没有被普及，直到 2014 年，由 Martin Fowler（《MicroServices》作者）、Adrian Cockcroft（Netflix 架构师）、Neal ford（《卓有成效的程序员》作者） 等人持续介绍、完善、演进、实践之后，微服务才算是一种真正丰满、独立的架构风格。
+微服务概念被提出之后，在很长的一段时间内并没有被普及，直到 2014 年，由 Martin Fowler（《MicroServices》作者）、Adrian Cockcroft（Netflix 架构师）、Neal ford（《卓有成效的程序员》作者）等人持续介绍、完善、演进、实践之后，微服务才算是一种真正丰满、独立的架构风格。
 
 对于微服务的定义，我们援引 Netflix[^2] 云架构师 Adrian Cockcroft 的观点。
 :::tip <i></i>
