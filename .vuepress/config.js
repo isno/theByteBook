@@ -32,7 +32,7 @@ export default defineUserConfig({
             provider: "Giscus",
             repo:"isno/thebytebook",
             repoId:"R_kgDOIKTmzQ", 
-            category:"General", 
+            category:"General",
             categoryId:"DIC_kwDOIKTmzc4CV4OL"
         }),
         readingTimePlugin({
