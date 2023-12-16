@@ -17,7 +17,7 @@ TCC 是一种对业务侵入性较强的事务方案，要求业务处理过程�
 以一个下单服务为例，说明 TCC 事务处理流。该下单服务由两个系统操作完成：订单系统 X、资金账户系统 Y。
 
 <div  align="center">
-	<img src="../assets/tcc.png" width = "550"  align=center />
+	<img src="../assets/TCC.svg" width = "450"  align=center />
 </div>
 
 - **Try 操作** : try X 下单系统创建待支付订单。try Y 自己账户系统冻结订单金额 100 元。 
