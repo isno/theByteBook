@@ -199,7 +199,7 @@ export default defineUserConfig({
                     '/distributed-transaction/ACID.md',
                     '/distributed-transaction/CAP.md',       
                     {
-                        text: "5.3 分布式事务的实现",
+                        text: "5.3 分布式事务模型",
                         link: '/distributed-transaction/transaction.md',
                         children: [
                             '/distributed-transaction/BASE.md',
