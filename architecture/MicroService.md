@@ -83,7 +83,7 @@ Adrian Cockcroft 的观点中有两个核心概念：Loosely Coupled（松耦合
 	<p>图1-21 Kubernetes 模糊了基础设施与软件服务的界限 </p>
 </div>
 
-此即为“后微服务时代”。
+此即为“后微服务时代” [^3]。
 
 ## 4.后微服务时代的二次进化
 
@@ -102,4 +102,5 @@ Kubernetes 的崛起标志着微服务时代的新篇章，但它并未能完全
 
 [^1]: 面向服务架构是在互联网应用规模迅速增长，集中式架构已无法做到无限制地提升系统吞吐量的背景下，产生的设计模块开发、分布式扩展部署等相对宽泛的概念。
 [^2]: Netflix 是业界微服务和 DevOps 组织的先驱，有大规模生产级微服务的成功实践，并为 Spring Cloud Netflix 社区贡献了大量优秀的开源软件，例如 Eureka（服务注册与发现）、Zuul（服务网关）、Ribbon（负载均衡）、Hystrix（熔断限流）等等。
+[^3]: 参见 https://icyfenix.cn/architecture/architect-history/post-microservices.html
 

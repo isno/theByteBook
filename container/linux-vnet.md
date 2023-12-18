@@ -97,7 +97,7 @@ $ ip addr
 
 Linux Bridge 是 Linux Kernel 2.2 版本开始提供的二层转发工具，与物理交换机机制一致，能够接入任何二层的网络设备（无论是真实的物理设备，例如 eth0 或者虚拟设备，例如 veth、tap 等）。不过 Linux Bridge 与普通物理交换机还有有一点不同，普通的交换机只会单纯地做二层转发，Linux Bridge 却还能把发给它的数据包再发送到主机的三层协议栈中。
 
-我们在部署 Docker 或者 Kubernetes 时，宿主机内的 cni0、docker0 就是它们创建的 Linux 网桥设备。
+部署 Docker 或者 Kubernetes 时，宿主机内的 cni0、docker0 就是它们创建的 Linux 网桥设备。
 
 <div  align="center">
     <img src="../assets/linux-bridge.svg" width = "500"  align=center />
@@ -126,7 +126,6 @@ VXLAN 你可能没有听说过，但 VLAN（Virtual Local Area Network，虚拟�
 	<img src="../assets/vxlan-data.png" width = "300"  align=center />
 	<p>图 2-27 VXLAN 报文结构</p>
 </div>
-
 
 虽然从名字上看，VXLAN 是 VLAN 的一种扩展协议，但 VXLAN 内在已经与 VLAN 迥然不同，VXLAN 本质上是一种隧道封装技术，它使用 TCP/IP 协议栈的惯用手法“封装/解封装技术”，将 L2 的以太网帧（Ethernet frames）封装成 L4 的 UDP 数据报，然后在 L3 的网络中传输，效果就像 L2 的以太网帧在一个广播域中传输一样，不再受数据中心传输的限制。VXLAN 的通信原理如下图所示，VXLAN 每个边缘入口都部署了一个 VTEP（VXLAN Tunnel Endpoints，VXLAN 隧道端点），VTEP 是 VXLAN 隧道的起点和终点，VXLAN 对用户原始数据帧的封装和解封装均在 VTEP 上进行，VTEP 既可以是一台独立的网络设备，也可以是在服务器中的虚拟交换机。源服务器发出的原始数据帧，在 VTEP 上被封装成 VXLAN 格式的报文，并在 IP 网络中传递到另外一个 VTEP 上，并经过解封转还原出原始的数据帧，最后转发给目的服务器。
 
