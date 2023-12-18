@@ -4,6 +4,6 @@
 
 总体而言，随着技术架构以云厂商主导的 IaaS、CaaS、FaaS 为整体演进，这意味对于普通工程师而言，隐藏在通用软件方案下的物理网络技术将逐渐成为“黑科技”。
 
-本章参考内容：
+本章参考内容
 
 - https://blog.envoyproxy.io/introduction-to-modern-network-load-balancing-and-proxying-a57f6ff80236

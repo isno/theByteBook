@@ -1,22 +1,29 @@
-# 7.6 资源限制模型
+# 7.6 编排调度模型
 
-Kubernetes 将管理的物理资源抽象成指定的类型和对应的计量单位，这些资源分为**可压缩**和**不可压缩**两类。
+对于一个编排系统而言，资源管理至少要考虑这几个问题：**资源模型的抽象**（譬如有何种资源，如何表示这些资源）；**资源的调度**（譬如如何描述一个资源申请、如何描述一台 node 资源分配的状态以及调度的算法），对照上面几个问题，我们来看下 Kubernetes 是如何设计的。
+
+## 资源模型的抽象
+
+Kubernetes 将管理的物理资源抽象为**可压缩**和**不可压缩**两类。
 
 **可压缩的资源典型的是 CPU**，当此类资源超限时，Pod 中进程使用 CPU 会被限制，应用表现变得卡顿，业务延迟明显增加，但**进程不会被 kill 掉**。在 Kubernetes 中，CPU 的计量单位为毫核（m），一个 Node 节点 CPU 核心数量乘以 1000，得到的就是该 Node 节点总的 CPU 总数量。譬如，一个 Node 节点有两核，那么该 Node 节点的 CPU 总量为 2000m。需要注意，CPU 的计算单位是绝对值，无论容器运行在单核、双核机器上，500m CPU 表示的是相同的计算能力。
 
-**不可压缩的资源为内存、显存（GPU）**，当此类资源不足时，进程产生 OOM 问题（Out of Memory，内存溢出）并**被杀掉**。内存的计算单位为字节，内存有多种写法，譬如 M（Megabyte）、Mi（Mebibyte）以及不带单位的数字，以下表达式所代表的是相同的值。
+**不可压缩的资源为内存、显存（GPU）**，当此类资源不足时，进程产生 OOM 问题（Out of Memory，内存溢出）并**被杀掉**。内存的计算单位为字节，内存计量有多种写法，譬如 M（Megabyte）、Mi（Mebibyte）以及不带单位的数字，以下表达式所代表的是相同的值。
 
 ```plain
 128974848, 129e6, 129M, 123Mi
 ```
 注意 Mebibyte 和 Megabyte 的区分，123 Mi = `123*1204*1204B` = 129 M，123 M 等于 `1*1000*1000`字节，所以 1M < 1Mi，显然使用带这个小 i 的更准确。
 
-有了资源的抽象，Kubernetes 再通过容器内的 requests (资源需求）和 limits (资源限制) 属性就完成了内存和 CPU 资源的分配。
+
+## 资源调度
+
+Kubernetes 抽象了两个概念 requests 和 limits 用以描述容器资源的分配。
 
 - **requests** 容器需要的最小资源量。举例来讲，对于一个 Spring Boot 业务容器，这里的 requests 必须是容器镜像中 JVM 虚拟机需要占用的最少资源。
 - **limits** 容器最大可以消耗的资源上限，防止过量消耗资源导致资源短缺甚至宕机。
 
-如下图所示，每一个容器都可以独立地设定相应的 requests 和 limits ，这 2 个参数通过每个容器 resources 字段进行设置，当设置 limits 而没有设置 requests 时，Kubernetes 默认令 requests 等于 limits 。
+如下图所示，每一个容器都可以独立地通过 resources 属性设定相应的 requests 和 limits，容器的资源调度以 requests 为准。
 
 <div  align="center">
 	<img src="../assets/requests-limits.png" width = "500"  align=center />
@@ -27,7 +34,7 @@ Kubernetes 将管理的物理资源抽象成指定的类型和对应的计量单
 ```plain
 container:
 	resources:  
-	    requests:    
+	    requests:
 	        cpu: 50m
 	        memory: 50Mi
 	   limits:    
