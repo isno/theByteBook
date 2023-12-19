@@ -23,11 +23,14 @@ Kubernetes 本身不实现集群内的网络模型，而是通过将其抽象出
 
 <div  align="center">
 	<img src="../assets/cni-plugin.png" width = "500"  align=center />
+	<p>CNI 网络插件 [^1]</p>
 </div>
 
 这几十种网络插件笔者不可能逐一解释，但跨主机通信不论形式如何变化，总结总归为以下几种。
 
-- **Overlay 模式**：笔者在 VXLAN 篇已经介绍过 overlay 网络，这是一种虚拟的上层逻辑网络。overlay 网络模式的优点是不受底层网络限制，只要是三层网络互通，就能完成跨数据中心的网络互联，但弊端是数据封包、解包有一定的计算压力和网络延迟消耗。在一个网络受限的环境中，譬如不允许二层通信，只允许三层转发，那么就意味着只能使用 overlay 网络插件。常见的 overlay 网络插件有 Cilium（VXLAN 模式）、Calico（IPIP 模式）以及 Flannel（VXLAN）等。
+- **Overlay 模式**：笔者在 VXLAN 篇已经介绍过 Overlay 网络通信的原理，这是一种虚拟的上层逻辑网络，其优点是不受底层网络限制，只要是三层网络互通，就能完成跨数据中心的网络互联，但弊端是数据封包、解包有一定的计算压力和网络延迟消耗。在一个网络受限的环境中（譬如不允许二层通信，只允许三层转发），那么就意味着只能使用 Overlay 模式网络插件。常见的 Overlay 模式网络插件有 Cilium（VXLAN 模式）、Calico（IPIP 模式）以及 Flannel（VXLAN）等。
 
 - **三层路由**，主要是借助 BGP 等三层路由协议完成路由传递。这种方案优势是传输率较高，不需要封包、解包， 但 BGP 等协议在很多数据中心内部支持，设置较为麻烦。常见的路由方案网络插件有 Calico（BGP 模式）、Cilium（BGP 模式）。
 
+
+[^1]: 参见 https://landscape.cncf.io/guide#runtime--cloud-native-network
