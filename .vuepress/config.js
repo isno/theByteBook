@@ -257,17 +257,8 @@ export default defineUserConfig({
                             '/container/Nydus-image.md',
                             '/container/dragonfly.md'
                         ]
-                    },                
-                    {
-                        text: '7.4 容器运行时',
-                        link:'/container/runtime.md',
-                        collapsable: false,
-                        sidebarDepth: 1,
-                        children: [
-                            '/container/CRI-in-Kubernetes.md',
-                            '/container/kata-containers.md',
-                        ]
-                    },
+                    },   
+                    '/container/runtime.md',
                     {
                         text: '7.5 容器间网络',
                         link: '/container/network.md',
@@ -276,7 +267,7 @@ export default defineUserConfig({
                         children: [
                            "/container/linux-vnet.md",
                            "/container/container-network.md",
-                           "/container/flannel.md"
+                           "/container/Cilium.md"
                         ]
                     },
                     '/container/storage.md',
