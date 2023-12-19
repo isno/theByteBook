@@ -275,7 +275,8 @@ export default defineUserConfig({
                         sidebarDepth: 1,
                         children: [
                            "/container/linux-vnet.md",
-                           "/container/container-network.md"
+                           "/container/container-network.md",
+                           "/container/flannel.md"
                         ]
                     },
                     '/container/storage.md',
