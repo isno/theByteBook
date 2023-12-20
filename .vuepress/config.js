@@ -275,6 +275,7 @@ export default defineUserConfig({
                     '/container/auto-scaling.md',
                     '/container/k8s-deploy.md',
                     '/container/k8s-upgrade.md',
+                    /*
                     {
                         text: '7.7 以应用为中心进行封装',
                         link:'/container/application-centric.md',
@@ -286,7 +287,7 @@ export default defineUserConfig({
                            '/container/CRD-Operator.md',
                            '/container/OAM.md',
                         ]
-                    }
+                    }*/
                 ]
             },
             {
