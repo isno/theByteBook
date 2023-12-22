@@ -12,11 +12,6 @@
 Kubernetes 的网络模型设计的一个基本原则，**每个 pod 都拥有一个独立的 IP 地址，而且假定所有的 Pod 都在一个可以直接联通的、扁平的网络空间中，不管它们是否运行在同一个 Node（宿主机）中，都可以直接通过对方的 IP 进行访问**。
 
 
-
-<div  align="center">
-	<img src="../assets/k8s-net.png" width = "300"  align=center />
-</div>
-
 ## 网络插件生态
 
 Kubernetes 本身不实现集群内的网络模型，而是通过将其抽象出来提供了 CNI 接口给第三方实现，只要最终的网络模型符合标准即可。这样一来节省了开发资源可以集中精力到 Kubernetes 本身，二来可以利用开源社区的力量打造一整个丰富的生态。现如今，支持 CNI 的插件多达二十几种，如下图所示[^1]。
@@ -33,20 +28,28 @@ Kubernetes 本身不实现集群内的网络模型，而是通过将其抽象出
 - **三层路由**，主要是借助 BGP 等三层路由协议完成路由传递。这种方案优势是传输率较高，不需要封包、解包， 但 BGP 等协议在很多数据中心内部支持，设置较为麻烦。常见的路由方案网络插件有 Calico（BGP 模式）、Cilium（BGP 模式）。
 
 
-此外，对于容器编排系统来说，网络并非孤立的功能模块，还要能提供各类的网络访问策略能力支持，譬如 Kubernetes 的 Network Policy 这种用于描述 Pod 之间访问这类 ACL 策略，明显不属于 CNI 范畴，因此并不是每个 CNI 插件都会支持 NetworkPolicy 声明。如果你有这方面的需求，那么 CNI 插件的选择第一个就要排除 Flannel 了。
+此外，对于容器编排系统来说，网络并非孤立的功能模块，还要能提供各类的网络访问策略能力支持，譬如 Kubernetes 的 Network Policy 这种用于描述 Pod 之间访问这类 ACL 策略以及加密通信，这些也明显不属于 CNI 范畴，因此并不是每个 CNI 插件都会支持这些额外的功能。如果你有这方面的需求，那么第一个就要排除 Flannel 了，如果按功能的丰富度而言，受到广泛关注的无疑是 Calico 和 Cilium。
 
 
-CNI 插件性能方面，笔者引用 
-Alexis Ducastel 发布的文章 《Benchmark results of Kubernetes network plugins (CNI) over 10Gbit/s network (Updated: August 2020)》的数据[^2]供你参考，此文中测试了不同 CNI 插件（Antrea、Calico、Canal、Cilium、Kube-router、Flannel、WeaveNet）在裸金属服务器之间，从 Pod to Pod、Pod to Service、网络策略以及加密影响等的通信表现。受限于篇幅，笔者给出文章的最后的测试结论，其结果如下图所示。
+对于插件性能表现方面，笔者引用 cilium 官方的测试数据[^2]，受限于篇幅，笔者给出文章内一部分性能占用表现（运行 32 个并行的 netperf 进程，按 TCP-CRR 的策略测试 cilium 与 Calico 的每秒请求数以及资源占用情况），其结果如下图所示。
+
+:::tip 额外知识
+
+TCP-CRR 表示在一次 TCP 链接中只进行一组 Request/Response 通信即断开，并不断新建 TCP 链接时的响应效率。TCP-CRR 在 Web 服务器访问中较为普遍。
+
+:::
 
 <div  align="center">
-	<img src="../assets/cni-benchmark.webp" width = "650"  align=center />
+	<img src="../assets/bench_tcp_crr_32_processes.png" width = "500" align=center />
+	<p>性能表现</p>
 </div>
 
+<div  align="center">
+	<img src="../assets/bench_tcp_crr_32_processes_cpu.png" width = "500"  align=center />
+	<p>资源占用表现</p>
+</div>
 
-如果你只是一个小型节点集群，且不关心安全性，那么建议使用最轻最稳定的 Flannel。如果是一个标准化的集群，Calico 
-
-
+从结果上看，综合吞出量、延迟表现或者资源占用的表现 Cilium 无疑非常出色。最后，且刨除网络受限环境的影响，假设所有的 CNI 插件我们都可以选择，笔者给到以下建议：如果只是一个小型节点集群，且不关心安全性，那么建议使用最轻最稳定的 Flannel；如果是一个标准化的集群，且看中 CNI 之外的功能（譬如可观测、Network Policy、加密通信），笔者建议就选择势头正劲的 Cilium。
 
 [^1]: 参见 https://landscape.cncf.io/guide#runtime--cloud-native-network
-[^2]: 参见 https://itnext.io/benchmark-results-of-kubernetes-network-plugins-cni-over-10gbit-s-network-updated-august-2020-6e1b757b9e49
+[^2]: 参见 https://cilium.io/blog/2021/05/11/cni-benchmark/

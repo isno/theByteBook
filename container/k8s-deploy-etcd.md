@@ -1,5 +1,6 @@
 # 高可用 etcd 集群
 
+笔者在分布式的章节用大量篇幅介绍共识算法和 raft，现在那些知识终于到了用武之地了。
 
 etcd 是 Kubernetes 的核心存储，Kubernetes 所有的资源对象都保存在 etcd etcd 是否健壮将直接影响 Kubernetes 服务。
 
