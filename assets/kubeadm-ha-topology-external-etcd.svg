@@ -1,0 +1,958 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.1"
+   viewBox="0.0 0.0 800.0 600.0"
+   fill="none"
+   stroke="none"
+   stroke-linecap="square"
+   stroke-miterlimit="10"
+   id="svg673"
+   sodipodi:docname="kubeadm-ha-topology-external-etcd.svg"
+   inkscape:version="1.2.2 (b0a8486, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs677" />
+  <sodipodi:namedview
+     id="namedview675"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="1.1125147"
+     inkscape:cx="242.24399"
+     inkscape:cy="252.58093"
+     inkscape:window-width="1651"
+     inkscape:window-height="868"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg673" />
+  <clipPath
+     id="p.0">
+    <path
+       d="m0 0l800.0 0l0 600.0l-800.0 0l0 -600.0z"
+       clip-rule="nonzero"
+       id="path432" />
+  </clipPath>
+  <g
+     clip-path="url(#p.0)"
+     id="g671">
+    <path
+       fill="#000000"
+       fill-opacity="0.0"
+       d="m0 0l800.0 0l0 600.0l-800.0 0z"
+       fill-rule="evenodd"
+       id="path435" />
+    <path
+       fill="#efefef"
+       d="m17.125984 231.90552l244.0 0l0 175.1496l-244.0 0z"
+       fill-rule="evenodd"
+       id="path437" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       stroke-dasharray="1.0,3.0"
+       d="m17.125984 231.90552l244.0 0l0 175.1496l-244.0 0z"
+       fill-rule="evenodd"
+       id="path439" />
+    <path
+       fill="#efefef"
+       d="m275.6299 231.90552l244.00003 0l0 175.1496l-244.00003 0z"
+       fill-rule="evenodd"
+       id="path441" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       stroke-dasharray="1.0,3.0"
+       d="m275.6299 231.90552l244.00003 0l0 175.1496l-244.00003 0z"
+       fill-rule="evenodd"
+       id="path443" />
+    <path
+       fill="#efefef"
+       d="m538.87665 231.90552l244.0 0l0 175.1496l-244.0 0z"
+       fill-rule="evenodd"
+       id="path445" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       stroke-dasharray="1.0,3.0"
+       d="m538.87665 231.90552l244.0 0l0 175.1496l-244.0 0z"
+       fill-rule="evenodd"
+       id="path447" />
+    <path
+       fill="#d9ead3"
+       d="m30.503937 449.2756l738.99207 0l0 87.99997l-738.99207 0z"
+       fill-rule="evenodd"
+       id="path449" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       stroke-dasharray="1.0,3.0"
+       d="m30.503937 449.2756l738.99207 0l0 87.99997l-738.99207 0z"
+       fill-rule="evenodd"
+       id="path451" />
+    <path
+       fill="#a4c2f4"
+       d="m49.124672 263.98425l180.0 0l0 41.984253l-180.0 0z"
+       fill-rule="evenodd"
+       id="path453" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m49.124672 263.98425l180.0 0l0 41.984253l-180.0 0z"
+       fill-rule="evenodd"
+       id="path455" />
+    <path
+       fill="#cfe2f3"
+       d="m49.12336 305.51706l180.0 0l0 41.984253l-180.0 0z"
+       fill-rule="evenodd"
+       id="path459" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m49.12336 305.51706l180.0 0l0 41.984253l-180.0 0z"
+       fill-rule="evenodd"
+       id="path461" />
+    <path
+       fill="#cfe2f3"
+       d="m49.12336 347.5013l180.0 0l0 41.984253l-180.0 0z"
+       fill-rule="evenodd"
+       id="path465" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m49.12336 347.5013l180.0 0l0 41.984253l-180.0 0z"
+       fill-rule="evenodd"
+       id="path467" />
+    <path
+       fill="#a4c2f4"
+       d="m307.6286 263.98425l180.0 0l0 41.984253l-180.0 0z"
+       fill-rule="evenodd"
+       id="path471" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m307.6286 263.98425l180.0 0l0 41.984253l-180.0 0z"
+       fill-rule="evenodd"
+       id="path473" />
+    <path
+       fill="#b6d7a8"
+       d="m307.62598 485.27823l180.0 0l0 41.984222l-180.0 0z"
+       fill-rule="evenodd"
+       id="path477" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m307.62598 485.27823l180.0 0l0 41.984222l-180.0 0z"
+       fill-rule="evenodd"
+       id="path479" />
+    <path
+       fill="#cfe2f3"
+       d="m307.6273 305.51706l180.0 0l0 41.984253l-180.0 0z"
+       fill-rule="evenodd"
+       id="path483" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m307.6273 305.51706l180.0 0l0 41.984253l-180.0 0z"
+       fill-rule="evenodd"
+       id="path485" />
+    <path
+       fill="#cfe2f3"
+       d="m307.6273 347.5013l180.0 0l0 41.984253l-180.0 0z"
+       fill-rule="evenodd"
+       id="path489" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m307.6273 347.5013l180.0 0l0 41.984253l-180.0 0z"
+       fill-rule="evenodd"
+       id="path491" />
+    <path
+       fill="#a4c2f4"
+       d="m570.8753 263.98425l180.0 0l0 41.984253l-180.0 0z"
+       fill-rule="evenodd"
+       id="path495" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m570.8753 263.98425l180.0 0l0 41.984253l-180.0 0z"
+       fill-rule="evenodd"
+       id="path497" />
+    <path
+       fill="#cfe2f3"
+       d="m570.874 305.51706l180.0 0l0 41.984253l-180.0 0z"
+       fill-rule="evenodd"
+       id="path501" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m570.874 305.51706l180.0 0l0 41.984253l-180.0 0z"
+       fill-rule="evenodd"
+       id="path503" />
+    <path
+       fill="#cfe2f3"
+       d="m570.874 347.5013l180.0 0l0 41.984253l-180.0 0z"
+       fill-rule="evenodd"
+       id="path507" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m570.874 347.5013l180.0 0l0 41.984253l-180.0 0z"
+       fill-rule="evenodd"
+       id="path509" />
+    <path
+       fill="#ffe599"
+       d="m319.8808 167.52231l155.49606 0l0 41.984253l-155.49606 0z"
+       fill-rule="evenodd"
+       id="path513" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m319.8808 167.52231l155.49606 0l0 41.984253l-155.49606 0z"
+       fill-rule="evenodd"
+       id="path515" />
+    <path
+       fill="#000000"
+       fill-opacity="0.0"
+       d="m139.12466 263.98425l0 -75.46457l180.75592 0"
+       fill-rule="evenodd"
+       id="path519" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       stroke-dasharray="4.0,3.0"
+       d="m139.12466 263.98425l0 -75.46457l180.75592 0"
+       fill-rule="evenodd"
+       id="path521" />
+    <path
+       fill="#000000"
+       fill-opacity="0.0"
+       d="m397.6286 263.98425l0 -27.238647l0.06298828 0l0 -27.249542"
+       fill-rule="evenodd"
+       id="path523" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       stroke-dasharray="8.0,3.0"
+       d="m397.6286 263.98425l0 -27.238647l0.06298828 0l0 -27.249542"
+       fill-rule="evenodd"
+       id="path525" />
+    <path
+       fill="#000000"
+       fill-opacity="0.0"
+       d="m306.8714 448.9147l180.75589 0l0 30.740143l-180.75589 0z"
+       fill-rule="evenodd"
+       id="path527" />
+    <path
+       fill="#000000"
+       fill-opacity="0.0"
+       d="m475.36353 188.51968l185.51178 0l0 75.46457"
+       fill-rule="evenodd"
+       id="path531" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       stroke-dasharray="8.0,3.0"
+       d="m475.36353 188.51968l185.51178 0l0 75.46457"
+       fill-rule="evenodd"
+       id="path533" />
+    <path
+       fill="#000000"
+       fill-opacity="0.0"
+       d="m9.251968 0l362.74017 0l0 41.984253l-362.74017 0z"
+       fill-rule="evenodd"
+       id="path535" />
+    <path
+       fill="#000000"
+       fill-opacity="0.0"
+       d="m272.50787 230.25984l130.99213 0l0 30.740158l-130.99213 0z"
+       fill-rule="evenodd"
+       id="path539" />
+    <path
+       fill="#fce5cd"
+       d="m52.11155 55.464565l126.015755 0l0 46.047245l-126.015755 0z"
+       fill-rule="evenodd"
+       id="path543" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m52.11155 55.464565l126.015755 0l0 46.047245l-126.015755 0z"
+       fill-rule="evenodd"
+       id="path545" />
+    <path
+       fill="#fce5cd"
+       d="m193.11154 55.464565l126.01575 0l0 46.047245l-126.01575 0z"
+       fill-rule="evenodd"
+       id="path549" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m193.11154 55.464565l126.01575 0l0 46.047245l-126.01575 0z"
+       fill-rule="evenodd"
+       id="path551" />
+    <path
+       fill="#fce5cd"
+       d="m335.1273 55.464565l126.01575 0l0 46.047245l-126.01575 0z"
+       fill-rule="evenodd"
+       id="path555" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m335.1273 55.464565l126.01575 0l0 46.047245l-126.01575 0z"
+       fill-rule="evenodd"
+       id="path557" />
+    <path
+       fill="#fce5cd"
+       d="m476.1273 55.464565l126.01578 0l0 46.047245l-126.01578 0z"
+       fill-rule="evenodd"
+       id="path561" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m476.1273 55.464565l126.01578 0l0 46.047245l-126.01578 0z"
+       fill-rule="evenodd"
+       id="path563" />
+    <path
+       fill="#fce5cd"
+       d="m617.1273 55.464565l126.01575 0l0 46.047245l-126.01575 0z"
+       fill-rule="evenodd"
+       id="path567" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m617.1273 55.464565l126.01575 0l0 46.047245l-126.01575 0z"
+       fill-rule="evenodd"
+       id="path569" />
+    <path
+       fill="#cfe2f3"
+       d="m322.00787 498.03018l0 0c0 1.2502441 4.0541077 2.263794 9.055115 2.263794c5.001007 0 9.055115 -1.0135498 9.055115 -2.263794l0 16.480316c0 1.2502441 -4.0541077 2.263794 -9.055115 2.263794c-5.001007 0 -9.055115 -1.0135498 -9.055115 -2.263794z"
+       fill-rule="evenodd"
+       id="path573" />
+    <path
+       fill="#e2edf7"
+       d="m322.00787 498.03018l0 0c0 -1.2502441 4.0541077 -2.2637634 9.055115 -2.2637634c5.001007 0 9.055115 1.0135193 9.055115 2.2637634l0 0c0 1.2502441 -4.0541077 2.263794 -9.055115 2.263794c-5.001007 0 -9.055115 -1.0135498 -9.055115 -2.263794z"
+       fill-rule="evenodd"
+       id="path575" />
+    <path
+       fill="#000000"
+       fill-opacity="0.0"
+       d="m340.1181 498.03018l0 0c0 1.2502441 -4.0541077 2.263794 -9.055115 2.263794c-5.001007 0 -9.055115 -1.0135498 -9.055115 -2.263794l0 0c0 -1.2502441 4.0541077 -2.2637634 9.055115 -2.2637634c5.001007 0 9.055115 1.0135193 9.055115 2.2637634l0 16.480316c0 1.2502441 -4.0541077 2.263794 -9.055115 2.263794c-5.001007 0 -9.055115 -1.0135498 -9.055115 -2.263794l0 -16.480316"
+       fill-rule="evenodd"
+       id="path577" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m340.1181 498.03018l0 0c0 1.2502441 -4.0541077 2.263794 -9.055115 2.263794c-5.001007 0 -9.055115 -1.0135498 -9.055115 -2.263794l0 0c0 -1.2502441 4.0541077 -2.2637634 9.055115 -2.2637634c5.001007 0 9.055115 1.0135193 9.055115 2.2637634l0 16.480316c0 1.2502441 -4.0541077 2.263794 -9.055115 2.263794c-5.001007 0 -9.055115 -1.0135498 -9.055115 -2.263794l0 -16.480316"
+       fill-rule="evenodd"
+       id="path579" />
+    <path
+       fill="#000000"
+       fill-opacity="0.0"
+       d="m12.006561 230.25984l130.99213 0l0 30.740158l-130.99213 0z"
+       fill-rule="evenodd"
+       id="path581" />
+    <path
+       fill="#000000"
+       fill-opacity="0.0"
+       d="m534.13257 230.25984l130.99213 0l0 30.740158l-130.99213 0z"
+       fill-rule="evenodd"
+       id="path585" />
+    <path
+       fill="#b6d7a8"
+       d="m571.14307 485.27823l180.0 0l0 41.984222l-180.0 0z"
+       fill-rule="evenodd"
+       id="path589" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m571.14307 485.27823l180.0 0l0 41.984222l-180.0 0z"
+       fill-rule="evenodd"
+       id="path591" />
+    <path
+       fill="#cfe2f3"
+       d="m585.52496 498.03018l0 0c0 1.2502441 4.054077 2.263794 9.055115 2.263794c5.0009766 0 9.055115 -1.0135498 9.055115 -2.263794l0 16.480316c0 1.2502441 -4.054138 2.263794 -9.055115 2.263794c-5.0010376 0 -9.055115 -1.0135498 -9.055115 -2.263794z"
+       fill-rule="evenodd"
+       id="path595" />
+    <path
+       fill="#e2edf7"
+       d="m585.52496 498.03018l0 0c0 -1.2502441 4.054077 -2.2637634 9.055115 -2.2637634c5.0009766 0 9.055115 1.0135193 9.055115 2.2637634l0 0c0 1.2502441 -4.054138 2.263794 -9.055115 2.263794c-5.0010376 0 -9.055115 -1.0135498 -9.055115 -2.263794z"
+       fill-rule="evenodd"
+       id="path597" />
+    <path
+       fill="#000000"
+       fill-opacity="0.0"
+       d="m603.6352 498.03018l0 0c0 1.2502441 -4.054138 2.263794 -9.055115 2.263794c-5.0010376 0 -9.055115 -1.0135498 -9.055115 -2.263794l0 0c0 -1.2502441 4.054077 -2.2637634 9.055115 -2.2637634c5.0009766 0 9.055115 1.0135193 9.055115 2.2637634l0 16.480316c0 1.2502441 -4.054138 2.263794 -9.055115 2.263794c-5.0010376 0 -9.055115 -1.0135498 -9.055115 -2.263794l0 -16.480316"
+       fill-rule="evenodd"
+       id="path599" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m603.6352 498.03018l0 0c0 1.2502441 -4.054138 2.263794 -9.055115 2.263794c-5.0010376 0 -9.055115 -1.0135498 -9.055115 -2.263794l0 0c0 -1.2502441 4.054077 -2.2637634 9.055115 -2.2637634c5.0009766 0 9.055115 1.0135193 9.055115 2.2637634l0 16.480316c0 1.2502441 -4.054138 2.263794 -9.055115 2.263794c-5.0010376 0 -9.055115 -1.0135498 -9.055115 -2.263794l0 -16.480316"
+       fill-rule="evenodd"
+       id="path601" />
+    <path
+       fill="#b6d7a8"
+       d="m45.728348 485.27823l180.0 0l0 41.984222l-180.0 0z"
+       fill-rule="evenodd"
+       id="path603" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m45.728348 485.27823l180.0 0l0 41.984222l-180.0 0z"
+       fill-rule="evenodd"
+       id="path605" />
+    <path
+       fill="#cfe2f3"
+       d="m60.110237 498.03018l0 0c0 1.2502441 4.0541153 2.263794 9.055115 2.263794c5.001007 0 9.055122 -1.0135498 9.055122 -2.263794l0 16.480316c0 1.2502441 -4.0541153 2.263794 -9.055122 2.263794c-5.0009995 0 -9.055115 -1.0135498 -9.055115 -2.263794z"
+       fill-rule="evenodd"
+       id="path609" />
+    <path
+       fill="#e2edf7"
+       d="m60.110237 498.03018l0 0c0 -1.2502441 4.0541153 -2.2637634 9.055115 -2.2637634c5.001007 0 9.055122 1.0135193 9.055122 2.2637634l0 0c0 1.2502441 -4.0541153 2.263794 -9.055122 2.263794c-5.0009995 0 -9.055115 -1.0135498 -9.055115 -2.263794z"
+       fill-rule="evenodd"
+       id="path611" />
+    <path
+       fill="#000000"
+       fill-opacity="0.0"
+       d="m78.220474 498.03018l0 0c0 1.2502441 -4.0541153 2.263794 -9.055122 2.263794c-5.0009995 0 -9.055115 -1.0135498 -9.055115 -2.263794l0 0c0 -1.2502441 4.0541153 -2.2637634 9.055115 -2.2637634c5.001007 0 9.055122 1.0135193 9.055122 2.2637634l0 16.480316c0 1.2502441 -4.0541153 2.263794 -9.055122 2.263794c-5.0009995 0 -9.055115 -1.0135498 -9.055115 -2.263794l0 -16.480316"
+       fill-rule="evenodd"
+       id="path613" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m78.220474 498.03018l0 0c0 1.2502441 -4.0541153 2.263794 -9.055122 2.263794c-5.0009995 0 -9.055115 -1.0135498 -9.055115 -2.263794l0 0c0 -1.2502441 4.0541153 -2.2637634 9.055115 -2.2637634c5.001007 0 9.055122 1.0135193 9.055122 2.2637634l0 16.480316c0 1.2502441 -4.0541153 2.263794 -9.055122 2.263794c-5.0009995 0 -9.055115 -1.0135498 -9.055115 -2.263794l0 -16.480316"
+       fill-rule="evenodd"
+       id="path615" />
+    <path
+       fill="#000000"
+       fill-opacity="0.0"
+       d="m115.11942 101.51181l222.86615 66.48819"
+       fill-rule="evenodd"
+       id="path617" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m115.11942 101.51181l217.11655 64.7729"
+       fill-rule="evenodd"
+       id="path619" />
+    <path
+       fill="#000000"
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linecap="butt"
+       d="m331.76376 167.86751l4.820923 -0.28544617l-3.8765259 -2.8801422z"
+       fill-rule="evenodd"
+       id="path621" />
+    <path
+       fill="#000000"
+       fill-opacity="0.0"
+       d="m256.11942 101.51181l103.87402 67.49606"
+       fill-rule="evenodd"
+       id="path623" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m256.11942 101.51181l98.842865 64.22688"
+       fill-rule="evenodd"
+       id="path625" />
+    <path
+       fill="#000000"
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linecap="butt"
+       d="m354.06232 167.12372l4.7052917 1.087616l-2.905365 -3.8576508z"
+       fill-rule="evenodd"
+       id="path627" />
+    <path
+       fill="#000000"
+       fill-opacity="0.0"
+       d="m398.13516 101.51181l-0.50393677 66.01575"
+       fill-rule="evenodd"
+       id="path629" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m398.13516 101.51181l-0.45812988 60.01593"
+       fill-rule="evenodd"
+       id="path631" />
+    <path
+       fill="#000000"
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linecap="butt"
+       d="m396.02536 161.51512l1.6170349 4.550583l1.6863098 -4.52536z"
+       fill-rule="evenodd"
+       id="path633" />
+    <path
+       fill="#000000"
+       fill-opacity="0.0"
+       d="m539.1352 101.51181l-108.12601 66.48819"
+       fill-rule="evenodd"
+       id="path635" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m539.1352 101.51181l-103.014984 63.345352"
+       fill-rule="evenodd"
+       id="path637" />
+    <path
+       fill="#000000"
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linecap="butt"
+       d="m435.25504 163.45015l-3.0005493 3.7841034l4.7309265 -0.9700928z"
+       fill-rule="evenodd"
+       id="path639" />
+    <path
+       fill="#000000"
+       fill-opacity="0.0"
+       d="m680.1352 101.51181l-215.14963 66.48819"
+       fill-rule="evenodd"
+       id="path641" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       d="m680.1352 101.51181l-209.41711 64.71666"
+       fill-rule="evenodd"
+       id="path643" />
+    <path
+       fill="#000000"
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linecap="butt"
+       d="m470.23038 164.65038l-3.8480835 2.917984l4.823456 0.23820496z"
+       fill-rule="evenodd"
+       id="path645" />
+    <path
+       fill="#000000"
+       fill-opacity="0.0"
+       d="m49.124672 284.97638l-17.124899 0l0 143.0231l107.01466 0l0 22.016266"
+       fill-rule="evenodd"
+       id="path647" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       stroke-dasharray="8.0,3.0"
+       d="m43.124672 284.97638l-11.124901 0l0 143.02313l107.01466 0l0 16.016235"
+       fill-rule="evenodd"
+       id="path649" />
+    <path
+       fill="#000000"
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linecap="butt"
+       d="m43.124672 286.6281l4.5380974 -1.6517334l-4.5380974 -1.6517334z"
+       fill-rule="evenodd"
+       id="path651" />
+    <path
+       fill="#000000"
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linecap="butt"
+       d="m137.3627 444.01575l1.6517334 4.538086l1.6517334 -4.538086z"
+       fill-rule="evenodd"
+       id="path653" />
+    <path
+       fill="#000000"
+       fill-opacity="0.0"
+       d="m750.8753 284.97638l16.124878 0l0 143.02399l-103.99884 0l0 21.007507"
+       fill-rule="evenodd"
+       id="path655" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       stroke-dasharray="8.0,3.0"
+       d="m756.8753 284.97638l10.124939 0l0 143.02399l-103.9989 0l0 15.007507"
+       fill-rule="evenodd"
+       id="path657" />
+    <path
+       fill="#000000"
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linecap="butt"
+       d="m756.8753 283.32465l-4.538086 1.6517334l4.538086 1.6517334z"
+       fill-rule="evenodd"
+       id="path659" />
+    <path
+       fill="#000000"
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linecap="butt"
+       d="m661.3496 443.00787l1.6517334 4.538086l1.6516724 -4.538086z"
+       fill-rule="evenodd"
+       id="path661" />
+    <path
+       fill="#000000"
+       fill-opacity="0.0"
+       d="m307.6286 284.97638l-15.628479 0l0 142.02399l108.00644 0l0 22.290985"
+       fill-rule="evenodd"
+       id="path663" />
+    <path
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linejoin="round"
+       stroke-linecap="butt"
+       stroke-dasharray="8.0,3.0"
+       d="m301.6286 284.97638l-9.6285095 0l0 142.02399l108.00647 0l0 16.290985"
+       fill-rule="evenodd"
+       id="path665" />
+    <path
+       fill="#000000"
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linecap="butt"
+       d="m301.6286 286.6281l4.5381165 -1.6517334l-4.5381165 -1.6517334z"
+       fill-rule="evenodd"
+       id="path667" />
+    <path
+       fill="#000000"
+       stroke="#000000"
+       stroke-width="1.0"
+       stroke-linecap="butt"
+       d="m398.35483 443.29135l1.6517334 4.538086l1.6517334 -4.538086z"
+       fill-rule="evenodd"
+       id="path669" />
+  </g>
+  <text
+     xml:space="preserve"
+     style="font-size:18.6667px;fill:#000000"
+     x="24.271248"
+     y="32.088104"
+     id="text837"><tspan
+       sodipodi:role="line"
+       id="tspan835"
+       x="24.271248"
+       y="32.088104"
+       style="font-size:18.6667px">kubeadm 高可用拓扑 - 外部 etcd</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:18.6667px;fill:#000000"
+     x="74.957893"
+     y="87.240494"
+     id="text837-6"><tspan
+       sodipodi:role="line"
+       id="tspan835-9"
+       x="74.957893"
+       y="87.240494"
+       style="font-size:18.6667px">工作节点</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:18.6667px;fill:#000000"
+     x="346.95682"
+     y="195.10881"
+     id="text837-6-8"><tspan
+       sodipodi:role="line"
+       id="tspan835-9-58"
+       x="346.95682"
+       y="195.10881"
+       style="font-size:18.6667px">负载均衡器</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:18.6667px;fill:#000000"
+     x="34.108017"
+     y="181.55746"
+     id="text837-6-8-6"><tspan
+       sodipodi:role="line"
+       id="tspan835-9-58-0"
+       x="34.108017"
+       y="181.55746"
+       style="font-size:18.6667px">API 服务器</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:18.6667px;fill:#000000"
+     x="92.397484"
+     y="292.8754"
+     id="text837-6-8-6-4"><tspan
+       sodipodi:role="line"
+       id="tspan835-9-58-0-0"
+       x="92.397484"
+       y="292.8754"
+       style="font-size:18.6667px">API 服务器</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:18.6667px;fill:#000000"
+     x="81.611099"
+     y="334.22318"
+     id="text837-6-8-6-4-3"><tspan
+       sodipodi:role="line"
+       id="tspan835-9-58-0-0-8"
+       x="81.611099"
+       y="334.22318"
+       style="font-size:18.6667px">控制器管理器</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:18.6667px;fill:#000000"
+     x="105.11085"
+     y="373.95551"
+     id="text837-6-8-6-4-3-8"><tspan
+       sodipodi:role="line"
+       id="tspan835-9-58-0-0-8-6"
+       x="105.11085"
+       y="373.95551"
+       style="font-size:18.6667px">调度器</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:18.6667px;fill:#000000"
+     x="101.17668"
+     y="512.12543"
+     id="text837-6-8-6-4-3-8-4"><tspan
+       sodipodi:role="line"
+       id="tspan835-9-58-0-0-8-6-88"
+       x="101.17668"
+       y="512.12543"
+       style="font-size:18.6667px">etcd 主机</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:16px;fill:#000000"
+     x="29.795162"
+     y="254.35181"
+     id="text837-6-8-6-4-3-8-4-8"><tspan
+       sodipodi:role="line"
+       id="tspan835-9-58-0-0-8-6-88-4"
+       x="29.795162"
+       y="254.35181"
+       style="font-size:16px">控制平面节点</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:16px;fill:#000000"
+     x="345.84335"
+     y="473.5463"
+     id="text837-6-8-6-4-3-8-4-8-5"><tspan
+       sodipodi:role="line"
+       id="tspan835-9-58-0-0-8-6-88-4-3"
+       x="345.84335"
+       y="473.5463"
+       style="font-size:16px">外部 etcd 集群</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:16px;fill:#000000"
+     x="290.11377"
+     y="254.22333"
+     id="text837-6-8-6-4-3-8-4-8-0"><tspan
+       sodipodi:role="line"
+       id="tspan835-9-58-0-0-8-6-88-4-5"
+       x="290.11377"
+       y="254.22333"
+       style="font-size:16px">控制平面节点</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:16px;fill:#000000"
+     x="551.68335"
+     y="255.12221"
+     id="text837-6-8-6-4-3-8-4-8-6"><tspan
+       sodipodi:role="line"
+       id="tspan835-9-58-0-0-8-6-88-4-8"
+       x="551.68335"
+       y="255.12221"
+       style="font-size:16px">控制平面节点</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:18.6667px;fill:#000000"
+     x="356.08301"
+     y="512.32593"
+     id="text837-6-8-6-4-3-8-4-0"><tspan
+       sodipodi:role="line"
+       id="tspan835-9-58-0-0-8-6-88-6"
+       x="356.08301"
+       y="512.32593"
+       style="font-size:18.6667px">etcd 主机</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:18.6667px;fill:#000000"
+     x="620.34918"
+     y="512.32593"
+     id="text837-6-8-6-4-3-8-4-4"><tspan
+       sodipodi:role="line"
+       id="tspan835-9-58-0-0-8-6-88-7"
+       x="620.34918"
+       y="512.32593"
+       style="font-size:18.6667px">etcd 主机</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:18.6667px;fill:#000000"
+     x="373.53265"
+     y="376.39688"
+     id="text837-6-8-6-4-3-8-6"><tspan
+       sodipodi:role="line"
+       id="tspan835-9-58-0-0-8-6-8"
+       x="373.53265"
+       y="376.39688"
+       style="font-size:18.6667px">调度器</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:18.6667px;fill:#000000"
+     x="637.79883"
+     y="376.39688"
+     id="text837-6-8-6-4-3-8-9"><tspan
+       sodipodi:role="line"
+       id="tspan835-9-58-0-0-8-6-1"
+       x="637.79883"
+       y="376.39688"
+       style="font-size:18.6667px">调度器</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:18.6667px;fill:#000000"
+     x="341.51224"
+     y="338.00092"
+     id="text837-6-8-6-4-3-9"><tspan
+       sodipodi:role="line"
+       id="tspan835-9-58-0-0-8-2"
+       x="341.51224"
+       y="338.00092"
+       style="font-size:18.6667px">控制器管理器</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:18.6667px;fill:#000000"
+     x="605.77838"
+     y="336.20319"
+     id="text837-6-8-6-4-3-4"><tspan
+       sodipodi:role="line"
+       id="tspan835-9-58-0-0-8-5"
+       x="605.77838"
+       y="336.20319"
+       style="font-size:18.6667px">控制器管理器</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:18.6667px;fill:#000000"
+     x="353.06821"
+     y="295.57199"
+     id="text837-6-8-6-4-4"><tspan
+       sodipodi:role="line"
+       id="tspan835-9-58-0-0-6"
+       x="353.06821"
+       y="295.57199"
+       style="font-size:18.6667px">API 服务器</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:18.6667px;fill:#000000"
+     x="613.73895"
+     y="294.67313"
+     id="text837-6-8-6-4-46"><tspan
+       sodipodi:role="line"
+       id="tspan835-9-58-0-0-4"
+       x="613.73895"
+       y="294.67313"
+       style="font-size:18.6667px">API 服务器</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:18.6667px;fill:#000000"
+     x="219.31804"
+     y="86.346184"
+     id="text837-6-9"><tspan
+       sodipodi:role="line"
+       id="tspan835-9-1"
+       x="219.31804"
+       y="86.346184"
+       style="font-size:18.6667px">工作节点</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:18.6667px;fill:#000000"
+     x="357.74319"
+     y="85.447319"
+     id="text837-6-5"><tspan
+       sodipodi:role="line"
+       id="tspan835-9-5"
+       x="357.74319"
+       y="85.447319"
+       style="font-size:18.6667px">工作节点</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:18.6667px;fill:#000000"
+     x="497.96603"
+     y="86.346184"
+     id="text837-6-5-2"><tspan
+       sodipodi:role="line"
+       id="tspan835-9-5-0"
+       x="497.96603"
+       y="86.346184"
+       style="font-size:18.6667px">工作节点</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:18.6667px;fill:#000000"
+     x="644.48102"
+     y="86.346191"
+     id="text837-6-5-7"><tspan
+       sodipodi:role="line"
+       id="tspan835-9-5-4"
+       x="644.48102"
+       y="86.346191"
+       style="font-size:18.6667px">工作节点</tspan></text>
+</svg>

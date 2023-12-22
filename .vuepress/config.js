@@ -273,7 +273,20 @@ export default defineUserConfig({
                     '/container/storage.md',
                     '/container/resource-limit.md',
                     '/container/auto-scaling.md',
-                    '/container/k8s-deploy.md',
+                    {
+                        text: 'kubernetes 生产级部署',
+                        link:'/container/k8s-deploy.md',
+                        collapsable: false,
+                        sidebarDepth: 1,
+                        children: [
+                           '/container/k8s-deploy-prepare.md',
+                           '/container/k8s-deploy-etcd.md',
+                           '/container/k8s-deploy-containerd.md',
+                           '/container/k8s-deploy-clilium.md',
+                           
+                        ]
+                    },
+
                     '/container/k8s-upgrade.md',
                     /*
                     {

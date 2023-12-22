@@ -1,8 +1,15 @@
 # 第十章 GitOps 落地实践
 
-GitOps 是 DevOps 文化的一种工程实践，它重新定义了云原生场景下的持续交付模型。GitOps 下的整个运维体系使用声明式描述，并使用 Git 类似的版本控制系统对基础设施、应用配置等进行跟踪管理，系统任何变更在 Git 版本的控制下更加便捷地进行跟踪。 
+随着 DevOps 文化的盛行，人们也一直在寻找一种能更好解决云环境中持续部署的最佳实践。
 
-GitOps 以目标为导向，使用 Git 来维护系统的期望状态，结合 CI/CD 流程中的工具，如 Helm、ArgoCD 等，提高了生产力、安全性和合规性，以及升应用交付的效率和质量保证。
+GitOps 起源于 weaveworks 公司在 2017 年发表的一篇博客：​GitOps - Operations by Pull Request[^1]。在这篇文章中，作者 Alexis Richardson 介绍了一种以 Git 为唯一事实来源的软件部署方式。在这种方式下，我们需要将软件设施定义在 Git 仓库中进行管理，这里的软件设施不限于应用本身，也包括 IaaS、Kubernetes 这样的基础设置。每个工程师都可以通过提交 Pull Request 来修改软件设施，然后通过自动化程序（譬如 Flux CD、Argo CD）的方式在线上执行这些修改。
 
+这种方式的交付（使用声明式描述、使用 Git 类似的版本控制系统进行跟踪管理、更优雅的可观测性）不仅缩短了构建过程、提高部署速度，更为
+
+
+
+
+
+[^1]: 参见 https://www.weave.works/blog/gitops-operations-by-pull-request
 
 
