@@ -35,7 +35,7 @@
 | DevOps|  Development + Operations | 开发运维 |
 | AIDevOps|  AI + Development + Operations | 智能开发运维 |
 | DevSecOps | Development + Security + Operations | 开发、安全和运维，应用安全 (AppSec) 领域术语 |
-| CI/CD|  Continuous Intergration + Continuous Deployment | 持续集成 + 持续交付 |
+| CI/CD|  Continuous Integration + Continuous Deployment | 持续集成 + 持续交付 |
 
 
 表 3 Kubernetes 相关类
