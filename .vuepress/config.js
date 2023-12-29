@@ -266,9 +266,7 @@ export default defineUserConfig({
                         sidebarDepth: 1,
                         children: [
                            "/container/linux-vnet.md",
-                           "/container/container-network.md",
-                           "/container/Cilium.md"
-                        ]
+                           "/container/container-network.md"                        ]
                     },
                     '/container/storage.md',
                     '/container/resource-limit.md',
@@ -310,6 +308,7 @@ export default defineUserConfig({
                 link: '/ServiceMesh/summary.md',
                 children: [
                     '/ServiceMesh/MicroService-history.md',
+                    '/ServiceMesh/overview.md'
                 ]
             },
              {
