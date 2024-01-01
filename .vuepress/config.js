@@ -285,8 +285,6 @@ export default defineUserConfig({
                            
                         ]
                     },
-
-                    '/container/k8s-upgrade.md',
                     /*
                     {
                         text: '7.7 以应用为中心进行封装',

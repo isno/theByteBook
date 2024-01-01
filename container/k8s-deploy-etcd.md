@@ -29,7 +29,74 @@ tar -xvf etcd-v3.5.11-linux-amd64.tar.gz
 mv etcd-v3.5.11-linux-amd64/etcd* /usr/local/bin
 ```
 
+2. 创建etcd集群配置文件，标注部分按实际情况进行修改
+
+```
+cat > /opt/etcd/cfg/etcd.conf << EOF
+#[Member]
+# 自定义此etcd节点的名称，集群内唯一
+ETCD_NAME="etcd-1"
+# 定义etcd数据存放目录
+ETCD_DATA_DIR="/var/lib/etcd/default.etcd"
+# 定义本机和成员之间通信的地址
+ETCD_LISTEN_PEER_URLS="https://10.211.55.7:2380" 
+# 定义etcd对外提供服务的地址
+ETCD_LISTEN_CLIENT_URLS="https://10.211.55.7:2379,http://127.0.0.1:2379"
+
+#[Clustering]
+# 定义该节点成员对等URL地址，且会通告集群的其余成员节点
+ETCD_INITIAL_ADVERTISE_PEER_URLS="https://10.211.55.7:2380"
+# 此成员的客户端URL列表，用于通告群集的其余部分
+ETCD_ADVERTISE_CLIENT_URLS="https://10.211.55.7:2379"
+# 集群中所有节点的信息
+ETCD_INITIAL_CLUSTER="etcd-1=https://10.211.55.7:2380,etcd-2=https://10.211.55.8:2380,etcd-3=https://10.211.55.9:2380"
+# 创建集群的token，这个值每个集群保持唯一
+ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster"
+# 设置new为初始静态或DNS引导期间出现的所有成员。如果将此选项设置为existing，则etcd将尝试加入现有群集
+ETCD_INITIAL_CLUSTER_STATE="new"
+# flannel操作etcd使用的是v2的API，而kubernetes操作etcd使用的v3的API，在ETCD3.5版本中默认关闭v2版本，所以为了兼容flannel，要设置开启v2的API
+ETCD_ENABLE_V2="true"
+EOF
+```
+
 2. 创建 etcd 的 systemd unit 文件
 
+```
+[Unit]
+Description=Etcd Server
+After=network.target
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=notify
+EnvironmentFile=/opt/etcd/cfg/etcd.conf
+ExecStart=/opt/etcd/bin/etcd \
+        --cert-file=/opt/etcd/ssl/etcd.pem \ 
+        --key-file=/opt/etcd/ssl/etcd-key.pem \
+        --peer-cert-file=/opt/etcd/ssl/etcd.pem \
+        --peer-key-file=/opt/etcd/ssl/etcd-key.pem \
+        --trusted-ca-file=/opt/etcd/ssl/ca.pem \
+        --peer-trusted-ca-file=/opt/etcd/ssl/ca.pem
+Restart=on-failure
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
+```
+
+3. 在所有 etcd 集群节点上设置 etcd 开机自启并启动 etcd
+
+```
+systemctl daemon-reload
+systemctl enable etcd
+systemctl start etcd # 在第一台节点上执行start后会一直卡着无法返回命令提示符，这是因为在等待其他节点准备就绪，继续启动其余节点即可
+```
+
+4. 在任意 etcd 节点上执行如下命令查看集群状态，若所有节点均处于 healthy 状态则表示 etcd 集群部署成功
+
+```
+/opt/etcd/bin/etcdctl --cacert=/opt/etcd/ssl/ca.pem --cert=/opt/etcd/ssl/etcd.pem --key=/opt/etcd/ssl/etcd-key.pem --endpoints="https://10.211.55.7:2379,https://10.211.55.8:2379,https://10.211.55.9:2379" endpoint health
+```
 
 [^1]: 参见 https://etcd.io/docs/v3.5/op-guide/failures/
