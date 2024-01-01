@@ -1,5 +1,11 @@
 # 高可用 etcd 集群
 
+:::tip etcd
+
+etcd 是基于 Raft 的分布式 key-value 存储系统，由 CoreOS 开发，常用于服务发现、共享配置以及并发控制（如 leader 选举、分布式锁等）。kubernetes 使用 etcd 存储所有运行数据。
+
+
+:::
 笔者在分布式的章节用大量篇幅介绍共识算法和 raft，这一节那些知识终于到了用武之地。
 
 笔者根据 raft 协议以及 etcd 本身实现的特性，解读部署中的部分策略，首先因 raft 选举或者可用性要求，一般部署节点的个数奇数且数量大于 3 个，注意，笔者用的是“一般”，实际上**raft 并不严格限定到底是奇数还是偶数，只要 (n-1)/2 以上的节点正常，集群就能正常工作**。譬如配置 4 个节点，其中 1 个节点宕机了，但还有  (n-1)/2 个节点正常，对 etcd 集群而言不论是选举还是可用性，都不会产生影响。
@@ -15,8 +21,15 @@ The majority side becomes the available cluster and the minority side is unavail
 但有一种特殊情况，假如旧的 Leader 和集群其他节点出现了网络分区，其他节点选出了新的 Leader，但是旧 Leader 并没有感知到新的 Leader，那么此时集群可能会出现一个短暂的“双 Leader”状态，但这个并不是脑裂，原因是 raft 有恢复机制，这个状态并不会持续很长，其次 etcd 也有 ReadIndex、Lease read 机制解决这种状态下的一致性问题。
 
 
-<div  align="center">
-	<img src="../assets/etcd-ha.svg" width = "450"  align=center />
-</div>
+1. 下载二进制安装包
+
+```
+wget https://github.com/etcd-io/etcd/releases/download/v3.5.11/etcd-v3.5.11-linux-amd64.tar.gz
+tar -xvf etcd-v3.5.11-linux-amd64.tar.gz
+mv etcd-v3.5.11-linux-amd64/etcd* /usr/local/bin
+```
+
+2. 创建 etcd 的 systemd unit 文件
+
 
 [^1]: 参见 https://etcd.io/docs/v3.5/op-guide/failures/

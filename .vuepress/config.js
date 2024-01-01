@@ -277,6 +277,7 @@ export default defineUserConfig({
                         collapsable: false,
                         sidebarDepth: 1,
                         children: [
+                           '/container/k8s-deploy-tls.md',
                            '/container/k8s-deploy-prepare.md',
                            '/container/k8s-deploy-etcd.md',
                            '/container/k8s-deploy-containerd.md',
