@@ -272,7 +272,7 @@ export default defineUserConfig({
                     '/container/resource-limit.md',
                     '/container/auto-scaling.md',
                     {
-                        text: 'kubernetes 生产级部署',
+                        text: '7.9 kubernetes 生产级部署',
                         link:'/container/k8s-deploy.md',
                         collapsable: false,
                         sidebarDepth: 1,

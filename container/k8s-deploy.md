@@ -1,4 +1,4 @@
-# 生产级 Kubernetes 部署实践
+# 7.9 生产级 Kubernetes 部署实践
 
 在本节，笔者使用二进制包的方式部署一个完整的 Kubernetes 集群，并开启 TLS 安全认证，安装教程适用于所有的 bare metal 环境、on-premise 环境和公有云等生产环境中的部署参考。
 
@@ -24,17 +24,3 @@
 kube-apiserver 本质上是一个无状态的服务器，为了实现其高可用，通常会部署多个 kube-apiserver 实例，同时引入外部负载均衡器（以下简称 LB）进行流量代理。后续用户（kubectl 、dashbaord 等其他客户端）和集群内部的组件都将通过访问 LB 来访问 apiserver 。
 
 
-
-wget https://github.com/cloudflare/cfssl/releases/download/v1.6.4/cfssl-certinfo_1.6.4_linux_amd64
-mv cfssl-certinfo_1.6.4_linux_amd64 /usr/local/bin/cfssl-certinfo
-
-
-
-wget https://github.com/cloudflare/cfssl/releases/download/v1.6.4/cfssljson_1.6.4_linux_amd64
-mv cfssljson_1.6.4_linux_amd64 /usr/local/bin/cfssljson
-
-
-
-wget https://github.com/cloudflare/cfssl/releases/download/v1.6.4/cfssl_1.6.4_linux_amd64
-
-mv cfssl_1.6.4_linux_amd64 /usr/local/bin/cfssl
