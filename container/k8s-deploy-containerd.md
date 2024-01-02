@@ -1,6 +1,6 @@
 # 容器运行时 containerd 
 
-如果没有隔离或者混部的需求，仅以性能和稳定筛选容器运行时，那么 containerd 就是不二之选。
+如果没有隔离或者混部的需求，仅以性能和稳定筛选容器运行时，那么 containerd 就是容器运行时不二之选。
 
 
 https://www.huaqiang.art/assets/img/kubelet-containerd.png
