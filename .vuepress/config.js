@@ -281,7 +281,7 @@ export default defineUserConfig({
                             '/container/k8s-deploy-tls.md',
                              '/container/k8s-deploy-etcd.md',
                             '/container/k8s-deploy-containerd.md',
-                            '/container/k8s-deploy-clilium.md',
+                            '/container/k8s-deploy-cilium.md',
                         ]
                     },
                     /*
