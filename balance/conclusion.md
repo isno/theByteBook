@@ -6,4 +6,4 @@
 
 本章参考内容
 
-- https://blog.envoyproxy.io/introduction-to-modern-network-load-balancing-and-proxying-a57f6ff80236
+- 现代网络负载均衡与代理导论，https://blog.envoyproxy.io/introduction-to-modern-network-load-balancing-and-proxying-a57f6ff80236

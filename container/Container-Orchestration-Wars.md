@@ -20,7 +20,7 @@ Cloud Foundry 最核心的组件就是应用的打包和分发机制，这也是
 
 虽然 dotCloud 拥有创新的容器技术，但受限于公司的知名度和 PaaS 整体市场规模，其业务并没有太大的起色，外加巨头不断进场搅局，使当时的 dotCloud 举步维艰，正当他们坚持不下去的时候，Solumon Hykes（dot Cloud 创始人）脑子里蹦出了开源的想法。2013 年 3 月，dotCloud 开源了其容器技术，将其正式命名为 Docker 项目。Docker 项目在开源后的短短几个月内就迅速崛起，成为一个不容忽视的 PaaS 技术方案，吸引了无数云服务开发者的眼球。
 
-滑稽的是，在 Docker 刚开源的时候，Cloud Foundry 的产品经理 James Bayer 就在社区做了一次详细的对比，告诉用户 Docker 和 Cloud Foundry 一样，都是使用了 Namespace 和 Cgroups 技术的沙箱而已，无需值得关注。事实上，Docker 也确实就和他所说的一样，采用了这个“传统”的技术方案，但是 Docker 与 Cloud Foundry 相比，做了一点”小小的创新“，而这个创新无不体现 Solumon Hykes 的远见，**从 dotCloud 创建开始，Solumon Hykes 就一直在考虑应用打包的一致性与复用性问题，并提出了创新的解决方案，最终对 Cloud Foundry 造成了毁灭性的打击，这个解决方案就是 Docker 镜像**。
+滑稽的是，在 Docker 刚开源的时候，Cloud Foundry 的产品经理就在社区做了一次详细的对比，告诉用户 Docker 和 Cloud Foundry 一样，都是使用了 Namespace 和 Cgroups 技术的沙箱而已，无需值得关注。事实上，Docker 也确实就和他所说的一样，采用了这个“传统”的技术方案，但是 Docker 与 Cloud Foundry 相比，多了一点”小小的创新“，而这个创新无不体现 Solumon Hykes 的远见，**从 dotCloud 创建开始，Solumon Hykes 就一直在考虑应用打包的一致性与复用性问题，并提出了创新的解决方案，最终对 Cloud Foundry 造成了毁灭性的打击，这个解决方案就是 Docker 镜像**。
 
 正是 Docker Image 这个“微不足道的创新”，让 Docker 席卷整个 PaaS 领域。比起 Cloud Foundry 那种执行文件+启动脚本的打包方式，**Docker 镜像完美解决了两个问题：本地环境和服务器环境的差异、同一份镜像可以让所有的机器进行复用**。
 
@@ -34,7 +34,7 @@ Cloud Foundry 最核心的组件就是应用的打包和分发机制，这也是
 
 Google 对容器也算知根知底，2007 年提交了 cgroup 到 Linux 内核，如今已经演变成容器运行时的基础。**2008 年 PaaS 平台 GAE 就已经采用了 LXC，并且开发了一套进行容器编排和调度的内部工具，也就是 Kubernetes 的前身 -- Borg**。凭借多年运行 GCP（Google Cloud Platform，Google云端平台）和 Borg 的经验，使得 Google 非常认可容器技术，也深知目前 Docker 在规模化使用场景下的不足。如果 Google 率先做好这件事不仅能让自己在云计算市场扳回一局，而且也能抓住一些新的商业机会。比如，在 AWS 上运行的应用有可能自由地移植到 GCP 上运行，这对于 Google 的云计算业务无疑极其有利。
 
-为了使 Google 能够抓住这次机会，2013 年夏天，Kubernetes 联合创始人 Craig McLuckie、Joe Beda 和 Brendan Burns 开始讨论借鉴 Borg 的经验进行容器编排系统的开发。Kubernetes 项目获批后，Google 在 2014 年 6 月的 DockerCon 大会上正式宣布将其开源，也标志着容器编排的竞赛正式拉开帷幕。
+为了使 Google 能够抓住这次机会，2013 年夏天，Kubernetes 联合创始人 Craig McLuckie、Joe Beda 和 Brendan Burns 开始讨论借鉴 Borg 的经验进行容器编排系统的开发。Kubernetes 项目获批后，Google 在 2014 年 6 月的 DockerCon 大会上正式宣布将其开源，在云计算失去先机的 IT 界的领导者和创新者再次王者归来，容器编排的竞赛正式拉开帷幕。
 
 ## 4. Docker Swarm 入场
 
