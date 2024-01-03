@@ -31,6 +31,8 @@ The majority side becomes the available cluster and the minority side is unavail
 |etcd-2|192.168.0.101|
 |etcd-3|192.168.0.102|
 
+在每个节点中执行以下步骤。
+
 1. 下载二进制安装包
 
 ```
@@ -39,9 +41,9 @@ tar -xvf etcd-v3.5.11-linux-amd64.tar.gz
 mv etcd-v3.5.11-linux-amd64/etcd* /usr/local/bin
 ```
 
-2. 创建etcd集群配置文件
+2. 创建 etcd 集群配置文件
 
-整个配置分为节点（Member）和 集群（Clustering）两个部分，参数的值按实际情况进行修改。
+整个配置分为节点（Member）和集群（Clustering）两个部分，参数的值按实际情况进行修改。
 
 ```
 cat > /opt/etcd/cfg/etcd.conf << EOF
@@ -71,7 +73,7 @@ EOF
 
 2. 创建 etcd 的 systemd unit 文件
 
-该文件最关键的是证书相关的配置，7.9.2 篇节已经详细解释过 Kubernetes 集群的机制，这里 peer 开头的为 etcd 节点之间互相通信使用的证书，cert-file 为 etcd 向外提供服务使用的证书。
+该文件最关键的是证书相关的配置，7.9.2 篇节已经详细解释过 Kubernetes 集群的机制。etcd 的 TLS 有两对，一对是 etcd 和 client 端的 TLS 配置。一对是 etcd 之间的 peer 的 TLS 配置。
 ```
 [Unit]
 Description=Etcd Server
@@ -82,12 +84,13 @@ Wants=network-online.target
 [Service]
 Type=notify
 EnvironmentFile=/opt/etcd/cfg/etcd.conf
-ExecStart=/opt/etcd/bin/etcd \
+ExecStart=/usr/local/bin/etcd \
         --cert-file=/opt/etcd/ssl/etcd.pem \   # 服务器证书
         --key-file=/opt/etcd/ssl/etcd-key.pem \ # 服务器证书密钥
+        --trusted-ca-file=/opt/etcd/ssl/ca.pem \  # 服务器 CA 证书
+
         --peer-cert-file=/opt/etcd/ssl/etcd.pem \ # 客户端证书
         --peer-key-file=/opt/etcd/ssl/etcd-key.pem \ # 客户端证书密钥
-        --trusted-ca-file=/opt/etcd/ssl/ca.pem \  # 服务器 CA 证书 
         --peer-trusted-ca-file=/opt/etcd/ssl/ca.pem # 客户端 CA 证书  
 Restart=on-failure
 LimitNOFILE=65536
