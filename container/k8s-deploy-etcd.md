@@ -21,14 +21,15 @@ The majority side becomes the available cluster and the minority side is unavail
 使用多个可用区部署唯一能假设的情况是云商某个可用区产生重大故障，短时间内无法恢复。可惜非常遗憾，实现多活不仅仅靠 etcd 部署了几个可用区，真正的多活系统得投入巨大的成本，涉及镜像仓库、网关、数据库、文件存储、各类中间件以及等等有状态的无状态的各类服务。
 
 
-了解了背景知识，接下来进入实践环节，笔者演示使用二进制包的方式部署一个三个节点的 etcd 集群，并对部分核心配置参数进行解读。
+了解了背景知识，接下来进入实践环节，笔者演示使用二进制包的方式部署一个三个节点的 etcd 集群。etcd 集群服务发现有三种方式：Static（静态部署）; etcd Discovery（借助已有的集群发现新的集群）; DNS Discovery（使用 DNS 的方式）。此次配置只有三个节点，节点信息全部知晓，我们就使用最简单的静态部署方式。
 
 集群三个节点 IP 地址：
 
-- 192.168.0.100
-- 192.168.0.101
-- 192.168.0.102
-
+| 名称| 节点 IP |
+|:--|:--|
+|etcd-1|192.168.0.100|
+|etcd-2|192.168.0.101|
+|etcd-3|192.168.0.102|
 
 1. 下载二进制安装包
 
@@ -110,7 +111,7 @@ systemctl start etcd # 在第一台节点上执行start后会一直卡着无法�
 在任意 etcd 节点上执行如下命令查看集群状态，若所有节点均处于 healthy 状态则表示 etcd 集群部署成功
 
 ```
-/opt/etcd/bin/etcdctl --cacert=/opt/etcd/ssl/ca.pem --cert=/opt/etcd/ssl/etcd.pem --key=/opt/etcd/ssl/etcd-key.pem --endpoints="https://10.211.55.7:2379,https://10.211.55.8:2379,https://10.211.55.9:2379" endpoint health
+/opt/etcd/bin/etcdctl --cacert=/opt/etcd/ssl/ca.pem --cert=/opt/etcd/ssl/etcd.pem --key=/opt/etcd/ssl/etcd-key.pem --endpoints="https://192.168.0.100:2379,https://192.168.0.101:2379,https://192.168.0.102:2379" endpoint health
 ```
 
 [^1]: 参见 https://etcd.io/docs/v3.5/op-guide/failures/
