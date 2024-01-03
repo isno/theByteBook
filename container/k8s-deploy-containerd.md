@@ -20,13 +20,15 @@ containerd 内置的 CRI 插件管理容器和镜像，并通过 CNI 插件给 P
 - Kubeletcri通过 CRI 运行时服务 API 调用插件来创建 pod；
 - cri创建 pod 的网络命名空间，然后使用 CNI 配置它；
 - cri使用containerd内部创建并启动一个特殊的 pause container （沙盒容器）并将该容器放入 pod 的 cgroup 和命名空间中
-- Kubelet 随后cri通过 CRI 镜像服务 API 调用插件来拉取应用程序容器镜像；
+- Kubelet 通过 ImageService 拉取应用程序容器镜像
 - cri如果节点上不存在镜像，则进一步使用containerd来拉取镜像；
-- 然后，Kubeletcri通过 CRI 运行时服务 API 调用 ，使用拉取的容器镜像在 pod 内创建并启动应用程序容器；
+- kubelet 调用 RuntimeService ，使用拉取的容器镜像在 pod 内创建并启动应用程序容器；
 - cri最后使用containerd内部创建应用程序容器，将其放入pod的cgroup和命名空间中，然后启动pod的新应用程序容器。
 
 经过这些步骤，一个 pod 及其对应的应用程序容器就被创建并运行了。
 
+
+1. 安装 containerd
 
 ```
 wget https://github.com/containerd/containerd/releases/download/v1.7.11/containerd-1.7.11-linux-amd64.tar.gz
