@@ -14,17 +14,19 @@
 
 ## 2. 从 Cloud Foundry 到 Docker
 
-Cloud Foundry 最核心的组件就是应用的打包和分发机制，这也是开发者打交道最多的功能，但就是这个打包功能，成了 Cloud Foundry 的软肋，一直为用户所诟病。Cloud Foundry 为每一种主流的语言都定义了一套打包的方式，开发者不得不为每一种语言、每一种框架、甚至是每个版本应用维护一个打好的包。除此，这种方式还有可能出现本机运行成功，打了个包上传之后就无法运行的情况。本来是为赋能开发者而生的技术，却对开发者极不友好。当开发者的抱怨积累到一定程度，想要在 PaaS 浪潮中央站稳脚跟的 Cloud Foundry 被后起之秀 Docker “红牌罚出局”也就顺理成章。
+Cloud Foundry 最核心的组件就是应用的打包和分发机制，但就是这个打包功能，成了 Cloud Foundry 的软肋，一直为用户所诟病。
+
+Cloud Foundry 为每一种主流的语言都定义了一套打包的方式，开发者不得不为每一种语言、每一种框架、甚至是每个版本应用维护一个打好的包。除此，这种方式还有可能出现本机运行成功，打了个包上传之后就无法运行的情况。本来是为赋能开发者而生的技术，却对开发者极不友好，当开发者的抱怨积累到一定程度，想要在 PaaS 浪潮中央站稳脚跟的 Cloud Foundry 被后起之秀 Docker “红牌罚出局”也就顺理成章。
 
 最初，Docker 还是一个叫 dotCloud 的公司，dotCloud 最初阶段也是选择 LXC 来快速部署软件，使用 LXC 虽然可以解决应用隔离的问题，但不能解决应用可移植性问题，为此 dotCloud 开发了一套内部管理工具，方便创建和管理容器，这个工具就是后来的 Docker。
 
 虽然 dotCloud 拥有创新的容器技术，但受限于公司的知名度和 PaaS 整体市场规模，其业务并没有太大的起色，外加巨头不断进场搅局，使当时的 dotCloud 举步维艰，正当他们坚持不下去的时候，Solumon Hykes（dot Cloud 创始人）脑子里蹦出了开源的想法。2013 年 3 月，dotCloud 开源了其容器技术，将其正式命名为 Docker 项目。Docker 项目在开源后的短短几个月内就迅速崛起，成为一个不容忽视的 PaaS 技术方案，吸引了无数云服务开发者的眼球。
 
-滑稽的是，在 Docker 刚开源的时候，Cloud Foundry 的产品经理就在社区做了一次详细的对比，告诉用户 Docker 和 Cloud Foundry 一样，都是使用了 Namespace 和 Cgroups 技术的沙箱而已，无需值得关注。事实上，Docker 也确实就和他所说的一样，采用了这个“传统”的技术方案，但是 Docker 与 Cloud Foundry 相比，多了一点”小小的创新“，而这个创新无不体现 Solumon Hykes 的远见，**从 dotCloud 创建开始，Solumon Hykes 就一直在考虑应用打包的一致性与复用性问题，并提出了创新的解决方案，最终对 Cloud Foundry 造成了毁灭性的打击，这个解决方案就是 Docker 镜像**。
+滑稽的是，在 Docker 刚开源的时候，Cloud Foundry 的产品经理就在社区做了一次详细的对比，告诉用户 Docker 和 Cloud Foundry 一样，都是使用了 Namespace 和 Cgroups 技术的沙箱而已，无需值得关注。事实上，Docker 也确实就和他所说的一样，采用了这个“传统”的技术方案，但是 Docker 与 Cloud Foundry 相比，创新性地提出了**Docker 镜像**，解决了应用打包的一致性与复用性问题。
 
-正是 Docker Image 这个“微不足道的创新”，让 Docker 席卷整个 PaaS 领域。比起 Cloud Foundry 那种执行文件+启动脚本的打包方式，**Docker 镜像完美解决了两个问题：本地环境和服务器环境的差异、同一份镜像可以让所有的机器进行复用**。
+比起 Cloud Foundry 那种执行文件+启动脚本的打包方式，**Docker 镜像完美解决了两个问题：本地环境和服务器环境的差异、同一份镜像可以让所有的机器进行复用**。
 
-从这一刻开始，PaaS 的市场已经完全是 Docker 的天下。
+正是 Docker Image 这个“微不足道的创新”，让 Docker 席卷整个 PaaS 领域，从这一刻开始，PaaS 的市场已经完全是 Docker 的天下。
 
 ## 3. Kubernetes 入场
 

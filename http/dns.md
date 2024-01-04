@@ -1,6 +1,6 @@
 # 2.3 域名解析环节实践
 
-DNS 也许是世界上最大、最频繁的却最没有存在感的基础设施系统了，虽没有存在感，但它施加的影响却无处不在，2021 年期间互联网发生了几起影响颇大的服务宕机故障：7月22日 Aakamai Edge DNS 故障，造成 PlayStation Network、HBO、UPS、Airbnb、Salesforce 等众多知名网站宕机[^1]。不久之后的10月4日，社交网络平台 Facebook 及旗下服务 Messenger、Instagram、WhatsApp、Mapillary 与 Oculus 发生全球性宕机[^2]。
+DNS 也许是世界上最大、最频繁的却最没有存在感的基础设施系统了。虽没有存在感，但它施加的影响却无处不在，2021 年期间互联网发生了几起影响颇大的服务宕机故障均与DNS系统有关：7月22日 Aakamai Edge DNS 故障，造成 PlayStation Network、HBO、UPS、Airbnb、Salesforce 等众多知名网站宕机[^1]；不久之后的10月4日，社交网络平台 Facebook 及旗下服务 Messenger、Instagram、WhatsApp、Mapillary 与 Oculus 发生全球性宕机[^2]。
 
 这些故障影响范围为何如此之广？带着这些问题，我们开始 DNS 的篇节。
 

@@ -315,9 +315,8 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
-                    '/observability/history.md',
                     {
-                        text: '可观测性的三大支柱',
+                        text: '9.1 可观测性的三大支柱',
                         link:'/observability/metrics-tracing-and-logging.md',
                         collapsable: false,
                         sidebarDepth: 1,
@@ -326,7 +325,8 @@ export default defineUserConfig({
                             '/observability/logging.md',
                             '/observability/tracing.md',
                         ]
-                    }
+                    },
+                    '/observability/OpenTelemetry.md',
                 ]
             },
             {
