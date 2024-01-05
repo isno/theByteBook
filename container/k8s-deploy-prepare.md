@@ -49,4 +49,4 @@ Kubernetes集群之间通信和服务暴露需要使用较多端口，为了方�
 systemctl disable firewalld.service
 ```
 
-[^1] 参见：https://kubernetes.io/zh-cn/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+[^1]: 参见 https://kubernetes.io/zh-cn/docs/setup/production-environment/tools/kubeadm/install-kubeadm/

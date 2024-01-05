@@ -1,6 +1,6 @@
 # 容器运行时 containerd 
 
-如果没有隔离或者混部的需求，仅以性能和稳定选择容器运行时，那么 containerd 就是不二之选。容器运行时篇节，我们继续延续惯例，先说明流程原理再进行实践操作。
+如果没有隔离或者混部的需求，仅以性能和稳定选择容器运行时，containerd 就是唯一之选。这一节，继续延续惯例，先说明流程原理再进行实践操作。
 
 首先，Kubelet 通过 CRI 接口管理节点上的容器，CRI 实际上就是基于 gRPC 定义了 RuntimeService 和 ImageService 等两个 gRPC 服务 [^1]，分别用于容器运行时和镜像的管理，所以 Kubelet 从本质上是 CRI 接口的 gRPC Client。早期，各类容器运行时没并没有实现 CRI 接口（gRPC Server） ，由此出现了各类垫片，譬如对接 Docker 的 Dockershim，对接 containerd 的 cri-containerd，这也是早期在 Node 节点部署各类 shim 的原因。
 
@@ -121,5 +121,5 @@ WantedBy=multi-user.target
 ```
 
 
-[^1]：参见 https://github.com/kubernetes/cri-api/blob/master/pkg/apis/runtime/v1/api.proto
+[^1]: 参见 https://github.com/kubernetes/cri-api/blob/master/pkg/apis/runtime/v1/api.proto
 

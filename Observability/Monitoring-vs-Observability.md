@@ -8,7 +8,14 @@
 -- by Baron Schwartz
 :::
 
-也就是说，监控可以发现问题，可观测性更好地定位问题。有一个很有表达力的示意图，如下
+换句话解释就是监控可以发现问题，可观测性更好地定位问题。它们之间的关系有一个很有表达力的示意图，如下。
 
+<div  align="center">
+	<img src="../assets/Monitoring-vs-Observability.png" width = "450"  align=center />
+</div>
 
-但这并不意味着有可可观测性，就不需要监控了。
+但这并不意味着有可可观测性，就不需要监控了。监控室对系统的持续观察，检测异常行为并发出报警，要解决已知的未知问题。而可观测性透过系统的输出（指标、日志、追踪）了解系统的内部状态，告诉你发生了什么、为什么发生以及如何修复，解决未知的未知问题。
+
+可观测性不能替代监控的讨论，有兴趣的读者可以阅读 《Observability will never replace Monitoring (because it shouldn’t)》[^1]，作者 Ben Sigelman 是 Google Dapper、时序数据库 Monarch 的共同创始人，也是可观测性领域最重要的两个标准 OpenTelemetry 和 OpenTracing 的共同创始人。
+
+[^1]: 参见 https://medium.com/lightstephq/observability-will-never-replace-monitoring-because-it-shouldnt-eeea92c4c5c9

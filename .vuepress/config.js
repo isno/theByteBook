@@ -315,6 +315,7 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
+                    "/observability/Monitoring-vs-Observability.md",
                     {
                         text: '9.1 可观测性的三大支柱',
                         link:'/observability/metrics-tracing-and-logging.md',
