@@ -31,26 +31,35 @@ containerd 内置的 CRI 插件管理容器和镜像，并通过 CNI 插件给 P
 1. 安装 containerd
 
 ```
-wget https://github.com/containerd/containerd/releases/download/v1.7.11/containerd-1.7.11-linux-amd64.tar.gz
+$ wget https://github.com/containerd/containerd/releases/download/v1.7.11/containerd-1.7.11-linux-amd64.tar.gz
 
+$ tar xzvf containerd-1.7.11-linux-amd64.tar.gz -C /usr/local/bin/
 ```
 
 2. 安装 runc
 
 runc 是底层容器运行时（真正创建容器的程序），containerd 二进制包中并没有内置，需要单独安装。
 
-```
-wget https://github.com/opencontainers/runc/releases/download/v1.1.11/runc.amd64
+:::tip GPU
 
-chmod +x runc.amd64
-mv runc.amd64 /usr/local/bin/runc
+runc 并不支持GPU资源操作，譬如 nvidia-container-runtime 
+
+:::
+
+
+
+```
+$ wget https://github.com/opencontainers/runc/releases/download/v1.1.11/runc.amd64
+
+$ mv runc.amd64 /usr/local/bin/runc
+$ chmod +x /usr/local/bin/runc
 ```
 
 2. 创建配置文件
 
 ```
-mkdir -p /etc/containerd/
-containerd config default > /etc/containerd/config.toml
+$ mkdir -p /etc/containerd/
+$ containerd config default > /etc/containerd/config.toml
 ```
 
 3. 修改 cgroup 驱动为 systemd
@@ -64,19 +73,19 @@ containerd config default > /etc/containerd/config.toml
     SystemdCgroup = true
 ```
 
-kubelet 和底层容器运行时都需要对接 cgroup 为 Pod 设置 CPU、内存资源的请求和限制，目前 cgroup 驱动有两种：
+kubelet 和底层容器运行时都需要对接 cgroup 实现容器的资源的管理控制，目前 cgroup 驱动有两种：
 
 - cgroupfs：当使用 cgroupfs 驱动时，kubelet 和容器运行时将直接对接 cgroup 文件系统来配置 cgroup。
 - systemd：systemd 也是对于 cgroup 接口的一个封装。systemd 以 PID 1 的形式在系统启动的时候运行，并提供了一套系统管理守护程序、库和实用程序，用来控制、管理 Linux 计算机操作系统资源。
 
-debian、centos7 系统，都是使用 systemd 初始化系统的。systemd 这边已经有一套 cgroup 管理器了，如果容器运行时和 kubelet 使用 cgroupfs，此时就会存在 cgroups 和 systemd 两种 cgroup 管理器。也就意味着操作系统里面存在两种资源分配的视图。我们将 kubelet 和 容器运行时的 cgroup 驱动统一改为 Systemd。
-
+部分系统譬如 debian、centos7 都是使用 systemd 初始化系统，相当于已经有一套 cgroup 资源分配视图了。如果 kubelet 和容器运行时使用 cgroupfs ，也就意味着一个系统里面存在两套资源分配视图。
 
 4. 创建 containerd 的 systemd service 文件
 
-```
-https://raw.githubusercontent.com/containerd/containerd/main/containerd.service
+也可从 gtihub 中下载 containerd service 配置文件[^2]，确认二进制执行文件配置正确。
 
+```
+cat >/etc/systemd/system/containerd.service <<EOF
 # Copyright The containerd Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -118,8 +127,41 @@ OOMScoreAdjust=-999
 
 [Install]
 WantedBy=multi-user.target
+
+EOF
 ```
 
+5. 启动 containerd 服务
 
+```
+systemctl daemon-reload
+systemctl enable --now containerd
+```
+
+6. 验证
+
+```
+$ ctr version
+Client:
+  Version:  v1.7.11
+  Revision: 64b8a811b07ba6288238eefc14d898ee0b5b99ba
+  Go version: go1.20.12
+
+Server:
+  Version:  v1.7.11
+  Revision: 64b8a811b07ba6288238eefc14d898ee0b5b99ba
+  UUID: 2f758747-ea47-4b81-8f2c-66133063dad5
+```
+
+下载镜像测试
+
+```
+$ ctr image pull docker.io/library/nginx:alpine
+$ ctr run docker.io/library/nginx:alpine nginx
+```
+
+此时容器正常启动了，默认情况下 containerd 创建的容器只有 lo 网络，启动的容器还不具备网络能力，所以我们无法从外部访问它。各类的 CNI 插件其实就是创建 veth 接口、Linux bridge、分配 IP 等，这一部分的工作，我们使用 Cilium 配置完成。
+
+[^2]: 参见 https://raw.githubusercontent.com/containerd/containerd/main/containerd.service
 [^1]: 参见 https://github.com/kubernetes/cri-api/blob/master/pkg/apis/runtime/v1/api.proto
 

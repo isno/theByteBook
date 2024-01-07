@@ -101,12 +101,11 @@ WantedBy=multi-user.target
 
 3. 启动 etcd 服务
 
-在所有 etcd 集群节点上设置 etcd 开机自启并启动 etcd
+在所有 etcd 集群节点上设置 etcd 开机自启并启动 etcd，在第一台节点上执行start后会一直卡着无法返回命令提示符，这是因为在等待其他节点准备就绪，继续启动其余节点即可
 
 ```
 systemctl daemon-reload
-systemctl enable etcd
-systemctl start etcd # 在第一台节点上执行start后会一直卡着无法返回命令提示符，这是因为在等待其他节点准备就绪，继续启动其余节点即可
+systemctl enable -now etcd
 ```
 
 4. 查看集群装填

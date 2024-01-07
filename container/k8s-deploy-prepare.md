@@ -32,7 +32,7 @@ sed -i '/swap / s/^\(.*\)$/#\1/g' /etc/fstab
 
 3. **关闭selinux**
 
-SELinux是Linux内核的安全子系统，会通过访问策略控制机制对应用、进程和文件访问进行安全控制，然而，在Kubernetes环境中，容器需要访问宿主机的文件系统，开启 SELinux 可能会出现意外的权限问题，Kubernetes 官方建议关闭SELinux[^1]。此外，Kubernetes 本身也提供了一系列的安全机制，譬如RBAC、网络策略和 PodSecurityPolicy 等等。
+SELinux是Linux内核的安全子系统，在 Kubernetes 环境中，容器需要访问宿主机的文件系统，开启 SELinux 可能会出现意外的权限问题，Kubernetes 官方建议关闭SELinux[^1]。另外一个重要的原因 SELinux 是通过**白名单访问策略**控制机制对应用、进程和文件访问进行安全控制，这就要意味着你要对你的应用系统非常熟悉。此外，Kubernetes 本身也提供了一系列的安全机制，譬如RBAC、网络策略和 PodSecurityPolicy 等等。
 
 ```
 # 使用命令直接关闭
