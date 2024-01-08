@@ -81,25 +81,24 @@ Kubernetes 中使用了大量的证书
 ## 安装 cfssl
 
 :::tip cfssl
-
-CFSSL 是CloudFlare开源的一款PKI/TLS工具。CFSSL 包含一个命令行工具和一个用于签名，验证并且捆绑TLS证书的 HTTP API 服务。 使用Go语言编写
-
-
+cfssl 是 CloudFlare 开源的证书管理工具，使用 json 文件生成证书，相比 openssl 更方便使用。
 :::
 
-cfssl是一个开源的证书管理工具，使用json文件生成证书，相比openssl更方便使用。
-
 
 ```
-curl -s -L -o /usr/local/bin/cfssl https://github.com/cloudflare/cfssl/releases/download/v1.6.4/cfssl_1.6.4_linux_amd64
-curl -s -L -o /usr/local/bin/cfssljson https://github.com/cloudflare/cfssl/releases/download/v1.6.4/cfssljson_1.6.4_linux_amd64
-curl -s -L -o /usr/local/bin/cfssl-certinfo https://github.com/cloudflare/cfssl/releases/download/v1.6.4/cfssl-certinfo_1.6.4_linux_amd64
+$ curl -s -L -o /usr/local/bin/cfssl https://github.com/cloudflare/cfssl/releases/download/v1.6.4/cfssl_1.6.4_linux_amd64
+$ curl -s -L -o /usr/local/bin/cfssljson https://github.com/cloudflare/cfssl/releases/download/v1.6.4/cfssljson_1.6.4_linux_amd64
+$ curl -s -L -o /usr/local/bin/cfssl-certinfo https://github.com/cloudflare/cfssl/releases/download/v1.6.4/cfssl-certinfo_1.6.4_linux_amd64
 
-chmod +x /usr/local/bin/cfssl*
-cfssl version
+$ chmod +x /usr/local/bin/cfssl*
+$ cfssl version
 ```
 
-CA 配置文件用于配置根证书的使用场景 (profile) 和具体参数 (usage，过期时间、服务端认证、客户端认证、加密等)：
+## 创建认证中心(CA)
+
+CFSSL可以创建一个获取和操作证书的内部认证中心。运行认证中心需要一个CA证书和相应的CA私钥（任何知道私钥的人都可以充当CA颁发证书，所以保证私钥安全至关重要）
+
+配置证书生成策略，确认根证书的使用场景 (profile) 和具体参数 (usage，过期时间、服务端认证、客户端认证、加密等)：
 
 ```
 cd ssl/
@@ -127,20 +126,28 @@ EOF
 ```
 - expiry 证书有效期 10 年
 
+- kubernetes：表示该配置(profile)的用途是为kubernetes生成证书及相关的校验工作
+  - signing：表示该证书可用于签名其它证书
+  - server auth：表示可以该 CA 对 server 提供的证书进行验证
+  - client auth：表示可以用该 CA 对 client 提供的证书进行验证
+  - server auth和client auth都存在时，说明客户端和服务端双向验证。
+
 2. 创建 CA 证书签名请求
+
+创建 ca-csr.json 文件，内容如下：
 
 ```
 {
   "CN": "kubernetes",
   "key": {
-    "algo": "rsa",
-    "size": 2048
+    "algo": "ecdsa",
+    "size": 256
   },
   "names": [
     {
       "C": "CN",
-      "ST": "BeiJing",
-      "L": "BeiJing",
+      "ST": "Shanghai",
+      "L": "Shanghai",
       "O": "k8s",
       "OU": "System"
     }
@@ -150,3 +157,15 @@ EOF
     }
 }
 ```
+
+- key，签名算法，可以选择 rsa，size可以取值2048，3072和4096，选择 ecdsa，size可以取值256,384和521。
+
+3. 生成 CA 根证书
+
+```
+$ cfssl gencert -initca ca-csr.json | cfssljson -bare ca
+```
+
+该命令会生成运行CA所必需的文件ca-key.pem（私钥）和ca.pem（证书），还会生成ca.csr（证书签名请求），用于交叉签名或重新签名。
+
+
