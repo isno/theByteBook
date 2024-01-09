@@ -104,39 +104,55 @@ CFSSL可以创建一个获取和操作证书的内部认证中心。运行认证
 cd ssl/
 cat > ca-config.json <<EOF
 {
-  "signing": {
-    "default": {
-      "expiry": "87600h"
-    },
-    "profiles": {
-      "kubernetes": {
-        "usages": [
-            "signing",
-            "key encipherment",
-            "server auth",
-            "client auth"
-        ],
-        "expiry": "876000h"
-      }
+    "signing": {
+        "default": {
+            "expiry": "87600h"
+        },
+        "profiles": {
+            "server": {
+                "expiry": "87600h",
+                "usages": [
+                    "signing",
+                    "key encipherment",
+                    "server auth"
+                ]
+            },
+            "client": {
+                "expiry": "87600h",
+                "usages": [
+                    "signing",
+                    "key encipherment",
+                    "client auth"
+                ]
+            },
+            "peer": {
+                "expiry": "87600h",
+                "usages": [
+                    "signing",
+                    "key encipherment",
+                    "server auth",
+                    "client auth"
+                ]
+            }
+        }
     }
-  }
 }
 EOF
 
 ```
 - expiry 证书有效期 10 年
-
 - kubernetes：表示该配置(profile)的用途是为kubernetes生成证书及相关的校验工作
   - signing：表示该证书可用于签名其它证书
   - server auth：表示可以该 CA 对 server 提供的证书进行验证
   - client auth：表示可以用该 CA 对 client 提供的证书进行验证
-  - server auth和client auth都存在时，说明客户端和服务端双向验证。
+  - server auth 和client auth 都存在时，说明客户端和服务端双向验证，用于etcd集群成员间通信。
 
 2. 创建 CA 证书签名请求
 
 创建 ca-csr.json 文件，内容如下：
 
 ```
+cat > ca-csr.json <<EOF
 {
   "CN": "kubernetes",
   "key": {
@@ -156,9 +172,12 @@ EOF
        "expiry": "87600h"
     }
 }
+EOF
 ```
 
 - key，签名算法，可以选择 rsa，size可以取值2048，3072和4096，选择 ecdsa，size可以取值256,384和521。
+- CN，Common Name，在 Kubernetes 集群中，apiserver 会从证书中提取该字段作为请求的用户名
+- O：Organization，apiserver 会从证书中提取该字段作为请求用户所属的组
 
 3. 生成 CA 根证书
 
@@ -167,5 +186,78 @@ $ cfssl gencert -initca ca-csr.json | cfssljson -bare ca
 ```
 
 该命令会生成运行CA所必需的文件ca-key.pem（私钥）和ca.pem（证书），还会生成ca.csr（证书签名请求），用于交叉签名或重新签名。
+
+
+4. 创建 kubernetes 证书
+
+创建 kubernetes 证书签名请求文件 kubernetes-csr.json：
+
+```
+cat > kubernetes-csr.json <<EOF
+{
+    "CN": "kubernetes",
+    "hosts": [
+      "127.0.0.1",
+      "192.168.31.34"
+      "192.168.31.35",
+      "192.168.31.36",
+      "kubernetes",
+      "kubernetes.default",
+      "kubernetes.default.svc",
+      "kubernetes.default.svc.cluster",
+      "kubernetes.default.svc.cluster.local"
+    ],
+    "key": {
+      "algo": "ecdsa",
+      "size": 256
+    },
+    "names": [
+        {
+            "C": "CN",
+            "ST": "Shanghai",
+            "L": "Shanghai",
+            "O": "k8s",
+            "OU": "System"
+        }
+    ]
+}
+EOF
+```
+
+$ etcd 集群
+
+```
+cat > etcd-peer-csr.json <<EOF
+{
+    "CN": "k8s-etcd",
+    "hosts": [
+        "192.168.31.34",
+        "192.168.31.35",
+        "192.168.31.36"
+    ],
+    "key": {
+        "algo": "ecdsa",
+        "size": 256
+    },
+    "names": [
+        {
+            "C": "CN",
+            "ST": "Shanghai",
+            "L": "Shanghai",
+            "O": "k8s",
+            "OU": "System"
+        }
+    ]
+}
+EOF
+```
+
+生成 etcd 证书和私钥
+
+```
+$ cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=peer etcd-peer-csr.json|cfssl-json -bare etcd-peer
+```
+
+cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes kubernetes-csr.json | cfssljson -bare kubernetes
 
 

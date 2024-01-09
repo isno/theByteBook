@@ -46,24 +46,24 @@ mv etcd-v3.5.11-linux-amd64/etcd* /usr/local/bin
 整个配置分为节点（Member）和集群（Clustering）两个部分，参数的值按实际情况进行修改。
 
 ```
-cat > /opt/etcd/cfg/etcd.conf << EOF
+cat > /etc/etcd/etcd.conf << EOF
 #[Member]
 # 自定义此etcd节点的名称，集群内唯一
 ETCD_NAME="etcd-1"
 # 定义etcd数据存放目录
 ETCD_DATA_DIR="/var/lib/etcd/default.etcd"
 # 定义本机和成员之间通信的地址
-ETCD_LISTEN_PEER_URLS="https://192.168.0.100:2380" 
+ETCD_LISTEN_PEER_URLS="https://192.168.31.34:2380" 
 # 定义etcd对外提供服务的地址
-ETCD_LISTEN_CLIENT_URLS="https://192.168.0.100:2379,http://127.0.0.1:2379"
+ETCD_LISTEN_CLIENT_URLS="https://192.168.31.34:2379,http:/192.168.31.34:2379"
 
 #[Clustering]
 # 定义该节点成员对等URL地址，且会通告集群的其余成员节点
-ETCD_INITIAL_ADVERTISE_PEER_URLS="https://192.168.0.100:2380"
+ETCD_INITIAL_ADVERTISE_PEER_URLS="https://192.168.31.34:2380"
 # 此成员的客户端URL列表，用于通告群集的其余部分
-ETCD_ADVERTISE_CLIENT_URLS="https://192.168.0.100:2379"
+ETCD_ADVERTISE_CLIENT_URLS="https://192.168.31.34:2379"
 # 集群中所有节点的信息
-ETCD_INITIAL_CLUSTER="etcd-1=https://192.168.0.100:2380,etcd-2=https://192.168.0.101:2380,etcd-3=https://192.168.0.102:2380"
+ETCD_INITIAL_CLUSTER="etcd-1=https://192.168.31.34:2380,etcd-2=https://192.168.31.35:2380,etcd-3=https://192.168.31.36:2380"
 # 创建集群的token，这个值每个集群保持唯一
 ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster"
 # 设置new为初始静态或DNS引导期间出现的所有成员。如果将此选项设置为existing，则etcd将尝试加入现有群集
@@ -75,6 +75,8 @@ EOF
 
 该文件最关键的是证书相关的配置，7.9.2 篇节已经详细解释过 Kubernetes 集群的机制。etcd 的 TLS 有两对，一对是 etcd 和 client 端的 TLS 配置。一对是 etcd 之间的 peer 的 TLS 配置。
 ```
+cat > /usr/lib/systemd/system/etcd.service << EOF
+
 [Unit]
 Description=Etcd Server
 After=network.target
@@ -83,20 +85,32 @@ Wants=network-online.target
 
 [Service]
 Type=notify
-EnvironmentFile=/opt/etcd/cfg/etcd.conf
+EnvironmentFile=/etc/etcd/etcd.conf
 ExecStart=/usr/local/bin/etcd \
-        --cert-file=/opt/etcd/ssl/etcd.pem \   # 服务器证书
-        --key-file=/opt/etcd/ssl/etcd-key.pem \ # 服务器证书密钥
-        --trusted-ca-file=/opt/etcd/ssl/ca.pem \  # 服务器 CA 证书
+		--name ${ETCD_NAME} \
+        --cert-file=/etc/kubernetes/ssl/etcd-peer.pem \   # 服务器证书
+        --key-file=/etc/kubernetes/ssl/etcd-peer-key.pem \ # 服务器证书密钥
+        --trusted-ca-file=/etc/kubernetes/ssl/ca.pem \  # 服务器 CA 证书
 
-        --peer-cert-file=/opt/etcd/ssl/etcd.pem \ # 客户端证书
-        --peer-key-file=/opt/etcd/ssl/etcd-key.pem \ # 客户端证书密钥
-        --peer-trusted-ca-file=/opt/etcd/ssl/ca.pem # 客户端 CA 证书  
+        --peer-cert-file=/etc/kubernetes/ssl/etcd-peer.pem \ # 客户端证书
+        --peer-key-file=/etc/kubernetes/ssl/etcd-peer-key.pem \ # 客户端证书密钥
+        --peer-trusted-ca-file=/etc/kubernetes/ssl/ca.pem # 客户端 CA 证书  
+        --data-dir=${ETCD_DATA_DIR}
+        --initial-advertise-peer-urls ${ETCD_INITIAL_ADVERTISE_PEER_URLS} 
+        --listen-peer-urls ${ETCD_LISTEN_PEER_URLS} \
+  		--listen-client-urls https://192.168.31.34,http://127.0.0.1:2379 \
+  		--advertise-client-urls ${ETCD_ADVERTISE_CLIENT_URLS} \
+  		--initial-cluster-token "etcd-cluster" \
+  		--initial-cluster infra1=https://172.20.0.113:2380,infra2=https://172.20.0.114:2380,infra3=https://172.20.0.115:2380 \
+  		--initial-cluster-state new \
+  		--data-dir=/var/lib/etcd/default.etcd
+
 Restart=on-failure
 LimitNOFILE=65536
 
 [Install]
 WantedBy=multi-user.target
+EOF
 ```
 
 3. 启动 etcd 服务
