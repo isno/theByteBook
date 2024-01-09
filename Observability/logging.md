@@ -3,6 +3,7 @@
 你可能不知道 Metrics、Tracing，但你一定了解点 logging。logging 系统中最成熟的部分就是打印日志。尤其是本地日志打印，各式各样层出不穷的 logging Library，同步的异步的、有锁的无锁的、有上下文的无上下文的、高性能的低性能的，花活最多轮子也造的最多。
 
 
+日志最出名的方案莫过于 ELK，但除了 ELK 之外，还有一个新晋的佼佼者
 
 ## 收集
 
@@ -28,17 +29,14 @@ Elastic Stack 之所以流行的一个原因之一，可能是它的无侵入性
 
 这个系统中，Beats 部署到日志所在地，用来收集原始数据，然后使用 MQ 做缓冲换取更好的吞吐，接着发给 logstash 做数据清洗，最后落地到 es 集群并进行索引，使用时通过 Kibana 来检索和分析，如果有必要挂上 Nginx 做各类访问控制。
 
-<div  align="center">
-	<img src="../assets/logging.png" width = "550"  align=center />
-</div>
-
-
-所以 ，loki的第一目的就是最小化度量和日志的切换成本，有助于减少异常事件的响应时间和提高用户的体验
-
 
 ## 存储与查询
 
-不同的是，Loki 不再根据日志内容去建立大量的索引，而是借鉴了 Prometheus 核心的思想，使用标签去对日志进行特征标记，然后归集统计。这样的话，能避免大量的内存资源占用，转向廉价的硬盘存储。当然 Loki 会对日志进行分块存储并压缩，保留少量的元数据索引，兼顾硬盘的查询效率。
+loki 一个明显的特点是非常经济，Loki 不再根据日志内容去建立大量的索引，而是借鉴了 Prometheus 核心的思想，使用标签去对日志进行特征标记，然后归集统计。Loki 只索引与日志相关的元数据标签，而日志内容则以压缩方式存储于对象存储中, 不做任何索引，这样的话，能避免大量的内存资源占用，转向廉价的硬盘存储。相较于 ES 这种全文索引的系统，数据可在十倍量级上降低，加上使用对象存储，最终存储成本可降低数十倍甚至更低。
+
+说白了，Loki 吸引人的地方就在于拥有和 Prometheus 类似机制的时序数据库以及方便拓展的硬盘资源。
+
+
 
 数据由标签、时间戳、内容组成
 
@@ -55,28 +53,17 @@ Elastic Stack 之所以流行的一个原因之一，可能是它的无侵入性
 }
 ```
 
-只索引与日志相关的元数据标签，而日志内容则以压缩方式存储于对象存储中, 不做任何索引。相较于 ES 这种全文索引的系统，数据可在十倍量级上降低，加上使用对象存储，最终存储成本可降低数十倍甚至更低。
+
 
 
 ## 日志展示
 
+在仪表可视化领域，如果 Grafana 称第二，应该没有敢称第一。
 
 
+在 Grafana Labs 公司成立之前，Grafana Dashboard 就已经在各个开源社区有不小的名气和用户积累。依靠社区的用户基础，Grafana Labs 也快速地将产品渗透至各个企业，如果你观察仔细，在各大新闻联播节目时不时会见到 Grafana 的身影：2016年，在猎鹰9号火箭首次发射期间，Grafana 出现在 SpaceX 控制中心的屏幕上；几周后，微软发布一段宣传视频，展示了他们的水下数据中心，同样出现了 Grafana 的身影[^3]。
 
-
-使用Grafana可以非常轻松的将任何数据[^1]转成任何你想要的图表[^2]的展现形式来做到数据监控以及数据统计。
-
-
-在仪表可视化领域，如果 Grafana 称第二，应该没有敢称第一。Grafana slogn “Dashboard anything. Observe everything.” 可不是说说，
-
-:::tip 官网的副标题
-Grafana is the open source analytics & monitoring solution for every database.
-:::
-
-这个 every  database，只要你能想到的数据源，Grafana 都有官方或者非官方的数据源插件[^1]。
-
-
-大致来说kibana能做的图形，grafana都可以做，grafana能做的展示效果，kibana不一定做的到。另外他们两点有些区别，就是如果你想做dashboard来展示的话，强烈推荐grafana。
+Grafana slogan 中的 “Dashboard anything. Observe everything.” 这个anything 和 everything 可不是说说，使用 Grafana 可以非常轻松的将任何数据[^1]转成任何你想要的图表[^2]的展现形式来做到数据监控以及数据统计。
 
 <div  align="center">
 	<img src="../assets/grafana-dashboard-english.png" width = "550"  align=center />
@@ -84,3 +71,4 @@ Grafana is the open source analytics & monitoring solution for every database.
 
 [^1]: 参见 https://grafana.com/grafana/plugins/data-source-plugins/
 [^2]: 参见 https://grafana.com/grafana/dashboards/
+[^3]: 参见 https://grafana.com/blog/2023/09/26/celebrating-grafana-10-top-10-oh-my-grafana-dashboard-moments-of-the-decade/
