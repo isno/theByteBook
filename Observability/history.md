@@ -23,10 +23,12 @@ The information that you will use to determine whether an application is healthy
 有了遥测数据的定义，那么只要是能分析应用程序性能、可用性，都是可观测的内容。最近，CNCF 又在官方《 Observability Whitepaper》中，提出了 Observability Signals 的概念，原来的三大支柱变成了 3 Primary Signals 以及 Profiles、Dumps。
 
 
+
 ## 可观测性生态
 
+可观测性的标准，已经基本统一，可见未来 OpenTelemetry，但基于标准化开发的产品，确很难出现一统天下的局面。在 CNCF Landscape 中，有个专门的可观测方案分类：Observability and Analysis，下面还有三个子分类：Montioring、Logging、Tracing，其中的产品加起来又上百个，可见其纷繁庞大。关键的是，这并不是全部不再 CNCF 范围内的商业产品更是不计其数。
 <div  align="center">
-	<img src="../assets/cncf-observability.png" width = "100%"  align=center />
+	<img src="../assets/cncf-observability.png" width = "300"  align=center />
 </div>
 
 ## 可观测性与监控
@@ -48,6 +50,9 @@ The information that you will use to determine whether an application is healthy
 但这并不意味着有可可观测性，就不需要监控了。监控室对系统的持续观察，检测异常行为并发出报警，要解决已知的未知问题。而可观测性透过系统的输出（指标、日志、追踪）了解系统的内部状态，告诉你发生了什么、为什么发生以及如何修复，解决未知的未知问题。
 
 可观测性不能替代监控的讨论，有兴趣的读者可以阅读 《Observability will never replace Monitoring (because it shouldn’t)》[^1]，作者 Ben Sigelman 是 Google Dapper、时序数据库 Monarch 的共同创始人，也是可观测性领域最重要的两个标准 OpenTelemetry 和 OpenTracing 的共同创始人。
+
+
+
 
 [^1]: 参见 https://medium.com/lightstephq/observability-will-never-replace-monitoring-because-it-shouldnt-eeea92c4c5c9
 

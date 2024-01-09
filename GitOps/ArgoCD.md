@@ -2,32 +2,23 @@
 
 Argo CD 是以 Kubernetes 作为基础设施，遵循声明式 GitOps 理念的持续交付工具，Argo CD 支持多种配置管理，包括 ksonnet/jsonnet、kustomize 和 Helm 等。它的配置和使用非常简单，并自带一个简单易用的可视化界面。
 
-> Argo CD 是 Intuit 公司开源出来的属于整个 Argo 项目中的其中一个子项目，整个 Argo 项目中还包括 Argo-event、argo-workflow、Argo-Rollout
+:::tip ArgoCD
+
+Argo CD 是 Intuit 公司开源出来的属于整个 Argo 项目中的其中一个子项目，整个 Argo 项目中还包括 Argo-event、argo-workflow、Argo-Rollout
+:::
 
 在介绍 Argo CD 之前，我们先需要清楚为什么使用 Argo CD？ 以及能给我们带来什么好处？
 
-## 传统的 CD 工作流
-
-目前大多数 CI/CD 工具都基于 Push 的部署模式，例如 Jenkins、CircleCI，这种模式一般都会在 CI 流水线完成后执行一个命令将应用程序部署到目标环境中。
-
-这种 CD 模式的缺陷很明显：
-
-- 需要安装配置额外的工具（例如 kubectl）。
-- 需要 Kubernetes 进行授权。
-- 无法感知部署状态，这也就无法感知期望状态与实际状态产生的偏差，只能接触额外方案来保障一致性。
+目前大多数 CI/CD 工具都基于 Push 的部署模式，例如 Jenkins、CircleCI，这种模式一般都会在 CI 流水线完成后执行一个命令将应用程序部署到目标环境中。这种 CD 模式的缺陷很明显：**需要安装配置额外的工具（例如 kubectl）**，**需要 Kubernetes 进行授权**，无法感知部署状态，这也就无法感知期望状态与实际状态产生的偏差，只能接触额外方案来保障一致性。
 
 
-我们在继续以 Argo CD 为例，来看看遵循声明式的 GitOps 理念的 CD 流程。
-
-## 使用 Argo CD 的 CD 工作流
-
-Argo CD 首先会被部署在 Kubernetes 集群中，使用的是基于 Pull 的部署模式，它会周期性地监控应用的实际状态，也会周期性拉取 Git 仓库中的配置清单，并将实际状态与期望状态进行比较，如果实际状态不符合预期，就会更新应用的实际状态以匹配期望状态。
+我们在继续以 Argo CD 为例，来看看遵循声明式的 GitOps 理念的 CD 流程。而 Argo CD 首先会被部署在 Kubernetes 集群中，使用的是基于 Pull 的部署模式，它会周期性地监控应用的实际状态，也会周期性拉取 Git 仓库中的配置清单，并将实际状态与期望状态进行比较，如果实际状态不符合预期，就会更新应用的实际状态以匹配期望状态。
 
 <div  align="center">
 	<img src="../assets/ArgoCD-1.webp" width = "400"  align=center />
 </div>
 
-无论是通过 CI 流水线触发更新 Kubernetes 编排文件，还是 运维工程师直接修改 Kubernetes 编排文件，ArgoCD 都会自动拉取最新的配置并应用到 Kubernetes 集群中。
+无论是通过 CI 流水线触发更新 Kubernetes 编排文件，还是运维工程师直接修改 Kubernetes 编排文件，ArgoCD 都会自动拉取最新的配置并应用到 Kubernetes 集群中。
 
 
 ## Argo CD 主要优势有

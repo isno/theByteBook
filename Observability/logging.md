@@ -3,7 +3,7 @@
 你可能不知道 Metrics、Tracing，但你一定了解点 logging。logging 系统中最成熟的部分就是打印日志。尤其是本地日志打印，各式各样层出不穷的 logging Library，同步的异步的、有锁的无锁的、有上下文的无上下文的、高性能的低性能的，花活最多轮子也造的最多。
 
 
-日志最出名的方案莫过于 ELK，但除了 ELK 之外，还有一个新晋的佼佼者
+日志最出名的方案莫过于 ELK，不过 2019 年 Grafana Labs 公司推出一个更能打的选手 Loki。但对于日志这种有时效性的数据而言，笔者也一时想也找不到一定要用到 Elasticsearch 的场景。
 
 ## 收集
 
@@ -58,10 +58,7 @@ loki 一个明显的特点是非常经济，Loki 不再根据日志内容去建�
 
 ## 日志展示
 
-在仪表可视化领域，如果 Grafana 称第二，应该没有敢称第一。
-
-
-在 Grafana Labs 公司成立之前，Grafana Dashboard 就已经在各个开源社区有不小的名气和用户积累。依靠社区的用户基础，Grafana Labs 也快速地将产品渗透至各个企业，如果你观察仔细，在各大新闻联播节目时不时会见到 Grafana 的身影：2016年，在猎鹰9号火箭首次发射期间，Grafana 出现在 SpaceX 控制中心的屏幕上；几周后，微软发布一段宣传视频，展示了他们的水下数据中心，同样出现了 Grafana 的身影[^3]。
+在仪表可视化领域，如果 Grafana 称第二，应该没有敢称第一。在 Grafana Labs 公司成立之前，Grafana Dashboard 就已经在各个开源社区有不小的名气和用户积累。依靠社区的用户基础，Grafana Labs 也快速地将产品渗透至各个企业，如果你观察仔细，还能在各大新闻联播节目时不时会见到 Grafana 的身影：2016年，在猎鹰9号火箭首次发射期间，Grafana 出现在 SpaceX 控制中心的屏幕上；几周后，微软发布一段宣传视频，展示了他们的水下数据中心，同样出现了 Grafana 的身影[^3]。
 
 Grafana slogan 中的 “Dashboard anything. Observe everything.” 这个anything 和 everything 可不是说说，使用 Grafana 可以非常轻松的将任何数据[^1]转成任何你想要的图表[^2]的展现形式来做到数据监控以及数据统计。
 
