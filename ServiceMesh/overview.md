@@ -1,6 +1,6 @@
 # 8.2 服务网格的产品与生态
 
-2016年1月，Buoyant 公司发布了第一代 ServiceMesh 产品 Linkerd。初次发布的 Linkerd 以 Scala 编写，绝大部分关注点都是如何做好 proxy（代理） 并完成一些通用控制面的功能。同期专注于 proxy 领域的还有一个重量级选手 Envoy，Envoy 是 CNCF 内继 Kubernetes、Prometheus 第三个孵化成熟的项目，由 Lyft 公司基于 C++ 开发，特点为性能出色、功能成熟。初代的 ServiceMesh 以 sidecar 为核心，虽然理念美好，但实际应用存在不少缺陷：特别是 Linkerd，其明显的资源消耗、性能影响广受诟病；其二仅限于数据层面的代理功能时，当大量部署 sidecar 以后，并没有考虑如何管理和控制这些 sidecar。
+2016年1月，Buoyant 公司发布了第一代 ServiceMesh 产品 Linkerd。初次发布的 Linkerd 以 Scala 编写，绝大部分关注点都是如何做好 proxy（代理） 并完成一些通用控制面的功能。同期专注于 proxy 领域的还有一个重量级选手 Envoy，Envoy 是 CNCF 内继 Kubernetes、Prometheus 第三个孵化成熟的项目，由 Lyft 公司基于 C++ 开发，特点为性能出色、功能成熟。初代的 ServiceMesh 虽然理念美好，但以 sidecar 为核心存在不少缺陷：特别是 Linkerd，其明显的资源消耗、性能影响广受诟病；其二仅限于数据层面的代理功能时，当大量部署 sidecar 以后，并没有充分考虑如何管理和控制这些 sidecar。
 
 于是，第二代 Service Mesh 应运而生。2017年5月，Google、IBM、Lyft 宣布新一代的服务网格 Istio 开源，有巨头背书以及**新增控制平面的设计理念**让 Istio 得到极大关注和发展，并迅速成为 ServiceMesh 的代表产品。
 
@@ -8,6 +8,19 @@
 	<img src="../assets/linkerd-control-plane.png" width = "500"  align=center />
 	<p>Linkerd 架构</p>
 </div>
+
+
+## xDS
+
+Envoy 倒成了偷偷领先的玩家，成为了云原生时代数据平面的事实标准。新兴API网关如Gloo，Ambassador都基于Envoy进行扩展开发；而在服务网格中，Istio、Kong社区Kuma、亚马逊AWS App Mesh都使用Envoy作为默认数据面。
+
+与HAProxy以及Nginx等传统Proxy依赖静态配置文件来定义各种资源以及数据转发规则不同，Envoy几乎所有配置都可以通过订阅来动态获取，如监控指定路径下的文件、启动gRPC流或轮询REST接口，对应的发现服务以及各种各样的API统称为xDS。
+
+以Istio中Pilot为例，当Pilot发现新的服务或路由规则被创建（通过监控K8S集群中特定CRD资源变化、或者发现Consul服务注册和配置变化），Pilot会通过已经和Envoy之间建立好的gRPC流将相关的配置推送到Envoy。Envoy接收到相关配置并校验无误之后，就会动态的更新运行时配置，使用新的配置更新相关资源。Pilot工作原理如图1所示。
+
+
+
+利用xDS协议，Envoy可以实现配置的完全动态化，配置实时更新而无需重启Envoy或者影响业务。
 
 
 - 控制面：主要用于更新，下发配置。
