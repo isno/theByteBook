@@ -53,4 +53,20 @@ spec:
 
 Kubernetes 自带的 HPA 仅支持 CPU/MEM 等有限的指标，但事实情况这些指标不一定就能代表服务的负载情况，比如消息服务器，如果消息堆积过多，我们希望启用更多的 Customer 处理消息，这种情况下就可以使用 Keda。
 
+KEDA 使得 Kubernetes 能够对 Pods 副本缩0或者扩展到更多是基于标准内置的 Kubernetes 指标，例如CPU和内存等标准，但也基于高级指标，例如消息队列的排队深度，每秒请求数，调度的 Cron 作业数，或者从您自己的应用程序记录中以及您可以想象的其他所有指标中的自定义指标
+
+
+<div  align="center">
+  <img src="../assets/keda-arch.png" width = "500"  align=center />
+</div>
+
+
+
 KEDA 是 Kubernetes 基于事件驱动的自动伸缩工具，通过 KEDA 我们可以根据需要处理的事件数量来驱动 Kubernetes 中任何容器的扩展。
+
+
+https://keda.sh/docs/2.12/scalers/
+
+<div  align="center">
+  <img src="../assets/keda-support-resources.png" width = "500"  align=center />
+</div>
