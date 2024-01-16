@@ -58,16 +58,22 @@ KEDA 并没有取代 HPA，而是对 Kubernetes 内置的 HAP 组件的补充。
 KEDA 使得 Kubernetes 能够对 Pods 副本缩0或者扩展到更多是基于标准内置的 Kubernetes 指标，例如CPU和内存等标准，但也基于高级指标，例如消息队列的排队深度，每秒请求数，调度的 Cron 作业数，或者从您自己的应用程序记录中以及您可以想象的其他所有指标中的自定义指标
 
 
-KEDA 会从外部度量提供者系统 (上面提到的指标扩展器，比如 Azure Monitor) 监控度量，然后根据基于度量值的伸缩规则进行伸缩。作为一个Kubernetes Operator 运行直接与度量提供者系统通信，
+KEDA 由以下组件组成：
+
+- Scaler：连接到外部组件（例如 Prometheus、RabbitMQ) 并获取指标（例如待处理消息队列大小）
+- Metrics Adapter：将 Scaler 获取的指标转化成 HPA 可以使用的格式并传递给 HPA
+- Controller：负责创建和更新一个 HPA 对象，并负责扩缩到零
+- keda operator：负责创建维护 HPA 对象资源，同时激活和停止 HPA 伸缩。在无事件的时候将副本数降低为 0 (如果未设置 minReplicaCount 的话)
+- metrics server: 实现了 HPA 中 external metrics，根据事件源配置返回计算结果。
 
 <div  align="center">
   <img src="../assets/keda-arch.png" width = "400"  align=center />
 </div>
 
+HPA 控制了副本 1->N 和 N->1 的变化。keda 控制了副本 0->1 和 1->0 的变化
+
 ## 离在线混部
 
 
-
-
-https://keda.sh/docs/2.12/scalers/
+[^1]: 参见 https://keda.sh/community/#end-users
 
