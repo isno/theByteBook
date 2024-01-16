@@ -267,7 +267,6 @@ export default defineUserConfig({
                            "/container/linux-vnet.md",
                            "/container/container-network.md"                        ]
                     },
-                    '/container/storage.md',
                     '/container/resource-limit.md',
                     '/container/auto-scaling.md',
                     {

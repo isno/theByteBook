@@ -120,7 +120,7 @@ VXLAN 你可能没有听说过，但 VLAN（Virtual Local Area Network，虚拟�
 
 不过 VLAN 有一个非常明显的缺陷，就是 VLAN tag 的设计，当时的网络工程师未曾想到云计算在现在会如此普及，只有 12 位来存储 VLAN ID，标准定义中 VLAN 的数量只有 4000 个左右，这显然无法支持大型数据中心数以万记的设备数，另外，VLAN 的二层范围一般较小且固定，也无法支持虚拟机大范围的动态迁移。
 
-为了解决上面这些问题，IETF 定义了 VXLAN 规范，这是三层虚拟化网络（Network Virtualization over Layer 3，NVO3）的标准技术规范之一，是一种典型的 overlay 网络。VXLAN 完美地弥补了 VLAN 的上述不足，一方面通过 VXLAN 中的 24 比特 VNI 字段（如图 1-5 所示）提供多达 16M 租户的标识能力，远大于 VLAN 的 4000；另一方面，VXLAN 本质上在两台交换机之间构建了一条穿越数据中心基础 IP 网络的虚拟隧道，将数据中心网络虚拟成一个巨型“二层交换机”，满足虚拟机大范围动态迁移的需求。
+为了解决上面这些问题，IETF 定义了 VXLAN 规范，这是三层虚拟化网络（Network Virtualization over Layer 3，NVO3）的标准技术规范之一，是一种典型的 overlay 网络。VXLAN 完美地弥补了 VLAN 的上述不足，一方面通过 VXLAN 中的 24 比特 VNI 字段（如图 2-27 所示）提供多达 16M 租户的标识能力，远大于 VLAN 的 4000；另一方面，VXLAN 本质上在两台交换机之间构建了一条穿越数据中心基础 IP 网络的虚拟隧道，将数据中心网络虚拟成一个巨型“二层交换机”，满足虚拟机大范围动态迁移的需求。
 
 <div  align="center">
 	<img src="../assets/vxlan-data.png" width = "300"  align=center />

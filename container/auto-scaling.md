@@ -18,9 +18,9 @@ HPA 组件根据资源利用率或者自定义指标自动调整 Deployment、St
 
 ## 基于事件驱动的方式
 
-现在的 HPA 虽然能基于外部指标实现弹性伸缩，但也有一些缺点，扑面来而的复杂、不直观的配置以及仅与 Prometheus 指标关联。而 Kedify、Microsoft 开源的 KEDA（Kubernetes Event-driven Autoscaling）项目则可以简化这个过程。
+现在的 HPA 虽然能基于外部指标实现弹性伸缩，但也有一些缺点，扑面来而的复杂、不直观的配置以及仅与 Prometheus 指标关联。如果你想要更好的处理好资源，那么你可以了解 KEDA 这个项目。
 
-KEDA 的出现并不是替代 HPA，而通过内置几十种常见的 Scaler[^1] 以及自定义 Scaler 对 HPA 增强。通过更丰富的指标，例如消息队列的排队深度、每秒请求数、调度的 Cron 作业数以及你可以想象的自定义指标，来驱动 HPA 工作负载从 0->1 和 1->0 的变化。
+KEDA（Kubernetes Event-driven Autoscaling）是由微软和红帽合作开发的一个基于事件触发的 Kubernetes 自动伸缩器，KEDA 的出现并不是替代 HPA，而通过内置几十种常见的 Scaler[^1] 以及自定义 Scaler 对 HPA 增强。通例如消息队列的排队深度、每秒请求数、调度的 Cron 作业数以及你能想象事件指标，来驱动 HPA 工作负载从 0->1 和 1->0 的变化。
 
 KEDA 由以下组件组成：
 
@@ -34,6 +34,33 @@ KEDA 由以下组件组成：
   <img src="../assets/keda-arch.png" width = "400"  align=center />
 </div>
 
+
+如下，一个 Kafka 伸缩实例。
+
+```
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: kafka-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: brm-index-basic
+  pollingInterval: 10
+  minReplicaCount: 1
+  maxReplicaCount: 20
+  triggers:
+    - type: kafka
+      metadata:
+        bootstrapServers: kafka-server:9092
+        consumerGroup: basic
+        topic: basic
+        lagThreshold: "100"
+        offsetResetPolicy: latest
+```
+minReplicaCount 和 maxReplicaCount 分别定义了要伸缩的对象的最小和最大副本数量，minReplicaCount 可以为 0 即缩容到没有副本，比方说 Kafka 队列一直没有新消息就可以完全缩容，到有新消息进来的时候 keda 又会自动扩容。
 
 ## Cluster AutoScaler
 
