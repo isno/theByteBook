@@ -14,7 +14,7 @@ Kubernetes 弹性伸缩组件可以从伸缩方向和伸缩对象两个维度进
 
 HPA 组件根据资源利用率或者自定义指标自动调整 Deployment、StatefulSet 或其他类似资源的扩展和缩减，实现部署的规模接近于实际服务的负载。HPA 最初的 v1 版本只支持 CPU 指标的伸缩，局限性明显。因为传统的指标如 CPU 或内存不一定就能代表服务的负载情况，比如事件驱动的应用程序 Kafka，传入 kafka 事件的数量才是确定负载的真实指标。在持续集成（CI）流水线中，当提交代码时，可能会触发一系列的流水线作业（镜像编译、应用打包、可用性测试），如果持续集成的作业出现瓶颈，这里的度量标准应该是等待执行的任务数，那么基于作业队列数量伸缩比仅仅观察 CPU 或者内存指标更有效。
 
-当然，Kubernetes 也看到了这一点。HPA 在经过三个大版本的演进之后，最新的 autoscaling/v2 实现支持 Resource Metrics（资源指标，如pod的CPU）和 Custom Metrics（自定义指标）和 External Metrics（额外指标）的缩放。
+当然，Kubernetes 也看到了这一点。HPA 在经过三个大版本的演进之后，最新的 autoscaling/v2 实现支持 Custom Metrics（自定义指标）和 External Metrics（额外指标）的缩放。
 
 ## 基于事件驱动的方式
 
