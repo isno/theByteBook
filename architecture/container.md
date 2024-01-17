@@ -1,6 +1,8 @@
 # 1.5.1 容器技术
 
-虽然容器概念是在 Docker 出现以后才开始在全球范围内火起来的，但容器却不是从 Docker 诞生的。事实上，容器连新技术都算不上，在 Docker 之前，就已经有无数先驱在探索这一极具前瞻性的虚拟化技术。
+时间回到 2013 年，当一条简单的 docker run postgre 命令就能运行起 postgre 这样复杂的传统服务时，开发者在震惊之余犹如受到天启。
+
+以 docker 为代表的实用容器技术的横空出世，也预示着一扇通往敏捷基础设施的大门即将打开。越来越多的开发者开始采用容器作为一种标准构建和运行方式，同时业界也意识到，很容易将这种封装方式引入计算集群，通过 Kubernetes 或 Mesos 这样的编排器来调度计算任务 —— 自此，容器便成为这些调度器最重要的 workload 类型。
 
 本节内容我们概览容器技术演进历程以及各个阶段所试图解决的问题，以便更全面地了解容器技术。
 
@@ -14,9 +16,9 @@ chroot 被认为是最早的容器化技术之一，chroot 可以重定向进程
 
 ## 2.Linux 容器阶段：封装系统 
 
-2006 年，Google 推出 Process Container（进程容器），Process Container 的目的非常直白，它希望能够像虚拟化技术那样给进程提供操作系统级别的资源限制、优先级控制、资源审计能力和进程控制能力。带着这样的设计思路，Process Container 推出不久就进入了 Linux Kernel 主干，不过由于 container 这一命名在内核中具有许多不同的含义，为了避免代码命名的混乱，后来就将 Process Container 更名为了 Control Groups，简称 cgroups。
+2006 年，Google 推出 Process Container（进程容器），Process Container 的目的非常直白，它希望能够像虚拟化技术那样给进程提供操作系统级别的资源限制、优先级控制、资源审计能力和进程控制能力。带着这样的设计思路，Process Container 推出不久就进入了 Linux 内核主干，不过由于 container 这一命名在内核中具有许多不同的含义，为了避免代码命名的混乱，后来就将 Process Container 更名为了 Control Groups，简称 cgroups。
 
-2008 年 Linux Kernel 2.6.24 刚刚开始提供 cgroups 的同一时间，社区开发者将 cgroups 的资源管理能力和 Linux namespace（命名空间）的资源隔离能力组合在一起，形成了完整的容器技术 LXC（Linux Container，Linux 容器），这就是如今被广泛应用的容器技术的实现基础。
+2008 年 Linux 内核版本 2.6.24 刚刚开始提供 cgroups 的同一时间，社区开发者将 cgroups 的资源管理能力和 Linux namespace（命名空间）的资源隔离能力组合在一起，形成了完整的容器技术 LXC（Linux Container，Linux 容器），这就是如今被广泛应用的容器技术的实现基础。
 
 至 2013 年，Linux 虚拟化技术已基本成型，通过 cgroups、namespace 以及安全防护机制，大体上解决了容器核心技术“运行环境隔离”。彼时，虽然容器运行环境隔离基础已经基本就位，但仍需等待另一项关键技术的出现，才能迎来容器技术的全面繁荣。
 

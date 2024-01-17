@@ -80,6 +80,11 @@ kubelet 和底层容器运行时都需要对接 cgroup 实现容器的资源的�
 
 部分系统譬如 debian、centos7 都是使用 systemd 初始化系统，相当于已经有一套 cgroup 资源分配视图了。如果 kubelet 和容器运行时使用 cgroupfs ，也就意味着一个系统里面存在两套资源分配视图。
 
+kubernetes 1.25.0 版本已经全面支持 cgroup v2[^3]，将 cgroupDriver 配置为 systemd，这样将 kubelet 可以通过 systemd 在 cgroup 的 v1 和 v2 版本之间进行自适应：
+- 操作系统发行版启用 cgroup v2
+- Linux 内核为 5.8 或更高版本
+- 容器运行时支持 cgroup v2（containerd v1.4+、cri-o v1.20+）
+
 4. 创建 containerd 的 systemd service 文件
 
 也可从 gtihub 中下载 containerd service 配置文件[^2]，确认二进制执行文件配置正确。
@@ -164,4 +169,5 @@ $ ctr run docker.io/library/nginx:alpine nginx
 
 [^2]: 参见 https://raw.githubusercontent.com/containerd/containerd/main/containerd.service
 [^1]: 参见 https://github.com/kubernetes/cri-api/blob/master/pkg/apis/runtime/v1/api.proto
+[^3]: 参见 https://kubernetes.io/zh-cn/docs/concepts/architecture/cgroups/
 
