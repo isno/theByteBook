@@ -7,3 +7,8 @@
 在数据的处理上，Metrics 可以是实时的，也可能是区间范围的，既能做常见的监控告警，也可以用来做趋势分析。
 
 一个典型的场景是你收到一条告警”请求成功率跌到了 10%“，你马上意识到大事不妙，立即开始处理，然后结合其他 Signals 去找到 root cause，从而解决问题。
+
+
+时序数据库排名
+
+https://db-engines.com/en/ranking/time+series+dbms
