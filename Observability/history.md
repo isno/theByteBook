@@ -38,7 +38,6 @@ X 轴的右侧称为 Known Knows（已知且理解）和 Known Unknowns（已知
 
 有经验的架构师能通过种种的蛛丝马迹证实自己的推测，也从无数次翻车的事故分析总结中将 Unknown Unknowns 的查询范围变小。但是更合理的做法是透过系统输出的蛛丝马迹，以一个低门槛且形象的方式描绘系统更全面的状态，当发生 Unknown Unkowns 的情况时候，具象化的一步步找到根因。
 
-
 在云原生和微服务的世界里，最近几年一个行业的大趋势是将系统的可观测性放在一个更高的位置，监控只是可观测性的一个子集，如下所示。
 
 <div  align="center">
@@ -48,6 +47,10 @@ X 轴的右侧称为 Known Knows（已知且理解）和 Known Unknowns（已知
 ## 可观测性数据分类
 
 工业界和学术界一般会将可观测性的遥测数据分解为三个更具体方向进行研究，它们分别是**事件日志（Logging）、链路追踪（Tracing）和聚合度量（Metrics）**。
+
+- Metrics，一般用来计算 Events 发生数量的数据集，这些数据通常具有原子性、且可以聚合。从操作系统到应用程序，任何事物都会产生 Metrics 数据，这些数据可以用来度量操作系统或者应用是否健康。
+- Logging，描述一系列离散的事件，在缺乏有力的监控系统时，Logging 数据通常是工程师在定位问题时最直接的手段。如果说 Metrics 告诉你应用程序出现问题，那么 Logging 就告诉你为什么出现问题。
+- Tracing，微服务下，多个服务之间或多或少存在依赖，Tracing 通过有向无环图的方式记录分布式系统依赖中发生 Events 之间的因果关系。
 
 2017 年的分布式追踪峰会结束后，Peter Bourgon 撰写了总结文章《Metrics, Tracing, and Logging》[^2]系统地阐述了这三者的定义、特征以及它们之间的关系与差异，受到了业界的广泛认可。
 
@@ -61,7 +64,7 @@ X 轴的右侧称为 Known Knows（已知且理解）和 Known Unknowns（已知
 
 ## 可观测性生态
 
-可观测性的标准，已经基本统一，可见未来 OpenTelemetry，但基于标准化开发的产品，确很难出现一统天下的局面。在 CNCF Landscape 中，有个专门的可观测方案分类：Observability and Analysis，下面还有三个子分类：Montioring、Logging、Tracing，其中的产品加起来上百个，可见其纷繁庞大。关键的这并不是全部，不在 CNCF 范围内的商业产品更是不计其数。
+在 CNCF Landscape 中，有个专门的可观测方案分类：Observability and Analysis，下面还有三个子分类：Montioring、Logging、Tracing，其中的产品加起来上百个，可见其纷繁庞大。关键的这并不是全部，不在 CNCF 范围内的商业产品更是不计其数。
 <div  align="center">
 	<img src="../assets/cncf-observability.png" width = "400"  align=center />
 </div>

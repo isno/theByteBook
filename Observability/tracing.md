@@ -7,21 +7,7 @@
 	<p>Uber 使用 Jaeger 生成的追踪链路拓扑</p>
 </div>
 
-分布式链路追踪诞生的标志性事件就是 Google Dapper 论文的发表。2010年4月，Benjamin H. Sigelman 等人在 Google Technical Report 上发表了《Dapper, a Large-Scale Distributed Systems Tracing Infrastructure》[^2]，揭开了分布式链路追踪的技术大幕，开启了一段全新的技术浪潮。
-
-
-链路追踪系统并不遥远，就在你身边。我们来看看物流订单追踪，一个快递包裹会在发件站点被赋予一个快递单号，沿途的中转节点会记录该快递到达的时间等信息，而用户通过快递单号就可以查询自己的包裹途径了哪些站点，耗时多久，是否存在滞留或丢件的情况。
-
-
-||物流追踪|链路追踪|
-|:--|:--|:--|
-|追踪对象| 快递包裹 | 服务请求 |
-| 唯一标识| 快递单号 | 链路标识(traceId) |
-|追踪信息| 包裹在不同地区的运输路线和状态 | 请求在分布式系统间的流转路径和状态|
-|业务价值| 物流状态查询、丢件排查、物流提效| 性能瓶颈分析、错/慢请求排查、服务依赖梳理 |
-
-
-## 追踪与跨度
+分布式链路追踪诞生的标志性事件就是 Google Dapper 论文的发表。2010年4月，Benjamin H. Sigelman 等人在 Google Technical Report 上发表了《Dapper, a Large-Scale Distributed Systems Tracing Infrastructure》[^2]。
 
 Dapper 论文详细阐述了分布式链路追踪的设计理念，还提出了成为后续链路追踪系统设计的共识的两个概念：“追踪”（Trace）和“跨度”（Span）。
 
@@ -33,7 +19,6 @@ Dapper 论文详细阐述了分布式链路追踪的设计理念，还提出了�
 	<img src="../assets/Dapper-trace-span.png" width = "350"  align=center />
 	<p>Trace 和 Spans</p>
 </div>
-
 
 ## 生态
 
