@@ -317,6 +317,8 @@ export default defineUserConfig({
                     '/observability/metrics.md',
                     '/observability/logging.md',
                     '/observability/tracing.md',
+                    '/observability/profiles.md',
+                    '/observability/dumps.md',
                     '/observability/OpenTelemetry.md',
                 ]
             },

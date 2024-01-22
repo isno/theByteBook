@@ -88,6 +88,7 @@ cat > ca-config.json <<EOF
             "server auth",
             "client auth"
         ],
+        "expiry": "87600h"
       }
     }
   }
@@ -120,10 +121,7 @@ cat > ca-csr.json <<EOF
       "O": "k8s",
       "OU": "System"
     }
-  ],
-    "ca": {
-       "expiry": "87600h"
-    }
+  ]
 }
 EOF
 ```
@@ -151,11 +149,9 @@ cat > kubernetes-csr.json <<EOF
     "CN": "kubernetes",
     "hosts": [
       "127.0.0.1",
-      "172.20.0.112",
-      "172.20.0.113",
-      "172.20.0.114",
-      "172.20.0.115",
-      "10.254.0.1",
+      "192.168.31.37",
+      "192.168.31.38",
+      "192.168.31.39",
       "kubernetes",
       "kubernetes.default",
       "kubernetes.default.svc",
@@ -163,14 +159,14 @@ cat > kubernetes-csr.json <<EOF
       "kubernetes.default.svc.cluster.local"
     ],
     "key": {
-        "algo": "rsa",
-        "size": 2048
+        "algo": "ecdsa",
+        "size": 256
     },
     "names": [
         {
             "C": "CN",
-            "ST": "BeiJing",
-            "L": "BeiJing",
+            "ST": "Shanghai",
+            "L": "Shanghai",
             "O": "k8s",
             "OU": "System"
         }
@@ -180,7 +176,7 @@ EOF
 ```
 生成 kubernetes 证书和私钥
 ```
-$ cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes kubernetes-csr.json|cfssljson -bare kubernetes
+$ cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes kubernetes-csr.json | cfssljson -bare kubernetes
 ```
 
 

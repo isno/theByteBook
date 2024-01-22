@@ -52,6 +52,7 @@ X 轴的右侧称为 Known Knows（已知且理解）和 Known Unknowns（已知
 - Logging，描述一系列离散的事件，在缺乏有力的监控系统时，Logging 数据通常是工程师在定位问题时最直接的手段。如果说 Metrics 告诉你应用程序出现问题，那么 Logging 就告诉你为什么出现问题。
 - Tracing，微服务下，多个服务之间或多或少存在依赖，Tracing 通过有向无环图的方式记录分布式系统依赖中发生 Events 之间的因果关系。
 
+
 2017 年的分布式追踪峰会结束后，Peter Bourgon 撰写了总结文章《Metrics, Tracing, and Logging》[^2]系统地阐述了这三者的定义、特征以及它们之间的关系与差异，受到了业界的广泛认可。
 
 <div  align="center">
