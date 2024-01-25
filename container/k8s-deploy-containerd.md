@@ -2,28 +2,17 @@
 
 如果没有隔离或者混部的需求，仅以性能和稳定选择容器运行时，containerd 就是唯一之选。这一节，继续延续惯例，先说明流程原理再进行实践操作。
 
-首先，Kubelet 通过 CRI 接口管理节点上的容器，CRI 实际上就是基于 gRPC 定义了 RuntimeService 和 ImageService 等两个 gRPC 服务 [^1]，分别用于容器运行时和镜像的管理，所以 Kubelet 从本质上是 CRI 接口的 gRPC Client。早期，各类容器运行时没并没有实现 CRI 接口（gRPC Server） ，由此出现了各类垫片，譬如对接 Docker 的 Dockershim，对接 containerd 的 cri-containerd，这也是早期在 Node 节点部署各类 shim 的原因。
-
-现在，作为 CNCF 毕业项目的 containerd 目标就是完全融入 Kubernetes 的生态，自然早早地在 1.1 版本起就将 cri-containerd 内置在 containerd 中了，如图所示。
-
-
-<div  align="center">
-	<img src="../assets/containerd-cri.png" width = "550"  align=center />
-</div>
-
-containerd 内置的 CRI 插件管理容器和镜像，并通过 CNI 插件给 Pod 配置网络。举一个例子，Kubelet 通过 cri 接口创建 pod 说明这个工作流程。
+早期，各类容器运行时没并没有实现 CRI 接口（gRPC Server） ，由此出现了各类垫片，譬如对接 Docker 的 Dockershim，对接 containerd 的 cri-containerd，这也是早期在 Node 节点部署各类 shim 的原因。现在，作为 CNCF 毕业项目的 containerd 目标就是完全融入 Kubernetes 的生态，自然早早地在 1.1 版本起就将 cri-containerd 内置在 containerd 中。如下图所示，kubelet 调用 containerd 内置的 CRI 插件管理容器和镜像，并通过 CNI 插件给 Pod 配置网络。
 
 <div  align="center">
 	<img src="../assets/cri-architecture.png" width = "550"  align=center />
 </div>
 
-- Kubeletcri通过 CRI 运行时服务 API 调用插件来创建 pod；
-- cri创建 pod 的网络命名空间，然后使用 CNI 配置它；
-- cri使用containerd内部创建并启动一个特殊的 pause container （沙盒容器）并将该容器放入 pod 的 cgroup 和命名空间中
-- Kubelet 通过 ImageService 拉取应用程序容器镜像
-- cri如果节点上不存在镜像，则进一步使用containerd来拉取镜像；
-- kubelet 调用 RuntimeService ，使用拉取的容器镜像在 pod 内创建并启动应用程序容器；
-- cri最后使用containerd内部创建应用程序容器，将其放入pod的cgroup和命名空间中，然后启动pod的新应用程序容器。
+Kubelet 通过 cri 接口创建 pod 说明这个工作流程。
+
+- CRI 负责创建容器沙箱（Container Sandbox），这是一个包含所有与 Pod 相关的资源的隔离环境
+- 在容器沙箱准备好后，CRI 会调用底层容器运行时的接口，请求在沙箱内创建一个或多个容器实例。
+- 容器运行时接收到 CRI 的请求后，负责在容器沙箱内创建并启动容器实例
 
 经过这些步骤，一个 pod 及其对应的应用程序容器就被创建并运行了。
 
@@ -38,15 +27,7 @@ $ tar xzvf containerd-1.7.11-linux-amd64.tar.gz -C /usr/local/bin/
 
 2. 安装 runc
 
-runc 是底层容器运行时（真正创建容器的程序），containerd 二进制包中并没有内置，需要单独安装。
-
-:::tip GPU
-
-runc 并不支持GPU资源操作，譬如 nvidia-container-runtime 
-
-:::
-
-
+runc 是底层容器运行时（真正创建容器的程序），containerd 二进制包中并没有内置，需要单独安装。（思考，如果把 runc 换成支持 GPU 的 nvidia-container-runtime，我们是否就部署了一个 GPU 算力平台了）
 
 ```
 $ wget https://github.com/opencontainers/runc/releases/download/v1.1.11/runc.amd64
