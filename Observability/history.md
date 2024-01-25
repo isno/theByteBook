@@ -11,9 +11,7 @@ The information that you will use to determine whether an application is healthy
 遥测数据是指采样和汇总有关软件系统性能和行为的数据，这些数据（响应时间、错误率、资源消耗等）用于监控和了解系统的当前状态。
 :::
 
-遥测数据你不一定陌生，你或许看过中央电视台火箭发射的直播，发射指挥大厅内有条不紊的回响起一系列口令：“USB、雷达 跟踪正常，遥测信号正常”。遥测信号正常说明火箭运行的参数在理想的范围内。软件领域的可测性和系统遥测数据本质和火箭一样，主要就是通过收集系统内部各类的遥测数据来了解系统内部正在发生的事情，以此找到问题的根本原因并提⾼系统可用性，所以，本质上它就是一门数据收集和分析的科学。
-
-总结来说，软件领域的可测性能够帮助大家在 DevOps 中遇到的故障定位难、容量评估、链路梳理、性能分析等问题，提供一种所谓洞见的能力。所以从实际效果看，分布式系统的可观测性可以认为是生物学的显微镜、天文学的望远镜，我想这也是很多开源项目 Logo 中带有各种镜子的原因。
+遥测数据你不一定陌生，如果你在生活中观察仔细，观看电视台火箭发射的直播时，能注意到发射指挥大厅内回响起一系列这样的口令：“东风光学USB雷达跟踪正常，遥测信号正常”，软件领域的可测性和系统遥测数据本质和火箭一样，主要就是通过收集系统内部各类的遥测数据来了解系统内部正在发生的事情，帮助大家在 DevOps 中遇到的故障定位难、容量评估、链路梳理、性能分析等问题，提供一种所谓洞见的能力，本质上它就是一门数据收集和分析的科学。
 
 
 ## 可观测性与传统监控
@@ -62,14 +60,6 @@ X 轴的右侧称为 Known Knows（已知且理解）和 Known Unknowns（已知
 来自于 Cindy Sridharan 的《Distributed Systems Observability》著作中进一步将这三个类型的数据称为可观测性的三大支柱（three pillars），不过将它们成为支柱容易让人产生误解，支柱就像一个房子的均匀受力支撑点，缺一不可。而事实上这三者都可以独立存在，系统中也往往只存在 Logging、Tracing。
 
 所以，在最新 CNCF 发布的可观测性白皮书中，将这些可观测的数据统一称为信号（Signals），主要的信号除了 Metrics、logs、traces 之外又额外增加了  Profiles 和 Dumps。
-
-## 可观测性生态
-
-在 CNCF Landscape 中，有个专门的可观测方案分类：Observability and Analysis，下面还有三个子分类：Montioring、Logging、Tracing，其中的产品加起来上百个，可见其纷繁庞大。关键的这并不是全部，不在 CNCF 范围内的商业产品更是不计其数。
-<div  align="center">
-	<img src="../assets/cncf-observability.png" width = "400"  align=center />
-</div>
-
 
 
 [^1]: 参见 https://medium.com/lightstephq/observability-will-never-replace-monitoring-because-it-shouldnt-eeea92c4c5c9
