@@ -247,16 +247,7 @@ export default defineUserConfig({
                 children: [
                     '/container/Container-Orchestration-Wars.md',
                     '/container/orchestration.md',
-                    {
-                        text: '7.3 容器镜像',
-                        link: '/container/image.md',
-                        collapsable: false,
-                        sidebarDepth: 1,
-                        children: [
-                            '/container/Nydus-image.md',
-                            '/container/dragonfly.md'
-                        ]
-                    },   
+                    '/container/image.md',
                     '/container/runtime.md',
                     {
                         text: '7.5 容器间网络',
@@ -282,19 +273,7 @@ export default defineUserConfig({
                             '/container/k8s-deploy-cilium.md',
                         ]
                     },
-                    /*
-                    {
-                        text: '7.7 以应用为中心进行封装',
-                        link:'/container/application-centric.md',
-                        collapsable: false,
-                        sidebarDepth: 1,
-                        children: [
-                           '/container/Kustomize.md',
-                           '/container/Helm.md',
-                           '/container/CRD-Operator.md',
-                           '/container/OAM.md',
-                        ]
-                    }*/
+                    '/container/conclusion.md',
                 ]
             },
             {

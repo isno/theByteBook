@@ -87,7 +87,7 @@ OCI 标准意在将容器运行时和镜像的实现从 Docker 项目中完全�
 
 ## 7. Kubernetes 最终胜出
 
-经过设计理念、架构、标准、生态等多方面的较量之后，Docker 在与 Kubernetes 的竞争中逐渐落败，Mesos 因其侧重在传统的资源管理，导致它在应对多云和集群管理时面临很多挑战，后来的 Mesos 项目发展也并不好，其标杆客户 Twitter 最后也放弃了 Mesos 改用 Kubernetes。
+经过设计理念、架构、标准、生态等多方面的较量之后，Docker 在与 Kubernetes 的竞争中逐渐落败，Mesos 因其侧重在传统的资源管理，导致它在应对多云和集群管理时面临很多挑战，标杆客户 Twitter 最后也放弃了 Mesos 改用 Kubernetes。
 
 2017 年 10 月的 DockerCon 欧洲大会上，Docker 官方正式宣布支持 Kubernetes，决定将在自己的主打产品 Docker 企业版中内置 Kubernetes，并将 Docker 项目的容器运行时部分 Containerd 捐赠给了 CNCF 社区。
 
