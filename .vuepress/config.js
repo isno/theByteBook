@@ -299,6 +299,7 @@ export default defineUserConfig({
                     '/observability/profiles.md',
                     '/observability/dumps.md',
                     '/observability/OpenTelemetry.md',
+                    '/observability/conclusion.md',
                 ]
             },
             {
