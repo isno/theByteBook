@@ -15,6 +15,7 @@
     "vuepress-plugin-reading-time2": "^2.0.0-rc.4"
   },
   "dependencies": {
+    "@vuepress/theme-default": "^2.0.0-rc.0",
     "vue-github-button": "^3.1.0"
   }
 }
