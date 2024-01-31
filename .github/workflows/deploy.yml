@@ -15,6 +15,7 @@ jobs:
           node-version: 20 
       - name: Install and Build   
         run: |
+          npm cache clean --force 
           npm install
           npm run build
       # 部署到阿里云
