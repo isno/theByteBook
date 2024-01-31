@@ -1,4 +1,6 @@
-import { defineUserConfig, defaultTheme } from 'vuepress';
+import { defineUserConfig } from 'vuepress';
+import { defaultTheme } from '@vuepress/theme-default'
+
 import { mdEnhancePlugin } from "vuepress-plugin-md-enhance";
 import { commentPlugin } from "vuepress-plugin-comment2";
 import { readingTimePlugin } from "vuepress-plugin-reading-time2";
