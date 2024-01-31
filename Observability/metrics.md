@@ -10,10 +10,21 @@
 
 Metrics 提供的信息可用于系统整体行为和监控状况的分析，它不一定能揭示问题根本原因，但可以作为发现问题的起点。一个典型例子是你收到一条告警”请求成功率跌到了 10%“，你意识到不妙，立即开始处理，然后结合其他 Signals 去找到 root cause，从而解决问题。
 
+prometheus-vs-victoriametrics[^1]
 
-
-
+||Prometheus| VictoriaMetrics | 
+|:--|:--|:--|
+|数据采集	 |基于拉动	|基于拉式和推式|
+|数据摄取	 |每秒高达 240,000 个样本|	每秒高达 360,000 个样本|
+|数据查询 |	每秒高达 80,000 次查询	|每秒高达 100,000 次查询|
+|内存使用情况	|高达 14GB RAM	|高达 4.3GB 的 RAM|
+|数据压缩	 |使用LZF压缩	| 使用 Snappy 压缩|
+|磁盘写入频率|	更频繁地将数据写入磁盘	|减少将数据写入磁盘的频率|
+|磁盘空间使用情况	|需要更多磁盘空间	|需要更少的磁盘空间|
+|查询语言	|PromQL	|MetricsQL（向后兼容 PromQL）|
 
 时序数据库排名
 
 https://db-engines.com/en/ranking/time+series+dbms
+
+[^1]: 参见 https://last9.io/blog/prometheus-vs-victoriametrics/
