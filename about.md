@@ -13,5 +13,5 @@
 
 发一些我的闲唠叨，有兴趣的可以关注。
 <div  align="left">
-	<img src="./assets/webchat.jpg" width = "250"  align=center />
+	<img src="./assets/qrcode-v2.png" width = "250"  align=center />
 </div>

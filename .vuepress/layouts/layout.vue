@@ -13,6 +13,9 @@
         </div>
       </div>
       <CommentService :darkmode="isDarkMode" class="layout-comment" />
+      <div class="qrcode">
+         <img src="https://www.thebyte.com.cn/assets/webchat-pHlFlW6o.jpg" width = "160"  align=center />
+      </div>
     </template>
   </ParentLayout>
 </template>
@@ -53,6 +56,16 @@
 
 </script>
 <style lang="scss" scoped>
+  .qrcode {
+    position: fixed;
+    bottom: 80px;
+    right: 30px;
+    
+  }
+  .qrcode img {
+    border-radius: 6px;
+    box-shadow: 0 2px 3px 0 rgba(0,0,0,0.1);
+  }
   .layout-comment {
     max-width: initial;
     margin-top: 100px;
