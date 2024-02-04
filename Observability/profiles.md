@@ -1,4 +1,4 @@
-# Profiles
+# 9.2.4 Profiles
 
 熟悉 Go 语言的朋友一定了解 pprof，进行性能分析时，通过 pprof 的 CPU profiling 或者 Memory profiling 功能分析函数耗时以及内存占用情况。Profiles 就是进行 profiling 时程序运行的动态画像，当于动态的内部数据，说明各类资源分配的情况，能精确到进程、代码。
 

@@ -295,11 +295,17 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     "/observability/history.md",
-                    '/observability/metrics.md',
-                    '/observability/logging.md',
-                    '/observability/tracing.md',
-                    '/observability/profiles.md',
-                    '/observability/dumps.md',
+                    {
+                        text: "9.2 可观测数据分类",
+                        link: '/observability/signals.md',
+                        children: [
+                            '/observability/metrics.md',
+                            '/observability/logging.md',
+                            '/observability/tracing.md',
+                            '/observability/profiles.md',
+                            '/observability/dumps.md',
+                        ]
+                    },
                     '/observability/OpenTelemetry.md',
                     '/observability/conclusion.md',
                 ]

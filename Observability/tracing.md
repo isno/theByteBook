@@ -1,13 +1,13 @@
-# 9.4 链路追踪
+# 9.2.3 链路追踪
 
-参阅 Uber（优步，国外的打车公司）公开的技术文档信息，它们的微服务架构中大约有 2,200 个服务，这些服务相互依赖的链路关系引用 Uber 博客中的配图[^1]，供你直观感受。而分布式链路追踪所要做的事情就是通过请求粒度的轨迹追踪与数据透传，实现规模级服务之间的确定性关联。
+参阅 Uber 公开的技术文档信息，它们的微服务架构中大约有 2,200 个服务。这些服务之间的调用链路，引用 Uber 博客中的配图[^1]，感受扑面来而的复杂。而分布式链路追踪所要做的事情就是**通过请求粒度的轨迹追踪与数据透传，实现分布式服务之间的确定性关联**。
 
 <div  align="center">
 	<img src="../assets/uber-microservice.png" width = "350"  align=center />
 	<p>Uber 使用 Jaeger 生成的追踪链路拓扑</p>
 </div>
 
-分布式链路追踪诞生的标志性事件就是 Google Dapper 论文的发表。2010年4月，Benjamin H. Sigelman 等人在 Google Technical Report 上发表了《Dapper, a Large-Scale Distributed Systems Tracing Infrastructure》[^2]。Dapper 论文详细阐述了分布式链路追踪的设计理念，还提出了成为后续链路追踪系统设计的共识的两个概念：“追踪”（Trace）和“跨度”（Span）。
+分布式链路追踪诞生的标志性事件就是 Google Dapper 论文的发表。2010年4月，Benjamin H. Sigelman 等人在 Google Technical Report 上发表了《Dapper, a Large-Scale Distributed Systems Tracing Infrastructure》[^2]，论文详细阐述了 Google 内部分布式链路追踪系统 Dapper 的设计理念，还提出了成为后续链路追踪系统设计的共识的两个概念 Trace（追踪）和 Span（跨度）。
 
 ## Trace 和 Span
 

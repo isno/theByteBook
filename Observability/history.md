@@ -24,7 +24,7 @@ The information that you will use to determine whether an application is healthy
 
 在过去，一个物理机器的状态确实可以通过几个监控指标描述，但是随着我们的系统越来越复杂，观测对象正渐渐的从 Infrastructure 转到 应用，观察行为本身从 Monitoring（监控）到 Observability（观测）。虽然看上去这两者只是文字上的差别，也确实容易引起误解，但是请仔细思考背后的含义。
 
-如下图所示，套用 Donald Rumsfeld 关于 Known、Unknowns 的名言[^3]，把系统的理解程度和可收集信息之间的关系进行象限化分析。
+如下图所示，套用 Donald Rumsfeld 关于 Known、Unknowns 的名言[^2]，把系统的理解程度和可收集信息之间的关系进行象限化分析。
 
 <div  align="center">
 	<img src="../assets/observability-knowns.png" width = "500"  align=center />
@@ -42,29 +42,6 @@ X 轴的右侧称为 Known Knows（已知且理解）和 Known Unknowns（已知
 	<img src="../assets/Monitoring-vs-Observability.png" width = "450"  align=center />
 </div>
 
-## 可观测性数据分类
-
-工业界和学术界一般会将可观测性的遥测数据分解为三个更具体方向进行研究，它们分别是**事件日志（Logging）、链路追踪（Tracing）和聚合度量（Metrics）**。
-
-- Metrics，一般用来计算 Events 发生数量的数据集，这些数据通常具有原子性、且可以聚合。从操作系统到应用程序，任何事物都会产生 Metrics 数据，这些数据可以用来度量操作系统或者应用是否健康。
-- Logging，描述一系列离散的事件，在缺乏有力的监控系统时，Logging 数据通常是工程师在定位问题时最直接的手段。如果说 Metrics 告诉你应用程序出现问题，那么 Logging 就告诉你为什么出现问题。
-- Tracing，微服务下，多个服务之间或多或少存在依赖，Tracing 通过有向无环图的方式记录分布式系统依赖中发生 Events 之间的因果关系。
-
-
-2017 年的分布式追踪峰会结束后，Peter Bourgon 撰写了总结文章《Metrics, Tracing, and Logging》[^2]系统地阐述了这三者的定义、特征以及它们之间的关系与差异，受到了业界的广泛认可。
-
-<div  align="center">
-	<img src="../assets/observability.png" width = "350"  align=center />
-</div>
-
-来自于 Cindy Sridharan 的《Distributed Systems Observability》著作中进一步将这三个类型的数据称为可观测性的三大支柱（three pillars），不过将它们成为支柱容易让人产生误解，支柱就像一个房子的均匀受力支撑点，缺一不可。而事实上这三者都可以独立存在，系统中只存在 Logging、Tracing 也未尝不可。
-
-所以，在最新 CNCF 发布的可观测性白皮书中，将这些可观测的数据统一称为信号（Signals），主要的信号除了 Metrics、logs、traces 之外又额外增加了  Profiles 和 Dumps。
-
-
-[^1]: 参见 https://medium.com/lightstephq/observability-will-never-replace-monitoring-because-it-shouldnt-eeea92c4c5c9
-
 
 [^1]: 参见 https://cloud.google.com/learn/what-is-opentelemetry
-[^2]: 参见 https://peter.bourgon.org/blog/2017/02/21/metrics-tracing-and-logging.html
-[^3]: 参见 https://blog.sciencenet.cn/blog-829-1271882.html
+[^2]: 参见 https://blog.sciencenet.cn/blog-829-1271882.html

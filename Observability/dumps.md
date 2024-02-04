@@ -1,4 +1,4 @@
-# core dump
+# 9.2.5 core dump
 
 CNCF 可观测性白皮书中只提到了 core dump。只提 core dump 有局限，dump 还应该包含更多，例如 Heap dump（某时刻 Java 堆栈的快照）、Thread dump（某一时刻 Java 线程快照）等。
 
