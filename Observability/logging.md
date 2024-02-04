@@ -1,16 +1,17 @@
 # 9.2.2 事件日志
 
-Logs 作为最古老而又最具体的一个 Signal，大部分的时候都是基于可读性较好的文本。
+日志我们绝对不会陌生（绝大多数程序员生涯的第一行代码都是从打印 “hello world” 开始）。整个日志系统中最成熟的部分就是打印日志。尤其是本地日志打印，各式各样层出不穷的 logging Library，同步的异步的、有锁的无锁的、有上下文的无上下文的、高性能的低性能的，花活最多轮子也造的最多。
 
-可观测性白皮书中把日志分为5类：Application Logs、Security Log、System Log、Audit log、Infrastructure log。
-
-
-日志级别，不同的系统差别较大，但形成共识的级别为 ERROR、WARNING、INFO、DEBUG。生产环境用 ERROR，开发阶段用 DEBUG。
-
-其次是日志库，logging 系统中最成熟的部分就是打印日志。尤其是本地日志打印，各式各样层出不穷的 logging Library，同步的异步的、有锁的无锁的、有上下文的无上下文的、高性能的低性能的，花活最多轮子也造的最多。
+作为最古老而又最具体的 Signal，日志记录的是系统运行期间发生的离散的事件，特别是非预期的行为、异常情况。大部分的时候都是基于可读性较好的文本。
 
 
-或多或少都应该听说过这几个名词：Elasticsearch、ELKB、Elastic Stack
+今天只要稍微复杂点的系统，已经很难只依靠 tail、grep、awk 来从日志中挖掘信息，对于日志的完整处理，除了打印，还包含着日志采集、日志传输、日志清洗、日志存储、分析与检索、告警与智能化响应一系列步骤。
+
+
+## ELK
+
+谈论实现一套完整的日志系统，相信用户或多或少都应该听说过这几个名词：Elasticsearch、ELK 或者 Elastic Stack。
+
 
 :::tip ELKB
 
@@ -26,15 +27,7 @@ ELK 中最核心的是 Elasticsearch，它是一个分布式搜索分析引擎�
 
 Elastic Stack 之所以流行的一个原因之一，可能是它的无侵入性。对于遗留系统的日志，它可以做到悄无声息地把处了上面打印日志之外的所有事情，全都给做了。
 
-一个典型的日志系统，一般有以下几个部分组成：
 
-- 日志打印
-- 日志采集
-- 日志传输
-- 日志清洗
-- 日志存储
-- 分析与检索
-- 告警与智能化响应
 
 
 我们来看一个典型的 Elastic Stack 使用场景，大致系统架构如下（整合了消息队列和 Nginx 的架构）。
@@ -50,7 +43,7 @@ Elastic Stack 之所以流行的一个原因之一，可能是它的无侵入性
 
 如果只是需求只是把日志集中起来，最多用来告警或者排查问题，那么我们可以把目光转向 Loki。
 
-## 低成本方案 Loki
+## Loki 
 
 Loki 是 Grafana Labs 公司推出的类似于 Prometheus 的日志系统（官方的项目介绍是 like Prometheus，but for logs）。
 
@@ -61,13 +54,10 @@ Loki 一个明显的特点是非常经济，Loki 不再根据日志的原始内�
 	<p>Loki 架构：与 Prometheus、Grafana 密切集成</p>
 </div>
 
-不难看出，Loki 的架构非常简单，使用了和 prometheus 一样的标签来作为索引，也正是因为这个原因，通过这些标签，既可以查询日志的内容，也可以查询到监控的内容，这两种查询被很好的兼容，节省了分别存储相关日志和监控数据的成本，也减少了查询的切换成本。
-
-说白了，Loki 吸引人的地方就在于拥有和 Prometheus 类似机制的时序数据库以及方便拓展的硬盘资源。
+Loki 对 Kubernetes 友好，Promtail（日志收集代理）以 DaemonSet 方式运行在每个节点中，负责收集日志并将其发送给 Loki。日志数据使用和 Prometheus 一样的标签来作为索引，也正是因为这个原因，通过这些标签，既可以查询日志的内容，也可以查询到监控的内容，还能对接到 alertmanager。这两种查询被很好的兼容，节省了分别存储相关日志和监控数据的成本，也减少了查询的切换成本（避免 kibana 和 grafana 来回切换）。
 
 
-Promtail（日志收集代理）以 DaemonSet 方式运行在每个节点中，负责收集日志并将其发送给 Loki。
-
+作为 Grafana Labs 的自家产品，自然与 Grafana 密切集成，
 
 <div  align="center">
 	<img src="../assets/loki-dashboard.jpeg" width = "550"  align=center />
