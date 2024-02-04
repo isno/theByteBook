@@ -23,7 +23,7 @@ TSDB 是专门用来存储随时间变化的数据，如股票价格、传感器
 - 时序的唯一性：某一个时刻的某个指标只有一条数据（或点），即时出现多条数据也会被认为是同一条数据（或点）
 - 单条数据并不重要
 
-
+## 存储
 
 回到我们的主角 Prometheus， 它会将所有采集到的样本（sample）数据以时间序列（time-series）的方式保存在内存数据库中，并且定时保存到硬盘上。时间序列是按照时间戳和值的序列顺序存放的，每条time-series通过指标名称（metrics name）和一组标签集（labelset）命名。
 
@@ -49,5 +49,7 @@ prometheus-vs-victoriametrics[^1]
 时序数据库排名
 
 https://db-engines.com/en/ranking/time+series+dbms
+
+## 告警
 
 [^1]: 参见 https://last9.io/blog/prometheus-vs-victoriametrics/
