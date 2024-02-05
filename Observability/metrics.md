@@ -14,6 +14,15 @@
 - 怎么收集和存储指标
 - 怎么利用指标生成报表
 
+<div  align="center">
+	<img src="../assets/prometheus-arch.png" width = "500"  align=center />
+</div>
+
+Exporter 用户采集费原生支持 prometheus 的第三方系统或者服务的指标数据，并将其转换为 prometheus 可以识别的格式。Exporter 运行为一个单独的服务，周期性的从目标系统中拉取原始指标，然后提供一个 HTTP 接口，使得 prometheus 可以从中抓取已经转换的指标数据。得益于 Prometheus 的良好社区生态，现在已经有大量各种用途的 Exporter，让 Prometheus 的监控范围几乎能涵盖所有用户所关心的目标。
+
+
+
+
 ## Metrics 类型
 
 - 计数（counter）：一个只能增加或重置的度量值（即该值只能比之前多）
