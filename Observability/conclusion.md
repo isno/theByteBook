@@ -10,4 +10,4 @@ https://github.com/cncf/tag-observability/blob/dec82aa5bd39a8834f58da0377d1e2b8f
 
 - https://medium.com/lightstephq/observability-will-never-replace-monitoring-because-it-shouldnt-eeea92c4c5c9
 
-- https://blog.devgenius.io/what-is-inverted-index-and-how-we-made-log-analysis-10-times-more-cost-effective-with-it-6afc6cc81d20
+- 《What is inverted index, and how we made log analysis 10 times more cost-effective with it?》https://blog.devgenius.io/what-is-inverted-index-and-how-we-made-log-analysis-10-times-more-cost-effective-with-it-6afc6cc81d20
