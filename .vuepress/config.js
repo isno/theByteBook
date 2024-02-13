@@ -284,6 +284,7 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 link: '/ServiceMesh/summary.md',
                 children: [
+                    '/ServiceMesh/What-is-ServiceMesh.md',
                     '/ServiceMesh/MicroService-history.md',
                     '/ServiceMesh/overview.md'
                 ]
