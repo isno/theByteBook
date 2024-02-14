@@ -1,26 +1,26 @@
 # 9.2.2 事件日志
 
-对于日志的生产和处理，相信程序员们绝对不会陌生。绝大多数程序员生涯的伊始第一行代码打印 “hello world” 开始，再到从 Nginx 的 access.log 中通过 awk 挖掘信息，而今天只要稍微复杂点的系统，已经很难只依靠 tail、grep、awk 来从日志中挖掘信息。现在对日志的完整处理，除了打印，还包含着日志采集、日志传输、日志清洗、日志存储、分析与检索、告警与智能化响应一系列步骤。
+对于日志的生产和处理，相信程序员们绝对不会陌生，绝大多数程序员生涯的第一行代码是从打印 “hello world” 开始，再到通过 awk 挖掘 Nginx 的 access.log 中的信息。而今天只要稍微复杂点的系统，已经很难只依靠 tail、grep、awk 来从日志中挖掘信息。现在对日志的完整处理，除了打印，还包含着日志采集、日志传输、日志清洗、日志存储、分析与检索、告警与智能化响应一系列步骤。
 
 日志的处理和分析是典型的大数据分析场景之一，高吞吐写入、低成本海量存储、实时文本检索，业内通常以 ELK（倒排索引架构，消耗巨大的资源建立索引，巨大的存储成本）和 Grafana Loki（轻量索引，检索性能慢）为代表的两类权衡架构。
 
 ## ELK
 
-谈论实现一套完整的日志系统，相信用户或多或少都应该听说过这几个名词：Elasticsearch、ELK 或者 Elastic Stack。
+谈论实现一套完整的日志系统，工程师们或多或少都应该听说过这几个名词：Elasticsearch、ELK(B) 或者 Elastic Stack。
 
 :::tip ELKB
 
-ELK 是三个开源项目的首字母缩写，这三个项目分别是：Elasticsearch、Logstash 和 Kibana。 Elasticsearch 是一个搜索和分析引擎。 Logstash 是服务器端数据处理管道，能够同时从多个来源采集数据，转换数据，然后将数据发送到诸如 Elasticsearch 等“存储库”中。Kibana 则可以让用户在 Elasticsearch 中使用图形和图表对数据进行可视化。Beats 作为轻量级的数据搬运工，集合了多种单一用途数据采集器，将数据发送给 Logstash 或 ElasticSearch，其可扩展的框架及丰富的预置采集器将使工作事半功倍。
+ELK 是三个开源项目的首字母缩写，这三个项目分别是：Elasticsearch、Logstash 和 Kibana。Elasticsearch 是一个搜索和分析引擎。 Logstash 是服务器端数据处理管道，能够同时从多个来源采集数据，转换数据，然后将数据发送到诸如 Elasticsearch 等“存储库”中。Kibana 则可以让用户在 Elasticsearch 中使用图形和图表对数据进行可视化。Beats 作为轻量级的数据搬运工，集合了多种单一用途数据采集器，将数据发送给 Logstash 或 ElasticSearch，其可扩展的框架及丰富的预置采集器将使工作事半功倍。
 :::
 
-总结起来， ELK 是一组开源组件组成的套件，组件之间作用不用，各司其事，可以像网络协议一样按分层来理解和归类，所以形成一个类似 TCP/IP Stack 类似的 ELK Stack，如下图所示。但明确的是 ELK 中的 Stack 肯定不是协议栈，跟协议没有任何区别。为严谨准确，我们把上面的所有名词简称为 Elastic。
+总结起来，ELKB 是一组开源组件组成的套件，组件之间作用不用，各司其事，可以像网络协议一样按分层来理解和归类，形成一个类似 TCP/IP Stack 类似的 ELK Stack，如下图所示。但明确的是 ELK 中的 Stack 肯定不是协议栈，且和协议没有任何关系。为统一明确，本文把上面的所有名词简称为 Elastic。
 
 <div  align="center">
 	<img src="../assets/elk-stac.svg" width = "350"  align=center />
 	<p>Loki 架构：与 Prometheus、Grafana 密切集成</p>
 </div>
 
-ELK 中最核心的是 Elasticsearch，它是一个分布式搜索分析引擎，提供一种准实时搜索服务（生产环境中可以做到上报 10 秒后可搜，不惜成本万亿级日志秒级响应）。与 Elasticsearch 类似的产品还有商业公司 Splunk 和 Apache 开源的 Solr。事实上，Elasticsearch 和 Solr 都使用了著名的 Java 信息检索工具包 Lucene，Lucene 的作者就是大名鼎鼎的 Doug Cutting，如果你不知道谁是 Doug Cutting，那你一定听过他儿子玩具的名字 -- Hadoop。
+Elastic 中最核心的是 Elasticsearch，它是一个分布式搜索分析引擎，提供一种准实时搜索服务（生产环境中可以做到上报 10 秒后可搜，不惜成本万亿级日志秒级响应）。与 Elasticsearch 类似的产品还有商业公司 Splunk 和 Apache 开源的 Solr。事实上，Elasticsearch 和 Solr 都使用了著名的 Java 信息检索工具包 Lucene，Lucene 的作者就是大名鼎鼎的 Doug Cutting，如果你不知道谁是 Doug Cutting，那你一定听过他儿子玩具的名字 -- Hadoop。
 
 
 Elasticsearch 在日志场景中的优势在于全文检索能力，能快速从海量的数据中检索出关键词匹配的日志，其底层核心技术是转置索引（Inverted index）。正常的索引是按 ID 查询详情，类似字典通过页码查询内容。转置索引反过来，将每一行文本进行分词，变成一个个词（Term），然后构建词（Term） -> 行号列表（Posting List） 的映射关系，将映射关系按照词进行排序存储。当需要查询某个词在哪些行出现的时候，先在 词 -> 行号列表 的有序映射关系中查找词对应的行号列表，然后用行号列表中的行号去取出对应行的内容。这样的查询方式，可以避免遍历对每一行数据进行扫描和匹配，只需要访问包含查找词的行，在海量数据下性能有数量级的提升。

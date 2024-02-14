@@ -1,6 +1,6 @@
 # 9.1 什么是可观测性
 
-什么是可观测性？观测的是什么？Google Cloud 介绍 OpenTelemetry 时提到了这么一个概念[^1]：
+什么是可观测性？观测的是什么？Google Cloud 介绍 OpenTelemetry 时提到了这么一个概念 telemetry data [^1]。
 
 :::tip telemetry data（遥测数据）
 
