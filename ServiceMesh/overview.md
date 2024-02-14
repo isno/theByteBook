@@ -6,7 +6,9 @@
 
 ## Istio 入局
 
-2017年5月，Google、IBM、Lyft 宣布新一代的服务网格 Istio 开源，有巨头背书以及**新增控制平面的设计理念**让 Istio 得到极大关注和发展，并迅速成为 ServiceMesh 的代表产品。Istio 最大的创新在于它为 ServiceMesh 带来前所未有的控制力：
+2017年5月，Google、IBM、Lyft 宣布新一代的服务网格 Istio 开源，有巨头背书以及**新增控制平面的设计理念**让 Istio 得到极大关注和发展，并迅速成为 ServiceMesh 的代表产品。
+
+Istio 最大的创新在于它为 ServiceMesh 带来前所未有的控制力：
 
 - 以 Sidercar 方式部署的 ServiceMesh 控制服务间所有的流量
 - Istio 增加控制面板来控制系统中所有的 Sidecar。
@@ -17,6 +19,41 @@
 	<img src="../assets/service-mesh-arc.svg" width = "500"  align=center />
 	<p>Linkerd 架构</p>
 </div>
+
+Istio 的控制层面主要负责：
+
+- 接收用户配置
+- 生成路由规则
+- 分发路由规则到数据平面
+- 分发策略
+- 遥测数据收集
+
+Istio 的数据平面主要负责：
+
+- 流量转发
+- 策略实施
+- 遥测数据上报
+
+Istio 的数据面支持的特性如下：
+
+| Outbound 特性 | Inbound 特性|
+|:--|:--|
+| Service authentication(服务认证)|Service authentication(服务认证)|
+| Load Balancing(负载均衡)| Authorization(鉴权)|
+| Retry and circuit breaker(重试和断路器)| Rate limits(请求限流)|
+| Fine-grained routing（细粒度路由）| Load shedding(负载控制)|
+| Telemetry(遥测)|Telemetry(遥测) |
+| Request tracing （分布式追踪）|Request tracing （分布式追踪）|
+| Fault injection(故障注入)|Fault injection(故障注入)|
+
+:::tip Outbound 和 Inbound
+
+Outbound 特性是指服务请求侧的 Sidecar 提供的功能特性。而 Inbound 特性是指服务提供侧 Sidecar 提供的功能特性。类似遥测、分布式追踪需要两侧的 Sidecar 都提供支持。而另一些特性只要一侧提供支持即可，例如鉴权只需要在服务提供侧支持，重试只需要在请求侧支持。
+:::
+
+对于一个仅提供服务与服务之间连接通信的基础设施来说，Istio 的架构算不上简单，但其中各个组件的理念得承认的确非常先进和超前。
+
+- Pilot：负责部署在 ServiceMesh 中的 Envoy 实例的生命周期管理。主要职责是负责流量管理和控制，向 Envoy 发送服务发现信息和各种流量管理以及路由规则。Pilot 让运维人员通过 pilot 指定它们希望流量遵循什么规则，而不是哪些特定的 Pod/VM 应该接收什么流量。有了 Pilot 这个组件，就可以轻松实现 A/B 测试以及金丝雀 Canary 测试。
 
 ## Linkerd 2.0 
 

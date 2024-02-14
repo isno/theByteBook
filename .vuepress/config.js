@@ -299,7 +299,7 @@ export default defineUserConfig({
                     "/observability/What-is-Observability.md",
                     "/observability/Observability-vs-Monitoring.md",
                     {
-                        text: "9.2 可观测数据分类",
+                        text: "9.2 遥测数据分类",
                         link: '/observability/signals.md',
                         children: [
                             '/observability/metrics.md',
