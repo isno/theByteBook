@@ -12,7 +12,7 @@ Service Mesh 是一个处理服务通讯的专门的基础设施层。它的职�
 
 :::
 
-概览以下的里程碑事件，我们看到 ServiceMesh 从无到有、被社区接受、巨头入局、众人皆捧的过程。
+概览以下里程碑事件，我们看到 ServiceMesh 从无到有、被社区接受、巨头入局、众人皆捧的历程。
 
 - 2016年9 月，在 SF MicroServices 大会上，“ServiceMesh” 这个术语第一次在公开场合使用，这标志着 ServiceMesh 逐渐从 Buoyant 公司走向社区，并开始被广泛接受以及推崇。
 - 2017年1月，Linkerd 加入 CNCF，项目类型被归类到 CNCF 新开辟的 “ServiceMesh” 分类。这代表着 ServiceMesh 理念被 CNCF 社区认同。
