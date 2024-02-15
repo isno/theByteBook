@@ -287,7 +287,8 @@ export default defineUserConfig({
                     '/ServiceMesh/What-is-ServiceMesh.md',
                     '/ServiceMesh/MicroService-history.md',
                     '/ServiceMesh/overview.md',
-                    '/ServiceMesh/The-future-of-ServiceMesh.md'
+                    '/ServiceMesh/The-future-of-ServiceMesh.md',
+                    '/ServiceMesh/conclusion.md',
                 ]
             },
              {
