@@ -15,25 +15,4 @@
 
 现在，在 CNCF 发布的最新可观测性白皮书中，将这些可观测的数据统一称为信号（Signals），主要的信号除了 Metrics、logs、traces 之外又额外增加了 Profiles 和 Dumps。
 
-
-## 可观测系统之间的联系
-
-<div  align="center">
-	<img src="../assets/observability-signals.png" width = "650"  align=center />
-</div>
-
-1. 最开始我们通过各式各样的预设报警发现异常（通常是 Metrics/Logs）。
-2. 发现异常后，打开监控大盘查找异常的曲线，并通过各种查询/统计找到异常的模块（Metrics）。
-3. 对这个模块以及关联的日志进行查询/统计分析，找到核心的报错信息（Logs）。
-4. 最后通过详细的调用链数据定位到引起问题的代码（Traces/Code）。
-
-由于当前的情况是指标和日志存储在两个不同的系统中，所以工程师们需要将查询从一种语言和界面切换到另外一种语言去操作。可观测系统第一个目的是将日志和指标之间的上下文切换成本降到最低。其次会产生海量的遥测数据（日均 PB 级别），是名副其实的大数据系统，要尽量减小对业务资源消耗的影响，找到存储成本与收益的平衡。
-
-
-
-
-
-
-
-
 [^1]: 参见 https://peter.bourgon.org/blog/2017/02/21/metrics-tracing-and-logging.html
