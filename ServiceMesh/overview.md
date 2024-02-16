@@ -128,9 +128,6 @@ Envoy 倒成了偷偷领先的玩家，成为了云原生时代数据平面的�
 
 总结 Linkerd 和 Istio 在性能和资源成本上的巨大差异主要归结于 Linkerd2-proxy，这个微代理为 Linkerd 的整个数据平面提供动力，所以这个基准在很大程度上反映了 Linkerd2-proxy 和 Envoy 的性能和资源消耗对比。Linkerd2-proxy 虽然性能卓越，但语言过于小众，开源社区的 contributor 数量稀少，未选择实现 xDS 那么它的未来的发展也取决于 Linkerd 发展如何
 
-
-Service Mesh 属于锦上添花的一种方案，而不是雪中送炭，所以在惰性的情况下大家没什么动力。
-
 iptables带来的性能损耗，原来本来是A->B，现在变成A->iptables+sidecar->iptables+sidecar->B，如果不用iptables而采用手动接入又会对业务方产生工作量。感觉只能等ebpf的普及可能会绕过iptables实现流量的高效代理。但是目前ebpf需要的内核还比较新，所以也需要一段时间的等待。
 
 
