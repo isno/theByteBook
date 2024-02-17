@@ -1,6 +1,6 @@
 # 8.1 什么是 ServiceMesh
 
-2016年，离开 Twiiter 的工程师 William Morgan 和 Oliver Gould 组建了一个小型的技术公司 Buoyant，不久之后 Buoyant 在 github 上发布了它们的创业项目 Linkerd，业界第一款 ServiceMesh 项目诞生。
+2016年，离开 Twiiter 的工程师 William Morgan 和 Oliver Gould 组建了一个小型的技术公司 Buoyant，不久之后他们在 Github 上发布了创业项目 Linkerd，业界第一款 ServiceMesh（服务网格）项目诞生。
 
 那么，什么是 ServiceMesh？ServiceMesh 最早出自于 William Morgan 的博文《What’s a service mesh？And why do I need one?》，作为 ServiceMesh 的创造者和布道师，引用 William Morgan 的定义自然是最官方和最权威的。
 
