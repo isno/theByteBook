@@ -59,6 +59,7 @@ export default defineUserConfig({
             }
         ],
         sidebar: [
+            '/intro.md',
             '/noun.md',
             {
                 text: '第一章：云原生技术概论',
