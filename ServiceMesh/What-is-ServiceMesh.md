@@ -1,4 +1,4 @@
-# 8.1 什么是 ServiceMesh
+# 8.1 什么是服务网格
 
 2016年，离开 Twiiter 的工程师 William Morgan 和 Oliver Gould 组建了一个小型的技术公司 Buoyant，不久之后他们在 Github 上发布了创业项目 Linkerd，业界第一款 ServiceMesh（服务网格）项目诞生。
 
@@ -12,7 +12,18 @@ Service Mesh 是一个处理服务通讯的专门的基础设施层。它的职�
 
 :::
 
-概览以下里程碑事件，我们看到 ServiceMesh 从无到有、被社区接受、巨头入局、众人皆捧的历程。
+Service Mesh 目的是解决系统架构微服务化后的服务间通信和治理问题。Service Mesh 由 Sidecar 节点组成，这个模式的精髓在于实现了数据面（业务逻辑）和控制面的解耦。
+
+服务之间通过 Sidecar 发现和调用目标服务，从而在服务之间形成一种网络状依赖关系，如果我们把节点和业务逻辑从视图剥离，就会出现一种网络状的架构，如图 1-23 所示，服务网格由此得名。
+
+<div  align="center">
+	<img src="../assets/service-mesh.png" width = "580"  align=center />
+	<p>图1-23 服务网格形象示例</p>
+</div>
+
+从 Micro-Services 到 Service Mesh 承前启后和顺其自然，光看名字就能很形象地理解它所做的事情：把微服务的各个 Service（服务）节点，用一张 mesh（网格）连接起来。就这样，原本被拆散得七零八落的微服务们，又被 Service Mesh 这张大网紧密得连接到了一起，即使依然天各一方（进程间隔离），但也找回了当年一起挤在单体应用内抱团撒欢的亲密感（通信更容易）。
+
+最后，概览以下里程碑事件，我们感受 ServiceMesh 从无到有、被社区接受、巨头入局、众人皆捧的历程。
 
 - 2016年9 月，在 SF MicroServices 大会上，“ServiceMesh” 这个术语第一次在公开场合使用，这标志着 ServiceMesh 逐渐从 Buoyant 公司走向社区，并开始被广泛接受以及推崇。
 - 2017年1月，Linkerd 加入 CNCF，项目类型被归类到 CNCF 新开辟的 “ServiceMesh” 分类。这代表着 ServiceMesh 理念被 CNCF 社区认同。

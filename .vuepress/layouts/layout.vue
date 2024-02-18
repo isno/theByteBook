@@ -8,8 +8,8 @@
         </div>
           <div class="last-updated" >
             <span class="prefix" v-if="pageWords > 0">总字数:</span>
-            <span class="words" v-if="pageWords > 0">{{ pageWords}}</span>
-            <span class="prefix" v-if="pageWords > 0">字　</span>
+            <span class="words" v-if="pageWords > 0"> {{ pageWords}} </span>
+            <span class="prefix" v-if="pageWords > 0">字</span>
         </div>
       </div>
       <CommentService :darkmode="isDarkMode" class="layout-comment" />
@@ -93,5 +93,6 @@
   .words {
     font-weight: 400;
     color: #aaa;
+    padding: 0px 3px;
   }
 </style>
