@@ -13,9 +13,9 @@
         </div>
       </div>
       <CommentService :darkmode="isDarkMode" class="layout-comment" />
-      <div class="qrcode">
+      <!--<div class="qrcode">
          <img src="../../assets/qrcode-v2.png" width = "160"  align=center />
-      </div>
+      </div>-->
     </template>
   </ParentLayout>
 </template>
