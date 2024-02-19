@@ -2,9 +2,7 @@
 
 TCP 协议之后分布式系统诞生，分布式系统催生出微服务，服务间的通信需求又催生出 ServiceMesh。理解服务间通信的本质之后，就会得到一个感性的结论 Service Mesh 是微服务时代的 TCP/IP 协议。
 
-本节，我们观察服务治理形式的演进，讨论以上 TCP协议、分布式系统、服务间通信的因果关系，从而深入理解 Service Mesh 因而而生、为何被追捧、解决什么问题。
-
-本篇引用的图片来源于 Phil Calçado 的博客《Pattern: Service Mesh》。
+本节，笔者借用 Phil Calçado 的博客《Pattern: Service Mesh》的内容脉络，并加以我的理解，讨论 TCP 协议、分布式系统、服务间通信的因果关系，尝试说清楚 Service Mesh 诞生的必然性。本节内容图片来源于 Phil Calçado 的博客，在此统一注明，后面不再单独列出。
 
 ## 原始的通信时代
 
