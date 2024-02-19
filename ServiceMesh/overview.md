@@ -1,4 +1,4 @@
-# 8.3 ServiceMesh 的产品与生态
+# 8.3 服务网格的产品与生态
 
 2016年1月，Buoyant 公司发布了第一代 ServiceMesh 产品 Linkerd。初次发布的 Linkerd 以 Scala 编写，绝大部分关注点都是如何做好 proxy（代理） 并完成一些通用控制面的功能。同期专注于 proxy 领域的还有一个重量级选手 Envoy，Envoy 由 Lyft 公司基于 C++ 开发，特点为性能出色、功能丰富、生态成熟，是 CNCF 内继 Kubernetes、Prometheus 第三个孵化成熟的项目。
 
