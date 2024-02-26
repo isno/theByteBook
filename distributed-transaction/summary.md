@@ -1,5 +1,10 @@
 # 分布式事务
 
+:::tip <a/>
+
+Repair what you can — but when you must fail, fail noisily and as soon as possible.
+
+:::
 对于分布式事物的定义，先来看看 WIKI 百科的解释。
 
 :::tip 分布式事务

@@ -1,10 +1,10 @@
 # 第九章：系统可观测性
 :::tip <a/>
-Troubleshooting any problem without the error log is like driving with your eyes closed.
+given enough eyeballs, all bugs are shallow
 
-在没有错误日志的情况下诊断任何问题无异于闭眼开车。
+足够多的眼睛，就可让所有问题浮现
 
--- by Apache
+-- by Linus Torvalds
 :::
 可观测性（Observability）一词最早出现在控制论领域，是匈牙利裔工程师鲁 Rudolf E. Kálmán 针对线性动态系统提出的概念，已有着几十年的历史。随着云原生时代的到来，2018 年，CNCF 率先将可观测性的概念引入 IT 领域，并称可观测性是云原生时代必须具备的能力。
 
