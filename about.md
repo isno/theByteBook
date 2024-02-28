@@ -2,12 +2,13 @@
 
 码农
 
-对低延迟网络系统、分布式系统以及云原生领域略有研究。
+对超低时延系统、分布式系统以及云原生领域略有研究。
 
 ## 兴趣
 
 - Networking
-- Container、Kubernetes、Service Mesh
+- Container、Service Mesh、Cloud、Infra..
+- 写作
 
 ## 公众号
 
