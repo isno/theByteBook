@@ -280,7 +280,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第八章：后微服务时代',
+                text: '第八章：服务网格概论',
                 collapsable: false,
                 sidebarDepth: 1,
                 link: '/ServiceMesh/summary.md',
