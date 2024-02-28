@@ -104,7 +104,6 @@ Linux Bridge 是 Linux Kernel 2.2 版本开始提供的二层转发工具，与�
     <p>图 2-24 conntrack 示例</p>
 </div>
 
-
 ## 网络 - VXLAN
 
 有了各类虚拟设备之后，下一步就是要使用这些设备组成网络。传统的物理拓扑结构相对固定，很难支持云原生时代下逻辑拓扑结构频繁变动的需求，例如灾难恢复、业务迁移等敏捷需求，跨集群甚至跨多个计算中心的可迁移性。SDN（Software Definded Network，软件定义网络）在云计算和分布式时代下应运而生。
@@ -135,4 +134,3 @@ VXLAN 你可能没有听说过，但 VLAN（Virtual Local Area Network，虚拟�
 </div>
 
 VXLAN 对网络基础设施的要求很低，不需要专门的硬件只要三层可达的网络就可以部署 VXLAN。从 Linux Kernel 3.2 起，一台 Linux 主机经过简单配置之后，就可以把 Linux Bridge 作为 VETP 设备使用。VXLAN 带来了很高的灵活性、扩展性和可管理性，已经成为当前构建数据中心的主流技术，绝大多数的公有云（阿里云、华为云、AWS等）的 VPC 都是用 VXLAN 来作为数据转发层面。
-
