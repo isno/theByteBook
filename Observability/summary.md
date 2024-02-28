@@ -1,8 +1,8 @@
 # 第九章：系统可观测性
 :::tip <a/>
-given enough eyeballs, all bugs are shallow
+given enough eyeballs, all bugs are shallow.
 
-足够多的眼睛，就可让所有问题浮现
+足够多的眼睛，就可让所有问题浮现。
 
 -- by Linus Torvalds
 :::
