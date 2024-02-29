@@ -1,14 +1,12 @@
 # 8.3 服务网格的产品与生态
 
-2016年1月，Buoyant 公司发布了第一代 ServiceMesh 产品 Linkerd。初次发布的 Linkerd 以 Scala 编写，绝大部分关注点都是如何做好 proxy（代理） 并完成一些通用控制面的功能。同期专注于 proxy 领域的还有一个重量级选手 Envoy，Envoy 由 Lyft 公司基于 C++ 开发，特点为性能出色、功能丰富、生态成熟，是 CNCF 内继 Kubernetes、Prometheus 第三个孵化成熟的项目。
+初代的 ServiceMesh 理念美好，但以 Sidecar 为核心还是存在不少缺陷：明显的资源消耗、额外的请求转发带来的性能影响，其次功能仅限于数据层面的代理时，当大量部署 Sidecar 后也没有充分考虑如何管理和控制这些 Sidecar。
 
-初代的 ServiceMesh 理念美好，但以 Sidecar 为核心存在不少缺陷，特别是其明显的资源消耗、性能影响广受诟病，其二仅限于数据层面的代理功能时，当大量部署 Sidecar 后并没有充分考虑如何管理和控制这些 Sidecar。于是，第一代 ServiceMesh（Linkerd、Envoy）刚开始被市场接受，第二代 Service Mesh 已经开始酝酿参与竞争。
+此时，你就看到了第一代 ServiceMesh（Linkerd、Envoy）刚开始被市场接受，第二代 Service Mesh 就迫不及待入场。
 
 ## Istio 入局
 
-2017年5月，Google、IBM、Lyft 宣布新一代的服务网格 Istio 开源，有巨头背书以及**新增控制平面的设计理念**让 Istio 得到极大关注和发展，并迅速成为 ServiceMesh 的代表产品。
-
-Istio 最大的创新在于它为 ServiceMesh 带来前所未有的控制力：
+2017年5月，Google、IBM、Lyft 宣布新一代的服务网格 Istio 开源，有巨头背书以及**新增控制平面的设计理念**让 Istio 得到极大关注和发展，并迅速成为 ServiceMesh 的代表产品。Istio 最大的创新在于它为 ServiceMesh 带来前所未有的控制力：
 
 - 以 Sidercar 方式部署的 ServiceMesh 控制服务间所有的流量
 - Istio 增加控制面板来控制系统中所有的 Sidecar。

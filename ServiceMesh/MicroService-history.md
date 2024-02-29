@@ -85,7 +85,7 @@ TCP出现之后，机器之间的网络通信不再是一个难题，以 GFS/Big
 
 2016年1月，William Morgan 和 Oliver Gould 在 Github 上发布了 Linkerd 0.0.7 版本。早期的 Linkerd 借鉴了 Twtter 开源的 Finagle 项目，并重用了大量的 Finagle 代码。逻辑上，Linkerd 将分布式服务的通信抽象为单独一层，在这一层中实现负载均衡、服务发现、认证授权、监控追踪、流量控制等分布式系统所需要的功能。实现上，作为和服务对等的代理服务（Sidecar）和服务部署在一起，接管服务的流量。
 
-此时，Linkerd 不绑定任何基础架构或某类体系，实现了通用型，成为业界第一个服务网格项目。同期的服务网格代表产品还有 lyft 公司的 Envoy。
+此时，Linkerd 不绑定任何基础架构或某类体系，实现了通用型，成为业界第一个服务网格项目。同期的服务网格代表产品还有 lyft 公司的 Envoy（Envoy 是 CNCF 内继 Kubernetes、Prometheus 第三个孵化成熟的项目）。
 
 <div  align="center">
 	<img src="../assets/linkerd-envoy.png" width = "450"  align=center />
