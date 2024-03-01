@@ -24,15 +24,15 @@ Istio 的架构如下图所示，对于一个仅提供服务与服务之间连�
 	<p>Istio 架构</p>
 </div>
 
-## Linkerd 2.0 
+## Linkerd 2.0 出击
 
-Istio 被争相追捧的同时，作为 Service Mesh 概念的创造者 Buoyant 公司自然不甘心出局，公司生死存亡之际，痛定思痛之后，瞄准 Istio 的缺陷（过于复杂）借鉴 Istio 的设计理念（控制平面与数据平面）主打轻量化，重新设计它们的服务网格产品：使用 Rust 构建数据平面 linkerd2-proxy ，使用 Go 开发了控制平面 Conduit。目标是世界上最轻、最简单、最安全的 Kubernetes 专用的服务网格。
+Istio 被争相追捧的同时，作为 Service Mesh 概念的创造者 Buoyant 公司自然不甘心出局，公司生死存亡之际，痛定思痛之后，瞄准 Istio 的缺陷（过于复杂）借鉴 Istio 的设计理念（新增控制平面），开始重新设计它们的服务网格产品：使用 Rust 构建数据平面 linkerd2-proxy ，使用 Go 开发了控制平面 Conduit。主打轻量化，目标是世界上最轻、最简单、最安全的 Kubernetes 专用的服务网格。
 
-Buoyant 第二代服务网格产品最初以 Conduit 命名，在 Conduit 加入 CNCF 后不久，宣布与原有的 Linkerd 项目合并，被重新命名为Linkerd 2[^1]，
+Buoyant 第二代服务网格产品最初以 Conduit 命名，在 Conduit 加入 CNCF 后不久，宣布与原有的 Linkerd 项目合并，被重新命名为Linkerd 2[^1]。如下图所示，Linkerd2 也增加控制平面，但是更加简单，控制层面只有（destination 类似Pilot，identity 类似 Citadel）和 proxy injector（代理注入器）。linkerd-init 设置 iptables 规则，拦截进出每个 pod 的 TCP 连接，Linkerd-proxy 实现所有的流量管控（负载均衡、熔断..）。
 
 <div  align="center">
 	<img src="../assets/linkerd-control-plane.png" width = "500"  align=center />
-	<p>Linkerd 架构</p>
+	<p>Linkerd2 架构</p>
 </div>
 
 ## 其他参与者
