@@ -15,50 +15,20 @@ Istio 最大的创新在于它为服务网格带来前所未有的控制力。
 
 Istio 的架构如下图所示，对于一个仅提供服务与服务之间连接通信的基础设施来说，Istio 的架构算不上简单，但其中各个组件的理念得承认的确非常先进和超前。
 
+- **Pilot** 从上（如 Kubernetes）获取服务信息，完成服务发现，往下（Proxy）下发流量管理以及路由规则等 xDS 配置，驱动数据面按照规则实现流量管控（A/B测试、灰度发布）、弹性（超时、重试、熔断）、调试（故障注入、流量镜像）等功能。
+- **Citadel** 充当证书颁发机构（CA），负责身份认证和证书管理，可提供服务间和终端用户的身份认证，实现数据平面内安全的 mTLS 通信。
+- **Galley** 负责将其他 Istio 组件和底层平台（Kubernetes）进行解耦，负责配置获取、处理和分发组件。
+
 <div  align="center">
 	<img src="../assets/service-mesh-arc.svg" width = "500"  align=center />
 	<p>Istio 架构</p>
 </div>
 
-- Pilot：负责部署在服务网格中的 Envoy 实例的生命周期管理。主要职责是负责流量管理和控制，向 Envoy 发送服务发现信息和各种流量管理以及路由规则。Pilot 让运维人员通过 pilot 指定它们希望流量遵循什么规则，而不是哪些特定的 Pod/VM 应该接收什么流量。有了 Pilot 这个组件，就可以轻松实现 A/B 测试以及金丝雀 Canary 测试。
-
-
-Istio 的控制层面主要负责：
-
-- 接收用户配置
-- 生成路由规则
-- 分发路由规则到数据平面
-- 分发策略
-- 遥测数据收集
-
-Istio 的数据平面主要负责：
-
-- 流量转发
-- 策略实施
-- 遥测数据上报
-
-Istio 的数据面支持的特性如下：
-
-| Outbound 特性 | Inbound 特性|
-|:--|:--|
-| Service authentication(服务认证)|Service authentication(服务认证)|
-| Load Balancing(负载均衡)| Authorization(鉴权)|
-| Retry and circuit breaker(重试和断路器)| Rate limits(请求限流)|
-| Fine-grained routing（细粒度路由）| Load shedding(负载控制)|
-| Telemetry(遥测)|Telemetry(遥测) |
-| Request tracing （分布式追踪）|Request tracing （分布式追踪）|
-| Fault injection(故障注入)|Fault injection(故障注入)|
-
-:::tip Outbound 和 Inbound
-
-Outbound 特性是指服务请求侧的 Sidecar 提供的功能特性。而 Inbound 特性是指服务提供侧 Sidecar 提供的功能特性。类似遥测、分布式追踪需要两侧的 Sidecar 都提供支持。而另一些特性只要一侧提供支持即可，例如鉴权只需要在服务提供侧支持，重试只需要在请求侧支持。
-:::
-
-
-
 ## Linkerd 2.0 
 
-Istio 被争相追捧的同时，作为 Service Mesh 概念的缔造者 Buoyant 公司自然不甘心出局，公司生死存亡之际，痛定思痛之后，瞄准 Istio 的缺陷（过于复杂）借鉴 Istio 的设计理念（控制平面与数据平面）主打轻量化，重新设计它们的 ServiceMesh 产品。使用 Rust 构建数据平面 linkerd2-proxy ，使用 Go 开发了控制平面 Conduit，Buoyant 第二代 ServiceMesh 产品最初是以 Conduit 命名，在 Conduit 加入 CNCF 后不久，宣布与原有的 Linkerd 项目合并，被重新命名为Linkerd 2[^1]，口号是世界上最轻、最简单、最安全的 Kubernetes 专用的服务网格。
+Istio 被争相追捧的同时，作为 Service Mesh 概念的创造者 Buoyant 公司自然不甘心出局，公司生死存亡之际，痛定思痛之后，瞄准 Istio 的缺陷（过于复杂）借鉴 Istio 的设计理念（控制平面与数据平面）主打轻量化，重新设计它们的服务网格产品：使用 Rust 构建数据平面 linkerd2-proxy ，使用 Go 开发了控制平面 Conduit。目标是世界上最轻、最简单、最安全的 Kubernetes 专用的服务网格。
+
+Buoyant 第二代服务网格产品最初以 Conduit 命名，在 Conduit 加入 CNCF 后不久，宣布与原有的 Linkerd 项目合并，被重新命名为Linkerd 2[^1]，
 
 <div  align="center">
 	<img src="../assets/linkerd-control-plane.png" width = "500"  align=center />
@@ -77,9 +47,9 @@ Istio 被争相追捧的同时，作为 Service Mesh 概念的缔造者 Buoyant 
 </div>
 
 
-## 性能对比
+## Istio 与 Linkerd2 性能对比
 
-2019年，Kinvolk（2021年被微软收购）发布了 Linkerd 与Istio 的公开基准数据，数据表明 Linkerd 比Istio 明显更快、更轻。这项测试工作还诞生了一个 开源的服务网格基准测试工具 service-mesh-benchmark[^2]，以便任何人都可以复制结果[^3]。
+2019年，Kinvolk（2021年被微软收购）曾发布 Linkerd 与 Istio 的公开基准数据，数据表明 Linkerd 比 Istio 明显更快、更轻。这项测试工作还诞生了一个 开源的服务网格基准测试工具 service-mesh-benchmark[^2]，以便任何人都可以复制结果[^3]。
 
 两年之后，Linkerd 以及 Istio 都发布了多个更成熟的版本，两者的表现如何？这里，我们引用 Linkerd 基于 Kinvolk 模仿现实场景（延迟数据从客户端的角度测量，而不是内部的代理时间）。使用 Linkerd v2.11.1、Istio v1.12.0 从延迟、资源消耗的表现上来看这两款 ServiceMesh 产品的差异。
 

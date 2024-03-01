@@ -12,7 +12,7 @@ Kubernetes 通过管理基础设施（Pod）为微服务提供了可扩展、高
 
 
 
-Kubernetes 与 Servicemesh 天生契合，两者结合提供一套从底层的负载部署运行到上层的服务访问治理端到端的解决方案。
+Kubernetes 与 Servicemesh 天生契合，Istio 最大化地利用了Kubernetes这个基础设施，与之叠加在一起形成一套从底层的负载部署运行到上层服务运行和治理的基础设施。
 
 <div  align="center">
 	<img src="../assets/ServiceMesh-and-Kubernetes.png" width = "450"  align=center />
@@ -20,13 +20,12 @@ Kubernetes 与 Servicemesh 天生契合，两者结合提供一套从底层的�
 </div>
 
 
-比较传统的SDK与 Istio ，可以看出 Istio 最大化地利用了Kubernetes这个基础设施，与之叠加在一起形成了一个更强大的用于进行服务运行和治理的基础设施，并提供了更透明的用户体验。
+由下图可见，Istio 补充了 Kubernetes 生态圈的重要一环，是 Google 的微服务版图里一个里程碑式的扩张
+
+<div  align="center">
+	<img src="../assets/k8s-ecosystem.png" width = "450"  align=center />
+	<p>图片来源于 zhaohuabing.com</p>
+</div>
 
 
-|比较观点| Istio 部署在 Kubernetes | SDK 开发的服务部署在 Kubernetes |
-|:--|:--|:--|
-|架构设计| 基于 Kubernetes 能力设计 | 和 Kubernetes 无关|
-| 服务发现| 使用和 Kubernetes 一致的服务发现 | 得搭建单独的服务发现，两套服务发现存在不一致的问题，Kubernetes 的 Pod 迁移会引起重新服务注册。|
-| 使用体验| 完全的 Kubernetes 使用体验。 Sidecar 自动注入，业务无感知| 和 Kubernetes 无结合，Kubernetes 只是提供了运行环境|
-| 控制面 | 无需额外的 APIServer 和 规则策略的定义，基于 CRD 扩展| 需安装单独的控制面来维护管理规则 |
-
+可以预见不久的将来，对于云原生应用而言，采用 kubernetes 进行服务部署和集群管理，采用 Istio 处理服务通讯和治理，将成为微服务应用的标准配置。
