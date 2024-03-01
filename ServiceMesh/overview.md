@@ -8,19 +8,20 @@
 
 Istio 最大的创新在于它为服务网格带来前所未有的控制力。
 
-- 以 Linkerd 代表的第一代服务网格用 Sidercar 方式部署，控制服务间所有的流量
+- 以 Linkerd 代表的第一代服务网格用 Sidercar 方式控制服务间所有的流量
 - 以 Istio 为代表的第二代服务网格增加控制面板，控制系统中所有的 Sidecar。
 
 至此，Istio 便控制了系统中所有请求的发送，也即控制了所有的流量。
 
 Istio 的架构如下图所示，对于一个仅提供服务与服务之间连接通信的基础设施来说，Istio 的架构算不上简单，但其中各个组件的理念得承认的确非常先进和超前。
 
-- Pilot：负责部署在 ServiceMesh 中的 Envoy 实例的生命周期管理。主要职责是负责流量管理和控制，向 Envoy 发送服务发现信息和各种流量管理以及路由规则。Pilot 让运维人员通过 pilot 指定它们希望流量遵循什么规则，而不是哪些特定的 Pod/VM 应该接收什么流量。有了 Pilot 这个组件，就可以轻松实现 A/B 测试以及金丝雀 Canary 测试。
-
 <div  align="center">
 	<img src="../assets/service-mesh-arc.svg" width = "500"  align=center />
-	<p>Linkerd 架构</p>
+	<p>Istio 架构</p>
 </div>
+
+- Pilot：负责部署在服务网格中的 Envoy 实例的生命周期管理。主要职责是负责流量管理和控制，向 Envoy 发送服务发现信息和各种流量管理以及路由规则。Pilot 让运维人员通过 pilot 指定它们希望流量遵循什么规则，而不是哪些特定的 Pod/VM 应该接收什么流量。有了 Pilot 这个组件，就可以轻松实现 A/B 测试以及金丝雀 Canary 测试。
+
 
 Istio 的控制层面主要负责：
 
@@ -75,36 +76,6 @@ Istio 被争相追捧的同时，作为 Service Mesh 概念的缔造者 Buoyant 
 	<p>CNCF 下 ServiceMesh 领域生态</p>
 </div>
 
-
-## xDS
-
-暂且不论 istio 和 linkerd 到底是谁 ServiceMesh 的赢家。
-
-Envoy 倒成了偷偷领先的玩家，成为了云原生时代数据平面的事实标准。新兴API网关如Gloo，Ambassador都基于Envoy进行扩展开发；而在服务网格中，Istio、Kong社区Kuma、亚马逊AWS App Mesh都使用Envoy作为默认数据面。
-
-与HAProxy以及Nginx等传统Proxy依赖静态配置文件来定义各种资源以及数据转发规则不同，Envoy几乎所有配置都可以通过订阅来动态获取，如监控指定路径下的文件、启动gRPC流或轮询REST接口，对应的发现服务以及各种各样的API统称为xDS。
-
-以Istio中Pilot为例，当Pilot发现新的服务或路由规则被创建（通过监控K8S集群中特定CRD资源变化、或者发现Consul服务注册和配置变化），Pilot会通过已经和Envoy之间建立好的gRPC流将相关的配置推送到Envoy。Envoy接收到相关配置并校验无误之后，就会动态的更新运行时配置，使用新的配置更新相关资源。Pilot工作原理如图1所示。
-
-
-
-利用xDS协议，Envoy可以实现配置的完全动态化，配置实时更新而无需重启Envoy或者影响业务。
-
-
-- 控制面：主要用于更新，下发配置。
-- 数据面：主要用于使用控制面的配置进行流量代理。
-
-
-
-
-
-
-
-| 特点 | Istio | Linkerd |
-|:--|:--|:--|
-| 易用性 | 由于各种配置选项和灵活性 ，上手复杂| 有内置和开箱即用的配置，适配起来是相对容易|
-|平台| Kubernetes、虚拟机 | Kubernetes |
-| 支持的协议 | gRPC、HTTP/2、HTTP/1.x、Websocket 和所有 TCP 流量 | 和 Istio 一致|
 
 ## 性能对比
 
