@@ -69,9 +69,6 @@ Buoyant 第二代服务网格产品最初以 Conduit 命名，在 Conduit 加入
 
 总结 Linkerd 和 Istio 在性能和资源成本上的巨大差异主要归结于 Linkerd2-proxy，这个微代理为 Linkerd 的整个数据平面提供动力，所以这个基准在很大程度上反映了 Linkerd2-proxy 和 Envoy 的性能和资源消耗对比。Linkerd2-proxy 虽然性能卓越，但语言过于小众，开源社区的 contributor 数量稀少，未选择实现 xDS 那么它的未来的发展也取决于 Linkerd 发展如何
 
-iptables带来的性能损耗，原来本来是A->B，现在变成A->iptables+sidecar->iptables+sidecar->B，如果不用iptables而采用手动接入又会对业务方产生工作量。感觉只能等ebpf的普及可能会绕过iptables实现流量的高效代理。但是目前ebpf需要的内核还比较新，所以也需要一段时间的等待。
-
-
 [^1]: 参见 https://github.com/linkerd/linkerd2
 [^2]: 参见 https://github.com/kinvolk/service-mesh-benchmark
 [^3]: 参见 https://github.com/linkerd/linkerd2/wiki/Linkerd-Benchmark-Setup

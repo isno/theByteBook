@@ -1,4 +1,4 @@
-# 使用 clilium 配置网络
+# 使用 cilium 配置网络
 
 里面介绍到 Kubernetes Service 性能和扩展性问题 默认的 Kubernetes 的 Service 实现 kube-proxy，它是使用了 iptables 去配置 Service IP 和负载均衡：
 
