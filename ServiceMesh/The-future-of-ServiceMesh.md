@@ -13,4 +13,8 @@ Ambient Mesh 是一个全新的 Istio 数据平面模式，让用户无需使用
 
 ## Cilium Service Mesh
 
-说明了运行 Cilium Envoy filter（棕色）的单个节点范围的 Envoy 代理与运行 Istio Envoy filter（蓝色）的双边车 Envoy 模型的 HTTP 处理的典型延迟成本。黄色是没有代理且未执行 HTTP 处理的基线延迟
+说明了运行 Cilium Envoy filter（棕色）的单个节点范围的 Envoy 代理与运行 Istio Envoy filter（蓝色）的双边车 Envoy 模型的 HTTP 处理的典型延迟成本。黄色是没有代理且未执行 HTTP 处理的基线延迟。
+
+:::center
+![这是图片](../assets/cilium-istio-benchmark.webp)
+:::

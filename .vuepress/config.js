@@ -1,8 +1,10 @@
-import { defineUserConfig,defaultTheme } from 'vuepress';
+import { defineUserConfig, defaultTheme } from 'vuepress';
 
 import { mdEnhancePlugin } from "vuepress-plugin-md-enhance";
 import { commentPlugin } from "vuepress-plugin-comment2";
 import { readingTimePlugin } from "vuepress-plugin-reading-time2";
+
+import { containerPlugin } from '@vuepress/plugin-container'
 
 export default defineUserConfig({
     lang: 'zh-CN',
@@ -10,6 +12,7 @@ export default defineUserConfig({
     description: '构建大规模高可用的分布式系统',
     head: [
         ['link', { rel: "shortcut icon", href: "/assets/favicon.ico" }],
+        ['link', { rel: "stylesheet", href: "/styles/index.css" }],
 
         [ 'script', {}, `
      var _hmt = _hmt || [];
@@ -28,6 +31,12 @@ export default defineUserConfig({
           footnote: true,
           katex: true,
           sub: true,
+        }),
+        containerPlugin({
+            type: 'center'
+        }),
+        containerPlugin({
+            type: 'right'
         }),
        commentPlugin({
             provider: "Giscus",

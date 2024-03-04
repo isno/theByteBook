@@ -4,7 +4,8 @@ given enough eyeballs, all bugs are shallow.
 
 足够多的眼睛，就可让所有问题浮现。
 
--- by Linus Torvalds
+:::right
+—— by Linus Torvalds
 :::
 可观测性（Observability）一词已有着几十年的历史，最早出现在控制理论领域，是指可由系统外部输出推断其内部状态，广泛应用于电气、机械工程等工业领域。随着云原生时代的到来，2018 年，CNCF 率先将可观测性的概念引入 IT 领域，并称可观测性是云原生时代必须具备的能力。
 

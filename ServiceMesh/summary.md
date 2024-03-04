@@ -3,7 +3,8 @@
 :::tip <a/>
 计算机科学中的所有问题都可以通过增加一个间接层来解决。如果不够，那就再加一层。
 
--- by David Wheeler
+:::right
+—— by David Wheeler
 :::
 
 
