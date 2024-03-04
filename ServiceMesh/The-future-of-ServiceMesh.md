@@ -2,19 +2,83 @@
 
 使用服务网格的架构，在大规模线上部署的时候逐渐遇到了以下两个主要问题：
 
-- **资源消耗过大**：以 sidecar 方式运行，每一个 Pod 都要注入 sidecar，还得为 sidecar 预留足够的 CPU 和内存资源。整个集群全都是 Sidecar，非业务逻辑消耗了大量的资源。
-- **Proxy 模式带来的请求延迟**：针对请求的拦截，目前常规的做法是使用 iptbales，当原来本来是A->B，现在变成A->iptables+sidecar->iptables+sidecar->B。代理增加了业务请求的链路长度，那必然会带来性能损耗（代理之后每次 400-500us）。
+- **延迟问题**：Sidecar 常规的做法是使用 iptbales 实现请求的拦截，当原来本来是A->B，现在变成A->iptables+sidecar->iptables+sidecar->B，那必然会带来性能损耗。尽管从一些产品的 benchmark 结果来看，Sidecar 的引入只会增加毫秒级（个位数）延迟，但对性能有极高要求的业务场景，来说，延迟损耗成为了放弃服务网格的最主要原因。
+- **资源占用问题**：Sidecar 作为一个独立的容器必然会占用一定的系统资源，对于超大规模集群（如数万个 Pod）来说，巨大的基数也使得资源总量变成了不小的数目，同时，这类集群的网络通信拓扑也更加复杂，配置下发的规模也会让 Sidecar 的内存出现剧烈的增长。
 
-针对以上问题，社区出现以 Ambient Mesh（无代理） 和 Cilium Service Mesh（跨内核，绕过 iptables 实现）为代表的两类解决方案。
+考虑解决以上的问题，社区的开发者开始重新思考是否应该将服务网格和 Sidecar 划上等号，同时继续探索产品形态其他的可能性。
 
-## Ambient Mesh 
+## Proxyless 模式
 
-Ambient Mesh 是一个全新的 Istio 数据平面模式，让用户无需使用 Sidecar 代理，就能将网格数据平面集成到其基础设施中，同时还能保持 Istio 的零信任安全、遥测和流量治理等核心特性。 
+既然问题是代理，那就把代理去掉，这就是 Proxyless（无代理）模式。
 
-## Cilium Service Mesh
+Proxyless 理念是服务间总是要选择一种协议进行通信，就必然要依赖于该协议的类库（SDK）进行编解码工作。既然如此，那么将协议的类库扩展，使其具有流量控制的能力，不就能代替 Sidecar 代理了吗？且 SDK 和应用同属于同一进程，必然有更优秀的性能表现，Sidecar 最为诟病的延迟问题也会迎刃而解。
+
+2021 年 Istio 官方博客发表了一篇基于 gRPC 实现 Proxyless 的文章[^2]，详细阐述了其工作原理以及如何在 Istio 中使用它。在这种模式中，核心的流控能力被集成在 gRPC 库中，不再使用代理进行数据面通信。但它仍然需要一个 Agent 进行初始化并与控制平面交互，负责告知 gRPC 库如何连接到 istiod，如何获取证书，并作为 xDS 代理，代表应用与 istiod 进行连接和认证。
+
+<div  align="center">
+	<img src="../assets/proxyless.svg" width = "520"  align=center />
+	<p>图1-25 Proxyless 模式</p>
+</div>
+
+相比通过进程外通信的 Sidecar 代理来说，Proxyless 模式具有性能、稳定性、资源消耗低等明显的优势：
+
+- 性能：Proxyless 模式是进程内、点对点的直接通信，网络延迟比代理要小得多。
+- 稳定性：SDK 类库与应用共享单一进程，拓扑结构简单，调试方便，消除了跨进程的调用，稳定性更高。
+- 框架集成：对于传统的基于 SDK 实现的服务治理框架，如果集成了 Proxyless 模式，即能够复用框架现有的能力。
+- 资源消耗低：无独立的 Sidecar 容器，内置类库资源消耗低。
+
+从官方博客给出的数据来看，gRPC Proxyless 模式下的延迟情况接近基准测试，资源消耗也相对较低。
+
+读者可能已经发现，所谓 Proxyless 其实和传统的 SDK 并无二致，只是将流控能力内嵌到负责通信协议的类库中，因此它具有和传统 SDK 服务框架相同的缺点，也正因为如此，业内很多人认为 Proxyless 本质上是一种倒退，是回归到传统的方式去解决服务通信的问题。
+
+## 4.Ambient Mesh 模式
+
+022 年 9 月 Istio 发布了一个名为 “Ambient Mesh” 的无边车数据平面模型，宣称用户无需使用 Sidecar 代理，就能将网格数据平面集成到其基础设施中，同时还能保持 Istio 零信任安全、遥测和流量治理等特性。
+
+为了避免 Sidecar 的种种缺陷，Ambient Mesh 不再为任何 Pod 注入 Sidecar。将网格的功能的实现进一步下沉到 Istio 的自有组件中。Ambient 将原本 Envoy 处理的 的功能分成两个不同的层次，安全覆盖层（ztunnel）和七层处理层（waypoint），如图 1-28 所示。
+
+<div  align="center">
+	<img src="../assets/ambient-mesh-arch.png" width = "420"  align=center />
+	<p>图1-28 Ambient Mesh 模式</p>
+</div>
+
+ztunnel（Zero Trust Tunnel，零信任隧道）是 Ambient 新引入的组件，以 Daemonset 的方式部署在每个节点上，处于类似 CNI 网格底层 。ztunnel 为网格中的应用通信提供 mTLS、遥测、身份验证和 L4 授权功能，但不执行任何七层协议相关的处理。
+
+七层治理架构中新增了 waypoint 组件，为用户按需启用 L7 功能提供支持，以获得 Istio 的全部功能，例如限速、故障注入、负载均衡、熔断等。
+
+
+Ambient Mesh 可以被理解为一种无 Sidecar 模式，但笔者认为将其描述为“中心化代理模式”更为准确，这是因为这种模式侧重于通过共享和中心化的代理进行流量管理，以替代位于应用容器旁边的 Sidecar 代理。
+
+从官方的博客来看，Istio 在过去的半年中一直在推进 Ambient Mesh 的开发，并于 2023 年 2 月将其合并到了 Istio 的主代码分支。这也从一定程度上说明 Istio 未来的发展方向之一就是持续的对 Ambient Mesh 改进并探索多种数据平面的可能性。
+
+## 3.Sidecarless 模式
+
+2022 年 Cilium 基于 eBPF 技术发布了具有服务网格能力的产品。Cilium 的服务网格产品提供了两种模式，对于 L3/L4 层的能力直接由 eBPF 支持，L7 层能力由一个公共的代理负责，以 DaemonSet 方式部署，如图 1-26 所示。
+
+<div  align="center">
+	<img src="../assets/sidecarless.png" width = "520"  align=center />
+	<p>图1-26 Sidecarless 模式</p>
+</div>
+
+Cilium 认为，内核加上共享型代理的引入可以极大的减少代理的数量，从而降低资源消耗和维护成本，而在内核层面进行通信管理也提高了性能。
+
+基于 eBPF 的服务网格在设计思路上其实和 Proxyless 如出一辙，即找到一个非 Sidecar 的地方去实现流量控制能力，它们一个是基于通信协议类库，一个是基于内核的扩展性。eBPF 通过内核层面提供的可扩展能力，在流量经过内核时实现了控制、安全和观察的能力，从而构建出一种新形态的服务网格。
+
+<div  align="center">
+	<img src="../assets/service-mesh-kernel.jpg" width = "520"  align=center />
+	<p>图1-27 Sidecarless 在内核实现流量观察、控制能力</p>
+</div>
 
 说明了运行 Cilium Envoy filter（棕色）的单个节点范围的 Envoy 代理与运行 Istio Envoy filter（蓝色）的双边车 Envoy 模型的 HTTP 处理的典型延迟成本。黄色是没有代理且未执行 HTTP 处理的基线延迟。
 
-:::center
-![这是图片](../assets/cilium-istio-benchmark.webp)
-:::
+<div  align="center">
+	<img src="../assets/cilium-istio-benchmark.webp" align=center />
+</div>
+
+
+但同样，软件领域没有银弹，Sidecarless 也是取舍后的结果。eBPF 并不是万能钥匙，也存在内核版本要求、编写难度大、安全等方面的问题。
+
+
+
+
+最后，随着新技术和创新观念的推动，服务网关的架构逐渐从最初的 Sidecar 模式发展至多元化。现阶段，谁将最终胜出仍难以预测，因为每种模式都具备其独特的优势和劣势，以及适用于不同的应用场景。正如编程语言一样，服务网格在未来可能不会走向标准化，而是各具特色，并在不断的自我完善过程中为用户提供更多的选择。
