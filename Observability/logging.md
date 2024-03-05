@@ -6,7 +6,7 @@
 
 ## 传统解决方案 ELK
 
-讨论实现一套完整的日志系统，工程师们或多或少都应该听说过这几个名词：Elasticsearch、ELK、ELKB 或者 Elastic Stack。
+讨论实现一套完整的日志系统，工程师们或多或少都应该听说过这几个名词：ELK、ELKB 或者 Elastic Stack。这些其实是实现日志处理方案一套开源组件。
 
 :::tip 什么是 ELKB
 
