@@ -48,11 +48,24 @@ Google 对容器知根知底，2007 年提交了 cgroup 到 Linux 内核，如�
 
 Docker Compose 虽然能编排多个容器，但是只能对单个服务器上的容器进行操作，不能实现在多个机器上进行容器的创建和管理。于是 Docker 在 2014 年底又发布了 Swarm 项目，并且不断招兵买马，充实着自己的平台化能力。如果说 Docker Compose 和 Kubernetes 还不算正面竞争的话，那么 Docker Swarm 的发布，则是正式向 Kubernetes 宣战。
 
+<div  align="center">
+	<img src="../assets/swarm-diagram.webp" width = "550"  align=center />
+	<p>图 swarm 架构</p>
+</div>
+
+
+
 Docker Swarm 可以在多个服务器上创建容器集群服务，而且依然保持着 Docker 的友好命令风格，几个命令就可以完成多机集群部署。因为它平滑地内置于 Docker 平台中，在容器规模较小的场景下，所以许多用户更喜欢使用 Docker Swarm。如果 Docker Swarm 能成功，那 Docker 就将通吃容器市场，此时的 Docker 掌握着容器的绝对话语权。
 
 ## 5. Mesos 备受追捧
 
 Mesos 是当时容器编排市场上另一个主要玩家，在 DockerCon 2014 大会之前就已经有很多公司在使用了。Mesos 最初是加州伯克利大学 RAD 实验室 2009 年启动的一个学术研究项目，目标是创建下一代集群管理器，致力于提高集群的利用效率和性能。作为一个面向资源管理的项目，容器编排其实只是其中的一个名叫 Marathon 的功能模块。
+
+<div  align="center">
+	<img src="../assets/mesos-arch.jpeg" width = "350"  align=center />
+	<p>图 Mesos 架构</p>
+</div>
+
 
 2010 年，Twitter 正值基础架构混乱不堪的时刻，他们看到了 Mesos 这个项目，随后马上应用到了 Twitter，成为 Twitter 自定义 PaaS 的实现基础，管理着 Twitter 超过 30 万台服务器上的应用部署。Benjamin Hindman（Mesos 项目负责人）当时也加入了 Twitter，负责开发和部署 Mesos，Twitter 的这套基于 Mesos 的 PaaS 解决方案就是后来的 Apache Aurora。
 
