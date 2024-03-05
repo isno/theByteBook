@@ -26,9 +26,11 @@ Istio 的架构如下图所示，对于一个仅提供服务与服务之间连�
 
 ## Linkerd 2.0 出击
 
-Istio 被争相追捧的同时，作为 Service Mesh 概念的创造者 Buoyant 公司自然不甘心出局，公司生死存亡之际，痛定思痛之后，瞄准 Istio 的缺陷（过于复杂）借鉴 Istio 的设计理念（新增控制平面），开始重新设计它们的服务网格产品：使用 Rust 构建数据平面 linkerd2-proxy ，使用 Go 开发了控制平面 Conduit。主打轻量化，目标是世界上最轻、最简单、最安全的 Kubernetes 专用的服务网格。
+Istio 被争相追捧的同时，作为 Service Mesh 概念的创造者 Buoyant 公司自然不甘心出局，公司生死存亡之际，瞄准 Istio 的缺陷（过于复杂）借鉴 Istio 的设计理念（新增控制平面），开始重新设计它们的服务网格产品：使用 Rust 构建数据平面 linkerd2-proxy ，使用 Go 开发了控制平面 Conduit。主打轻量化，目标是世界上最轻、最简单、最安全的 Kubernetes 专用的服务网格。
 
-Buoyant 第二代服务网格产品最初以 Conduit 命名，在 Conduit 加入 CNCF 后不久，宣布与原有的 Linkerd 项目合并，被重新命名为Linkerd 2[^1]。如下图所示，Linkerd2 也增加控制平面，但是更加简单，控制层面只有（destination 类似Pilot，identity 类似 Citadel）和 proxy injector（代理注入器）。linkerd-init 设置 iptables 规则，拦截进出每个 pod 的 TCP 连接，Linkerd-proxy 实现所有的流量管控（负载均衡、熔断..）。
+Buoyant 第二代服务网格产品最初以 Conduit 命名，在 Conduit 加入 CNCF 后不久，宣布与原有的 Linkerd 项目合并，被重新命名为Linkerd 2[^1]。Linkerd2 的架构如下图所示，增加了控制平面，但整体简单。
+
+控制层面只有（destination 类似 Pilot，identity 类似 Citadel）和 proxy injector（代理注入器）。数据面中 linkerd-init 设置 iptables 规则拦截 pod 中的 TCP 连接，Linkerd-proxy 实现所有的流量管控（负载均衡、熔断..）。
 
 <div  align="center">
 	<img src="../assets/linkerd-control-plane.png" width = "500"  align=center />
@@ -37,9 +39,11 @@ Buoyant 第二代服务网格产品最初以 Conduit 命名，在 Conduit 加入
 
 ## 其他参与者
 
-除了头部的 Linkrd，Istio 玩家外，明显能影响微服务格局的新兴领域，又怎少得了传统的 Proxy 玩家，Kong 推出了 ServiceMesh kuma，有意思的是 Kong 选择了 Envoy 作为数据平面，而非 Kong 网关核心内核 OpenResty。远古玩家 Nginx 也祭出自己新一代的产品 Nginx Service Mesh，主打简化 Service Mesh，并顺势推出商业产品 Aspen Mesh。APISIX 推出了 Amesh，与 William Morgan 的死磕 Istio 策略不同，绝大部分在 Proxy 领域根基深厚玩家，从一开始就没有想过要做一套完整的第二代 Service Mesh 开源方案，而是实现支持 xDS协议，宣布兼容 Istio, 作为 Istio 的数据面。
+除了头部的 Linkrd，Istio 玩家外，明显能影响微服务格局的新兴领域，又怎少得了传统的 Proxy 玩家。远古玩家 Nginx 祭出自己新一代的产品 Nginx Service Mesh，主打简化 Service Mesh，并顺势推出商业产品 Aspen Mesh。Kong 推出了 ServiceMesh kuma，有意思的是 Kong 选择了 Envoy 作为数据平面，而非 Kong 网关核心内核 OpenResty。APISIX 也推出了 Amesh。
 
-现如今的 ServiceMesh 产品生态如下，虽然有众多的选手，但就社区活跃度而言，Istio 还是牢牢占据了头部地位。
+与 William Morgan 的死磕 Istio 策略不同，绝大部分在 Proxy 领域根基深厚玩家，从一开始就没有想过要做一套完整的第二代服务网格方案，而是选择实现 xDS 协议，宣布兼容 Istio，作为 Istio 的数据面。
+
+现如今的服务网格产品生态如下，虽然有众多的选手，但就社区活跃度而言，Istio 还是牢牢占据了头部地位。
 
 <div  align="center">
 	<img src="../assets/service-mesh-overview.png" width = "500"  align=center />
