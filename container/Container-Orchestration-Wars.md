@@ -20,40 +20,42 @@ Cloud Foundry 为每一种主流的语言都定义了一套打包的方式，开
 
 最初，Docker 还是一个叫 dotCloud 的公司，dotCloud 最初阶段也是选择 LXC 来快速部署软件，使用 LXC 虽然可以解决应用隔离的问题，但不能解决应用可移植性问题，为此 dotCloud 开发了一套内部管理工具，方便创建和管理容器，这个工具就是后来的 Docker。
 
-虽然 dotCloud 拥有创新的容器技术，但受限于公司的知名度和 PaaS 整体市场规模，其业务并没有太大的起色，外加巨头不断进场搅局，使当时的 dotCloud 举步维艰，正当他们坚持不下去的时候，Solumon Hykes（dot Cloud 创始人）脑子里蹦出了开源的想法。2013 年 3 月，dotCloud 开源了其容器技术，将其正式命名为 Docker 项目。Docker 项目在开源后的短短几个月内就迅速崛起，成为一个不容忽视的 PaaS 技术方案，吸引了无数云服务开发者的眼球。
-
-滑稽的是，在 Docker 刚开源的时候，Cloud Foundry 的产品经理就在社区做了一次详细的对比，告诉用户 Docker 和 Cloud Foundry 一样，都是使用了 Namespace 和 Cgroups 技术的沙箱而已，无需值得关注。事实上，Docker 也确实就和他所说的一样，采用了这个“传统”的技术方案，但是 Docker 与 Cloud Foundry 相比，创新性地提出了**Docker 镜像**，解决了应用打包的一致性与复用性问题。
+Docker 刚开源的时候，Cloud Foundry 的产品经理就在社区做了一次详细的对比，告诉用户 Docker 和 Cloud Foundry 一样，都是使用了 Namespace 和 Cgroups 技术的沙箱而已，无需值得关注。事实上，Docker 也确实就和他所说的一样，采用了这个“传统”的技术方案，但是 Docker 与 Cloud Foundry 相比，创新性地提出了**Docker 镜像**，解决了应用打包的一致性与复用性问题。
 
 比起 Cloud Foundry 那种执行文件+启动脚本的打包方式，**Docker 镜像完美解决了两个问题：本地环境和服务器环境的差异、同一份镜像可以让所有的机器进行复用**。
 
-正是 Docker Image 这个“微不足道的创新”，让 Docker 席卷整个 PaaS 领域，从这一刻开始，PaaS 的市场已经完全是 Docker 的天下。
+正是 Docker Image 这个“微不足道的创新”，让 Docker 席卷整个 PaaS 领域。
 
 ## 3. Kubernetes 入场
 
-每一波技术浪潮都会带来新的机会，科技的进步与商机是一对相辅相成的孪生兄弟。
+Docker 项目利用自己创新的 Docker Image 瞬间爆红，众多厂商也从中发现商机，开始围绕容器编排做一些思考和布局，这其中就包括云计算概念的最早提出者 Google 公司。
 
-Docker 项目利用自己创新的 Docker Image 瞬间爆红，众多厂商也从中发现商机，开始围绕容器编排做一些思考和布局，这其中就包括云计算概念的最早提出者 Google 公司。虽然 Google 公司名声显赫，有强大的技术实力和资金实力，但在当时提到云计算，人们首先想到的却是 AWS，Google 也一直想法设法扭转局面，随着 Docker 的成功，他们从大火的容器市场看到了新的机会。
+虽然 Google 公司名声显赫，有强大的技术实力和资金实力，但在当时提到云计算，人们首先想到的却是 AWS，Google 也一直想法设法扭转局面，随着 Docker 的成功，他们从大火的容器市场看到了新的机会。Google 对容器知根知底，2007 年提交了 cgroup 到 Linux 内核，如今已经演变成容器运行时的基础。**2008 年 PaaS 平台 GAE 就已经采用了 LXC，并且开发了一套进行容器编排和调度的内部工具，也就是 Kubernetes 的前身 -- Borg**。
 
-Google 对容器知根知底，2007 年提交了 cgroup 到 Linux 内核，如今已经演变成容器运行时的基础。**2008 年 PaaS 平台 GAE 就已经采用了 LXC，并且开发了一套进行容器编排和调度的内部工具，也就是 Kubernetes 的前身 -- Borg**。凭借多年运行 GCP（Google Cloud Platform，Google云端平台）和 Borg 的经验，使得 Google 非常认可容器技术，也深知目前 Docker 在规模化使用场景下的不足。如果 Google 率先做好这件事不仅能让自己在云计算市场扳回一局，而且也能抓住一些新的商业机会。比如，在 AWS 上运行的应用有可能自由地移植到 GCP 上运行，这对于 Google 的云计算业务无疑极其有利。
+凭借多年运行 GCP（Google Cloud Platform，Google云端平台）和 Borg 的经验，使得 Google 非常认可容器技术，也深知目前 Docker 在规模化使用场景下的不足。如果 Google 率先做好这件事不仅能让自己在云计算市场扳回一局，而且也能抓住一些新的商业机会。比如，在 AWS 上运行的应用有可能自由地移植到 GCP 上运行，这对于 Google 的云计算业务无疑极其有利。
 
-为了使 Google 能够抓住这次机会，2013 年夏天，Kubernetes 联合创始人 Craig McLuckie、Joe Beda 和 Brendan Burns 开始讨论借鉴 Borg 的经验进行容器编排系统的开发。Kubernetes 项目获批后，Google 在 2014 年 6 月的 DockerCon 大会上正式宣布将其开源，在云计算失去先机的 IT 界的领导者和创新者再次王者归来，容器编排的竞赛正式拉开帷幕。
+为了使 Google 能够抓住这次机会，2013 年夏天，Kubernetes 联合创始人 Craig McLuckie、Joe Beda 和 Brendan Burns 开始讨论借鉴 Borg 的经验进行容器编排系统的开发。Kubernetes 项目获批后，Google 在 2014 年 6 月的 DockerCon 大会上正式宣布将其开源。
+
+在云计算失去先机的 IT 界的领导者和创新者王者归来，容器编排的竞赛正式拉开帷幕。
 
 ## 4. Docker Swarm 入场
 
-实际上，当时并不是只有 Google 看到了容器市场的机会。在 DockerCon 2014 大会上，有多家公司推出了自己的容器编排系统，我们今天所熟知的项目几乎有一半都是在这次大会上宣布发布或开源的，而 Google 的进场让竞争变得更加激烈。
+当然，并不是只有 Google 看到了容器市场的机会。DockerCon 2014 大会上，就有多家公司推出了自己的容器编排系统，而 Google 的进场让竞争变得更加激烈。
 
 随着 DockerCon 2014 大会的落幕，Docker 公司也意识到自己仅仅是云计算技术栈中的幕后英雄，容器平台化能力才是致胜的关键，单纯解决应用打包并没有价值，只能当做平台最终部署应用的载体，企业真正需要解决的是应用部署问题。于是迅速调整了战略方向，再度向 PaaS 进军。
 
-凭借在容器引擎市场的巨大成功以及先天的 PaaS 基因，Docker 进入容器编排领域是手到擒来。2014 年 7 月，Docker 收购了 OrchardLabs，正式涉足容器编排领域。Orchard Labs 的容器编排工具 fig 当时很有名，而这个 fig 就是 DockerCompose 的前身。
+2014 年 7 月，Docker 收购了 OrchardLabs，正式涉足容器编排领域。Orchard Labs 的容器编排工具 fig 当时很有名，而这个 fig 就是 DockerCompose 的前身。Docker Compose 虽然能编排多个容器，但是只能对单个服务器上的容器进行操作，不能实现在多个机器上进行容器的创建和管理。于是 Docker 在 2014 年底又发布了 Swarm 项目，并且不断招兵买马，充实着自己的平台化能力。
 
-Docker Compose 虽然能编排多个容器，但是只能对单个服务器上的容器进行操作，不能实现在多个机器上进行容器的创建和管理。于是 Docker 在 2014 年底又发布了 Swarm 项目，并且不断招兵买马，充实着自己的平台化能力。如果说 Docker Compose 和 Kubernetes 还不算正面竞争的话，那么 Docker Swarm 的发布，则是正式向 Kubernetes 宣战。
+Docker Swarm 可以在多个服务器上创建容器集群服务，而且依然保持着 Docker 的友好命令风格，几个命令就可以完成多机集群部署，在容器规模较小的场景下，所以许多用户更喜欢使用 Docker Swarm。
+
 
 <div  align="center">
 	<img src="../assets/swarm-diagram.webp" width = "550"  align=center />
 	<p>图 swarm 架构</p>
 </div>
 
-Docker Swarm 可以在多个服务器上创建容器集群服务，而且依然保持着 Docker 的友好命令风格，几个命令就可以完成多机集群部署，在容器规模较小的场景下，所以许多用户更喜欢使用 Docker Swarm。
+如果说 Docker Compose 和 Kubernetes 还不算正面竞争的话，那么 Docker Swarm 的发布，则是正式向 Kubernetes 宣战。
+
 
 ## 5. Mesos 备受追捧
 
@@ -93,7 +95,7 @@ Mesos 在 Twitter 的成功应用后，也吸引了全世界其他知名公司�
 
 Kubernetes 如果要和 Docker 对抗，肯定不能仅仅只做 Docker 容器管理这种 Docker 本身就已经支持的功能了，这样的话别说分庭抗礼，可能连 Docker 的基本用户都吸引不到。因此在 Kubernetes 设计之初，就确定了不以 Docker 为核心依赖的设计理念，并在其社区、开放、标准等方面对 Docker 展开全方面的围剿。
 
-2015 年 7 月 Google、RedHat 等企业共同发起成立了 CNCF（Cloud Native Computing Foundation）的基金会，希望以 Kubernetes 项目为基础，建立一个按照开源基金会方式运营的开源社区，来对抗以 Docker 公司为核心的容器商业生态。Kubernetes 项目在交由社区维护开始迅速发展，并且逐渐开始和 Docker 分庭抗礼。依托于开放性接口和优秀的架构设计，基于 Kubernetes 的开源项目和插件比比皆是，最终形成了一个百花齐放的稳定庞大的生态。
+2015 年 7 月 Google、RedHat 等企业共同发起成立了 CNCF（Cloud Native Computing Foundation）的基金会，希望以 Kubernetes 项目为基础，建立一个按照开源基金会方式运营的开源社区，来对抗以 Docker 公司为核心的容器商业生态。Kubernetes 项目在交由社区维护开始迅速发展，依托于开放性接口和优秀的架构设计，基于 Kubernetes 的开源项目和插件比比皆是，到现在，CNCF 已经形成了一个百花齐放的稳定庞大的生态。
 
 Docker 为应对 Kubernetes 在容器商业生态方面的布局，决定背水一战。2015 年 6 月，Docker 与 CoreOS、Google、红帽等公司联合发起制定了一套容器和镜像的标准与规范 —— OCI（Open Container Initiative），Docker 还将自己容器运行时 Libcontainer 捐出，并改名为 RunC 项目，交由 Linux 基金会管理。OCI 标准意在将容器运行时和镜像的实现从 Docker 项目中完全剥离出来，Docker希望 借助更加成熟和广泛的容器生态系统，为自己的 Swarm 等产品提供更加完整和丰富的支持，从而在生态方面能够与 Kubernetes 继续抗衡。可惜 Docker 这番操作不但没有改变现有局势，反倒让自己陷入到更加被动的局面。
 
