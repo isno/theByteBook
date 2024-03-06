@@ -53,30 +53,39 @@ Docker Compose 虽然能编排多个容器，但是只能对单个服务器上�
 	<p>图 swarm 架构</p>
 </div>
 
-
-
-Docker Swarm 可以在多个服务器上创建容器集群服务，而且依然保持着 Docker 的友好命令风格，几个命令就可以完成多机集群部署。因为它平滑地内置于 Docker 平台中，在容器规模较小的场景下，所以许多用户更喜欢使用 Docker Swarm。如果 Docker Swarm 能成功，那 Docker 就将通吃容器市场，此时的 Docker 掌握着容器的绝对话语权。
+Docker Swarm 可以在多个服务器上创建容器集群服务，而且依然保持着 Docker 的友好命令风格，几个命令就可以完成多机集群部署，在容器规模较小的场景下，所以许多用户更喜欢使用 Docker Swarm。
 
 ## 5. Mesos 备受追捧
 
-Mesos 是当时容器编排市场上另一个主要玩家，在 DockerCon 2014 大会之前就已经有很多公司在使用了。Mesos 最初是加州伯克利大学 RAD 实验室 2009 年启动的一个学术研究项目，目标是创建下一代集群管理器，致力于提高集群的利用效率和性能。作为一个面向资源管理的项目，容器编排其实只是其中的一个名叫 Marathon 的功能模块。
+当集群规模很大，管理的资源很多时，很多人就不愿意再使用 Docker Swarm，选择了 Marathon 和 Mesos。
+
+Mesos 最初是加州伯克利大学 RAD 实验室 2009 年启动的一个学术研究项目，初衷是为 spark 做集群管理，可以将不同的物理资源整合在一个逻辑资源层面上，是一种管理分布式资源的框架。
+
+:::tip Mesos 是什么
+
+举一个例子说明。假定某公司需要频繁进行大数据计算，该任务运行时需要 N 多个CPU和内存，为了满足资源需求，有两种方案：
+
+1. 使用一个大型服务器，为任务提供足够的资源。
+2. 采用分布计算，即提供一批普通配置的机器，组成集群，将计算任务拆分到各个机器上计算，然后汇总结果。
+
+Mesos 就是实现这类分布式计算的框架.
+
+:::
+
+Mesos 解决问题的核心是围绕物理资源层，它上面跑什么，怎么跑其时并不关注（想要跑什么任务，开发 Scheduler 和 Executor 实现Mesos Framework即可），有部分文章拿 Mesos 跟 Kubernetes 相比，实际上它们并不在一个维度，Kubernetes  只是负责容器编排而不是集群资源管理。不能因为两者都可以管理 docker，就把它们混为一谈。
+
+Mesos 的架构图如下所示，如果忽略图中与 Hadoop、MPI 框架的相关模块，我们会发现架构会变得非常简单，它仅由 Zookeeper 集群、Mesos 主节点和工作节点组成。
+
+master 根据调度策略(比如公平调度和优先级方式)，来决定将slave节点上的空闲资源(比如：CPU、内存或磁盘等)的提供给 framwork （例如 Hadoop、MPI、Hypertable、Spark、docker 等）使用
 
 <div  align="center">
-	<img src="../assets/mesos-arch.jpeg" width = "350"  align=center />
+	<img src="../assets/mesos-arch.jpeg" width = "450"  align=center />
 	<p>图 Mesos 架构</p>
 </div>
 
+Mesos 的标杆客户是 Twitter，2010 年，Twitter 正值基础架构混乱不堪的时刻，他们看到了 Mesos 这个项目，随后马上应用，管理着 Twitter 超过 30 万台服务器上的应用部署，成为 Twitter 自定义 PaaS 的实现基础。Benjamin Hindman（Mesos 项目负责人）当时也加入了 Twitter，负责开发和部署 Mesos，Twitter 的这套基于 Mesos 的 PaaS 解决方案就是后来的 Apache Aurora。
 
-2010 年，Twitter 正值基础架构混乱不堪的时刻，他们看到了 Mesos 这个项目，随后马上应用到了 Twitter，成为 Twitter 自定义 PaaS 的实现基础，管理着 Twitter 超过 30 万台服务器上的应用部署。Benjamin Hindman（Mesos 项目负责人）当时也加入了 Twitter，负责开发和部署 Mesos，Twitter 的这套基于 Mesos 的 PaaS 解决方案就是后来的 Apache Aurora。
-
-2013 年，Benjamin Hindman 离开 Twitter 成立了一个名为 Mesosphere 的公司，专注于打造生产级商业化 Mesos 平台，Mesosphere 正式成为 Mesos 背后的公司。在后期的 Mesos 开发、商业化运营、与 Kubernetes 的竞争中几乎都由 Mesosphere 在主导和支撑。
-
-Mesosphere 成立后就备受资本的追捧，自 2014 年 6 月至 2018 年 5 月共完成 A 到 D 轮四轮融资，金额分别为 1050 万美元、3600 万美元、7350 万美元和 1.25 亿美元，投资方包括 A16Z、Fuel Capital、微软等。Mesosphere 最高估值是 D 轮之后达到 7.75 亿美金。
-
-Mesos 在 2014 年成为首批支持 Docker 容器的容器编排框架之一。实际上，Mesos 并不关心谁会在它的基础上运行。Mesos 可以为 Java 应用服务器提供集群服务，也可以为 Docker 容器提供编排能力。当时，Mesos 的最大优势是它在运行关键任务时的成熟度，它比其他许多的容器技术更成熟、更可靠。
-
-Mesos 在 Twitter 的成功应用后，也吸引了全世界其他知名公司的采纳，比如 Airbnb、eBay 和 Netflix 等等，甚至 2015 年 Apple 的 Siri 就是运行在 Mesos 上，Mesos 也因此曾经火极一时。至于微软，他不仅投资了 Mesosphere，还让他的 Azure 平台率先支持了 Mesos。
-
+Mesos 在 Twitter 的成功应用后，也吸引了全世界其他知名公司的采纳，比如 Airbnb、eBay 和 Netflix 等等，甚至 2015 年 Apple 的 Siri 就是运行在 Mesos 上，Mesos 也因此曾经火极一时。至于微软，他不仅投资了 Mesosphere（Benjamin Hindman 离开 Twitter 后成立的 mesos 的商业化公司），还让它的 Azure 平台率先支持了 Mesos。
 
 ## 6. Kubernetes 扭转局势
 
@@ -102,10 +111,11 @@ OCI 标准意在将容器运行时和镜像的实现从 Docker 项目中完全�
 
 经过设计理念、架构、标准、生态等多方面的较量之后，Docker 在与 Kubernetes 的竞争中逐渐落败，Mesos 因其侧重在传统的资源管理，导致它在应对多云和集群管理时面临很多挑战，标杆客户 Twitter 最后也放弃了 Mesos 改用 Kubernetes。
 
-2017 年 10 月的 DockerCon 欧洲大会上，Docker 官方正式宣布支持 Kubernetes，决定将在自己的主打产品 Docker 企业版中内置 Kubernetes，并将 Docker 项目的容器运行时部分 Containerd 捐赠给了 CNCF 社区。
+- 2017 年 10 月的 DockerCon 欧洲大会上，Docker 宣布在自己的主打产品 Docker 企业版中内置 Kubernetes，并将 Docker 项目的容器运行时部分 Containerd 捐赠给了 CNCF 社区。
+- 2017 年 11 月 29 日，AWS 宣布了他们的 Kubernetes 弹性容器服务 (EKS)。在 Amazon 宣布之前，Mesosphere、Pivotal 和 Docker 也宣布了对 Kubernetes 的原生支持。
+- 2019 年 8 月 5 号，Mesosphere 宣布改名为 D2iQ，开启了围绕 Kubernetes 生命周期管理、混合云、多云的重生之旅。
+- 2019 年 11 月，Mirantis 收购了 Docker 的企业部门。
 
-2017 年 11 月 29 日，AWS 宣布了他们的 Kubernetes 弹性容器服务 (EKS)。在 Amazon 宣布之前，Mesosphere、Pivotal 和 Docker 也宣布了对 Kubernetes 的原生支持。
+至此，纷扰的容器技术圈尘埃落定，天下归一。
 
-2019 年 8 月 5 号，Mesosphere 宣布改名为 D2iQ，开启了围绕 Kubernetes 生命周期管理、混合云、多云的重生之旅。
-
-2019 年 11 月，Mirantis 收购了 Docker 的企业部门，至此，纷扰的容器技术圈尘埃落定，天下归一。
+[^1] : Mesos 论文 https://www.usenix.org/legacy/events/nsdi11/tech/full_papers/Hindman.pdf
