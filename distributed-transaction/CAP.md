@@ -19,19 +19,6 @@ CAP 定理描述的是**一个分布式系统中，涉及共享数据问题时�
 笔者在这里提前补充一点：对一个分布式系统，因为必须要实现分区容错性，不能舍弃 P，CAP 其实是二选一（AP 和 CP 之间）而不是三选二的权衡。
 :::
 
-由于论文的定义非常苛刻，让很多系统既不是 CP，也不是 AP 类型的系统，而是处于这两个分类之外的状态，AP/CP 的二分法就不那么准确，Eric A.Brewer 在论文中还提出了弱 CAP 原则（weak CAP principle）：
-
-:::tip 弱 CAP 原则
-
-The stronger the guarantees made about any two of strong
-consistency, high availability, or resilience to partitions, the
-weaker the guarantees that can be made about the third.
-
-在强一致性、高可用性、分区容错性三个属性中，任意两个属性越强，第三个属性就越弱。
-:::
-
-不管是 CAP 定理还是弱 CAP 原则，都在说明可用性和一致性之间是对立的，需要在他们之间做出权衡。CAP 定理对 C 和 A 的定义非常严苛，只能衡量很少一部分系统，而弱 CAP 原则则给出了一种更普适的权衡。
-
 由于 CAP 定理已有严格的证明，本节不去探讨为何 CAP 不可兼得，而是直接分析如果舍弃 C、A、P 时所带来的不同影响。
 
 - **放弃分区容忍性（CA without P）**：意味着我们将假设节点之间通信永远是可靠（注意，笔者开篇的分布式八大缪误），永远可靠的通信在分布式系统中必定不成立，只要用到网络来共享数据，分区现象就会始终存在。没有 P，也谈不上是什么分布式系统。
