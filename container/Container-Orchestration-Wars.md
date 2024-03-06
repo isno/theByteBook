@@ -91,21 +91,13 @@ Mesos 在 Twitter 的成功应用后，也吸引了全世界其他知名公司�
 
 面对 Kubernetes 的出现，一场 Docker 和 Kubernetes 之间的容器之战就此打响。
 
-Kubernetes 如果要和 Docker 对抗，肯定不能仅仅只做 Docker 容器管理这种 Docker 本身就已经支持的功能了，这样的话别说分庭抗礼，可能连 Docker 的基本用户都吸引不到。因此在 Kubernetes 设计之初，就确定了不以 Docker 为核心依赖的设计理念。在 Kubernetes 中，Docker 仅是容器运行时实现的一个可选项，用户可以依据自己的喜好任意调换自己需要的容器内容且 Kubernetes 为这些容器都提供了接口。
+Kubernetes 如果要和 Docker 对抗，肯定不能仅仅只做 Docker 容器管理这种 Docker 本身就已经支持的功能了，这样的话别说分庭抗礼，可能连 Docker 的基本用户都吸引不到。因此在 Kubernetes 设计之初，就确定了不以 Docker 为核心依赖的设计理念，并在其社区、开放、标准等方面对 Docker 展开全方面的围剿。
 
-虽然 Kubernetes 受到广泛的关注，但也有不少人担心 Kubernetes 的开源策略。因为 Kubernetes 开源项目的实际控制权仍然是 Google，比如，项目参与者要签版权协议，仍然是 Google 的版权，而一些大公司并不愿意自己的员工签署这样的协议。
+2015 年 7 月 Google、RedHat 等企业共同发起成立了 CNCF（Cloud Native Computing Foundation）的基金会，希望以 Kubernetes 项目为基础，建立一个按照开源基金会方式运营的开源社区，来对抗以 Docker 公司为核心的容器商业生态。Kubernetes 项目在交由社区维护开始迅速发展，并且逐渐开始和 Docker 分庭抗礼。依托于开放性接口和优秀的架构设计，基于 Kubernetes 的开源项目和插件比比皆是，最终形成了一个百花齐放的稳定庞大的生态。
 
-为了让 Kubernetes 项目被更多组织接受，Google、RedHat 等企业在 2015 年 7 月共同发起成立了 CNCF（Cloud Native Computing Foundation）的基金会，希望以 Kubernetes 项目为基础，建立一个按照开源基金会方式运营的开源社区，来对抗以 Docker 公司为核心的容器商业生态。RedHat 的长处就是有着成熟的社区管理体系，并且也有足够多的工程能力，这使得 Kubernetes 项目在交由社区维护开始迅速发展，并且逐渐开始和 Docker 分庭抗礼。
+Docker 为应对 Kubernetes 在容器商业生态方面的布局，决定背水一战。2015 年 6 月，Docker 与 CoreOS、Google、红帽等公司联合发起制定了一套容器和镜像的标准与规范 —— OCI（Open Container Initiative），Docker 还将自己容器运行时 Libcontainer 捐出，并改名为 RunC 项目，交由 Linux 基金会管理。OCI 标准意在将容器运行时和镜像的实现从 Docker 项目中完全剥离出来，Docker希望 借助更加成熟和广泛的容器生态系统，为自己的 Swarm 等产品提供更加完整和丰富的支持，从而在生态方面能够与 Kubernetes 继续抗衡。可惜 Docker 这番操作不但没有改变现有局势，反倒让自己陷入到更加被动的局面。
 
-和 Docker 的封闭商业模式不同，Kubernetes 反其道而行之主打开源和民主化，每一个重要功能都给用户提供了可定制化的接口，并且普通用户也可以无权限拉取修改 Kubernetes 的代码，社区有专门的 reviewer 以及 approver，只要你的 PR 通过了代码审核和批准，就会被合并到 Kubernetes 的主干，这也大大的增加了 Kubernetes 的活力，依托于开放性接口，基于 Kubernetes 的开源项目和插件比比皆是，并且依托于优秀的架构设计，微服务等新兴的技术理念也迅速落地，最终形成了一个百花齐放的稳定庞大的生态。
-
-Docker 为应对 Kubernetes 在容器商业生态方面的布局，决定背水一战。2015 年 6 月，Docker 与 CoreOS、Google、红帽等公司联合发起制定了一套容器和镜像的标准与规范 —— OCI（Open Container Initiative），Docker 还将自己容器运行时 Libcontainer 捐出，并改名为 RunC 项目，交由 Linux 基金会管理。
-
-OCI 标准意在将容器运行时和镜像的实现从 Docker 项目中完全剥离出来，这样做很显然对 Docker 不利。但从另一方面看，这对于 Docker 自身的发展也是有益的，因为它能够借助更加成熟和广泛的容器生态系统，为自己的 Swarm 等产品提供更加完整和丰富的支持，从而在生态方面能够与 Kubernetes 继续抗衡。
-
-可惜 Docker 这番操作不但没有改变现有局势，反倒让自己陷入到更加被动的局面。2016 年 12 月 CNCF 发布了 CRI（Container Runtime Interface，容器运行时接口），直接目的就是要支持 CoreOS 的容器运行时项目 rkt。当时为了支持 rkt 要写很多兼容的代码，为了避免后续兼容其他运行时带来的维护工作，所以发布了统一的 CRI 接口，以后凡是支持 CRI 的运行时，皆可直接作为 Kubernetes 的底层运行时。
-
-这样一来，相当于 Docker 曾经领先的容器技术被 OCI 剥离了运行时和镜像部分，而且其他运行时也都逐渐支持了 CRI，进一步增加了 RunC 的可替代性。Swarm 相较 Kubernetes 在容器编排层面的优势被削弱了，再加上 Swarm 项目自身的复杂度和封闭性，更进一步限制了其后来的发展。
+2016 年 12 月 CNCF 发布了 CRI（Container Runtime Interface，容器运行时接口），以后凡是支持 CRI 的运行时，皆可直接作为 Kubernetes 的底层运行时。这样一来，相当于 Docker 曾经领先的容器技术被 OCI 剥离了运行时和镜像部分，而且其他运行时也都逐渐支持了 CRI，进一步增加了 RunC 的可替代性，再加上 Swarm 项目自身的复杂度和封闭性，更进一步限制了其后来的发展。
 
 ## 7. Kubernetes 最终胜出
 
