@@ -61,8 +61,6 @@ Docker Swarm 可以在多个服务器上创建容器集群服务，而且依然�
 
 当集群规模很大，管理的资源很多时，很多人就不愿意再使用 Docker Swarm，选择了 Marathon 和 Mesos。
 
-Mesos 最初是加州伯克利大学 RAD 实验室 2009 年启动的一个学术研究项目，初衷是为 spark 做集群管理，可以将不同的物理资源整合在一个逻辑资源层面上，是一种管理分布式资源的框架。
-
 :::tip Mesos 是什么
 
 举一个例子说明。假定某公司需要频繁进行大数据计算，该任务运行时需要 N 多个CPU和内存，为了满足资源需求，有两种方案：
@@ -74,11 +72,11 @@ Mesos 就是实现这类分布式计算的框架.
 
 :::
 
-Mesos 解决问题的核心是围绕物理资源层，它上面跑什么，怎么跑其时并不关注（想要跑什么任务，开发 Scheduler 和 Executor 实现Mesos Framework即可），有部分文章拿 Mesos 跟 Kubernetes 相比，实际上它们并不在一个维度，Kubernetes  只是负责容器编排而不是集群资源管理。不能因为两者都可以管理 docker，就把它们混为一谈。
+Mesos 最初是加州伯克利大学 RAD 实验室 2009 年启动的一个学术研究项目，初衷是为 spark 做集群管理，可以将不同的物理资源整合在一个逻辑资源层面上。Mesos 也在火热的容器技术中看到意识到了新的机会，在 Docker 问世后通过与 Docker 的整合焕发了第二春。
 
-Mesos 的架构图如下所示，如果忽略图中与 Hadoop、MPI 框架的相关模块，我们会发现架构会变得非常简单，它仅由 Zookeeper 集群、Mesos 主节点和工作节点组成。
+Mesos 解决问题的核心是围绕物理资源层，它上面跑什么，怎么跑其时并不关注（想要跑什么任务，开发 Scheduler 和 Executor 实现 Mesos Framework 即可）。Mesos 的架构图如下所示，如果忽略图中与 Hadoop、MPI 框架的相关模块，我们会发现架构会变得非常简单，它仅由 Zookeeper 集群、Mesos 主节点和工作节点组成。
 
-master 根据调度策略(比如公平调度和优先级方式)，来决定将slave节点上的空闲资源(比如：CPU、内存或磁盘等)的提供给 framwork （例如 Hadoop、MPI、Hypertable、Spark、docker 等）使用
+master 根据调度策略(比如公平调度和优先级方式)，来决定将slave节点上的空闲资源(比如：CPU、内存或磁盘等)的提供给 framwork （例如 Hadoop、MPI、Hypertable、Spark、Docker 等）使用
 
 <div  align="center">
 	<img src="../assets/mesos-arch.jpeg" width = "450"  align=center />
@@ -93,13 +91,15 @@ Mesos 在 Twitter 的成功应用后，也吸引了全世界其他知名公司�
 
 面对 Kubernetes 的出现，一场 Docker 和 Kubernetes 之间的容器之战就此打响。
 
-Kubernetes 如果要和 Docker 对抗，肯定不能仅仅只做 Docker 容器管理这种 Docker 本身就已经支持的功能了，这样的话别说分庭抗礼，可能连 Docker 的基本用户都吸引不到。因此在 Kubernetes 设计之初，就确定了不以 Docker 为核心依赖的设计理念，并在其社区、开放、标准等方面对 Docker 展开全方面的围剿。
+2015 年 7 月 Google、RedHat 等企业共同发起成立了 CNCF（Cloud Native Computing Foundation）的基金会，希望以 Kubernetes 项目为基础，建立一个按照开源基金会方式运营的开源社区。与 Apache 基金会截然不同，CNCF 并不会把自身的组织架构和管理模式强加在其成员项目上，而是让其成员项目如 Kubernetes 更加自治化地自我管理，并提供如下维度的帮助：
 
-2015 年 7 月 Google、RedHat 等企业共同发起成立了 CNCF（Cloud Native Computing Foundation）的基金会，希望以 Kubernetes 项目为基础，建立一个按照开源基金会方式运营的开源社区，来对抗以 Docker 公司为核心的容器商业生态。Kubernetes 项目在交由社区维护开始迅速发展，依托于开放性接口和优秀的架构设计，基于 Kubernetes 的开源项目和插件比比皆是，到现在，CNCF 已经形成了一个百花齐放的稳定庞大的生态。
+- 生态绑定：将紧密围绕 Kubernetes 的插件项目（如 linkerd、fluentd、promethues）放在同一个 CNCF 生态下，形成有机的绑定。
+- 法律保护：保障 Kubernetes 的商标、Logo、License、专利、版权等被合理使用和消费。
+- 市场推广：通过 meetups、K8sPort、Kubecon、Blog、Twitter、新闻媒体等线下、线上活动对 Kubernetes 等技术进行推广。
+- 培训认证：制定规范、流程、课程来对 Kubernetes 等技术进行普及和相应的盈利。
+- 最后，协调不同厂商之间的关系和竞争。
 
-Docker 为应对 Kubernetes 在容器商业生态方面的布局，决定背水一战。2015 年 6 月，Docker 与 CoreOS、Google、红帽等公司联合发起制定了一套容器和镜像的标准与规范 —— OCI（Open Container Initiative），Docker 还将自己容器运行时 Libcontainer 捐出，并改名为 RunC 项目，交由 Linux 基金会管理。OCI 标准意在将容器运行时和镜像的实现从 Docker 项目中完全剥离出来，Docker希望 借助更加成熟和广泛的容器生态系统，为自己的 Swarm 等产品提供更加完整和丰富的支持，从而在生态方面能够与 Kubernetes 继续抗衡。可惜 Docker 这番操作不但没有改变现有局势，反倒让自己陷入到更加被动的局面。
-
-2016 年 12 月 CNCF 发布了 CRI（Container Runtime Interface，容器运行时接口），以后凡是支持 CRI 的运行时，皆可直接作为 Kubernetes 的底层运行时。这样一来，相当于 Docker 曾经领先的容器技术被 OCI 剥离了运行时和镜像部分，而且其他运行时也都逐渐支持了 CRI，进一步增加了 RunC 的可替代性，再加上 Swarm 项目自身的复杂度和封闭性，更进一步限制了其后来的发展。
+依托于开放性接口和优秀的架构设计，基于 Kubernetes 的开源项目和插件比比皆是，到现在，CNCF 已经形成了一个百花齐放的稳定庞大的生态。
 
 ## 7. Kubernetes 最终胜出
 
