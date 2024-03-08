@@ -85,7 +85,7 @@ Docker Swarm 可以在多个服务器上创建容器集群服务，而且依然�
 
 ## 5. 搅局者 Marathon
 
-当集群规模很大，管理的资源很多时，很多人就不愿意再使用 Docker Swarm，选择了 Marathon 和 Mesos。
+当集群规模很大，管理的资源很多时，很多人就不愿意再使用 Docker Swarm，也没有选择 Kubernetes，而是选择了 Marathon 和 Mesos。
 
 :::tip Mesos 是什么
 
