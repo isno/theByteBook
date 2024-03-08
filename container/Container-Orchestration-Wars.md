@@ -60,11 +60,11 @@ Docker 项目利用自己创新的 Docker Image 瞬间爆红，众多厂商也�
 	<p>图 Kubernetes 前身 Omega 系统在 Google 内部中的地位</p>
 </div>
 
-凭借多年运行 GCP（Google Cloud Platform，Google云端平台）和 Borg 的经验，使得 Google 非常认可容器技术，也深知目前 Docker 在规模化使用场景下的不足。如果 Google 率先做好这件事不仅能让自己在云计算市场扳回一局，而且也能抓住一些新的商业机会。比如，在 AWS 上运行的应用有可能自由地移植到 GCP 上运行，这对于 Google 的云计算业务无疑极其有利。
+凭借多年运行 GCP（Google Cloud Platform，Google 云端平台）和 Borg 的经验，使得 Google 非常认可容器技术，也深知目前 Docker 在规模化使用场景下的不足。如果 Google 率先做好这件事不仅能让自己在云计算市场扳回一局，而且也能抓住一些新的商业机会。比如，在 AWS 上运行的应用有可能自由地移植到 GCP 上运行，这对于 Google 的云计算业务无疑极其有利。
 
-为了使 Google 能够抓住这次机会，2013 年夏天，Kubernetes 联合创始人 Craig McLuckie、Joe Beda 和 Brendan Burns 开始讨论借鉴 Borg 的经验进行容器编排系统的开发。Kubernetes 项目获批后，Google 在 2014 年 6 月的 DockerCon 大会上正式宣布将其开源。
+2013 年夏天，Kubernetes 联合创始人 Craig McLuckie、Joe Beda 和 Brendan Burns 开始讨论借鉴 Borg 的经验进行容器编排系统的开发。Kubernetes 项目获批后，Google 在 2014 年 6 月的 DockerCon 大会上正式宣布将其开源。
 
-在云计算失去先机的 IT 界的领导者和创新者王者归来，容器编排的竞赛正式拉开帷幕。
+云计算市场中失去先机的 IT 界的领导者和创新者王者归来，容器编排的竞赛正式拉开帷幕。
 
 ## 4. Docker Swarm 入场
 
@@ -76,14 +76,12 @@ Docker 项目利用自己创新的 Docker Image 瞬间爆红，众多厂商也�
 
 Docker Swarm 可以在多个服务器上创建容器集群服务，而且依然保持着 Docker 的友好命令风格，几个命令就可以完成多机集群部署，在容器规模较小的场景下，所以许多用户更喜欢使用 Docker Swarm。
 
-
 <div  align="center">
 	<img src="../assets/swarm-diagram.webp" width = "550"  align=center />
 	<p>图 swarm 架构</p>
 </div>
 
 如果说 Docker Compose 和 Kubernetes 还不算正面竞争的话，那么 Docker Swarm 的发布，则是正式向 Kubernetes 宣战。
-
 
 ## 5. 搅局者 Marathon
 
@@ -140,4 +138,4 @@ Mesos 在 Twitter 的成功应用后，也吸引了全世界其他知名公司�
 
 至此，纷扰的容器技术圈尘埃落定，天下归一。
 
-[^1] : Mesos 论文 https://www.usenix.org/legacy/events/nsdi11/tech/full_papers/Hindman.pdf
+[^1]: Mesos 论文 https://www.usenix.org/legacy/events/nsdi11/tech/full_papers/Hindman.pdf
