@@ -8,29 +8,57 @@
 
 ## 1. 从 Cloud Foundry 开始
 
-最早出现在开发者视野中的 PaaS 开源项目当属 VMware 创立的 Cloud Foundry，与 IaaS 提供云上虚拟机的服务方式不同，基于 Cloud Foundry 的云计算能够提供应用托管的功能，开发者只需要通过一条简单的命令比如：cf push "我的应用"，就可以将项目打成一个压缩包，把压缩包上传到 Cloud Foundry 服务器之后 Cloud foundry 会开启调度器，在一群云主机中找到满足用户需求的主机（系统版本、性能、个数），通过容器化技术在选中的主机上创建容器，之后在容器内下载压缩包，解压并运行，最终成为一个对外提供服务的应用。
+最早出现在开发者视野中的 PaaS 开源项目当属 VMware 创立的 Cloud Foundry。
+
+Cloud Foundry 号称是业界第一个开源 PaaS 云平台，它支持多种框架、语言、运行时环境、云平台及应用服务，使开发人员能够在几秒钟内进行应用程序的部署和扩展，无需担心任何基础架构的问题。
+
+Cloud Foundry 的典型使用方法是用户在云端部署好 Cloud Foundry 之后，本地应用只需要一条命令就能进行推送和安装。
+
+```
+cf push hello-work
+```
+
+Cloud Foundry 为应用定义了一种打包方式，push 则将本应用以及启动脚本进行压缩传到 Cloud Foundry 服务器之中，随后 Cloud foundry 开启调度器找到合适的虚拟机，下载压缩包，解压并运行，最终成为一个对外提供服务。在这个过程中，由于虚拟机会启动不同的应用，Cloud Foundry 利用 cgroups 和 namespace 机制为每个应用创建了一个“沙盒”环境。这样，在同一个虚拟机中的应用互相隔离，彼此不受影响。
+
+<div  align="center">
+	<img src="../assets/cf-push.png" align=center />
+	<p>图 Cloud Foundry 部署模型</p>
+</div>
+
 
 此外，Cloud Foundry 平台对这些应用项目提供分发，灾备，监控，重启等等服务。这种托管服务**解放了开发者的生产力，让他们不用再关心应用的运维状况，而是专心开发自己的应用，而这也就是 PaaS 的“初心” -- 平台即服务**。
 
-## 2. 从 Cloud Foundry 到 Docker
+## 2. Cloud Foundry 的软肋
 
-Cloud Foundry 最核心的组件就是应用的打包和分发机制，但就是这个打包功能，成了 Cloud Foundry 的软肋，一直为用户所诟病。
+历史上有太多的前辈想要解决环境不一致的问题。前有 Java “write once run erverwhere”，后有 Cloud Foundry 的 “cf-push”。PaaS 当时的火热就在于应用的打包和部署功能。但就是这个打包功能，成了 Cloud Foundry 的软肋，一直为用户所诟病。
 
 Cloud Foundry 为每一种主流的语言都定义了一套打包的方式，开发者不得不为每一种语言、每一种框架、甚至是每个版本应用维护一个打好的包。除此，这种方式还有可能出现本机运行成功，打了个包上传之后就无法运行的情况。本来是为赋能开发者而生的技术，却对开发者极不友好，当开发者的抱怨积累到一定程度，想要在 PaaS 浪潮中央站稳脚跟的 Cloud Foundry 被后起之秀 Docker “红牌罚出局”也就顺理成章。
 
+## 3. Docker 的制胜法宝
+
 最初，Docker 还是一个叫 dotCloud 的公司，dotCloud 最初阶段也是选择 LXC 来快速部署软件，使用 LXC 虽然可以解决应用隔离的问题，但不能解决应用可移植性问题，为此 dotCloud 开发了一套内部管理工具，方便创建和管理容器，这个工具就是后来的 Docker。
 
-Docker 刚开源的时候，Cloud Foundry 的产品经理就在社区做了一次详细的对比，告诉用户 Docker 和 Cloud Foundry 一样，都是使用了 Namespace 和 Cgroups 技术的沙箱而已，无需值得关注。事实上，Docker 也确实就和他所说的一样，采用了这个“传统”的技术方案，但是 Docker 与 Cloud Foundry 相比，创新性地提出了**Docker 镜像**，解决了应用打包的一致性与复用性问题。
+Docker 刚开源的时候，Cloud Foundry 的产品经理就在社区做了一次详细的对比，告诉用户 Docker 和 Cloud Foundry 一样，都是使用了 Namespace 和 Cgroups 技术的沙箱而已，无需值得关注。事实上，Docker 也确实就和他所说的一样，采用了这个“传统”的技术方案，但是 Docker 与 Cloud Foundry 相比，创新性地提出了**Docker 镜像**。
 
 比起 Cloud Foundry 那种执行文件+启动脚本的打包方式，**Docker 镜像完美解决了两个问题：本地环境和服务器环境的差异、同一份镜像可以让所有的机器进行复用**。
 
-正是 Docker Image 这个“微不足道的创新”，让 Docker 席卷整个 PaaS 领域。
+<div  align="center">
+	<img src="../assets/docker.png" align=center />
+	<p>Docker 的愿景：Build, Ship, and Run Any App, Anywhere</p>
+</div>
+
+正是 Docker 镜像这个“微不足道的创新”，让 Docker 席卷整个 PaaS 领域。
 
 ## 3. Kubernetes 入场
 
 Docker 项目利用自己创新的 Docker Image 瞬间爆红，众多厂商也从中发现商机，开始围绕容器编排做一些思考和布局，这其中就包括云计算概念的最早提出者 Google 公司。
 
 虽然 Google 公司名声显赫，有强大的技术实力和资金实力，但在当时提到云计算，人们首先想到的却是 AWS，Google 也一直想法设法扭转局面，随着 Docker 的成功，他们从大火的容器市场看到了新的机会。Google 对容器知根知底，2007 年提交了 cgroup 到 Linux 内核，如今已经演变成容器运行时的基础。**2008 年 PaaS 平台 GAE 就已经采用了 LXC，并且开发了一套进行容器编排和调度的内部工具，也就是 Kubernetes 的前身 -- Borg**。
+
+<div  align="center">
+	<img src="../assets/Borg.jpeg"   align=center />
+	<p>图 Kubernetes 前身 Omega 系统在 Google 内部中的地位</p>
+</div>
 
 凭借多年运行 GCP（Google Cloud Platform，Google云端平台）和 Borg 的经验，使得 Google 非常认可容器技术，也深知目前 Docker 在规模化使用场景下的不足。如果 Google 率先做好这件事不仅能让自己在云计算市场扳回一局，而且也能抓住一些新的商业机会。比如，在 AWS 上运行的应用有可能自由地移植到 GCP 上运行，这对于 Google 的云计算业务无疑极其有利。
 
@@ -57,7 +85,7 @@ Docker Swarm 可以在多个服务器上创建容器集群服务，而且依然�
 如果说 Docker Compose 和 Kubernetes 还不算正面竞争的话，那么 Docker Swarm 的发布，则是正式向 Kubernetes 宣战。
 
 
-## 5. Mesos 备受追捧
+## 5. 搅局者 Marathon
 
 当集群规模很大，管理的资源很多时，很多人就不愿意再使用 Docker Swarm，选择了 Marathon 和 Mesos。
 
