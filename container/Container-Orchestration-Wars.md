@@ -119,7 +119,7 @@ Mesos 在 Twitter 的成功应用后，也吸引了全世界其他知名公司�
 
 2015 年 7 月 Google、RedHat 等企业共同发起成立了 CNCF（Cloud Native Computing Foundation）的基金会，希望以 Kubernetes 项目为基础，建立一个按照开源基金会方式运营的开源社区。与 Apache 基金会截然不同，CNCF 并不会把自身的组织架构和管理模式强加在其成员项目上，而是让其成员项目如 Kubernetes 更加自治化地自我管理，并提供如下维度的帮助：
 
-- 生态绑定：将紧密围绕 Kubernetes 的插件项目（如 linkerd、fluentd、promethues）放在同一个 CNCF 生态下，形成有机的绑定。
+- 生态绑定：将紧密围绕 Kubernetes 的插件项目（如 linkerd、fluentd、prometheus）放在同一个 CNCF 生态下，形成有机的绑定。
 - 法律保护：保障 Kubernetes 的商标、Logo、License、专利、版权等被合理使用和消费。
 - 市场推广：通过 meetups、K8sPort、Kubecon、Blog、Twitter、新闻媒体等线下、线上活动对 Kubernetes 等技术进行推广。
 - 培训认证：制定规范、流程、课程来对 Kubernetes 等技术进行普及和相应的盈利。
