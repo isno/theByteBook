@@ -25,6 +25,9 @@ int pid = clone(main_function, stack_size, CLONE_NEWPID | SIGCHLD, NULL);
 
 这时，新创建的这个进程将会“看到”一个全新的进程空间，在这个进程空间里，它的 PID 是 1。
 
+这些进程就会觉得自己是各自 PID Namespace 里的第 1 号进程，只能看到各自 Mount Namespace 里挂载的目录和文件，只能访问到各自 Network Namespace 里的网络设备，就仿佛运行在一个个“容器”里面，与世隔绝
+
+
 除了刚刚用到的 PID Namespace，Linux 操作系统还提供了 Mount、UTS、IPC、Network 和 User 这些 Namespace，用来对各种不同的进程上下文进行隔离操作。
 
 隔离之后，还有一个关键问题：操作系统如何管理或者限制被隔离进程使用的资源（CPU、内存、网络带宽、磁盘等）？这就是上面提到的第二项技术了： Linux Control Cgroup，即 cgroups。
@@ -41,21 +44,15 @@ cgroups 是一种内核级别的资源管理机制，最早由 Google 工程师�
 
 ```
 $ pstree -g
-[root@VM-12-12-centos ~]# pstree -g
-systemd(1)─┬─abrt-dbus(540)─┬─{abrt-dbus}(540)
-           │                ├─{abrt-dbus}(540)
-           │                └─{abrt-dbus}(540)
-           ...
-     	   |-rsyslogd(1089)-+-{in:imklog}(1089)
-           |  |-{in:imuxsock) S 1(1089)
-           | `-{rs:main Q:Reg}(1089)
-           ...
+    |-rsyslogd(1089)-+-{in:imklog}(1089)
+    |  |-{in:imuxsock) S 1(1089)
+    | `-{rs:main Q:Reg}(1089)
 ```
-如上，负责Linux日志处理 rsyslogd 的程序，可见rsyslogd的主程序main，和它要用到的内核日志模块imklog等，同属1089进程组。这些进程相互协作，共同完成rsyslogd程序的职责。
+如上，负责Linux日志处理 rsyslogd 的程序，可见rsyslogd的主程序main，和它要用到的内核日志模块imklog等，同属1089进程组。这些进程相互协作，共享 rsyslogd 程序的资源，共同完成 rsyslogd 程序的职责。
 
 对os，这样的进程组更方便管理。Linux操作系统只需将信号，如 SIGKILL 信号，发给一个进程组，该进程组中的所有进程就都会收到这个信号而终止运行。
 
-那么现在的问题是如果把上面的进程用容器跑起来，你该怎么做？自然的解法启动一个 Docker 容器，里面运行四个进程，可是这样会有一个问题：容器里面 PID=1 的进程该是谁？这个核心问题在于容器的设计本身是一种“单进程”模型，不是说容器里只能起一个进程，而是容器的应用等于进程，Docker 只能通过监视 PID 为 1 的进程的运行状态来判断容器的工作状态是否正常。
+那么现在的问题是如果把上面的进程用容器跑起来，你该怎么做？自然的解法启动一个 Docker 容器，里面运行四个进程，可是这样会有一个问题：容器里面 PID=1 的进程该是谁？这个核心问题在于容器的设计本身是一种“单进程”模型，容器的应用等于进程，Docker 也只能通过监视 PID 为 1 的进程的运行状态来判断容器的工作状态是否正常。
 
 既然我们把容器与进程在概念上对应起来，那容器编排的第一个扩展点，就是要找到容器领域中与“进程组”相对应的概念，这是实现容器从隔离到协作的第一步。
 
@@ -63,13 +60,16 @@ systemd(1)─┬─abrt-dbus(540)─┬─{abrt-dbus}(540)
 
 进程组的实现在 Kubernetes 中叫做 Pod，Pod 是 Kubernetes 中最基本、最重要的概念。
 
+
 容器之间原本是被 Linux Namespace 和 cgroups 隔开的，Pod 第一个要解决的问题是怎么去打破这个隔离，让 Pod  内的容器可以像进程组一样天然的共享资源和数据（例如网络和存储）。
 
 Kubernetes 中使用 Infra Container 解决这个问题。Infra Container 是整个 Pod 中第一个启动的容器，只有几百 KB 大小，Pod 中的其他容器都会以 Infra Container 作为父容器，UTS、IPC、网络等名称空间实质上都是来自 Infra Container 容器。
 
 :::tip 额外知识
 
-Infra Container 启动之后，永远处于 Pause 状态，所以也常被称为“pause 容器”
+Infra Container 启动之后，永远处于 Pause 状态，所以也常被称为“pause 容器”。
+
+默认情况下 infra 镜像的地址为 k8s.grc.io/pause.3.5，很多时候我们部署应用一直处于 Pending状态 ，大部分原因就是这个镜像地址在国内无法访问造成。
 :::
 
 
