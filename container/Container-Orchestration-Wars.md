@@ -49,7 +49,7 @@ Docker 刚开源的时候，Cloud Foundry 的产品经理就在社区做了一�
 
 正是 Docker 镜像这个“微不足道的创新”，让 Docker 席卷整个 PaaS 领域。
 
-## 3. Kubernetes 入场
+## 4. Kubernetes 入场
 
 Docker 项目利用自己创新的 Docker Image 瞬间爆红，众多厂商也从中发现商机，开始围绕容器编排做一些思考和布局，这其中就包括云计算概念的最早提出者 Google 公司。
 
@@ -66,7 +66,7 @@ Docker 项目利用自己创新的 Docker Image 瞬间爆红，众多厂商也�
 
 云计算市场中失去先机的 IT 界的领导者和创新者王者归来，容器编排的竞赛正式拉开帷幕。
 
-## 4. Docker Swarm 入场
+## 5. Docker Swarm 入场
 
 当然，并不是只有 Google 看到了容器市场的机会。DockerCon 2014 大会上，就有多家公司推出了自己的容器编排系统，而 Google 的进场让竞争变得更加激烈。
 
@@ -83,7 +83,7 @@ Docker Swarm 可以在多个服务器上创建容器集群服务，而且依然�
 
 如果说 Docker Compose 和 Kubernetes 还不算正面竞争的话，那么 Docker Swarm 的发布，则是正式向 Kubernetes 宣战。
 
-## 5. 搅局者 Marathon
+## 6. 搅局者 Marathon
 
 当集群规模很大，管理的资源很多时，很多人就不愿意再使用 Docker Swarm，也没有选择 Kubernetes，而是选择了 Marathon 和 Mesos。
 
@@ -113,7 +113,7 @@ Mesos 的标杆客户是 Twitter，2010 年，Twitter 正值基础架构混乱�
 
 Mesos 在 Twitter 的成功应用后，也吸引了全世界其他知名公司的采纳，比如 Airbnb、eBay 和 Netflix 等等，甚至 2015 年 Apple 的 Siri 就是运行在 Mesos 上，Mesos 也因此曾经火极一时。至于微软，他不仅投资了 Mesosphere（Benjamin Hindman 离开 Twitter 后成立的 mesos 的商业化公司），还让它的 Azure 平台率先支持了 Mesos。
 
-## 6. Kubernetes 扭转局势
+## 7. Kubernetes 扭转局势
 
 面对 Kubernetes 的出现，一场 Docker 和 Kubernetes 之间的容器之战就此打响。
 
@@ -127,7 +127,7 @@ Mesos 在 Twitter 的成功应用后，也吸引了全世界其他知名公司�
 
 依托于开放性接口和优秀的架构设计，基于 Kubernetes 的开源项目和插件比比皆是，到现在，CNCF 已经形成了一个百花齐放的稳定庞大的生态。
 
-## 7. Kubernetes 最终胜出
+## 8. Kubernetes 最终胜出
 
 经过设计理念、架构、标准、生态等多方面的较量之后，Docker 在与 Kubernetes 的竞争中逐渐落败，Mesos 因其侧重在传统的资源管理，导致它在应对多云和集群管理时面临很多挑战，标杆客户 Twitter 最后也放弃了 Mesos 改用 Kubernetes。
 

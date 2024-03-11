@@ -8,7 +8,7 @@
 
 那么，容器是本质什么呢？如果吧 Kubernetes 比作云原生时代的操作系统，那么容器就是这个操作系统之内的特殊进程。
 
-特殊之处在于容器利用 namespace 对其视图进行隔离，利用 cgroup（约束能用多少资源，内存/磁盘。cpu等）对其资源使用进行约束。
+特殊之处在于容器利用一些内核技术，如 namespace 对其视图进行隔离，cgroup（约束能用多少资源，内存/磁盘。cpu等）对其资源使用进行约束。
 
 使用 Namespace 其实也非常简单，它其实只是 Linux 创建新进程的一个可选参数。比如，在 Linux 系统中创建线程的系统调用是 clone。
 ```
@@ -25,10 +25,7 @@ int pid = clone(main_function, stack_size, CLONE_NEWPID | SIGCHLD, NULL);
 
 这时，新创建的这个进程将会“看到”一个全新的进程空间，在这个进程空间里，它的 PID 是 1。
 
-这些进程就会觉得自己是各自 PID Namespace 里的第 1 号进程，只能看到各自 Mount Namespace 里挂载的目录和文件，只能访问到各自 Network Namespace 里的网络设备，就仿佛运行在一个个“容器”里面，与世隔绝
-
-
-除了刚刚用到的 PID Namespace，Linux 操作系统还提供了 Mount、UTS、IPC、Network 和 User 这些 Namespace，用来对各种不同的进程上下文进行隔离操作。
+这些进程就会觉得自己是各自 PID Namespace 里的第 1 号进程，只能看到各自 Mount Namespace 里挂载的目录和文件，只能访问到各自 Network Namespace 里的网络设备，就仿佛运行在一个个“容器”里面，与世隔绝。
 
 隔离之后，还有一个关键问题：操作系统如何管理或者限制被隔离进程使用的资源（CPU、内存、网络带宽、磁盘等）？这就是上面提到的第二项技术了： Linux Control Cgroup，即 cgroups。
 
