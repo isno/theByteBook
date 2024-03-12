@@ -31,11 +31,9 @@ int clone(int (*fn)(void *), void *child_stack,
 int pid = clone(main_function, stack_size, CLONE_NEWPID | SIGCHLD, NULL); 
 ```
 
-这时，新创建的这个进程将会“看到”一个全新的进程空间，在这个进程空间里，它的 PID 是 1。
+这时，新创建的这个进程将会“看到”一个全新的进程空间，在这个进程空间里，它的 PID 是 1。这些进程就会觉得自己是各自 PID Namespace 里的第 1 号进程，只能看到各自 Mount Namespace 里挂载的目录和文件，只能访问到各自 Network Namespace 里的网络设备，就仿佛运行在一个个“容器”里面，与世隔绝。
 
-这些进程就会觉得自己是各自 PID Namespace 里的第 1 号进程，只能看到各自 Mount Namespace 里挂载的目录和文件，只能访问到各自 Network Namespace 里的网络设备，就仿佛运行在一个个“容器”里面，与世隔绝。
-
-隔离之后，还有一个关键问题：操作系统如何管理或者限制被隔离进程使用的资源（CPU、内存、网络带宽、磁盘等）？这就是上面提到的第二项技术了： Linux Control Cgroup，即 cgroups。
+进程的视图隔离已经完成，如果再对使用资源进行限制，那么就能对进程的运行环境实现一个进乎完美的隔离。这就要用到上面提到的第二项技术： Linux Control Cgroup，即 cgroups。
 
 cgroups 是一种内核级别的资源管理机制，最早由 Google 工程师在 2007年提出，它主要的作用就是限制一个进程组所使用的资源上限。使用 cgroups 也很方便，通过 /sys/fs/cgroup 查看系统支持的被限制的资源种类。然后再想限制的资源下新建一个目录，配置资源的限制，绑定指定的进程即可。
 
