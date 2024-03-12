@@ -14,7 +14,7 @@ ifconfig lo:0 1.1.1.1 netmask 255.255.255.255 up // 绑定 VIP 地址在 lo 接�
 route add -host 1.1.1.1 dev lo  //  目标地址是 VIP 的数据包从本机 lo 接口发送出去
 ```
 
-只有请求经过负载均衡器，而服务的响应无需从负载均衡器原路返回的工作模式中，整个请求、转发、响应的链路形成一个“三角关系”，所以这种模式也被形象的称为“三角传输模式”（Direct Server Return，DSR），也称为“单臂模式”（Single Legged Model），如图 4-2 所示。
+只有请求经过负载均衡器，而服务的响应无需从负载均衡器原路返回的工作模式中，整个请求、转发、响应的链路形成一个“三角关系”，所以这种模式也被形象的称为“三角传输模式”（Direct Server Return，DSR），也称为“单臂模式”（Single Legged Model），如图 4-7 所示。
 
 <div  align="center">
 	<img src="../assets/balancer4-dsr.svg" width = "550"  align=center />
