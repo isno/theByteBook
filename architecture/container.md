@@ -47,19 +47,17 @@ chroot 被认为是最早的容器化技术之一，chroot 可以重定向进程
 
 2015 年 6 月，Linux 基金会联合 Docker 带头成立 OCI（Open Container Initiative，开放容器标准），OCI 组织着力解决容器的构建、分发和运行问题，其宗旨是制定并维护容器镜像格式和容器运行时的正式规范（OCI Specifications）。
 
-OCI 其核心产出是：
+OCI 其核心产出是下面三个标准：
 
 - OCI Runtime Spec（容器运行时规范）
 - OCI Image Spec（镜像格式规范）
 - OCI Distribution Spec（镜像分发规范）。
 
-OCI 项目启动后，为了符合 OCI 标准，Docker 推动自身的架构持续向前演进。
+OCI 项目启动后，为了符合 OCI 标准，Docker 推动自身的架构持续向前演进。首先它将 libcontainer 独立出来，封装重构成 runC 项目，并捐赠给 Linux 基金会管理。runC 是 OCI Runtime 的首个参考实现，它提出了“让标准容器无处不在”（Make Standard Containers Available Everywhere）的口号。
 
-首先它将 libcontainer 独立出来，封装重构成 runC 项目，并捐赠给 Linux 基金会管理。runC 是 OCI Runtime 的首个参考实现，它提出了“让标准容器无处不在”（Make Standard Containers Available Everywhere）的口号。
+为了能够兼容所有符合标准的 OCI Runtime 实现，Docker 进一步重构了 Docker Daemon 子系统，把其中与运行时交互的部分抽象为了 containerd 项目。这是一个负责管理容器执行、分发、监控、网络、构建、日志等功能的核心模块，其内部会为每个容器运行时创建一个 containerd-shim 适配进程，默认与 runC 搭配工作，但也可以切换到其他 OCI Runtime 实现上（实际并没做到，containerd 仍是紧密绑定于 runC）。
 
-而为了能够兼容所有符合标准的 OCI Runtime 实现，Docker 进一步重构了 Docker Daemon 子系统，把其中与运行时交互的部分抽象为了 containerd 项目。这是一个负责管理容器执行、分发、监控、网络、构建、日志等功能的核心模块，其内部会为每个容器运行时创建一个 containerd-shim 适配进程，默认与 runC 搭配工作，但也可以切换到其他 OCI Runtime 实现上（然而实际并没做到，最后 containerd 仍是紧密绑定于 runC）。
-
-后来到了 2016 年，Docker 把 containerd 捐献给了 CNCF 管理。此后 Docker 运行就不是简单通过 Docker Daemon 来启动了，现阶段的 Docker 通过集成 containerd、containerd-shim、runC 等多个组件共同完成，架构如图 1-16 所示。
+2016 年，Docker 把 containerd 捐献给了 CNCF 管理。此后 Docker 运行就不是简单通过 Docker Daemon 来启动了，现阶段的 Docker 通过集成 containerd、containerd-shim、runC 等多个组件共同完成，架构如图 1-16 所示。
 
 <div  align="center">
 	<img src="../assets/docker-arc.png" width = "600"  align=center />
@@ -94,7 +92,7 @@ OCI 和 CNCF 这两个围绕容器的基金会对云原生生态的发展发挥�
 
 在容器编排大战期间，以 kubernetes 为底层资源调度和应用生命周期管理的 CNCF 生态系统也得以迅猛发展，云原生成为云计算市场的技术新热点。
 
-迄今为止，CNCF 在其公布的云原生全景图中，如图 1-18 所示，显示了目前近 30 个领域、数百个项目的繁荣发展，从数据存储、消息传递，到持续集成、服务编排乃至网络管理无所不包，无所不含，正如稼轩先生有言 “溪边照影行，天在清溪底。天上有行云，人在行云里”。
+迄今为止，CNCF 在其公布的云原生全景图中，如图 1-18 所示，显示了目前近 30 个领域、数百个项目的繁荣发展，从数据存储、消息传递，到持续集成、服务编排乃至网络管理无所不包、无所不含。
 
 <div  align="center">
 	<img src="../assets/landscape.png" width = "100%"  align=center />
