@@ -18,7 +18,7 @@ route add -host 1.1.1.1 dev lo  //  目标地址是 VIP 的数据包从本机 lo
 
 <div  align="center">
 	<img src="../assets/balancer4-dsr.svg" width = "550"  align=center />
-	<p>图4-7 链路层 DSA 模式负载均衡</p>
+	<p>图4-7 链路层 DSR 模式负载均衡</p>
 </div>
 
 设计 DSR 的主要原因是：在一些场景中，响应的流量要远远大于请求的流量（例如典型的 HTTP request/response 模式）。假设请求占 10% 的流量，响应占 90%，使用 DSR 技术，只需 1/10 的带宽就可以满足系统需求，这种类型的优化可以极大地节省成本，还提高了负载均衡器的可靠性（流量越低肯定越好）。
