@@ -8,6 +8,10 @@
 
 讨论实现一套完整的日志系统，工程师们或多或少都应该听说过这几个名词：ELK、ELKB 或者 Elastic Stack。这些其实是实现日志处理方案一套开源组件。
 
+:::tip 额外知识
+Elastic 的发展始于 Shay Banon 个人兴趣的技术项目，从开源、聚人、成立公司，到走向纽交所，在到股价一路狂飙（最新市值 $107 亿），几乎是最理想的工程师创造故事。
+:::
+
 :::tip 什么是 ELKB
 
 ELK 是三个开源项目的首字母缩写，这三个项目分别是：Elasticsearch、Logstash 和 Kibana。Elasticsearch 是一个搜索和分析引擎。Logstash 是服务器端数据处理管道，能够同时从多个来源采集数据，转换数据，然后将数据发送到诸如 Elasticsearch 等“存储库”中。Kibana 则可以让用户在 Elasticsearch 中使用图形和图表对数据进行可视化。Beats 作为轻量级的数据搬运工，集合了多种单一用途数据采集器，将数据发送给 Logstash 或 ElasticSearch，其可扩展的框架及丰富的预置采集器将使工作事半功倍。
@@ -34,7 +38,9 @@ Elastic 中最核心的是 Elasticsearch，它是一个提供一种准实时搜�
 
 :::tip 额外知识
 
-与 Elasticsearch 类似的产品还有商业公司 Splunk 和 Apache 开源的 Solr。事实上，Elasticsearch 和 Solr 都使用了著名的 Java 信息检索工具包 Lucene，Lucene 的作者就是大名鼎鼎的 Doug Cutting，如果你不知道谁是 Doug Cutting，那你一定听过他儿子玩具的名字 -- Hadoop。
+说起 Elasticsearch 不得不提及背后的 Lucene。Lucene 的作者就是大名鼎鼎的 Doug Cutting，如果你不知道他是谁是？那你一定听过他儿子玩具的名字 -- Hadoop。
+
+Lucene是一个面向搜索引擎的倒排库，可以直接用来索引文档并提供接口进行查询。但 Lucene 本身只是个 Lib 库，离直接使用还有部分集成工作，之后陆续有了 Solr、Nutch 等项目帮助发展，但依然不温不火。2012年，Elasticsearch 诞生后，通过优秀的 Restful API、分布式部署等机制才把 Lucene 的使用推向一个新的高度。
 
 :::
 
