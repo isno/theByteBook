@@ -55,7 +55,7 @@ Buoyant 第二代服务网格产品最初以 Conduit 命名，在 Conduit 加入
 
 2019年，Kinvolk（2021年被微软收购）曾发布 Linkerd 与 Istio 的公开基准数据，数据表明 Linkerd 比 Istio 明显更快、更轻。这项测试工作还诞生了一个 开源的服务网格基准测试工具 service-mesh-benchmark[^2]，以便任何人都可以复制结果[^3]。
 
-两年之后，Linkerd 以及 Istio 都发布了多个更成熟的版本，两者的表现如何？这里，我们引用 Linkerd 基于 Kinvolk 模仿现实场景（延迟数据从客户端的角度测量，而不是内部的代理时间）。使用 Linkerd v2.11.1、Istio v1.12.0 从延迟、资源消耗的表现上来看这两款 ServiceMesh 产品的差异。
+两年之后，Linkerd 以及 Istio 都发布了多个更成熟的版本，两者的表现如何？这里，我们引用 Linkerd 基于 Kinvolk 模仿现实场景（延迟数据从客户端的角度测量，而不是内部的代理时间）。使用 Linkerd v2.11.1、Istio v1.12.0 从延迟、资源消耗的表现上来看这两款服务网格产品的差异。
 
 首先是延迟数据的表现，中位数（P50）延迟的表现 Linkerd 在 6ms 的基准延迟上增加了额外的 6ms 延迟，而 Istio的额外延迟为 15ms。值得注意的是在 P90 以上两者开始出现显著差异，最极端的 Max 数据表现上 Linkerd 在 25ms 的基准延迟上增加了额外的 25 ms 延迟，而 Istio 则额外增大了 5倍，高达 253 ms 的延迟。
 
@@ -71,7 +71,9 @@ Buoyant 第二代服务网格产品最初以 Conduit 命名，在 Conduit 加入
 	<p>Istio 与 Linkerd 资源消耗对比</p>
 </div>
 
-总结 Linkerd 和 Istio 在性能和资源成本上的巨大差异主要归结于 Linkerd2-proxy，这个微代理为 Linkerd 的整个数据平面提供动力，所以这个基准在很大程度上反映了 Linkerd2-proxy 和 Envoy 的性能和资源消耗对比。Linkerd2-proxy 虽然性能卓越，但语言过于小众，开源社区的 contributor 数量稀少，未选择实现 xDS 那么它的未来的发展也取决于 Linkerd 发展如何
+总结 Linkerd 和 Istio 在性能和资源成本上的巨大差异主要归结于 Linkerd2-proxy，这个微代理为 Linkerd 的整个数据平面提供动力，所以这个基准在很大程度上反映了 Linkerd2-proxy 和 Envoy 的性能和资源消耗对比。
+
+Linkerd2-proxy 虽然性能卓越，但语言过于小众，开源社区的 contributor 数量稀少（只有 53 人，Envoy 有 1,104 人），未选择实现 xDS 那么它的未来的发展也取决于 Linkerd 发展如何
 
 [^1]: 参见 https://github.com/linkerd/linkerd2
 [^2]: 参见 https://github.com/kinvolk/service-mesh-benchmark
