@@ -89,7 +89,7 @@ Kubernetes 在 v1.24 版本正式删除和弃用 dockershim，这件事情的本
 
 Kubernetes 从 1.10 版本宣布开始支持 containerd 1.1，在调用链中已经能够完全抹去 Docker Engine 的存在。此时，再观察 Kubernetes 到容器运行时的调用链，你会发现调用步骤会比通过 DockerShim、Docker Engine 与 containerd 交互的步骤要减少两步，用户只要愿意抛弃掉 Docker 情怀，在容器编排上便可至少省略一次 HTTP 调用，获得性能上的收益。
 
-从 Kubernetes 角度看，选择 containerd 作为运行时的组件，它调用链更短，组件更少，更稳定，占用节点资源更少，根据 Kubernetes 官方给出的测试数据[^1]，containerd1.1 相比当时的 Docker 18.03，Pod 的启动延迟降低了大约 20%，CPU 使用率降低了 68%，内存使用率降低了 12%，这是一个相当大的性能改善，对于云厂商非常有诱惑力。
+从 Kubernetes 角度看，选择 containerd 作为运行时的组件，调用链更短、更稳定、占用节点资源也更少。根据 Kubernetes 官方给出的测试数据[^1]，containerd1.1 对比 Docker 18.03：Pod 的启动延迟降低了大约 20%；CPU 使用率降低了 68%；内存使用率降低了 12%，这是一个相当大的性能改善。
 
 <div  align="center">
 	<img src="../assets/k8s-runtime-v4.svg" width = "100%"  align=center />
