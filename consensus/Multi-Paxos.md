@@ -49,11 +49,11 @@ Lamport 提出的选举方案是一种很简单的策略，这种方式系统存
 1. 阻止那些更老的还未完成的提案被选中
 2. 看看有没有已经被选中的值，如果有，提议者的提议就应该使用这个值
 
-优化 Prepare 阶段的前提要保证以上功能的完整性。第一点，我们可以通过改变提议序号的含义来解决这个问题，**将提议序号全局化，代表完整的日志 ，而不是为每个日志记录都保留独立的提议序号**。这样的话就只需要一次 prepare 请求就可以 prepare 所有的日志了。
+优化 Prepare 阶段的前提要保证上述功能的完整性。第一点，我们可以通过改变提议序号的含义来解决这个问题，**将提议序号全局化，代表完整的日志 ，而不是为每个日志记录都保留独立的提议序号**。这样的话就只需要一次 prepare 请求就可以 prepare 所有的日志了。
 
 关于第二点，需要拓展 Prepare 请求的返回信息，和之前一样，Prepare 还是会返回最大提案编号的 acceptedValue，除此之外，Acceptor 还会向后查看日志记录，如果要写的这个位置之后都是空的记录，没有接受过任何值，那么 Acceptor 就额外返回一个标志位 noMoreAccepted。
 
 后续，如果 Leader 接收到超过半数的 Acceptor 回复了 noMoreAccepted，那 Leader 就不需要发送 Prepare 请求了，直接发送 Accept 请求即可，这样只需要一轮 RPC。
 
-最后，把以上共识问题分解为 Leader Election、Entity Replication 和 Safety 三个问题来思考，解题思路即“Raft 算法” ，Diego Ongaro 和 John Ousterhout 在 2014 年 发表的题为《In Search of an Understandable Consensus Algorithm》的论文提出了 Raft 算法，并获得了 USENIX ATC 2014 大会的 Best Paper，后来更是成为 Etcd、Consul 等分布式程序的实现基础。
+最后，把上述共识问题分解为 Leader Election、Entity Replication 和 Safety 三个问题来思考，解题思路即“Raft 算法” ，Diego Ongaro 和 John Ousterhout 在 2014 年 发表的题为《In Search of an Understandable Consensus Algorithm》的论文提出了 Raft 算法，并获得了 USENIX ATC 2014 大会的 Best Paper，后来更是成为 Etcd、Consul 等分布式程序的实现基础。
 

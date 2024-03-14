@@ -50,8 +50,24 @@ Elasticsearch 在日志场景中的优势在于全文检索能力，快速从海
 
 ## ClickHouse
 
+一个流行的观点认为：如果你想要查询变得更快，最简单且有效的方法就是减少数据扫描范围和数据传输的大小。而列式存储和数据压缩就可以帮助我们实现上述两点。
+
+- 压缩的本质是按照一定步长对数据进行匹配扫描，当发现重复部分的时候就进行编码转换。数据中的重复项越多，则压缩率越高。 同一列字段的数据，因为拥有相同的数据类型和现实语义，重复项可能性自然更高。
+
+	- 下图为同一份日志在Elasticsearch, ClickHouse和ClickHouse(zstd)中的容量, 最终对比ES达到了 1:6。[^4]
+
+<div  align="center">
+	<img src="../assets/es-vs-clickhouse.png" width = "550"  align=center />
+	<p>B站 </p>
+</div>
+
+- 列式存储：
+
+
+
 MPP(Massively Parallel Processing，大规模并行处理)
 
+正如 ClickHouse 的宣传所言：其他的开源系统太慢、商用太贵，只有 ClickHouse 在成本与性能之间做到了良好平衡，又快还开源。ClickHouse 当之无愧的阐释了“在线”二字的含义，即便在复杂的查询场景下，它也能做到极快响应，且无需对数据进行任何预加工处理。
 
 
 ## 日志处理新贵 Loki 
@@ -90,3 +106,4 @@ Grafana slogan 中的 “Dashboard anything. Observe everything.” 这个anythi
 [^1]: 参见 https://grafana.com/grafana/plugins/data-source-plugins/
 [^2]: 参见 https://grafana.com/grafana/dashboards/
 [^3]: 参见 https://grafana.com/blog/2023/09/26/celebrating-grafana-10-top-10-oh-my-grafana-dashboard-moments-of-the-decade/
+[^4]: 参见 https://mp.weixin.qq.com/s/dUs7WUKUDOf9lLG6tzdk0g
