@@ -2,7 +2,7 @@
 
 :::tip <a/>
 
-Repair what you can — but when you must fail, fail noisily and as soon as possible.
+一个篮子装不下所有的鸡蛋，那么就多用几个篮子来装。 -- 分布式设计的基本思想。
 
 :::
 
