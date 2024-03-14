@@ -50,6 +50,8 @@ Elasticsearch 在日志场景中的优势在于全文检索能力，快速从海
 
 ## ClickHouse
 
+MPP(Massively Parallel Processing，大规模并行处理)
+
 
 
 ## 日志处理新贵 Loki 
