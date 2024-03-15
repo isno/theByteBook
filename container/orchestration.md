@@ -125,12 +125,12 @@ Pod 承担的另外一个重要职责是 - 作为调度的原子单位。
 
 当前集群环境的可用内存是这样一个情况：Node1：1.25G 内存，Node2：2G 内存。
 
-假如说现在没有 Pod 概念，就只有两个容器，这两个容器要紧密协作、运行在一台机器上。如果调度器先把 Nginx 调度到了 Node1 上面，LogCollector 实际上是没办法调度到 Node1 上的，因为资源不够，这一轮的调度失败，需要重新再发起调度。假如有几十台 Node，数百个、数千个容器，要避免系统因为外部流量压力、代码缺陷、软件更新等等原因出现的中断，那该如何设计编排系统呢？
+假如现在没有 Pod 概念，就只有两个亲密协同的容器，它们需要运行在一台机器上。如果调度器先把 Nginx 调度到了 Node1 上面，LogCollector 实际上是没办法调度到 Node1 上的，因为资源不够，这一轮的调度失败，需要重新再发起调度。假如有几十台 Node，数百个、数千个容器，要避免系统因为外部流量压力、代码缺陷、软件更新等等原因出现的中断，那么编排系统该如何高效的运作呢？
 
 - 在前面提到的 Mesos 系统中，它会先做资源囤积（resource hoarding），当所有设置了亲和性约束的任务都达到时，才开始统一调度，这是一个非常典型的成组调度的解法。这样也会带来新的问题，调度效率会损失，互相等待还有可能产生死锁。
 - 另一个做法是 Google Omega 系统中的做法，他们在论文《Omega: Flexible, Scalable Schedulers for Large Compute Clusters》[^1] 中介绍了如何使用通过乐观并发（Optimistic Concurrency）、冲突回滚的方式做到高效率，但方案无疑非常复杂。
 
-如果将运行资源的需求声明定义在 Pod 上，直接以 Pod 为最小的原子单位来实现调度的话，Pod 与 Pod 之间也不存在什么超亲密关系（想要联系，通过网络就可以了），复杂的协同的调度问题在 Kubernetes 中就直接消失了。
+将运行资源的需求声明定义在 Pod 上，直接以 Pod 为最小的原子单位来实现调度的话，Pod 与 Pod 之间也不存在什么超亲密关系（非亲密关系的容器在不同的 Pod 内，通过网络联系），复杂的协同的调度问题在 Kubernetes 中就直接消失了。
 
 ## 容器的设计模式 Sidecar
 
@@ -142,20 +142,20 @@ sidecar 设计模式允许你为你的应用程序增加一些功能，而不需
 
 ## Kubernetes 系统架构
 
-熟悉 Kubernetes 中最基本的 Pod 设计之后，我们再整理了解 Kubernetes 的架构设计，如下图所示，Kubernetes 架构由两部分组成：管理者被称为 Control Plane（控制平面）、被管理者称为 Node（节点）。
+此刻，我们概览 Kubernetes 的整个架构设计，如下图所示，架构由两部分组成：管理者被称为 Control Plane（控制平面，按照习惯称呼 Master 节点也没问题 ）、被管理者称为 Node（Work 节点）。
 
 <div  align="center">
 	<img src="../assets/k8s.png" width = "650"  align=center />
 	<p>图 Kubernetes 架构</p>
 </div>
 
-Control Plane 是集群管理者，在逻辑上只有一个。按照习惯称呼，我们也可把该计算机称之为 Master 节点。Control Plane 对节点进行统一管理，调度资源并操作 Pod，它的目标就是使得用户创建的各种 Kubernetes 对象按照其配置所描述的状态运行。它包含如下组件：
+Control Plane 是集群管理者，在逻辑上只有一个，它对 Node 节点进行统一管理，调度资源并操作 Pod，目标就是使得用户创建的各种 Kubernetes 对象按照其配置所描述的状态运行。它包含如下组件：
 
 - API Server： 操作 Kubernetes 各个资源的应用接口。并提供认证、授权、访问控制、API 注册和发现等机制。
 - Scheduler（调度器）：负责调度 Pod 到合适的 Node 上。例如，通过 API Server 创建 Pod 后，Scheduler 将按照调度策略寻找一个合适的 Node。
 - Controller Manager（集群控制器）：负责执行对集群的管理操作。例如，按照预期增加或者删除 Pod。
 
-Node 通常也被称为工作节点，可以有多个，用于运行 Pod 并根据 Control Plane 的命令管理各个 Pod，它包含如下组件：
+Node 通常也被称为工作节点，可以有多个，资源提供者，用于运行 Pod 并根据 Control Plane 的命令管理各个 Pod，它包含如下组件：
 
 - Kubelet 是 Kubernetes 在 Node 节点上运行的代理，负责所在 Node 上 Pod 创建、销毁等整个生命周期的管理。
 - Kube-proxy 在 Kubernetes 中，将一组特定的 Pod 抽象为 Service，Kube-proxy 通过维护节点上的网络规则，为 Service 提供集群内服务发现和负载均衡功能。
