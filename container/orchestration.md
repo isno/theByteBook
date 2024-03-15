@@ -9,16 +9,18 @@
 
 那么，容器是本质什么呢？其实本质就是个特殊的进程。
 
-特殊之处在于容器利用内核技术对进程的视图进行隔离（使用 namespace 技术），使用的资源进行限制（使用cgroups 技术）。使其仿佛独立占有所有资源，并拥有整个全局资源的假象。
+特殊之处在于容器利用 Linux namespaces 技术对进程的视图进行隔离，使用 cgroups 技术对进程使用的资源进行限制。这样，对进程而言仿佛独立占整个操作系统，拥有整个全局资源。
 
-:::tip Namespace(命名空间)
+:::tip Namespace(名称空间)
 
-Linux namespaces，由内核直接提供的全局资源封装，针对进程设计的访问隔离机制。
+Linux namespaces 是由内核直接提供的全局资源封装，针对进程设计的访问隔离机制。早期提出以及使用要追溯到贝尔实验室开发的一个名叫 Plan 9 的分布式操作系统。最初的目的是为了实现文件的隔离，并非为了容器而设计。
 
-早期提出以及使用要追溯到贝尔实验室开发的一个名叫 Plan 9 的分布式操作系统。最初的目的是为了实现文件的隔离，并非为了容器而设计。最开始 Linux 内核 2.4.19 引入了 Mount ，后来系统其他资源隔离的呼声愈发强烈，Linux 内核从 2.6.19 起陆续添加了 UTS、IPC、PID、Network 等 namespace 隔离功能。到 Linux 3.8，又增加了 User namespace。至此，Docker 以及其他容器技术所用到的 namespace 已全部就绪。
+最开始 Linux 内核 2.4.19 引入了 Mount 名称空间，后来系统其他资源隔离的呼声愈发强烈，Linux 内核从 2.6.19 起陆续添加了 UTS、IPC、PID、Network 等 名称空间隔离。到 Linux 3.8，又增加了 User 名称空间。
+
+至此，Docker、LXC 等容器技术所用到的名称空间全部就绪。
 :::
 
-表 7-1 Linux 目前支持的八类命名空间
+表 7-1 Linux 目前支持的八类名称空间
 
 | 名称空间 | 隔离内容 | 内核版本|
 |:--|:--|:--|
@@ -31,14 +33,14 @@ Linux namespaces，由内核直接提供的全局资源封装，针对进程设�
 | Cgroup| 使进程拥有一个独立的 cgroup 控制组 | 4.6 |
 | Time| 隔离系统时间 | 5.6 |
 
-使用 Namespace 也非常简单，Linux 系统中创建线程的系统调用 clone 的一个可选参数，clone 定义如下：
+使用名称空间也非常简单，Linux 系统中创建线程的系统调用 clone 的一个可选参数，clone 定义如下：
 ```
 int clone(int (*fn)(void *), void *child_stack,
          int flags, void *arg, ...
          /* pid_t *ptid, struct user_desc *tls, pid_t *ctid */ );
 ```
 
-其中 flags 参数可指定以上命名空间，而返回值就是新进程的 PID。
+其中 flags 参数可指定以上名称空间，而返回值就是新进程的 PID。
 
 如下代码，创建一个新的进程，指定 flags 参数为 CLONE_NEWPID。
 
@@ -46,7 +48,7 @@ int clone(int (*fn)(void *), void *child_stack,
 int pid = clone(main_function, stack_size, CLONE_NEWPID | SIGCHLD, NULL); 
 ```
 
-这时，新创建的这个进程将会“看到”一个全新的进程空间，在这个进程空间里，它的 PID 是 1。如果再补充 Mount 以及 Network 命名空间，那么进程就只能看到各自 Mount Namespace 里挂载的目录和文件，只能访问到各自 Network Namespace 里的网络设备，就仿佛运行在一个个“容器”里面，与世隔绝。
+这时，新创建的这个进程将会“看到”一个全新的进程空间，在这个进程空间里，它的 PID 是 1。如果再补充 Mount 以及 Network 名称空间，那么进程就只能看到各自 Mount 名称空间里挂载的目录和文件，只能访问到各自 Network 名称空间里的网络设备，就仿佛运行在一个个“容器”里面，与世隔绝。
 
 进程的视图隔离已经完成，如果再对使用资源进行限制，那么就能对进程的运行环境实现一个进乎完美的隔离。这就要用 Linux 内核的第二项技术： Linux Control Cgroup，即 cgroups。
 
@@ -85,11 +87,11 @@ $ pstree -g
 
 ## 超亲密容器组
 
-Kubernetes 中这个设计叫做 Pod，Pod 是一组紧密关联的容器集合，它们共享 IPC、Network、UTS 等命名空间，是 Kubernetes 调度的基本单位。
+Kubernetes 中这个设计叫做 Pod，Pod 是一组紧密关联的容器集合，它们共享 IPC、Network、UTS 等名称空间，是 Kubernetes 调度的基本单位。
 
 容器之间原本是被 Linux Namespace 和 cgroups 隔开的，Pod 第一个要解决的问题是怎么去打破这个隔离，让 Pod 内的容器可以像进程组一样天然的共享资源和数据。
 
-Kubernetes 中使用 Infra Container 解决这个问题。Infra Container 是整个 Pod 中第一个启动的容器，只有几百 KB 大小，它负责申请容器组的 UTS、IPC、网络等名称空间，Pod 中的其他容器通过 setns（Linux 系统调用，把进程加入到某个命名空间中） 方式共享父容器的命名空间。
+Kubernetes 中使用了一个特殊的容器（Infra Container）解决这个了问题。Infra Container 是整个 Pod 中第一个启动的容器，只有几百 KB 大小，它负责申请容器组的 UTS、IPC、网络等名称空间，Pod 内其他容器通过 setns（Linux 系统调用，把进程加入到某个名称空间中）方式共享 Infra Container 容器的命名空间。
 
 :::tip 额外知识
 Infra Container 启动之后，永远处于 Pause 状态，所以也常被称为“pause 容器”。
@@ -101,21 +103,20 @@ Infra Container 启动之后，永远处于 Pause 状态，所以也常被称为
   <p>图 Kubernetes 架构</p>
 </div>
 
-此刻，同一Pod内的容器共享以下命名空间：
+此时，同一 Pod 内的容器共享以下名称空间：
 
 - **UTS 名称空间**：所有容器都有相同的主机名和域名。
 - **网络名称空间**：所有容器都共享一样的网卡、网络栈、IP 地址等。同一个 Pod 中不同容器占用的端口不能冲突（这也是 Kubernetes 中 endpoint 的由来）。
 - **IPC 名称空间**：所有容器都可以通过信号量或者 POSIX 共享内存等方式通信。
 - **时间名称空间**：所有容器都共享相同的系统时间。
 
-同一个 Pod 的容器，只有 PID 名称空间和文件名称空间默认是隔离的。这是因为容器之间也需要相互独立的文件系统以避免冲突，PID 的隔离令每个容器都有独立的进程 ID 编号。如果容器之间想要想要实现文件共享，使用共享存储卷即可，这也是 Kubernetes Volume 的由来。
+不过 PID 名称空间和文件名称空间默认还是隔离的，这是因为容器之间也需要相互独立的文件系统以避免冲突。如果容器之间想要想要实现文件共享，使用共享存储卷即可，这也是 Kubernetes Volume 的由来。
 
-如果要共享 PID namespace，需要设置 PodSpec 中的 ShareProcessNamespace 为 true，如下所示。
+PID 的隔离令每个容器都有独立的进程 ID 编号，如果要共享 PID 名称空间，需要设置 PodSpec 中的 ShareProcessNamespace 为 true，如下所示。
 ```
 spec:
   shareProcessNamespace: true
 ```
-
 
 ## Pod 是原子调度单位
 
@@ -123,14 +124,16 @@ Pod 承担的另外一个重要职责是 - 作为调度的原子单位。
 
 协同调度是非常麻烦的事情，举个例子说明，假如有两个亲和性容器：第一个容器 Nginx（资源需求 1G 内存） 接收请求，并将请求写入日志文件，第二个容器 LogCollector（资源需求 0.5 G 内存），它会把 Nginx 容器写的日志文件转发到后端的 ElasticSearch 中。
 
-当前集群环境的可用内存是这样一个情况：Node1：1.25G 内存，Node2：2G 内存。
+当前集群环境的可用内存是这样一个情况：Node1 1.25G 内存，Node2 2G 内存。
 
 假如现在没有 Pod 概念，就只有两个亲密协同的容器，它们需要运行在一台机器上。如果调度器先把 Nginx 调度到了 Node1 上面，LogCollector 实际上是没办法调度到 Node1 上的，因为资源不够，这一轮的调度失败，需要重新再发起调度。假如有几十台 Node，数百个、数千个容器，要避免系统因为外部流量压力、代码缺陷、软件更新等等原因出现的中断，那么编排系统该如何高效的运作呢？
 
-- 在前面提到的 Mesos 系统中，它会先做资源囤积（resource hoarding），当所有设置了亲和性约束的任务都达到时，才开始统一调度，这是一个非常典型的成组调度的解法。这样也会带来新的问题，调度效率会损失，互相等待还有可能产生死锁。
+有两个比较典型的方案：
+
+- 前面提到的 Mesos 系统中，它会先做资源囤积（resource hoarding），当所有设置了亲和性约束的任务都达到时，才开始统一调度，这是一个非常典型的成组调度的解法。这样也会带来新的问题，调度效率会损失，互相等待还有可能产生死锁。
 - 另一个做法是 Google Omega 系统中的做法，他们在论文《Omega: Flexible, Scalable Schedulers for Large Compute Clusters》[^1] 中介绍了如何使用通过乐观并发（Optimistic Concurrency）、冲突回滚的方式做到高效率，但方案无疑非常复杂。
 
-将运行资源的需求声明定义在 Pod 上，直接以 Pod 为最小的原子单位来实现调度的话，Pod 与 Pod 之间也不存在什么超亲密关系（非亲密关系的容器在不同的 Pod 内，通过网络联系），复杂的协同的调度问题在 Kubernetes 中就直接消失了。
+将运行资源的需求声明定义在 Pod 上，直接以 Pod 为最小的原子单位来实现调度的话，Pod 与 Pod 之间也不存在什么超亲密关系（非亲密关系的容器在不同的 Pod 内，通过网络联系），复杂的协同调度设计在 Kubernetes 中直接消失了。
 
 ## 容器的设计模式 Sidecar
 
