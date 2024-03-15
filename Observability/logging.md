@@ -50,6 +50,10 @@ Elasticsearch 在日志场景中的优势在于全文检索能力，快速从海
 
 ## ClickHouse
 
+:::tip ClickHouse
+ClickHouse® is an open-source **column-oriented** database management system that allows generating analytical data reports in **real-time**.
+:::
+
 一个流行的观点认为：如果你想要查询变得更快，最简单且有效的方法就是减少数据扫描范围和数据传输的大小。而列式存储和数据压缩就可以帮助我们实现上述两点。
 
 - 压缩的本质是按照一定步长对数据进行匹配扫描，当发现重复部分的时候就进行编码转换。数据中的重复项越多，则压缩率越高。 同一列字段的数据，因为拥有相同的数据类型和现实语义，重复项可能性自然更高。
