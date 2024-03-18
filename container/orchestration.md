@@ -17,23 +17,12 @@
 
 从字面上，“Container” 这个词，确实很难让人形象地理解其真正含义，容器编排生态中的另外一个词 “Pod” 也是如此。仅看一些概念性的解释并不能给我们清晰的认识。为了尽可能深入理解容器，我们沿用惯例，从历史的起源讲起。
 
-## chroot
+## 最古老的容器技术
 
-chroot 是最古老最简单的容器化软件
-:::tip chroot
-
-经由chroot设定根目录的程序，它不能够对这个指定根目录之外的文件进行访问动作，不能读取，也不能更改它的内容。
-
-:::
-
-**使用 chroot（切换根目录） 可以更改当前正在运行的进程及其子进程的根目录。**，调用 chroot 命令后，后续命令将针对新根目录 ”/“ 运行。
-
-<div  align="center">
-  <img src="../assets/chroot.png" width = "350"  align=center />
-  <p>图 chroot</p>
-</div>
+1979 年，Unix 系统引入了一个革命性的技术 -- chroot（chang root）。这个命令允许管理员将进程的根目录锁定在指定的位置，从而可以有效的限制该进程访问的文件系统范围，实现了基本的文件系统隔离。这种隔离能力对安全性至关重要，比如创建一个隔离环境，用来安全地运行和监控可疑的代码或者程序，因此 chroot 之后的环境也被形象地称为监狱（jail）。
 
 仅需几步，就能运行自己的 chroot 环境。
+
 ```
 $ mkdir -p $HOME/{bin,lib64,root}
 $ cp /bin/bash new-root/bin
@@ -43,10 +32,16 @@ $ sudo chroot new-root
 
 上面是首先创建一个新的根目录，然后将 Bash shell 以及依赖项复制并运行 chroot。这个 jail 的用处不大，只有 bash 以及内置的函数，例如 cd、pwd 等。
 
+<div  align="center">
+  <img src="../assets/chroot.png" width = "350"  align=center />
+  <p>图 chroot</p>
+</div>
+
 
 在经过 chroot 之后，系统读取到的目录和文件将不在是旧系统根下的而是新根下 
 
 
+除了 /bin 之外，程序依赖的还有 /etc，/proc 等等
 
 **最完整的依赖库实际上就是操作系统本身的所有文件和目录**。
 
