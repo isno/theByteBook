@@ -1,6 +1,16 @@
 # 7.3 离完美还只差一步
 
 
+
+```
+$ mkdir -p $HOME/{bin,lib64,root}
+$ cp /bin/bash new-root/bin
+$ cp /lib64/{ld-linux-x86-64.so*,libc.so*,libdl.so.2,libreadline.so*,libtinfo.so*} new-root/lib64
+$ sudo chroot new-root
+
+```
+我们在子进程的 shell 里面输入 top、ps 等命令，还是可以看到所有的进程，
+
 最完整的依赖库实际上就是操作系统本身的所有文件和目录。
 
 
@@ -10,10 +20,18 @@
 
 这个挂载操作系统是无感知的额，那可想而知，只要在进程启动之间挂载整个根目录 /，就可以让容器随意折腾而不影响宿主机。
 
+对 Docker 项目来说，它最核心的原理实际上有以下三点：
 
 - 创建一个新的 mount namespace
 - 在新的 mount namespace 中，挂载需要的文件系统。例如 /etc、/bin、/proc
-- 使用chroot()系统调用将进程的根目录更改为新的根目录
+- 使用 chroot() 系统调用将进程的根目录更改为新的根目录
+
+这样，一个完整的容器就诞生了。
+
+需要明确的是，rootfs 只是一个操作系统所包含的文件、配置和目录，并不包括操作系统内核。
+
+Docker 公司在实现 Docker 镜像时并没有沿用以前制作 rootfs 的标准流程，而是做了一个小小的创新
+
 
 
 
