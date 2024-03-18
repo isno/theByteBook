@@ -17,7 +17,6 @@
 
 
 
-
 在 Linux 系统中，提供了 chroot 命名实现这个功能，它专门用于将当前进程的根目录更改到指定目录。
 
 比如刚才的容器 “/bin/sh” ，我们可以通过 chroot $certain_path /bin/bash 来指定根目录为 $certain_path。

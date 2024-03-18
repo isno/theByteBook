@@ -1,6 +1,6 @@
 # 8.2 服务间通信的演化
 
-本节，笔者借用 Phil Calçado 的博客《Pattern: Service Mesh》中的内容脉络，并加以我的理解，尝试从服务间通信层面说清楚 Service Mesh 的本质以及诞生的必然性。本节内容图片来源于 Phil Calçado 的博客，在此统一注明，后面不再单独列出。
+本节，笔者借用 Kong CTO Phil Calçado 撰文《Pattern: Service Mesh》中的内容脉络，并加以我的理解，从服务间通信层面说清楚 Service Mesh 的本质以及诞生的必然性。本节内容图片来源于 Phil Calçado 的博客，在此统一注明，后面不再单独列出。
 
 ## 原始的通信时代
 
