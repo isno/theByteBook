@@ -111,6 +111,12 @@ bash-4.2# echo $$
 
 与 mount proc 类似，如果将 sys 进行挂载，也能看到所有的设备，比如网卡：
 
+```
+$ mount -t sysfs sys /sys
+$ ls /sys/class/net
+docker0  eth0  lo
+```
+
 因此，缺少隔离和具备离开监狱的能力，就会导致许多与安全相关的问题。如何解决这个问题呢？ 这就是要介绍的 Linux 名称空间的能力了。
 
 
