@@ -257,8 +257,8 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/container/Container-Orchestration-Wars.md',
-                    '/container/orchestration.md',
                     '/container/API.md',
+                    '/container/orchestration.md',
                     '/container/runtime.md',
                     {
                         text: '7.5 容器间网络',

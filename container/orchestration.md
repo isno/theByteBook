@@ -1,4 +1,4 @@
-# 7.2 以容器构建系统
+# 7.2 从 Container 到 Pod
 
 我们思考一下：“容器到底是什么？”。
 
@@ -151,28 +151,44 @@ int pid = clone(main_function, stack_size, flags | SIGCHLD, NULL);
 
 新创建的这个进程将会“看到”一个全新的进程空间，在这个进程空间里，它的 PID 是 1，只能看到各自 Mount 名称空间里挂载的目录和文件，只能访问到各自 Network 名称空间里的网络设备。
 
-进程的资源视图隔离已经完成，如果再对使用资源进行额度限制，那么就能对进程的运行环境实现一个进乎完美的隔离。这就要用 Linux 内核的第二项技术： Linux Control Cgroup，即 cgroups。
+进程的资源视图隔离已经完成，如果再对使用资源进行额度限制，那么就能对进程的运行环境实现一个进乎完美的隔离。这就要用 Linux 内核的第二项技术： Linux Control Cgroup（控制群组），简称 cgroups。
 
-:::tip cgroups
+:::tip cgroups（控制群组）
 
-cgroups 是一种内核级别的资源管理机制，最早由 Google 工程师在 2007年提出，它主要的作用就是限制一个进程组所使用的资源上限。
+cgroups 是一种内核级别的资源管理机制，可以实现对 Linux 进程或者进程组的资源限制、隔离和统计功能，最早由 Google 工程师 Paul Menage 和 Rohit Seth 在 2006年发起，在 2008年 合并到 2.6.24 版内核后正式对外发布，这一阶段的 cgroups 被称为第一代 cgroups。
 
-Linux 系统中，cgroups 通过内核文件系统操作接口暴露出来，可以通过 /sys/fs/cgroup 查看系统支持的被限制的资源种类。
+2016年3月发布的 Linux 内核4.5版本中，搭载了由 Facebook 工程师 Tejun Heo 重新编写的 “第二代cgroups”，相较于 v1版本，Facebook 工程师编写的 cgroups 提供了更加统一的资源控制接口，使得对于CPU、内存、I/O等资源的限制更加一致和统一。不过由于兼容性和稳定性原因，目前多数容器运行时默认使用的是 第一代 cgroups。
+
+cgroups 通过内核文件系统操作接口（cgroupfs）暴露出来，可以
 :::
 
-设置 cgroups 的逻辑比较简单，基本上就是创建 cgroup 目录， 以及往 cgroups 配置文件写入配置。
+通过 /sys/fs/cgroup 查看系统支持的被限制的资源种类。
+
+| 控制群组子系统 | 功能|
+|:--|:--|
+|blkio | 控制并监控 cgroup 中的任务对块设备(例如磁盘、USB 等) I/O 的存取 |
+| cpu | 控制 cgroups 中进程的 CPU 占用率 |
+|cpuacct| 自动生成报告来显示 cgroup 中的进程所使用的 CPU 资源 |
+| cpuset| 可以为 cgroups 中的进程分配独立 CPU 和内存节点 |
+|devices | 控制 cgroups 中进程对某个设备的访问权限|
+|freezer | 暂停或者恢复 cgroup 中的任务 |
+| memory | 自动生成 cgroup 任务使用内存资源的报告，并限定这些任务所用内存的大小 |
+|net_cls | 使用等级识别符（classid）标记网络数据包，这让 Linux 流量管控器（tc）可以识别从特定 cgroup 中生成的数据包 ，可配置流量管控器，让其为不同 cgroup 中的数据包设定不同的优先级|
+| net_prio | 可以为各个 cgroup 中的应用程序动态配置每个网络接口的流量优先级 |
+|perf_event | 允许使用 perf 工具对 crgoups 中的进程和线程监控|
+
+设置 cgroups 的逻辑比较简单，基本上就是创建 cgroup 目录，以及往 cgroups 配置文件写入配置。
 
 ```
 /sys/fs/cgroup/memory/$hostname/memory.limit_in_bytes=1GB // 容器进程及其子进程使用的总内存不超过 1GB
 /sys/fs/cgroup/cpu/$hostname/cpu.shares=256 // CPU 总 slice 是 1024，因此限制进程最多只能占用 1/4 CPU 时间
 
 echo 3892 > /sys/fs/cgroup/cpu/$hostname/tasks 
-
 ```
 
 最后则是将进程 PID 写入 tasks 文件里，配置生效。CPU 最配只能最多使用 25%；
 
-由此可见，容器不是轻量化的虚拟机，也没有创造出真正的沙盒（容器之间共享系统内核，这也是为什么又出现了 kata、gVisor 等内核隔离的沙盒容器），只是使用了名称空间、cgroups 等技术进行资源隔离、限制以及拥有独立 rootfs 的特殊进程。
+行文至此，相信读者们也一定理解容器是什么，容器不是轻量化的虚拟机，也没有创造出真正的沙盒（容器之间共享系统内核，这也是为什么又出现了 kata、gVisor 等内核隔离的沙盒容器），只是使用了名称空间、cgroups 等技术进行资源隔离、限制以及拥有独立 rootfs 的特殊进程。
 
 ## 设计容器协作的方式
 
