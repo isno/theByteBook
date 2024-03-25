@@ -332,14 +332,8 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
-                    '/GitOps/GitOps.md',
+                    '/GitOps/what-is-GitOps.md',
                     '/GitOps/AoneFlow.md',
-                    {
-                        text: "基础设施即代码",
-                        link: '/GitOps/IaC.md',
-                        children: [
-                        ]
-                    },
                     '/GitOps/CICD.md',
                     {
                         text: "持续集成",
