@@ -162,42 +162,49 @@ overlay on / type overlay (rw,relatime,lowerdir=/var/lib/docker/overlay2/l/JZMUX
 
 ## 镜像启动加速
 
-SUSE 的工程师 Aleksa Sarai 也专门写过一篇文章 来讨论这个话题，除了 tar 格式本身的标准化问题外，大家对当前的镜像的主要不满集中在
+实际上，容器的运行期间整个镜像并不会被充分利用，Cern 在《Making containers lazy with Docker and CernVM-FS》的论文中就提到[^2]，一般镜像只有 6% 的内容会被实际用到。
 
-- **内容冗余**：不同层之间相同信息在传输和存储时都是冗余内容，在不读取内容的时候无法判断到这些冗余的存在。
-- **无法并行**：单一层是一个整体，对同一个层既无法并行传输，也不能并行提取。
-- **无法进行小块数据的校验** 只有完整的层下载完成之后，才能对整个层的数据做完整性校验。
+如果能实现一种按需加载的新型镜像架构，自然能对镜像存储利用率、容器的启动速度极为有益。这就是 Nydus 出现的背景。
 
-上述这些问题核心是镜像的基本单位是 layer。但实际上，容器的运行整个镜像并不会被充分利用，然而，镜像的数据的实际使用率是很低的，Cern 在《Making containers lazy with Docker and CernVM-FS》的论文中就提到[^2]，一般镜像只有 6% 的内容会被实际用到。为了解决上面这些问题，我们就考虑实现一种新型的镜像结构，对镜像存储利用率、启动速度等更进一步优化，而这些就是 Nydus 要做的工作。
+:::tip Nydus 是什么
+Nydus 是蚂蚁集团，阿里云和字节等共建的开源容器镜像加速项目，是 CNCF Dragonfly 的子项目，Nydus 在 OCI Image Spec 基础上重新设计了镜像格式和底层文件系统，从而加速容器启动速度，提高大规模集群中的容器启动成功率。
 
+:::
 
-Nydus 是阿里云发起的基于延迟加载原理的镜像加速项目，配合 Dragonfly 做 P2P 加速，能够极大缩短镜像下载时间、提升效率，从而让用户能够更安全快捷地启动容器应用。
-
-Nydus 提供了容器镜像按需加载的能力，在生产环境支撑了每日百万级别的加速镜像容器创建，在启动性能，镜像空间优化，端到端数据一致性，内核态支持等方面相比 OCIv1 有巨大优势。Nydus 符合 OCI 标准，与 containerd、CRI-O、Kata-containers 等流行的运行时有良好的兼容性。
+Nydus 主要包含一个新的镜像格式，和一个负责解析容器镜像的 FUSE 用户态文件系统进程，它的架构如下。
 
 <div  align="center">
-	<img src="../assets/nydus.png" width = "550"  align=center />
+	<img src="../assets/Nydus-arch.webp" width = "550"  align=center />
 </div>
 
-Nydus 镜像格式并没有对 OCI 镜像格式在架构上进行修改，主要优化了其中的 Layer 数据层的数据结构。Nydus 将原本统一存放在 Layer 层的文件数据和元数据 （文件系统的目录结构、文件元数据等） 分开，分别存放在 `Blob Layer` 和 `Bootstrap Layer` 中。并对 `Blob Layer` 中存放的文件数据进行分块，以便于延迟加载 （在需要访问某个文件时，只需要拉取对应的 Chunk 即可，不需要拉取整个 Blob Layer） 。
+Nydus 镜像格式并没有对 OCI 镜像格式在架构上进行修改，主要优化了其中的 Layer 数据层的数据结构。
+
+Nydus 将原本统一存放在 Layer 层的文件数据和元数据 （文件系统的目录结构、文件元数据等） 分开，分别存放在 `Blob Layer` 和 `Bootstrap Layer` 中。并对 `Blob Layer` 中存放的文件数据进行分块，以便于延迟加载 （在需要访问某个文件时，只需要拉取对应的 Chunk 即可，不需要拉取整个 Blob Layer） 。
 
 同时，这些分块信息，包括每个 Chunk 在 Blob Layer 的位置信息等也被存放在 Bootstrap Layer 这个元数据层中。这样，容器启动时，仅需拉取 Bootstrap Layer 层，当容器具体访问到某个文件时，再根据 Bootstrap Layer 中的元信息拉取对应 Blob Layer 中的对应的 Chunk 即可。
 
-用户部署了 Nydus 镜像服务后，由于使用了按需加载镜像数据的特性，容器的启动时间明显缩短。在官网的测试数据中，Nydus 能够把常见镜像的启动时间，从数分钟缩短到数秒钟。理论上来说，容器镜像越大，Nydus 体现出来的效果越明显。
+<div  align="center">
+	<img src="../assets/nydus.png" width = "550"  align=center />
+	<p>Nydus 工作流程</p>
+</div>
+
+
+用户部署了 Nydus 镜像服务后，由于使用了按需加载镜像数据的特性，容器的启动时间明显缩短。在官网的测试数据中，Nydus 能够把常见镜像的启动时间，从数分钟缩短到数秒钟。
 
 <div  align="center">
 	<img src="../assets/nydus-performance.png" width = "550"  align=center />
 </div>
 
 
-##  Dragonfly
+## 镜像下载加速
 
-容器云平台达到一定规模之后，镜像分发就可能成为整个平台的性能瓶颈。举例说明：在生产实践中，较大尺寸的容器镜像有多方面的问题（见过 12G 的镜像文件），其一影响容器启动效率，其二在应对瞬时高峰启动几百、几千 Pod 时，受带宽、镜像仓库服务瓶颈等影响，会存在较长的耗时。笔者见过多次所有的环节准备完毕，唯独遗漏了镜像下载服务，有时候甚至流量高峰已过，集群还没有扩展完毕。
-
-如果你也有过此类的困扰，那么可以看看 Dragonfly。
-
+:::tip 什么是 Dragonfly
 
 Dragonfly 是阿里巴巴开源的容器镜像分发系统，目标是解决容器镜像分发效率低下和镜像共享依赖公共镜像仓库等问题。它的核心思想是基于 P2P 的镜像分发模型，以提高镜像传输速度和并发性，减少公共镜像仓库的依赖。
+
+:::
+
+容器云平台达到一定规模之后，镜像分发就可能成为整个平台的性能瓶颈。举例说明：在生产实践中，较大尺寸的容器镜像有多方面的问题（见过 12G 的镜像文件），其一影响容器启动效率，其二在应对瞬时高峰启动几百、几千 Pod 时，受带宽、镜像仓库服务瓶颈等影响，会存在较长的耗时。
 
 
 Dragonfly 是一种无侵入的解决方案，并不需要修改 Docker 等源码，下图为 Dragonfly 的架构图，在每一个节点上会启动一个 dfdaemon 和 dfget, dfdaemon 是一个代理程序，他会截获 dockerd 上传或者下载镜像的请求，dfget 是一个下载客户端工具。每个 dfget 启动后 将自己注册到 supernode 上。supernode 超级节点以被动 CDN 的方式产生种子数据块，并调度数据块分布。
@@ -205,14 +212,6 @@ Dragonfly 是一种无侵入的解决方案，并不需要修改 Docker 等源�
 <div  align="center">
 	<img src="../assets/dragonfly.png" width = "550"  align=center />
 </div>
-
-通过镜像加速下载的场景，解析其中运作原理：
-
-- dfget-proxy 拦截客户端 docker 发起的镜像下载请求（docker pull）并转换为向 SuperNode 的 dfget 下载请求。
-- SuperNode 从镜像源仓库下载镜像并将镜像分割成多个 block 种子数据块。
-- dfget 下载数据块并对外共享已下载的数据块，SuperNode 记录数据块下载情况，并指引后续下载请求在结点之间以 P2P 方式进行数据块下载。
-- dfdaemon 将将镜像分片文件组成完整的镜像。
-
 
 [^1]: 参见 https://www.cyphar.com/blog/post/20190121-ociv2-images-i-tar
 [^2]: 参见 https://indico.cern.ch/event/567550/papers/2627182/files/6153-paper.pdf
