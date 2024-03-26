@@ -198,20 +198,28 @@ Nydus 将原本统一存放在 Layer 层的文件数据和元数据 （文件系
 
 ## 镜像下载加速
 
+我们知道镜像文件是从远程仓库下载而来，镜像下载的效率会受带宽、镜像仓库服务瓶颈的影响。那如何提高镜像下载的效率？你一定能想到 P2P 网络加速。而 Dragonfly 就是基于这一网络模型的容器镜像分发系统。
+
 :::tip 什么是 Dragonfly
 
-Dragonfly 是阿里巴巴开源的容器镜像分发系统，目标是解决容器镜像分发效率低下和镜像共享依赖公共镜像仓库等问题。它的核心思想是基于 P2P 的镜像分发模型，以提高镜像传输速度和并发性，减少公共镜像仓库的依赖。
+Dragonfly 是一款基于 P2P 技术的文件分发和镜像加速系统，它旨在提高大规模文件传输的效率，最大限度地利用网络带宽。在镜像分发、文件分发、日志分发、AI 模型分发以及 AI 数据集分发等领域被大规模使用。
 
+目前 Dragonfly 在 CNCF 托管作为孵化级项目。
 :::
 
-容器云平台达到一定规模之后，镜像分发就可能成为整个平台的性能瓶颈。举例说明：在生产实践中，较大尺寸的容器镜像有多方面的问题（见过 12G 的镜像文件），其一影响容器启动效率，其二在应对瞬时高峰启动几百、几千 Pod 时，受带宽、镜像仓库服务瓶颈等影响，会存在较长的耗时。
+Dragonfly 并不需要修改 Docker 等源码，它提供了一种无侵入的解决方案，运行流程如下图所示。当下载一个镜像或文件时，通过 Peer（类似 p2p 的节点） 的 HTTP Proxy 将下载请求代理到 Dragonfly。Peer 首先会 Scheduler（类似 p2p 调度器）注册 task。Scheduler 会查看 Task 的信息，判断 Task 是否在 P2P 集群内第一次下载
 
+- 第一次下载优先触发 Seed Peer 进行回源下载，并且下载过程中对 Task 基于 Piece 级别切分。Peer 每下载成功一个 Piece， 会将信息上报给 Scheduler 供下次调度使用。
+- 如果 Task 在 P2P 集群内非第一次下载，那么 Scheduler 会调度其他 Peer 给当前 Peer 下载。
 
-Dragonfly 是一种无侵入的解决方案，并不需要修改 Docker 等源码，下图为 Dragonfly 的架构图，在每一个节点上会启动一个 dfdaemon 和 dfget, dfdaemon 是一个代理程序，他会截获 dockerd 上传或者下载镜像的请求，dfget 是一个下载客户端工具。每个 dfget 启动后 将自己注册到 supernode 上。supernode 超级节点以被动 CDN 的方式产生种子数据块，并调度数据块分布。
+Peer 从不同的 Peer 下载 Piece，拼接并返回整个文件，那么 P2P 下载就完成了。
 
 <div  align="center">
 	<img src="../assets/dragonfly.png" width = "550"  align=center />
+	<p>Dragonfly 怎么运行的</p>
 </div>
+
+如此，使用 P2P 的方式解决密集的镜像下载问题，实现瞬时启动几百、几千 Pod 的能力，这样的弹性在生产环境中（瞬时高峰、无损迁移）才能发挥更大的作用。
 
 [^1]: 参见 https://www.cyphar.com/blog/post/20190121-ociv2-images-i-tar
 [^2]: 参见 https://indico.cern.ch/event/567550/papers/2627182/files/6153-paper.pdf
