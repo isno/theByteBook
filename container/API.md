@@ -29,7 +29,7 @@ Kubernetes 的核心在于提供了一种标准的编程接口（API）用来定
 
 提供一套跨厂商的标准结构和语义来声明核心基础设施（pod/service/volume/serviceaccount...）是 Kubernetes 成功的基础。在此基础上，它又通过 CRD 将这个结构扩展到任何/所有基础设施资源。
 
-:::tip CRD
+:::tip 什么是 CRD
 
 CRD（Custom Resource Define，自定义资源）是 Kubernetes（v1.7+）为提高可扩展性，让开发者去自定义资源的一种方式。CRD 资源可以动态注册到集群中，注册完毕后，用户可以通过 kubectl 来创建访问这个自定义的资源对象，类似于操作 Pod 一样。不过需要注意的是 CRD 仅仅是资源的定义而已，还需要编写 Controller 去监听 CRD 的各种事件来实现自定义的业务逻辑。
 

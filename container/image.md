@@ -1,4 +1,4 @@
-# 7.3 容器镜像的原理与生态
+# 7.3 容器镜像的进化
 
 对于 Docker 一类的容器来说，它最核心的原理实际上就以下三点：
 
@@ -152,53 +152,15 @@ overlay on / type overlay (rw,relatime,lowerdir=/var/lib/docker/overlay2/l/JZMUX
 如此，Docker 镜像 分发更快、存储更少、加载更快。
 
 
-之前讲到的 OCI 镜像规范 oci image format spec，规定了对于符合规范的镜像，允许开发者只要对容器打包和前面一次，就可以在所有的容器引擎中运行该容器。
-
-镜像层和运行时配置各自有一个唯一 Hash，这些 Hash 会被写进一个叫 Manifest 的 JSON 文件里，在 Pull 镜像时实际就是先拉取 Manifest 文件，然后再根据 Hash 去 Registry 拉取对应的镜像层/容器运行时配置。
+OCIv1 格式是一种基于 Docker Image Manifest Version 2 Schema 2 格式的镜像格式规范，由 manifest、镜像索引 (optional)、一系列容器镜像层及配置文件组成，本质上说 OCI 镜像是一个以层为基本单位的镜像格式，每个层存储了文件级别的 diff data，以 tgz 归档格式存储，如下所示。
 
 <div  align="center">
   <img src="../assets/oci-image.png" width = "200"  align=center />
 </div>
 
-## 镜像启动加速
-
-实际上，容器的运行期间整个镜像并不会被充分利用，Cern 在《Making containers lazy with Docker and CernVM-FS》的论文中就提到[^2]，一般镜像只有 6% 的内容会被实际用到。
-
-如果能实现一种按需加载的新型镜像架构，自然能对镜像存储利用率、容器的启动速度极为有益。这就是 Nydus 出现的背景。
-
-:::tip Nydus 是什么
-Nydus 是蚂蚁集团，阿里云和字节等共建的开源容器镜像加速项目，是 CNCF Dragonfly 的子项目，Nydus 在 OCI Image Spec 基础上重新设计了镜像格式和底层文件系统，从而加速容器启动速度，提高大规模集群中的容器启动成功率。
-
-:::
-
-Nydus 主要包含一个新的镜像格式，和一个负责解析容器镜像的 FUSE 用户态文件系统进程，它的架构如下。
-
-<div  align="center">
-	<img src="../assets/Nydus-arch.webp" width = "550"  align=center />
-</div>
-
-Nydus 镜像格式并没有对 OCI 镜像格式在架构上进行修改，主要优化了其中的 Layer 数据层的数据结构。
-
-Nydus 将原本统一存放在 Layer 层的文件数据和元数据 （文件系统的目录结构、文件元数据等） 分开，分别存放在 `Blob Layer` 和 `Bootstrap Layer` 中。并对 `Blob Layer` 中存放的文件数据进行分块，以便于延迟加载 （在需要访问某个文件时，只需要拉取对应的 Chunk 即可，不需要拉取整个 Blob Layer） 。
-
-同时，这些分块信息，包括每个 Chunk 在 Blob Layer 的位置信息等也被存放在 Bootstrap Layer 这个元数据层中。这样，容器启动时，仅需拉取 Bootstrap Layer 层，当容器具体访问到某个文件时，再根据 Bootstrap Layer 中的元信息拉取对应 Blob Layer 中的对应的 Chunk 即可。
-
-<div  align="center">
-	<img src="../assets/nydus.png" width = "550"  align=center />
-	<p>Nydus 工作流程</p>
-</div>
-
-
-用户部署了 Nydus 镜像服务后，由于使用了按需加载镜像数据的特性，容器的启动时间明显缩短。在官网的测试数据中，Nydus 能够把常见镜像的启动时间，从数分钟缩短到数秒钟。
-
-<div  align="center">
-	<img src="../assets/nydus-performance.png" width = "550"  align=center />
-</div>
-
-
 ## 镜像下载加速
 
-我们知道镜像文件是从远程仓库下载而来，镜像下载的效率会受带宽、镜像仓库服务瓶颈的影响。那如何提高镜像下载的效率？你一定能想到 P2P 网络加速。而 Dragonfly 就是基于这一网络模型的容器镜像分发系统。
+我们知道镜像文件是从远程仓库下载而来，镜像下载的效率会受带宽、镜像仓库瓶颈的影响。那如何提高镜像下载的效率？你一定能想到 P2P 网络加速。而 Dragonfly 就是基于这一网络模型的容器镜像分发系统。
 
 :::tip 什么是 Dragonfly
 
@@ -207,7 +169,7 @@ Dragonfly 是一款基于 P2P 技术的文件分发和镜像加速系统，它�
 目前 Dragonfly 在 CNCF 托管作为孵化级项目。
 :::
 
-Dragonfly 并不需要修改 Docker 等源码，它提供了一种无侵入的解决方案，运行流程如下图所示。当下载一个镜像或文件时，通过 Peer（类似 p2p 的节点） 的 HTTP Proxy 将下载请求代理到 Dragonfly。Peer 首先会 Scheduler（类似 p2p 调度器）注册 task。Scheduler 会查看 Task 的信息，判断 Task 是否在 P2P 集群内第一次下载
+Dragonfly 提供了一种无侵入（不修改容器、仓库等源码）的镜像下载加速解决方案，它的工作流程如下图所示。当下载一个镜像或文件时，通过 Peer（类似 p2p 的节点） 的 HTTP Proxy 将下载请求代理到 Dragonfly。Peer 首先会 Scheduler（类似 p2p 调度器）注册 task。Scheduler 会查看 Task 的信息，判断 Task 是否在 P2P 集群内第一次下载
 
 - 第一次下载优先触发 Seed Peer 进行回源下载，并且下载过程中对 Task 基于 Piece 级别切分。Peer 每下载成功一个 Piece， 会将信息上报给 Scheduler 供下次调度使用。
 - 如果 Task 在 P2P 集群内非第一次下载，那么 Scheduler 会调度其他 Peer 给当前 Peer 下载。
@@ -219,7 +181,36 @@ Peer 从不同的 Peer 下载 Piece，拼接并返回整个文件，那么 P2P �
 	<p>Dragonfly 怎么运行的</p>
 </div>
 
-如此，使用 P2P 的方式解决密集的镜像下载问题，实现瞬时启动几百、几千 Pod 的能力，这样的弹性在生产环境中（瞬时高峰、无损迁移）才能发挥更大的作用。
+## 镜像启动加速
+
+容器镜像的大小会影响容器启动的时间，例如 tensorflow 的镜像有 1.83 GB，启动这个镜像的时间要用 3 分钟。在一篇《Making containers lazy with Docker and CernVM-FS》[^2]的论文中就提到容器运行期间整个镜像内容并不会被充分利用，一般镜像只有 6% 的内容会被实际用到。
+
+如果能实现按需加载，肯定能大幅降低容器启动时间，这便是 Nydus 出现的背景。
+
+:::tip Nydus 是什么
+Nydus 是蚂蚁集团、阿里云和字节等共建的开源容器镜像加速项目，是 CNCF Dragonfly 的子项目，Nydus 优化了现有的 OCIv1 容器镜像架构，设计了 RAFS (Registry Acceleration File System) 磁盘格式，最终呈现为一种“文件系统”的容器镜像格式的镜像加速实现。
+
+:::
+
+Nydus 主要优化了镜像中 Layer 数据层的数据结构，将容器镜像文件系统的数据 (blobs）和元数据 (bootstrap) 分离，让原来的镜像层（layer）只存储文件的数据部分，并且把文件以 chunk 为粒度分割，每层 blob 存储对应的 chunk 数据。
+
+由于元数据被单独分离出来合为一处，因此对于元数据的访问不需拉取对应的 blob 数据，需要拉取的数据量要小很多，I/O 效率更高。
+
+最后再利用 FUSE（Filesystem in Userspace，用户态文件系统）重写文件系统，实现了容器启动后，按需从远端（镜像中心）拉取镜像数据。
+
+<div  align="center">
+	<img src="../assets/nydus.png" width = "550"  align=center />
+	<p>Nydus 工作流程</p>
+</div>
+
+由于使用了按需加载镜像数据的特性，容器的启动时间明显缩短。在官网给到的数据中，Nydus 能够把常见镜像的启动时间，从数分钟缩短到数秒钟。
+
+<div  align="center">
+	<img src="../assets/nydus-performance.png" width = "550"  align=center />
+	<p>OCIv1 与 Nydus 镜像启动时间对比</p>
+</div>
+
+如此，使用 P2P 的方式加速镜像下载，再结合 Nydus 容器启动延迟加载技术实现瞬时启动几百、几千 Pod 的能力，对于大规模集群或者对冷启动扩容延迟要求较高的场景（大促扩容、游戏服务器扩容、函数计算）来说，不仅能大幅降低容器启动时间，还能大量节省网络/存储开销。
 
 [^1]: 参见 https://www.cyphar.com/blog/post/20190121-ociv2-images-i-tar
 [^2]: 参见 https://indico.cern.ch/event/567550/papers/2627182/files/6153-paper.pdf
