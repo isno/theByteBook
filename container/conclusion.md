@@ -8,4 +8,4 @@
 - 《从风口浪尖到十字路口，写在 Kubernetes 两周年之际》https://mp.weixin.qq.com/s/hrgXzt7YKVf6ZCFzJ-WTFA
 - 《 500 行的 Linux 容器》https://blog.lizzie.io/linux-containers-in-500-loc.html
 - 《Borg、Omega、K8s：Google 十年三代容器管理系统的设计与思考》https://queue.acm.org/detail.cfm?id=2898444
-- https://jvns.ca/blog/2019/11/18/how-containers-work--overlayfs/
+- 《How containers work: overlayfs》https://jvns.ca/blog/2019/11/18/how-containers-work--overlayfs/
