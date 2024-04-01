@@ -160,6 +160,7 @@ export default defineUserConfig({
                             '/network/XDP.md',
                         ]
                     },
+                    "/container/linux-vnet.md",
                     {
                         text: '3.3 内核参数优化实践',
                         link: '/network/kernel-performance.md',
