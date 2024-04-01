@@ -1,20 +1,12 @@
-# 7.3 定义 API 为中心的基础设施
+# 7.3 基础设施的进化
 
-Kubernetes 的核心在于提供了一种标准的编程接口（API）用来定义基础设施。
+Kubernetes 的核心在于提供了一种标准的编程接口（API）用来定义基础设施。为了进一步理解，回顾一下 Kubernetes 出现之前的场景。
 
-- Specification + Implementation 构成一个完整的 API 框架 —— 用于设计、实现和使用各种类型和规模的基础设施服务
-- 这些 API 都基于相同的核心结构和语义：typed resources watched and reconciled by controllers （资源按类型划分，控制器监听相应类型的资源，并将其实际 status 校准到 spec 里期望的状态）。
-
-为了进一步理解，回顾一下 Kubernetes 出现之前的场景。
-
-## Kubernetes 之前
 
 - 云厂商只提供了计算实例、块存储、虚拟网络和对象存储等基础构建模块，开发者需要像拼图一样将它们拼出一个相对完整的基础设施方案。
 - 对于其他云厂商，重复过程 1，因为各家的 API、结构和语义并不相同，甚至差异很大。
 
 虽然 Terraform 等工具供了一种跨厂商的通用格式，但原始的结构和语义仍然是五花八门，例如针对 AWS 编写的 Terraform descriptor 无法用到 Azure。
-
-## Kubernetes 面世
 
 现在再来看 Kubernetes 从一开始就提供的东西：描述各种资源需求的标准 API。例如，
 
@@ -25,9 +17,9 @@ Kubernetes 的核心在于提供了一种标准的编程接口（API）用来定
 
 这些 API 是跨公有云/私有云和各家云厂商的，各云厂商会将 Kubernetes 结构和语义对接到它们各自的原生 API，因此我们可以说 Kubernetes 提供了一种管理软件定义基础设施（也就是云）的标准接口。
 
-## Kubernetes API 扩展
+提供一套跨厂商的标准结构和语义来声明核心基础设施（pod/service/volume/serviceaccount...）是 Kubernetes 成功的基础。
 
-提供一套跨厂商的标准结构和语义来声明核心基础设施（pod/service/volume/serviceaccount...）是 Kubernetes 成功的基础。在此基础上，它又通过 CRD 将这个结构扩展到任何/所有基础设施资源。
+在此基础上，它又通过 CRD 将这个结构扩展到任何/所有基础设施资源。
 
 :::tip 什么是 CRD
 

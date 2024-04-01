@@ -1,6 +1,8 @@
 # 7.2 容器的进化：从互相隔离到亲密协作
 
-容器到底是什么？从字面上，“Container” 这个词很难让人形象地理解其真正含义，容器编排生态中的另外一个词 “Pod” 也是如此。仅看一些概念性的解释并不能给我们清晰的认识，甚至会引起误解：例如把容器比作轻量化虚拟机(VM)。
+容器到底是什么？从字面上，“Container” 这个词很难让人形象地理解其真正含义，容器编排生态中的另外一个词 “Pod” 也是如此。
+
+仅看一些概念性的解释并不能给我们清晰的认识，甚至会引起误解，例如把容器比作轻量化虚拟机(VM)。
 
 :::tip 如果容器类似虚拟机
 那就应该有一种普适的方法把虚拟机里面的应用无缝地迁移到容器中，可是现实世界中并没有这种方法。
@@ -115,7 +117,9 @@ $ ls /sys/class/net
 docker0  eth0  lo
 ```
 
-因此，缺少隔离和具备离开监狱的能力，就会导致许多与安全相关的问题。如何解决这个问题呢？ 这就是要介绍的 Linux 名称空间的能力了。
+因此，缺少隔离和具备离开监狱的能力，就会导致许多与安全相关的问题。
+
+如何解决这个问题呢？ 这就是要介绍的 Linux 名称空间的能力了。
 
 
 ## 使用 Namespace 进行全方位的隔离
@@ -251,9 +255,11 @@ spec:
 
 Pod 承担的另外一个重要职责是 - 作为调度的原子单位。
 
-协同调度是非常麻烦的事情，举个例子说明，假如有两个亲和性容器：第一个容器 Nginx（资源需求 1G 内存） 接收请求，并将请求写入日志文件，第二个容器 LogCollector（资源需求 0.5 G 内存），它会把 Nginx 容器写的日志文件转发到后端的 ElasticSearch 中。
+协同调度是非常麻烦的事情。举个例子说明，假如有两个亲和性容器：
+- 第一个容器 Nginx（资源需求 1G 内存） 接收请求，并将请求写入日志文件。
+- 第二个容器 LogCollector（资源需求 0.5 G 内存），它会把 Nginx 容器写的日志文件转发到后端的 ElasticSearch 中。
 
-当前集群环境的可用内存是这样一个情况：Node1 1.25G 内存，Node2 2G 内存。
+当前集群环境的可用资源是这样一个情况：Node1 1.25G 内存，Node2 2G 内存。
 
 假如现在没有 Pod 概念，就只有两个亲密协同的容器，它们需要运行在一台机器上。如果调度器先把 Nginx 调度到了 Node1 上面，LogCollector 实际上是没办法调度到 Node1 上的，因为资源不够，这一轮的调度失败，需要重新再发起调度。假如有几十台 Node，数百个、数千个容器，要避免系统因为外部流量压力、代码缺陷、软件更新等等原因出现的中断，那么编排系统该如何高效的运作呢？
 
@@ -279,26 +285,5 @@ Pod 承担的另外一个重要职责是 - 作为调度的原子单位。
 比如我们前面举的例子，LogCollector 就是 sidecar。
 
 在 ServiceMesh 章节中，读者将会深入理解 Sidecar 的作用。
-
-## Kubernetes 系统架构
-
-此刻，我们概览 Kubernetes 的整个架构设计，如下图所示，架构由两部分组成：管理者被称为 Control Plane（控制平面，按照习惯称呼 Master 节点也没问题 ）、被管理者称为 Node（Work 节点）。
-
-<div  align="center">
-	<img src="../assets/k8s.png" width = "650"  align=center />
-	<p>图 Kubernetes 架构</p>
-</div>
-
-Control Plane 是集群管理者，在逻辑上只有一个，它对 Node 节点进行统一管理，调度资源并操作 Pod，目标就是使得用户创建的各种 Kubernetes 对象按照其配置所描述的状态运行。它包含如下组件：
-
-- API Server： 操作 Kubernetes 各个资源的应用接口。并提供认证、授权、访问控制、API 注册和发现等机制。
-- Scheduler（调度器）：负责调度 Pod 到合适的 Node 上。例如，通过 API Server 创建 Pod 后，Scheduler 将按照调度策略寻找一个合适的 Node。
-- Controller Manager（集群控制器）：负责执行对集群的管理操作。例如，按照预期增加或者删除 Pod。
-
-Node 通常也被称为工作节点，可以有多个，资源提供者，用于运行 Pod 并根据 Control Plane 的命令管理各个 Pod，它包含如下组件：
-
-- Kubelet 是 Kubernetes 在 Node 节点上运行的代理，负责所在 Node 上 Pod 创建、销毁等整个生命周期的管理。
-- Kube-proxy 在 Kubernetes 中，将一组特定的 Pod 抽象为 Service，Kube-proxy 通过维护节点上的网络规则，为 Service 提供集群内服务发现和负载均衡功能。
-- Container runtime (容器运行时)：负责 Pod 和 内部容器的运行。在第七章已经介绍过各类容器运行时，Kubernetes 支持多种容器运行时，如 containerd、Docker 等。
 
 [^1]: 参见 https://static.googleusercontent.com/media/research.google.com/zh-CN//pubs/archive/41684.pdf
