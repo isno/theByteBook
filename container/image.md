@@ -1,6 +1,6 @@
-# 7.3 镜像的进化
+# 7.3 镜像的进化：从 layer 到 chunk
 
-容器的生态中还有一个关键角色“镜像”，那么镜像是什么呢？
+容器生态中还有一个关键角色“镜像”，那么镜像是什么呢？
 
 实际上，挂载在容器根目录的 rootfs（根文件系统），就是所谓的“容器镜像”，rootfs 将进程运行的所有依赖都封装在了一起，进而提供了容器最关键的特性 —— 本地云端一致性。
 
@@ -12,25 +12,25 @@
 
 :::
 
-Docker 镜像时并没有沿用以前制作 rootfs 的流程，而是做了一个小小的创新，设计了 layer（层）的概念，并采用堆叠的方式进行复用。借助 layer 复用机制，Docker 镜像实现了分发更快、存储更少、加载更快的目标。
-
-layer 的设计的原理是 UnionFS（联合文件系统）。
+不过 Docker 的镜像和 roofs 还是有一些区别， Docker 的镜像并没有沿用以前制作 rootfs 的流程，而是做了一个小小的创新，基于 UnionFS（Union File System，联合文件系统）采用堆叠的方式，对 rootfs 进行分层（layer），镜像内的一些公共部分（层）可以在不同容器之间复用。
 
 :::tip UnionFS 是什么
 
 UnionFS（联合文件系统）技术能够将不同的层整合成一个文件系统，为这些层提供了一个统一视角，这样就隐藏了多层的存在，在用户的角度看来，只存在一个文件系统。
-
-UnionFS 类似的有很多种实现，比如 OverlayFS、Btrfs 等。在 Linux 内核 3.18 版本中，OverlayFS 代码正式合入 Linux 内核的主分支。在这之后，OverlayFS 也就逐渐成为各个主流 Linux 发行版本里缺省使用的容器文件系统了。
-
 :::
+
+UnionFS 有很多种实现，例如 OverlayFS、Btrfs 等。在 Linux 内核 3.18 版本中，OverlayFS 代码正式合入 Linux 内核的主分支。在这之后，OverlayFS 也就逐渐成为各个主流 Linux 发行版本里缺省使用的容器文件系统了。
+
+Stripe 工程师 Julia Evans 曾撰写过一篇文章《How containers work: overlayfs》[^1]，文中作者用漫画形式说明容器镜像如何工作。
+
+如下图所示，OverlayFS 工作原理概览。
 
 <div  align="center">
   <img src="../assets/overlay.jpeg"  align=center />
   <p>OverlayFS 工作原理概览</p>
 </div>
 
-
-笔者借用 Stripe 工程师 Julia Evans 撰写的《How containers work: overlayfs》[^1] 中的例子，说明 OverlayFS 中的概念和作用。
+笔者继续借用 Julia Evans 文章中的代码示例，说明 overlay 的原理。
 
 ```
 #!/bin/bash
@@ -51,31 +51,29 @@ sudo mount -t overlay overlay \
  -o lowerdir=./lower,upperdir=./upper,workdir=./work \
  ./merged
 ```
-在使用 mount 命令并指定 OverlayFS 时，有几个关键的目录：
+使用 mount 命令指定 OverlayFS 挂载时，有几个关键的参数：
 
 - lowerdir：只读层，该层无法修改，可以指定多个 lower
 - upperdir：读写层，容器数据修改保存的地方
 - merged：最终呈现给用户的目录
 - workdir：工作目录，指 OverlayFS 工作时临时使用的目录，保证文件操作的原子性，挂载后会被清空
 
-从挂载点的视角看，upper 层的文件会覆盖 lower 层的文件，比如”in_both.txt”这个文件，在 lower 层和 upper 层都有，但是挂载点 merged/里看到的只是 upper 层里的 in_both.txt.
-
 <div  align="center">
   <img src="../assets/overfs.jpeg"  align=center />
 </div>
 
-如果我们在 merged/ 目录里做文件操作，具体包括这三种
+
+在 merged 目录里内进行增删改操作：
 
 - 新建文件时：这个文件会出现在 upper/ 目录中
 - 删除文件时：
-	- 如果我们删除 ”in_upper.txt”，那么这个文件会在upper/目录中消失
-	- 如果删除 ”in_lower.txt”, 在 lower/目录里的”in_lower.txt”文件不会有变化，只是在 upper/目录中增加了一个特殊文件来告诉OverlayFS，”in_lower.txt’这个文件不能出现在merged/里了，这就表示它已经被删除了。
+  - 如果我们删除 ”in_upper.txt”，那么这个文件会在upper/目录中消失
+  - 如果删除 ”in_lower.txt”, lower/目录里内的 ”in_lower.txt” 文件不会有变化，只是在 upper/目录中增加了一个特殊文件来告诉 OverlayFS ”in_lower.txt’这个文件不能出现在merged/里了，这就表示它已经被删除了。
 - 修改文件：类似如果修改”in_lower.txt”，那么就会在upper/目录中新建一个”in_lower.txt”文件，包含更新的内容，而在lower/中的原来的实际文件”in_lower.txt”不会改变
 
+Docker 镜像正式利用 OverlayFS 设计出了镜像 layer 的概念。
 
-Docker 镜像正式利用 union fs 这种特性，设计出了镜像 layer 的概念。
-
-如下图所示，容器镜像文件可以分成多个层（layer），每层可以对应 OverlayFS 里 lowerdir 的一个目录，lowerdir 支持多个目录，也就可以支持多层的镜像文件。在容器启动后，对镜像文件中修改就会被保存在 upperdir 里了。
+如下图所示，容器镜像文件可以分成多个层（layer），每层可以对应 OverlayFS 里 lowerdir 的一个目录，lowerdir 支持多个目录，也就可以支持多层的镜像文件。容器启动后，对镜像文件中修改会被保存在 upperdir 内（可写层）。
 
 <div  align="center">
   <img src="../assets/overlay.png"  align=center />
