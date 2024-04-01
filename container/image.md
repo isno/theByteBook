@@ -12,7 +12,7 @@
 
 :::
 
-不过 Docker 的镜像和 roofs 还是有一些区别， Docker 的镜像并没有沿用以前制作 rootfs 的流程，而是做了一个小小的创新，基于 UnionFS（Union File System，联合文件系统）采用堆叠的方式，对 rootfs 进行分层（layer），镜像内的一些公共部分（层）可以在不同容器之间复用。
+不过 Docker 镜像和 rootfs 还是有一些区别， Docker 镜像并没有沿用以前制作 rootfs 的流程，而是做了一个小小的创新，基于 UnionFS（Union File System，联合文件系统）采用堆叠的方式，对 rootfs 进行分层（layer）设计，这样镜像内的公共部分（层）就可以在不同容器之间复用。
 
 :::tip UnionFS 是什么
 
@@ -30,7 +30,7 @@ Stripe 工程师 Julia Evans 曾撰写过一篇文章《How containers work: ove
   <p>OverlayFS 工作原理概览</p>
 </div>
 
-笔者继续借用 Julia Evans 文章中的代码示例，说明 overlay 的原理。
+笔者继续借用 Julia Evans 文章中的代码示例，说明 OverlayFS 的原理。
 
 ```
 #!/bin/bash
@@ -51,67 +51,49 @@ sudo mount -t overlay overlay \
  -o lowerdir=./lower,upperdir=./upper,workdir=./work \
  ./merged
 ```
-使用 mount 命令指定 OverlayFS 挂载时，有几个关键的参数：
-
-- lowerdir：只读层，该层无法修改，可以指定多个 lower
-- upperdir：读写层，容器数据修改保存的地方
-- merged：最终呈现给用户的目录
-- workdir：工作目录，指 OverlayFS 工作时临时使用的目录，保证文件操作的原子性，挂载后会被清空
+使用 mount 命令并指定文件系统类型为 overlay，挂载后的文件系统视图如下所示。
 
 <div  align="center">
   <img src="../assets/overfs.jpeg"  align=center />
 </div>
 
 
-在 merged 目录里内进行增删改操作：
+指定文件系统为 OverlayFS。这一条命令有几个 overlay 文件系统的关键的参数：lowerdir（只读层）、upperdir（读写层）、merged（挂载后，最终呈现给用户视图）
 
-- 新建文件时：这个文件会出现在 upper/ 目录中
+当在 merged 目录里内进行增删改操作时，存储驱动会执行一个写时复制(CoW)策略：
+
+:::tip copy-on-write
+
+写时复制是一种共享和复制文件的策略，可最大程度地提高效率。如果文件或目录位于镜像的较低层中，而另一层(包括可写层)需要对其进行读取访问，则它仅使用现有的已经存在的文件。另一层第一次需要修改文件时(在构建镜像或运行容器时)，将文件复制到该层并进行修改。这样可以将I/O和每个后续层的大小最小化
+
+:::
+
+写时复制的大致的流程如下。
+
+- 新建文件时：这个文件会出现在 upper 目录中。
 - 删除文件时：
-  - 如果我们删除 ”in_upper.txt”，那么这个文件会在upper/目录中消失
-  - 如果删除 ”in_lower.txt”, lower/目录里内的 ”in_lower.txt” 文件不会有变化，只是在 upper/目录中增加了一个特殊文件来告诉 OverlayFS ”in_lower.txt’这个文件不能出现在merged/里了，这就表示它已经被删除了。
-- 修改文件：类似如果修改”in_lower.txt”，那么就会在upper/目录中新建一个”in_lower.txt”文件，包含更新的内容，而在lower/中的原来的实际文件”in_lower.txt”不会改变
+  - 如果删除 ”in_upper.txt”，这个文件会在 upper 目录中消失。
+  - 如果删除 ”in_lower.txt”, lower 目录里内的 ”in_lower.txt” 文件不会有变化，会在 upper 目录中增加一个特殊文件来告诉 OverlayFS ”in_lower.txt’这个文件不能出现在 merged 里了，这就表示它已经被删除了。
+- 修改文件：如果修改”in_lower.txt”，会在 upper 目录中新建一个”in_lower.txt”文件，包含更新的内容，而在lower/中的原来的实际文件”in_lower.txt”不会改变
 
-Docker 镜像正式利用 OverlayFS 设计出了镜像 layer 的概念。
-
-如下图所示，容器镜像文件可以分成多个层（layer），每层可以对应 OverlayFS 里 lowerdir 的一个目录，lowerdir 支持多个目录，也就可以支持多层的镜像文件。容器启动后，对镜像文件中修改会被保存在 upperdir 内（可写层）。
+下面是 Docker 官方的一张描述文件系统的图片，显示了一张联合文件系统在串联镜像层和容器层起到的作用。
 
 <div  align="center">
   <img src="../assets/overlay.png"  align=center />
 </div>
 
-如下代码所示，可以看到，这个 Ubuntu 镜像，实际上由五个层组成。这五个层就是五个增量 rootfs，每一层都是 Ubuntu 操作系统文件与目录的一部分；而在使用镜像时，Docker 会把这些增量联合挂载
-在一个统一的挂载点上（等价于前面例子里的“/C”目录）。
-
-
-```
-$ docker run -d ubuntu:latest sleep 3600
-$ docker image inspect ubuntu:18.04
-
-...
- "GraphDriver": {
-            "Data": {
-                "MergedDir": "/var/lib/docker/overlay2/93873a3eea1d0f99d78445324c9c2997e17769e5de13ba45da2f5d6c9fbe325d/merged",
-                "UpperDir": "/var/lib/docker/overlay2/93873a3eea1d0f99d78445324c9c2997e17769e5de13ba45da2f5d6c9fbe325d/diff",
-                "WorkDir": "/var/lib/docker/overlay2/93873a3eea1d0f99d78445324c9c2997e17769e5de13ba45da2f5d6c9fbe325d/work"
-            },
-            "Name": "overlay2"
-        },
-
-...
-```
-
-
-
-
-OCIv1 格式是一种基于 Docker Image Manifest Version 2 Schema 2 格式的镜像格式规范，由 manifest、镜像索引 (optional)、一系列容器镜像层及配置文件组成，本质上说 OCI 镜像是一个以层为基本单位的镜像格式，每个层存储了文件级别的 diff data，以 tgz 归档格式存储，如下所示。
+再来概览容器的文件系统，启动一个容器(或来自同一镜像的多个容器)时，使用 layer 层复用，并使用 cow 创建薄薄的可写容器层。如此，不仅节省空间，还缩短了启动时间。
 
 <div  align="center">
-  <img src="../assets/oci-image.png" width = "200"  align=center />
+  <img src="../assets/docker-file-system.png"  align=center />
+  <p>镜像文件系统概览</p>
 </div>
 
 ## 镜像下载加速
 
-我们知道镜像文件是从远程仓库下载而来，镜像下载的效率会受带宽、镜像仓库瓶颈的影响。那如何提高镜像下载的效率？你一定能想到 P2P 网络加速。而 Dragonfly 就是基于这一网络模型的容器镜像分发系统。
+镜像文件是从远程仓库下载而来，那么镜像下载的效率会受带宽、镜像仓库瓶颈的影响。
+
+如果讨论提高镜像下载的效率？你一定能想到 P2P 网络加速。而 Dragonfly 就是基于这一网络模型的容器镜像分发系统。
 
 :::tip 什么是 Dragonfly
 
