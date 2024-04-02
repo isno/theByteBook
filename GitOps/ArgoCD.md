@@ -4,7 +4,11 @@ Argo CD 是以 Kubernetes 作为基础设施，遵循声明式 GitOps 理念的�
 
 :::tip ArgoCD
 
-Argo CD 是 Intuit 公司开源出来的属于整个 Argo 项目中的其中一个子项目，整个 Argo 项目中还包括 Argo-event、argo-workflow、Argo-Rollout
+Argo CD 是 Intuit 公司开源出来的属于整个 Argo 项目中的其中一个子项目，整个 Argo 项目中还包括：
+
+- Argo Events：一个事件驱动的 Kubernetes 工作流自动化框架。它支持20 多种不同的事件（例如 webhook、S3 drop、cronjob、消息队列-例如 Kafka、GCP PubSub、SNS、 SQS等）。
+- Argo Workflows：是一个云原生的工作流引擎，基于 kubernetes 来做编排任务，可以在短时间内轻松运行用于机器学习或数据处理的计算密集型作业。
+- Argo Rollouts：是一组 Kubernetes 控制器和自定义资源（CRD），为 Kubernetes 提供高级部署功能，例如蓝绿、金丝雀、金丝雀分析、实验和渐进式交付等功能。
 :::
 
 在介绍 Argo CD 之前，我们先需要清楚为什么使用 Argo CD？ 以及能给我们带来什么好处？
