@@ -160,7 +160,6 @@ export default defineUserConfig({
                             '/network/XDP.md',
                         ]
                     },
-                    "/container/linux-vnet.md",
                     {
                         text: '3.3 内核参数优化实践',
                         link: '/network/kernel-performance.md',
@@ -170,6 +169,14 @@ export default defineUserConfig({
                             '/network/kernel-bypass.md',
                         ]
                     },
+                    {
+                        text: '3.4 Linux 网络虚拟化',
+                        link: "/network/linux-vritual-net.md",
+                        children: [
+                            "/network/network-namespace.md",
+                        ]
+                    },
+                    
                     '/network/conclusion.md',
                 ]
             },
@@ -262,16 +269,7 @@ export default defineUserConfig({
                     '/container/orchestration.md',
                     '/container/image.md',
                     '/container/runtime.md',
-                    {
-                        text: '7.5 容器间网络',
-                        link: '/container/network.md',
-                        collapsable: false,
-                        sidebarDepth: 1,
-                        children: [
-                           "/container/linux-vnet.md",
-                           "/container/container-network.md" 
-                        ]
-                    },
+                    "/container/container-network.md",
                     '/container/resource-limit.md',
                     '/container/auto-scaling.md',
                     {
