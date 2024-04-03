@@ -174,6 +174,10 @@ export default defineUserConfig({
                         link: "/network/linux-vritual-net.md",
                         children: [
                             "/network/network-namespace.md",
+                            "/network/virtual-nic.md",
+                            "/network/linux-bridge.md",
+                            "/network/vxlan.md",
+                            "/network/macvlan.md",
                         ]
                     },
                     
@@ -331,9 +335,12 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
+                    '/GitOps/background.md',
                     '/GitOps/what-is-GitOps.md',
-                    '/GitOps/AoneFlow.md',
                     '/GitOps/CICD.md',
+                    '/GitOps/secrets-management.md',
+                    '/GitOps/AoneFlow.md',
+                    
                     {
                         text: "持续集成",
                         link: '/GitOps/CI.md',

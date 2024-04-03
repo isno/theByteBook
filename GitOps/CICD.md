@@ -1,17 +1,6 @@
-# GitOps 下的 CI/CD 流程
+# 10.3 GitOps 下的 CI/CD 流程
 
-CI/CD 是架构中非常重要的一个组件，在云原生时代，依托于容器化持续集成，改变了以往应用通过 Jar、war 包形式的部署方式，转而制作成镜像，通过集成 GitLab CI、镜像仓库、Kubernetes 、Argo CD 等各类效率、流程系统，对纳管集群进行镜像发布、应用验证、升级，进而实现了自动化和监控贯穿于应用迭代的整个生命周期。
-
-:::tip CI
-CI（Continuous Integration，持续集成），强调开发人员不断进行代码提交、单元测试、性能测试、代码扫描等操作，根据测试结果，发现问题及时回滚，并进行反馈。
-
-:::
-
-:::tip CD
-持续部署 （Continuous Deployment，CD）或者说持续交付（Continuous Delivery，CD），是指在构建和测试完成通过后，通过一系列系统化手段让最新的功能能够尽快地更新到生产环境，并通过运营反馈需求，促进产品进一步迭代。持续部署需要保障整个过程的平滑和安全，通常借助蓝绿发布、金丝雀发布确保过程中的平滑、安全以及降低部署过程出错的概率。
-:::
-
-鉴于 GitOps 的设计哲学，我们看一下 GitOps 下的 CI/CD 流程，如下图所示：
+理解了 GitOps 的概念以及声明式、IaC 等关键属性，再来看 GitOps 下的 CI/CD 实践流程，如下图所示：
 
 <div  align="center">
   <img src="../assets/gitops-workflow.webp" width = "550"  align=center />
