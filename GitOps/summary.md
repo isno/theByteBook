@@ -14,7 +14,7 @@ GitOps 起源于 Weaveworks[^1] 公司在 2017 年发表的一篇博客《GitOps
 这种方式的交付（使用声明式描述、使用 Git 类似的版本控制系统进行跟踪管理），开发人员可以更高效地将注意力集中在创建新功能而不是运维相关任务上（例如应用系统安装、配置、迁移等）。
 
 
-[^1]: 很不幸，云原生明星创业公司 Weaveworks 在 2024年 2月5日宣布倒闭了，但是其开源的关于 GitOps 的项目 Flux 将持续健康运行（因为捐赠给了 CNCF）
+[^1]: 不幸的是云原生明星创业公司 Weaveworks 在 2024年 2月5日宣布倒闭了，但幸运的是其开源的关于 GitOps 的项目 Flux 未来将持续健康发展（因为捐赠给了 CNCF）。
 [^2]: 参见 https://www.weave.works/blog/gitops-operations-by-pull-request
 
 
