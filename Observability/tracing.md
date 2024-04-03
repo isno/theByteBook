@@ -70,18 +70,7 @@ Span 代表系统中一个逻辑运行单元，Span 之间通过嵌套或者顺�
 国内的工程师应该非常熟悉 Skywalking，这是一款本土开源的调用链分析以及应用监控分析工具，特点是支持多种插件，UI 功能较强，接入端无代码侵入（Java Agent 技术）。Skywalking 提供了自动插桩的能力，通过 Java Agent 技术在运行时不侵入地修改字节码，插入追踪代码。这种方式对业务代码完全透明，开发者无需修改任何业务逻辑即可实现埋点。
 
 
-## Opentracing
-
-一般来说 Tracing 开源项目他们只提供 Instrument 的接入方式，但是却不提供 Instrument 的具体实现，如果其他开源项目想接入 Tracing ，则是需要这些开源项目的开发者们自己去实现对应的 Instrument。即使一些 Tracing 开源项目的开发者们直接支持了一些开源组件的 Instrument（如 Pinpoint），也可能很快由于其他开源项目的架构升级，导致原来的 Instrument 实现不可用。
-
-如果市场只有一个 Tracing 还好，但是百花齐放的 Tracing 开源实现会让开源组件的开发者们并不是很乐于去实现某个 Tracing 的 Instrument。而且开源组件的每次大版本升级，都有可能导致原先的 Instrument 无法工作。基于这个思考， 2016 年 Ben Sigelman 发表博客 《Towards Turnkey Distributed Tracing》[^4]，提出了 OpenTracing 这个概念。
-
-和一般的规范标准不同，Opentracing 不是传输协议，消息格式层面上的规范标准，而是一种语言层面上的 API 标准。只要某链路追踪系统实现了 Opentracing 规定的接口（interface），符合Opentracing 定义的表现行为，那么就可以说该应用符合 Opentracing 标准。这意味着开发者只需修改少量的配置代码，就可以在符合 Opentracing 标准的链路追踪系统之间自由切换。
-
-
-
 [^1]: 参见 https://www.uber.com/en-IN/blog/microservice-architecture/
 [^2]: 参见《Dapper, a Large-Scale Distributed Systems Tracing Infrastructure》https://research.google/pubs/dapper-a-large-scale-distributed-systems-tracing-infrastructure/
 
 [^3]: 参见 https://logz.io/gap/devops-pulse-2022/
-[^4]: 参见 https://medium.com/opentracing/towards-turnkey-distributed-tracing-5f4297d1736

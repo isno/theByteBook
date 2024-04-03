@@ -337,26 +337,9 @@ export default defineUserConfig({
                 children: [
                     '/GitOps/background.md',
                     '/GitOps/what-is-GitOps.md',
-                    '/GitOps/CICD.md',
                     '/GitOps/secrets-management.md',
-                    '/GitOps/AoneFlow.md',
-                    
-                    {
-                        text: "持续集成",
-                        link: '/GitOps/CI.md',
-                        children: [
-                            '/GitOps/container-image-build.md',
-                            '/GitOps/SonarQube.md',
-                        ]
-                    },
-                    {
-                        text: "持续交付",
-                        link: '/GitOps/CD.md',
-                        children: [                         
-                           '/GitOps/ArgoCD.md',
-                           '/GitOps/Flagger.md'
-                        ]
-                    },
+                    '/GitOps/container-image-build.md',
+                    '/GitOps/AoneFlow.md'
                 ]
             }
         ]
