@@ -9,7 +9,7 @@
 ——《高性能 MySQL》作者 by Baron Schwartz 
 :::
 
-最近几年发展的趋势是将系统的可观测性放在一个更高的位置，监控只是可观测性的一个子集，如下所示。
+最近几年发展的趋势是将可观测性放在一个更高的位置，监控只是可观测性的一个子集，如下所示。
 
 <div  align="center">
 	<img src="../assets/Monitoring-vs-Observability.png" width = "450"  align=center />
