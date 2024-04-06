@@ -338,8 +338,14 @@ export default defineUserConfig({
                     '/GitOps/background.md',
                     '/GitOps/what-is-GitOps.md',
                     '/GitOps/secrets-management.md',
-                    '/GitOps/container-image-build.md',
-                    '/GitOps/AoneFlow.md'
+                     {
+                        text: "10.4 使用 Tekton 进行持续集成",
+                        link: '/GitOps/Tekton.md',
+                        children: [
+                            '/GitOps/container-image-build.md',
+                        ]
+                    },
+                    '/GitOps/ArgoCD.md'
                 ]
             }
         ]
