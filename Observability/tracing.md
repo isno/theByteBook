@@ -11,8 +11,6 @@
 
 分布式链路追踪诞生的标志性事件就是 Google Dapper 论文的发表。2010年4月，Benjamin H. Sigelman 等人在 Google Technical Report 上发表了《Dapper, a Large-Scale Distributed Systems Tracing Infrastructure》[^2]论文，文中详细阐述了 Google 内部分布式链路追踪系统 Dapper 的设计理念，还提出了成为后续链路追踪系统设计共识的两个基础术语 Trace（追踪）和 Span（跨度）。
 
-受 Dapper 思想和协议的影响，市场上开始出现大量的链路追踪项目。
-
 ## Trace 和 Span
 
 一条 Trace 代表一次入口请求在 IT 系统内的完整调用轨迹及其关联数据集合。其中，全局唯一的链路标识 TraceId 是代表性的一个属性，通过 TraceId 我们才能将同一个请求分散在不同节点的链路数据准确的关联起来，实现请求粒度的“确定性关联”。
@@ -64,9 +62,17 @@ Dapper 论文中提出的链路追踪系统的设计原则须满足以下两个�
 
 ## 代表性项目
 
+受 Dapper 思想和协议的影响，市场上开始出现大量的链路追踪项目。
+
 最开始是 Twitter 受到 Dapper 的启发，开发了自己的分布式追踪系统 Zipkin，Zipkin 是第一个被广泛采用的开源的分布式链路追踪系统，提供了数据收集、存储和查询的功能以及友好的 UI 界面来展示追踪信息。2017年 Uber 在基于 Zipkin 思想和经验的基础上开源了 Jaeger，增加了自适应采样、提供了更加强大和灵活的查询能力等，后来 Jaeger 成为 CNCF 的托管项目，并在 2019年 成为 graduated 级别。
 
 即使在今天，Zipkin 和 Jaeger 仍然是最流行的分布式追踪工具之一。
+
+<div  align="center">
+	<img src="../assets/tracing.png" width = "520"  align=center />
+	<p>CNCF 下分布式链路追踪产品生态</p>
+</div>
+
 
 除以上两个项目外，国内的工程师应该非常熟悉 Skywalking，这是一款本土开源的调用链分析以及应用监控分析工具，特点是支持多种插件，UI 功能较强，接入端无代码侵入（Java Agent 技术）。
 
