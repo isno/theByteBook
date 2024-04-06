@@ -342,7 +342,9 @@ export default defineUserConfig({
                         text: "10.4 使用 Tekton 进行持续集成",
                         link: '/GitOps/Tekton.md',
                         children: [
+                            '/GitOps/Tekton-install.md',
                             '/GitOps/container-image-build.md',
+                            '/GitOps/Tekton-Log4j2.md'
                         ]
                     },
                     '/GitOps/ArgoCD.md'
