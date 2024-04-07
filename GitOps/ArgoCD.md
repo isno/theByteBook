@@ -11,7 +11,7 @@ Argo CD 是以 Kubernetes 作为基础设施，遵循声明式 GitOps 理念的�
 无论是通过 CI 流水线触发更新 Kubernetes 编排文件，还是工程师直接修改 Kubernetes 编排文件，ArgoCD 都会自动拉取最新的配置并应用到 Kubernetes 集群中。
 
 <div  align="center">
-	<img src="../assets/argocd-1.webp" width = "500"  align=center />
+	<img src="../assets/ArgoCD-1.webp" width = "500"  align=center />
 	<p>ArgoCD 如何工作</p>
 </div>
 
