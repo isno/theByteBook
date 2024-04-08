@@ -2,7 +2,9 @@
 
 对于日志的生产和处理，相信程序员们绝对不会陌生，绝大多数程序员生涯是从打印 “hello world” 开始。现在稍微复杂点的系统，对日志的完整处理除了打印，还包含着采集、传输、清洗、存储、分析与检索、告警与智能化响应一系列过程。
 
-日志的可视化参考 9.2.1 节聚合度量 Grafana 相关内容，而日志的处理和分析就以 Elastic stack（全文索引）、Loki（只索引元数据）、ClickHouse（列式数据库）三类日志解决方案进行讲解。
+其中，日志的处理和分析是整个环节中技术挑战最大、难度最高的场景，既要高吞吐写入、又要低成本海量存储、还要实时文本检索。
+
+本节，笔者从索引原理到成本分析角度介绍 Elastic stack（全文索引）、Loki（只索引元数据）、ClickHouse（列式数据库）这三种业内应用典型代表。
 
 ## 传统解决方案 ELK
 
@@ -60,8 +62,7 @@ Loki 是 Grafana Labs 公司推出的类似于 Prometheus 的日志系统，官�
 
 Loki 一个明显的特点是非常经济，它不再根据日志的原始内容建立大量的全文索引，而是借鉴了 Prometheus 核心的思想，使用标签对日志进行特征标记，并只索引与日志相关的元数据标签，而日志内容则以压缩方式存储于对象存储中，不做任何索引，这样的话，能避免大量的内存资源占用，相较于 Elastic 这种全文索引的系统，数据可在十倍量级上降低，加上使用对象存储，最终存储成本可降低数十倍甚至更低。
 
-
-Loki 对以 Kubernetes 为基座的系统十分优化。如下图所示，promtail（日志收集组件）以 DaemonSet 方式运行在每个节点中，负责收集日志并将其发送给 Loki。日志数据使用和 Prometheus 一样的标签来作为索引，也正是因为这个原因，通过这些标签，既可以查询日志的内容，也可以查询到监控的内容，还能对接到 alertmanager。这两种查询被很好的兼容，节省了分别存储相关日志和监控数据的成本，也减少了查询的切换成本（避免 kibana 和 grafana 来回切换）。
+Loki 对以 Kubernetes 为基座的系统十分友好。如下图所示，promtail（日志收集组件）以 DaemonSet 方式运行在每个节点中，负责收集日志并将其发送给 Loki。日志数据使用和 Prometheus 一样的标签来作为索引，也正是因为这个原因，通过这些标签，既可以查询日志的内容，也可以查询到监控的内容，还能对接到 alertmanager。这两种查询被很好的兼容，节省了分别存储相关日志和监控数据的成本，也减少了查询的切换成本（避免 kibana 和 grafana 来回切换）。
 
 <div  align="center">
 	<img src="../assets/loki-arc.png" width = "550"  align=center />
@@ -79,30 +80,47 @@ Loki 对以 Kubernetes 为基座的系统十分优化。如下图所示，promta
 
 Loki 相对轻量，具有较高的可扩展性和简化的存储架构，若是数据的处理不那么复杂，且有时序属性，如应用程序日志和基础设施指标，并且应用使用 kubernetes Pod 形式部署，则选择 Loki 比较合适。Elastic 则相对重量，需要复杂的存储架构和较高的硬件要求，部署和管理也比较复杂，适合更大的数据集和更复杂的数据处理需求。
 
-## ClickHouse
-
-:::tip ClickHouse
-ClickHouse® is an open-source **column-oriented** database management system that allows generating analytical data reports in **real-time**.
-:::
+## 凶猛彪悍的 ClickHouse
 
 一个流行的观点认为：如果你想要查询变得更快，最简单且有效的方法就是减少数据扫描范围和数据传输的大小。而列式存储和数据压缩就可以帮助我们实现上述两点。
 
-- 压缩的本质是按照一定步长对数据进行匹配扫描，当发现重复部分的时候就进行编码转换。数据中的重复项越多，则压缩率越高。 同一列字段的数据，因为拥有相同的数据类型和现实语义，重复项可能性自然更高。
+通常的按行存储的数据库中，数据是按照如下顺序存储的。换句话说，一行内的所有数据都彼此依次存储。像这样的行式数据库包括MySQL、Postgres、MS SQL-Server等。
+<div  align="center">
+	<img src="../assets/row-database.png" width = "550"  align=center />
+	<p>按行存储</p>
+</div>
 
-	- 下图为同一份日志在Elasticsearch, ClickHouse和ClickHouse(zstd)中的容量, 最终对比ES达到了 1:6。[^4]
+而面向列的数据库管理系统中，数据是这样存储的：
+
+<div  align="center">
+	<img src="../assets/column-database.png" width = "550"  align=center />
+	<p>列是存储</p>
+</div>
+
+压缩的本质是按照**一定步长对数据进行匹配扫描，当发现重复部分的时候就进行编码转换**。数据中的重复项越多，则压缩率越高。 同一列字段的数据，因为拥有相同的数据类型和现实语义，重复项可能性自然更高。下图为同一份日志在 Elasticsearch, ClickHouse 和 ClickHouse(zstd) 中的容量, 最终对比 Elasticsearch 达到了 1:6。[^4]
 
 <div  align="center">
 	<img src="../assets/es-vs-clickhouse.png" width = "550"  align=center />
 	<p>B站 </p>
 </div>
 
-- 列式存储：
 
+列式数据库的佼佼者当属由 Yandex（一家俄罗斯搜索引擎公司）开源的用于 MPP (Massively Parallel Processing，大规模并行处理)架构的列式存储分析型数据库 ClickHouse。
 
+:::tip 什么是 ClickHouse
+ClickHouse® is an open-source **column-oriented** database management system that allows generating analytical data reports in **real-time**.
+:::
 
-MPP(Massively Parallel Processing，大规模并行处理)
+ClickHouse 的全称是 Click Stream，Data WareHouse，特点是极致的向量化查询性能，功能强大的表引擎、数据类型、索引类型和高效计算函数，灵活的可配置项以及自定义参数。
 
-正如 ClickHouse 的宣传所言：其他的开源系统太慢、商用太贵，只有 ClickHouse 在成本与性能之间做到了良好平衡，又快还开源。ClickHouse 当之无愧的阐释了“在线”二字的含义，即便在复杂的查询场景下，它也能做到极快响应，且无需对数据进行任何预加工处理。
+ClickHouse 极致的查询速度，当之无愧阐述“实时（real-time）”二字含义。从它的跑分结果来看：ClickHouse 比 Vertia（一款商业的 MPP 分析软件）快约5倍，比 Hive 快279倍，比 My SQL 快801倍；虽然对不同的SQL查询，结果不完全一样，但是基本趋势是一致的。
+
+<div  align="center">
+	<img src="../assets/ClickHouse-benchmark.jpeg" width = "550"  align=center />
+	<p></p>
+</div>
+
+正如 ClickHouse 的宣传所言：其他的开源系统太慢、商用太贵，只有 ClickHouse 在成本与性能之间做到了良好平衡，又快还开源。
 
 ## 日志展示
 
@@ -118,3 +136,4 @@ Grafana slogan 中的 “Dashboard anything. Observe everything.” 这个anythi
 [^2]: 参见 https://grafana.com/grafana/dashboards/
 [^3]: 参见 https://grafana.com/blog/2023/09/26/celebrating-grafana-10-top-10-oh-my-grafana-dashboard-moments-of-the-decade/
 [^4]: 参见 https://mp.weixin.qq.com/s/dUs7WUKUDOf9lLG6tzdk0g
+[^5]: 参见 http://clickhouse.yandex/benchmark.html
