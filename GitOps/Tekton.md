@@ -1,6 +1,6 @@
 # 10.4 使用 Tekton 进行持续集成
 
-本文选择 Tekton 构建 CI 流程。
+构建 CI（持续集成）可选型的方案众多，例如 Gitlab CI、Jenkins、Travis CI、Circle CI 等，本文选择 Tekton 构建 CI 流程。
 
 :::tip Tekton 是什么
 
@@ -8,17 +8,17 @@ Tekton 的前身是 Knative 项目的 build-pipeline 项目，这个项目是为
 
 :::
 
-构建 CI（持续集成）可选型的方案众多，例如 Gitlab CI、Jenkins、Travis CI、Circle CI 等，那为什么选择 Tekton 呢？
-
-最主要的原因还是 Tekton 是一款基于 Kubernetes 实现的 CI/CD 框架，可以充分利用 Kubernetes 的生态与其他服务整合，例如监控、告警、日志等，形成基于 Kubernetes 的完整 DevOps 技术栈。
-
 如下图所示，Tekton 简介：Cloud Native CI/CD（符合云原生理念的 CI/CD 系统）。
 
 <div  align="center">
 	<img src="../assets/Tekton.png" align=center />
 </div>
 
-Tekton 整体分为两部分：EventListener 和 Pipeline。Event Handler 主要是接受 SCM（Software Configuration Management，软件配置管理系统） 系统的事件消息（如代码变更），然后做一些处理，获取必要的信息（代码提交者、提交内容等），然后把这些内容当作输入（Input）传递到 Pipeline Handler 部分。Pipeline Handler 会根据用于自定义的流程（如完成源码到镜像的转换）来完成整个 CI/CD 构建。
+选择 Tekton 最主要的原因还是 Tekton 是一款基于 Kubernetes 实现的 CI/CD 框架，可以充分利用 Kubernetes 的生态与其他服务整合，例如监控、告警、日志等，形成基于 Kubernetes 的完整 DevOps 技术栈。
+
+Tekton 整体分为两部分：EventListener 和 Pipeline。
+
+Event Handler 主要是接受 SCM（Software Configuration Management，软件配置管理系统） 系统的事件消息（如代码变更），然后做一些处理，获取必要的信息（代码提交者、提交内容等），然后把这些内容当作输入（Input）传递到 Pipeline Handler 部分。Pipeline Handler 会根据用于自定义的流程（如完成源码到镜像的转换）来完成整个 CI/CD 构建。
 
 
 Pipeline Handler 有几个概念需要了解：
