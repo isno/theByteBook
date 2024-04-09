@@ -1,40 +1,53 @@
 # 9.2.1 聚合度量
 
-聚合度量（Metrics），传统监控和告警领域的代名词，一般是用来计算事件发生数量的数据集，例如服务 QPS、API 响应延迟、某个接口的失败数等。它们大部分以数字化指标出现，特征是可聚合性。在数据的处理上，Metrics 可以是实时的，也可能是区间范围的，是跟随着时间变化的时序数据，如此既能做常见的监控告警，也可以用来做趋势分析。
-
-对于一个监控系统而言，核心要解决的问题其实就三个：
+所有的度量系统总体上要解决的问题其实就三个：
 
 - 监控指标用什么形式表示
 - 怎么收集和存储指标
 - 怎么利用指标生成报表
 
-为了实现这个功能，需要实现几个独立的子功能。检测指标、收集指标、存储指标、查询指标、警报指标。每个子功能独立实现，通过搭积木的方式，就可以形成一个功能强大的监控告警系统。
 
 
-## 数据模型
+<div  align="center">
+	<img src="../assets/monitoring.png" width = "500"  align=center />
+</div>
 
-- 计数（counter）：一个只能增加或重置的度量值（即该值只能比之前多）
+:::tip Prometheus 是什么
 
+:::
 
-## 收集和存储指标
-
-由于目前并没有 Metrics 采集的标准 API，所以不同的监控系统在收集 Metrics 数据时采取的手段也可能不一样，但大部分无非都是通过 push 到中心 Collector 方式采集 Metrics（比如各种 Agent 采集器，Telegraf 等），又或者是中心 Collector 通过 pull 的方式去主动获取 Metrics（比如 Prometheus）。
-
-Prometheus 的架构设计中，Prometheus Server 主要任务负责数据的收集，存储并且对外提供数据查询支持，并不直接服务监控特定的目标。因此为了能够能够监控到某些东西，如主机的CPU使用率，我们需要使用到 Exporter。
+如下图所示，Prometheus 的架构设计中，通过不同的子功能实现检测指标、收集指标、存储指标、查询指标、警报指标。再通过搭积木的方式，形成一个功能强大的监控告警系统。
 
 <div  align="center">
 	<img src="../assets/prometheus-arch.png" width = "500"  align=center />
 </div>
 
-Prometheus 周期性的从 Exporter（Exporter 实例称 target ）暴露的 HTTP 服务地址（通常是/metrics）拉取监控样本数据。
+## 数据模型
+
+从存储上来讲所有的监控指标都是相同的，但是在不同的场景下这些指标又有一些细微的差异。以 Prometheus 为例，它支持四种不同的指标类型：
+
+- Counter：只增不减的计数器，常用于服务的 HTTP 请求数量或使用的 CPU 时间之类的信息，例如 http_requests_total、node_cpu_seconds_total 都是 Counter 类型的监控指标。
+
+- Gauge：可增可减的仪表盘，侧重于反应系统的当前状态，常见的监控指标 CPU 负载、活跃线程数、内存使用率、磁盘使用率，这些数它都是会随着时间进行波动的，它存储和展示的都是一个瞬时值。
+
+- Summary：
+
+## 收集指标
+
+不同监控系统收集 Metrics 数据手段各有不同，但总结无非是通过 push 到中心 Collector 方式采集比如各种 Agent 采集器，Telegraf 等），又或者是中心 Collector 通过 pull 的方式主动获取（比如 Prometheus）。
+
+如下图所示，Prometheus 主动地从数据源拉取数据 Exporter（Exporter 实例称 target ）暴露的 HTTP 服务地址（通常是/metrics）拉取监控样本数据。
+
 
 <div  align="center">
-	<img src="../assets/prometheus-exporter.png" width = "500"  align=center />
+	<img src="../assets/prometheus-exporter.png" width = "600"  align=center />
 </div>
 
-从上面的描述中可以看出 Exporter 可以是一个相对开放的概念，其可以是一个独立运行的程序独立于监控目标以外，也可以是直接内置在监控目标中。只要能够向 Prometheus 提供标准格式的监控样本数据即可。
+:::tip Exporter
+Exporter 一个相对开放的概念，可以是一个独立运行的程序独立于监控目标以外，也可以是直接内置在监控目标中，只要能够向 Prometheus 提供标准格式的监控样本数据即可。
+:::
 
-得益于 Prometheus 的良好社区生态，现在已经有大量各种用途的 Exporter，涵盖了从基础设施、中间件以及网络等各个方面，让 Prometheus 的监控范围几乎能涵盖所有用户所关心的目标。
+得益于 Prometheus 的良好社区生态，现在已经有大量各种用途的 Exporter，如表所示，涵盖了从基础设施、中间件以及网络等各个方面，让 Prometheus 的监控范围几乎能涵盖所有用户所关心的目标。
 
 | 范围 | 常用 Exporter |
 |:--|:--|
@@ -48,53 +61,29 @@ Prometheus 周期性的从 Exporter（Exporter 实例称 target ）暴露的 HTT
  | 监控系统 |  Collectd Exporter、Graphite Exporter、InfluxDB Exporter、Nagios Exporter、SNMP Exporter 等 |
  | 其它 | Blockbox Exporter、JIRA Exporter、Jenkins Exporter、Confluence Exporter 等|
 
+## 存储指标
 
+Prometheus 的作者及社区核心开发者都秉承一个理念：Prometheus 只聚焦核心的功能，扩展性的功能留给社区解决。Prometheus 自身携带 TSDB（时序数据库）的设计初衷是为可监控数据的查询，更多考虑的是高性能而非分布式。因此，一般只能把本地存储视为近期数据的短暂滑动窗口。
 
-## 生成报表
-
-Prometheus 的数据是典型的时序数据，Prometheus 本身会将。要注意的是，本地存储不可复制，无法构建集群，如果本地磁盘或节点出现故障，存储将无法扩展和建议。因此，一般只能把本地存储视为近期数据的短暂滑动窗口。
-
-Prometheus 的作者及社区核心开发者都秉承一个理念：Prometheus 只聚焦核心的功能，扩展性的功能留给社区解决，所以 Prometheus 自诞生至今都是单实例不可扩展的。
-
-
-尽管单实例的 Prometheus 已经足够强大，但还是存在部分需求是其无法满足的，如跨集群聚合、更长时间的存储等。为了扩展 Prometheus，社区给出了多种方案。
-
-2017 年，Prometheus 加⼊ Remote Read/Write API，自此之后社区涌现出大量长期存储的方案，如 Thanos、Grafana Cortex/Mimir、VictoriaMetrics、Wavefront、Splunk、Sysdig、SignalFx、InfluxDB、Graphite 等。
-
-
-## 存储
-
-回到我们的主角 Prometheus， 它会将所有采集到的样本（sample）数据以时间序列（time-series）的方式保存在内存数据库中，并且定时保存到硬盘上。时间序列是按照时间戳和值的序列顺序存放的，每条time-series通过指标名称（metrics name）和一组标签集（labelset）命名。
-
-主流的 TSDB 包括了 InfluxDB、Prometheus、Kdb、Graphite、TimescaleDB、Apache Druid 等等。
-为了追求极致性能和极致成本，大家都在针对海量数据和使用场景，持续改进和优化数据的存储结构设计、各种高效索引机制、和查询效率。从单点技术或者关键技术上来讲，有趋同性和同质化的大趋势
-
-
-prometheus-vs-victoriametrics[^1]
-
-||Prometheus| VictoriaMetrics | 
-|:--|:--|:--|
-|数据采集	 |基于拉动	|基于拉式和推式|
-|数据摄取	 |每秒高达 240,000 个样本|	每秒高达 360,000 个样本|
-|数据查询 |	每秒高达 80,000 次查询	|每秒高达 100,000 次查询|
-|内存使用情况	|高达 14GB RAM	|高达 4.3GB 的 RAM|
-|数据压缩	 |使用LZF压缩	| 使用 Snappy 压缩|
-|磁盘写入频率|	更频繁地将数据写入磁盘	|减少将数据写入磁盘的频率|
-|磁盘空间使用情况	|需要更多磁盘空间	|需要更少的磁盘空间|
-|查询语言	|PromQL	|MetricsQL（向后兼容 PromQL）|
-
-时序数据库排名
-
-https://db-engines.com/en/ranking/time+series+dbms
-
-## 生成报表
-
-Prometheus 定义了功能强大的 promQL，可以满足各种复杂的查询场景。
-
-Grafana 提供了对 PromQL 的完整支持，如下所示，通过 Grafana 添加 Dashboard 并且为该 Dashboard 添加一个类型为 “Graph”的面板。 并在该面板的“Metrics”选项下通过PromQL查询需要可视化的数据：
+2017 年，Prometheus 扩展了远端存储扩展（Remote Read/Write API），自此之后社区涌现出大量长期存储的方案，如 Thanos、Grafana Cortex/Mimir、VictoriaMetrics、Wavefront、Splunk、Sysdig、SignalFx、InfluxDB、Graphite 等。
 
 <div  align="center">
-	<img src="../assets/first_grafana_dashboard.png" width = "500"  align=center />
+	<img src="../assets/prometheus-storage.jpeg" width = "100%"  align=center />
+	<p>长期存储方案</p>
 </div>
 
-[^1]: 参见 https://last9.io/blog/prometheus-vs-victoriametrics/
+基于多维度对上述介绍的 Prometheus 长期存储方案进行横向对比，数据持久化到硬盘的方案里，VictoriaMetrics 是更好的选择，如果是对象存储方案，Thanos 则更受欢迎。
+
+## 生成报表
+
+在仪表可视化领域，如果 Grafana Dashboard 称第二，应该没有敢窜出来称第一的。
+
+Grafana Labs 公司成立之前，Grafana Dashboard 就已经在各个开源社区有不小的名气和用户积累。依靠社区的用户基础，Grafana Labs 也快速地将产品渗透至各个企业，各类大场面也时不时会见到 Grafana 的身影：
+- 2016年，在猎鹰9号火箭首次发射期间，Grafana 出现在 SpaceX 控制中心的屏幕上；
+- 几周后，微软发布一段宣传视频，展示了他们的水下数据中心，同样出现了 Grafana 的身影[^3]。
+
+Grafana 的 slogan 是“Dashboard anything. Observe everything.” ，Prometheus 定义了功能强大的 promQL，可以满足各种复杂的查询场景。而 Grafana 提供了对 PromQL 的完整支持。两者结合的反应：只要你能想到的数据[^1]就能转成任何你想要的图表[^2]。
+
+<div  align="center">
+	<img src="../assets/grafana-dashboard-english.png" width = "550"  align=center />
+</div>
