@@ -1,23 +1,25 @@
-# 9.3 可观测性的未来
+# 9.3 可观测性标准演进
 
-建设完善的可观测体系，很可能会形成链路监控、日志监控、指标监控等多套不同的监控系统，要打通是相当困难的。不同的业务线间，日志规则不互通，要完全互通也很困难。系统一旦过多，需要将查询从一种语言和界面切换到另外一种语言去操作。可观测系统第一个目的是将日志和指标之间的上下文切换成本降到最低。其次会产生海量的遥测数据（日均 PB 级别），是名副其实的大数据系统，要尽量减小对业务资源消耗的影响，找到存储成本与收益的平衡。相关维护以及故障排除的时间成本就会大幅增加。
+几乎所有的追踪系统都以 Dapper 论文为原型实现，各个系统功能并没有本质差别，但又受限于实现细节，很难搭配工作。
 
+为了解决追踪系统各自为政，一些老牌 APM 所代表的厂商（Uber、LightStep、Redhat）提出了 OpenTracing 分布式追踪的标准协议，定义了一套厂商无关、语言无关的规范。只要遵守 OpenTracing 规范，任何公司的追踪探针、存储、界面就可以互换或者组合。OpenTracing 规范提出之后，业内知名的追踪系统 Jaeger 、Zipkin、Skywalking 等项目很快宣布宣布实现和支持 OpenTracing。也是基于这一点，2016 年云原生计算基金会 CNCF 正式接纳 OpenTracing，顺利成为 CNCF 第三个项目。
 
+OpenTracing 推出不久之后，Google 成为异意者，和微软推出了 OpenCensus 项目。
 
-先是 CNCF 提出了 OpenTracing 分布式追踪的标准协议，定义了一套厂商无关、语言无关的规范，也有 Jaeger 、Zipkin 等项目的实现和支持。随后 Google 和微软提出了 OpenCensus 项目，在定义分布式追踪协议的基础上，规范了应用性能指标，并实现了一套标准的 API ，为可观测性能力统一奠定了基础。
+OpenCensus 在定义分布式追踪协议的基础上，不仅纳入了指标度量，还提供了包含 Agent 和 Collector SDK 的实现。遵循 OpenCensus 协议的产品有 Prometheus、SignalFX、Stackdriver 和 Zipkin 等。
 
-经过对已有的标准协议不停的打磨和演变，最终 CNCF 提出了可观测性的终极项目 OpenTelemetry，它结合了 OpenTracing 与 OpenCensus 两个项目，成为了一个厂商无关、平台无关的支撑可观测性三大支柱的标准协议和开源实现。
+对很多开发人员而言，一边是老牌 APM 厂商，一边是影响力巨大的 Google 和微软。选择困难症发作的同时，一个新的想法不断被讨论：是否能有一个能够将 OpenTracing 和 OpenCensus，并且能够支持 Log 日志相关可观测数据的项目呢？
 
-OpenTelemetry 的核心工作主要集中在三部分：
-- 规范的制定和协议的统一，规范包含数据传输、API的规范，协议的统一包含：HTTP W3C的标准支持、gRPC等框架的协议标准。
-- 多语言SDK的实现和集成，用户可以使用SDK进行代码自动注入和手动埋点，同时对其他三方库进行集成支持。
-- 数据收集系统的实现，当前是基于OpenCensus Service的收集系统，包括 Agent 和 Collector。
+为了更好的将 Traces、Metrics 和 Logs 融合在一起，OpenTelemetry 诞生了。
+
+作为 CNCF 的孵化项目，OpenTelemetry 由 OpenTracing 和 OpenCensus 项目合并而成，是一组规范、API 接口、SDK、工具和集成。为众多开发人员带来 Metrics、Tracing、Logs 的统一标准，三者都有相同的元数据结构，可以轻松实现互相关联。
+
+集成 OpenTelemetry 可观测建设，只需要一种 SDK 就可以实现所有类型数据的统一产生；集群只需要部署一个 OpenTelemetry Collector 便可以实现所有类型数据的采集。
 
 <div  align="center">
 	<img src="../assets/otel-diagram.svg" width = "550"  align=center />
 </div>
 
-OpenTelemetry 定位明确，专注于数据采集和标准规范的统一，对于数据如何去使用、存储、展示、告警，标准本身并不涉及。但就总体来说，可观测的技术方案成以下趋势：对于 Metrics 使用 Prometheus 做存储 Grafana 展示，使用 Jaeger 做分布式跟踪存储和展示，对于日志则使用 Loki 存储 Grafana 展示。
+OpenTelemetry 定位明确，专注于数据采集和标准规范的统一，对于数据如何去使用、存储、展示、告警，标准本身并不涉及。这使得 OpenTelemetry 既不会因动了“数据的蛋糕”，引起生态抵制，也极大保存了精力，得以专注于数据采集器，努力去兼容“所有的语言、所有的系统”。
 
 
-OpenTelemetry 的特点在于制定统一的协议数据格式，并提供底层数据采集器。这使得 OpenTelemetry 既不会因动了“数据的蛋糕”，引起生态抵制，也极大保存了精力，得以专注于数据采集器，努力去兼容“所有的语言、所有的系统”。

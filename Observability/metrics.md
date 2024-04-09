@@ -63,9 +63,9 @@ Exporter 一个相对开放的概念，可以是一个独立运行的程序独�
 
 ## 存储指标
 
-Prometheus 的作者及社区核心开发者都秉承一个理念：Prometheus 只聚焦核心的功能，扩展性的功能留给社区解决。Prometheus 自身携带 TSDB（时序数据库）的设计初衷是为可监控数据的查询，更多考虑的是高性能而非分布式。因此，一般只能把本地存储视为近期数据的短暂滑动窗口。
+Prometheus 自身携带 TSDB（时序数据库）的设计初衷是为可监控数据的查询，更多考虑的是高性能而非分布式。因此，一般只能把本地存储视为近期数据的短暂滑动窗口。
 
-2017 年，Prometheus 扩展了远端存储扩展（Remote Read/Write API），自此之后社区涌现出大量长期存储的方案，如 Thanos、Grafana Cortex/Mimir、VictoriaMetrics、Wavefront、Splunk、Sysdig、SignalFx、InfluxDB、Graphite 等。
+Prometheus 的作者及社区核心开发者都秉承一个理念：Prometheus 只聚焦核心的功能，扩展性的功能留给社区解决。2017 年，Prometheus 扩展了远端存储扩展（Remote Read/Write API），自此之后社区涌现出大量长期存储的方案，如 Thanos、Grafana Cortex/Mimir、VictoriaMetrics、Wavefront、Splunk、Sysdig、SignalFx、InfluxDB、Graphite 等。
 
 <div  align="center">
 	<img src="../assets/prometheus-storage.jpeg" width = "100%"  align=center />

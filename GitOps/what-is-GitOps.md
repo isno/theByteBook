@@ -1,6 +1,6 @@
 # 10.2 什么是 GitOps
 
-那什么是 GitOps？先来看看 Google 工程师，Kubernetes 创始人之一的 Kelsey Hightower 对于 GitOps 的解释。
+Google 工程师，Kubernetes 创始人之一的 Kelsey Hightower 对于 GitOps 的解释。
 
 :::tip  Kelsey Hightower 的解释
 
