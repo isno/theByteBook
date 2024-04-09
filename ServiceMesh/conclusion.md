@@ -4,10 +4,10 @@
 
 正如编程语言一样，服务网格在未来可能不会走向标准化，而是各具特色，并在不断的自我完善过程中为用户提供更多的选择。
 
-参考
+本章参考内容：
 
-- William Morgan 的服务网格之战，https://softwareengineeringdaily.com/2019/05/31/service-mesh-wars-with-william-morgan/
-- Pattern: Service Mesh，https://philcalcado.com/2017/08/03/pattern_service_mesh.html
-- 《云原生服务网格Istio：原理、实践、架构与源码解析》
+- 《William Morgan 的服务网格之战》，https://softwareengineeringdaily.com/2019/05/31/service-mesh-wars-with-william-morgan/
+- 《Pattern: Service Mesh》，https://philcalcado.com/2017/08/03/pattern_service_mesh.html
+- 图书《云原生服务网格Istio：原理、实践、架构与源码解析》
 - https://blog.container-solutions.com/wtf-is-cilium
 - https://isovalent.com/blog/post/cilium-service-mesh/
