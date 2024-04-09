@@ -18,13 +18,13 @@ HPA 组件根据资源利用率或者自定义指标自动调整 Deployment、St
 
 ## 基于事件驱动的方式
 
-现在的 HPA 虽然能基于外部指标实现弹性伸缩，但也有一些缺点，扑面来而的复杂、不直观的配置以及仅与 Prometheus 指标关联。
+HPA 虽然能基于外部指标实现弹性伸缩，但缺点是扑面来而的复杂、不直观的配置以及仅与 Prometheus 指标关联。
 
 如果你想要更好的处理好资源，那么你可以了解 KEDA 这个项目。
 
 :::tip KEDA 是什么？
 
-KEDA（Kubernetes Event-driven Autoscaling）是由微软和红帽合作开发的一个基于事件触发的 Kubernetes 自动伸缩器，KEDA 的出现并不是替代 HPA，而通过内置几十种常见的 Scaler[^1] 以及自定义 Scaler 对 HPA 增强。通例如消息队列的排队深度、每秒请求数、调度的 Cron 作业数以及你能想象事件指标，来驱动 HPA 工作负载从 0->1 和 1->0 的变化。
+KEDA（Kubernetes Event-driven Autoscaling）是由微软和红帽合作开发的一个基于事件触发的 Kubernetes 自动伸缩器。KEDA 的出现并不是替代 HPA，而通过内置几十种常见的 Scaler[^1] 以及自定义 Scaler 对 HPA 增强。例如通过消息队列的排队深度、每秒请求数、调度的 Cron 作业数以及你能想象事件指标，来驱动 HPA 工作负载从 0->1 和 1->0 的变化。
 
 :::
 
