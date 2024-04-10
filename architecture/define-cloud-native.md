@@ -31,31 +31,27 @@
 
 ## 1.3.2 CNCF 的定义
 
-2015 年 CNCF 建立，开始围绕云原生的概念打造云原生生态体系。
+2015 年 CNCF（Cloud Native Computing Foundation，云原生计算基金会）建立，开始围绕云原生的概念打造云原生生态体系。
 
 :::tip CNCF 简介
 
-CNCF（Cloud Native Computing Foundation，云原生计算基金会）是 Linux 基金会旗下的基金会，可以理解为一个非盈利组织，成立于 2015 年 12 月 11 日。
+CNCF 是 Linux 基金会旗下的基金会，可以理解为一个非盈利组织，成立于 2015 年 12 月 11 日。
 
 成立这个组织的初衷或者愿景，简单说：
 
 - 推动云原生计算可持续发展。
 - 帮助云原生技术开发人员快速地构建出色的产品。
-
-CNCF 通过建立社区、管理众多开源项目等手段来推广技术和生态系统发展（Kubernetes 是 CNCF 托管的第一个开源项目）。
 :::
 
 起初 CNCF 对云原生的定义包含以下三个方面：
 
-- 应用容器化(software stack to be Containerized)
-- 面向微服务架构(Microservices oriented)
-- 应用支持容器的编排调度(Dynamically Orchestrated)
+- 应用容器化（Software stack to be Containerized）。
+- 面向微服务架构（Microservices oriented）。
+- 应用支持容器的编排调度（Dynamically Orchestrated）。
 
-在 2018 年，随着社区对云原生理念的广泛认可和云原生生态的不断扩大，还有 CNCF 项目和会员的大量增加，起初的定义已经不再适用，因此 CNCF 对云原生进行了重新定位。
+随着社区对云原生理念的广泛认可和云原生生态的不断扩大，还有 CNCF 项目和会员的大量增加，起初的定义已经不再适用，因此 CNCF 对云原生进行了重新定位。2018 年 6 月，CNCF 正式对外公布了更新之后的云原生的定义 v1.0 版本[^3]。
 
-2018 年 6 月，CNCF 正式对外公布了更新之后的云原生的定义 v1.0 版本[^3]，CNCF 的定义如下： 
-
-:::tip <i></i>
+:::tip CNCF 云原生的定义 v1.0 版本
 
 云原生技术有利于各组织在公有云、私有云和混合云等新型动态环境中，构建和运行可弹性扩展的应用。云原生的代表技术包括容器、服务网格、微服务、不可变基础设施和声明式 API。
 
