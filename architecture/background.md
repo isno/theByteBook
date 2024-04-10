@@ -1,6 +1,6 @@
 # 1.2 云原生出现的背景
 
-## 1.2.1 软件正在改变世界
+## 1.2.1 软件正在吞噬世界
 
 Mark Andreessen 是风险投资公司 Andreessen-Horowitz 的联合创始人（如图 1-7 所示），该公司投资了 Facebook、Groupon、Skype、Twitter、Zynga、Foursquare 等公司。
 
@@ -11,7 +11,7 @@ Mark Andreessen 是风险投资公司 Andreessen-Horowitz 的联合创始人（�
 
 2011 年 8 月 20 日华尔街日报上，Mark Andreessen 发表了名为「Why Software Is Eating the World」的文章，内容主要阐述了软件如何影响各个行业，援引其中部分内容：
 
-:::tip <i></i>
+:::tip 《软件正在吞噬世界》内容节选
 
 我们处于戏剧性和广泛的技术和经济转变的中间，软件公司准备接管大量的经济。
 

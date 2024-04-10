@@ -2,13 +2,11 @@
 
 2010 年，由 Intel 领导的 DPDK 实现了一个基于内核旁路（Bypass Kernel）思想的高性能网络应用开发解决方案，并逐渐成为了独树一帜的成熟技术体系。但是 DPDK 也由于内核旁路这一前提，天然就无法与内核技术生态很好的结合。
 
-2016 年，在 Linux Netdev 会议上，David S. Miller 喊出了 “DPDK is not Linux” 的口号。同年，伴随着 eBPF 技术的成熟，Linux 内核终于迎来了属于自己的高速公路 —— XDP（AF_XDP），其具有足以媲美 DPDK 的性能以及背靠 Linux 内核的多种独特优势。
-
-以上，便是 XDP 出现的背景。
+2016 年，在 Linux Netdev 会议上，David S. Miller[^1] 喊出了 “DPDK is not Linux” 的口号。同年，伴随着 eBPF 技术的成熟，Linux 内核终于迎来了属于自己的高速公路 —— XDP（eXpress Data Path，快速数据路径），其具有足以媲美 DPDK 的性能以及背靠 Linux 内核的多种独特优势。
 
 ## 1. XDP 概述
 
-XDP (eXpress Data Path，快速数据路径) 本质上是 Linux 内核网络模块中的一个 BPF Hook，能够动态挂载 eBPF 程序逻辑，使得 Linux 内核能够在数据报文到达 L2（网卡驱动层）时就对其进行针对性高速处理，无需再`循规蹈矩`地进入到内核网络协议栈。用虚拟化领域的完全虚拟化和半虚拟化概念类比，如果 DPDK 是”完全 Kernel bypass”，那么 AF_XDP 就是 “半 Kernel bypass”。
+XDP 本质上是 Linux 内核网络模块中的一个 BPF Hook，能够动态挂载 eBPF 程序逻辑，使得 Linux 内核能够在数据报文到达 L2（网卡驱动层）时就对其进行针对性高速处理，无需再`循规蹈矩`地进入到内核网络协议栈。用虚拟化领域的完全虚拟化和半虚拟化概念类比，如果 DPDK 是”完全 Kernel bypass”，那么 AF_XDP 就是 “半 Kernel bypass”。
 
 更详细地说，AF_XDP 和 AF_INET 一样，也是 address family 的一种，AF_XDP 就相当于 socket 底层通讯方式的不同实现，AF_INET 可以用于 IPv4 类型地址的通讯，AF_XDP 则是一套基于 XDP 的通讯的实现。
 
@@ -42,3 +40,6 @@ XDP 程序在内核提供的网卡驱动中直接取得网卡收到的数据帧�
 $ cilium bpf nat list
 $ cilium bpf ct list global
 ```
+
+[^1]: Linux 内核开发者，自 2005 年开始，已经提交过 4989 个 patch，是 Linux 核心源代码第二大的贡献者。
+
