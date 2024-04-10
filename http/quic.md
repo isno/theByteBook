@@ -1,6 +1,9 @@
 # 2.8.1 快速 UDP 网络连接
 
+:::tip 什么是 QUIC
 QUIC (Quick UDP Internet Connection, 快速 UDP 网络连接) 是一种基于 UDP 封装的安全、可靠传输协议，它的目标是取代 TCP 成为标准且效率更高的安全传输协议。
+
+:::
 
 实际上推动替换 TCP 协议的先驱并不是 IETF，而是 Google 公司。早在 2013 年，Google 在它的服务器（如 Google.com、youtube.com）和 Chrome 浏览器中启用了名为 “快速 UDP 网络连接（QUIC）” 的全新传输协议。2015 年，Google 将 QUIC 提交给 IETF，并在 IETF 的推动下对 QUIC 进行规范化。2018 年末，IETF 正式批准了 HTTP over QUIC 使用 HTTP/3 的版本号，将其确立为最新一代的互联网标准。
 
