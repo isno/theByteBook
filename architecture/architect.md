@@ -9,16 +9,17 @@
 	<p>图 1-39 云原生代表技术栈</p>
 </div>
 
-1. 容器和镜像：Docker、Containerd、CRI-O、Kata Containers。
-2. 镜像仓库：Harbor、Dragonfly、Nydus。
+1. 容器运行时：Docker、Containerd、CRI-O、Kata Containers。
+2. 镜像和仓库：Harbor、Dragonfly、Nydus。
 3. 应用封装：Kustomize、Helm。
 4. 持续集成：Gitlab、Tekton。
-5. 持续部署：FluxCD、ArgoCD。
+5. 持续部署：ArgoCD、FluxCD。
 6. 容器编排：Kubernetes。
 7. 服务网格: Istio、Envoy、Linkerd。
 7. 网关：Ingress-Nginx、Kong、APISIX。
-8. 日志：Fluentd、Grafana loki。
-9. 监控：Grafana、Prometheus。
+8. 日志：Grafana Loki、Elastic Stack、ClickHouse。
+9. 监控：Prometheus、Grafana。
+10. 可观测：OpenTelemetry。
 10. 应用开发：Nocalhost。
 
 
