@@ -1,8 +1,6 @@
 # 2.3.3 Facebook 故障分析总结
 
-这一节我们了解 Facebook 的故障的原因以及给我们的警示。
-
-Facebook 此次故障发生在 2021 年 10 月 4 日，故障绕过了所有的高可用设计，故障期间 facebook、instagram、whatsapp 等众多服务出现了长达接近 7 个小时宕机，影响范围之深以至于差点产生严重二次故障，搞崩整个互联网。如此大规模服务的瘫痪不是 DNS 就是 BGP 出了问题，非常巧，这次是两个一起出了问题。
+Facebook 史诗级故障事件发生在 2021 年 10 月 4 日，故障绕过了所有的高可用设计，故障期间 Meta 公司旗下的 Facebook、Instagram、WhatsApp 等众多服务出现了长达接近 7 个小时宕机，影响范围之深以至于差点产生严重二次故障，搞崩整个互联网。如此大规模服务的瘫痪不是 DNS 就是 BGP 出了问题，非常不幸，这次是两个一起出了问题。
 
 <div  align="center">
 	<img src="../assets/facebook-404-error.jpeg" width = "450"  align=center />
@@ -53,7 +51,7 @@ Facebook 这次故障带给我们以下几点关于 DNS 系统设计的思考：
 - **部署形式考虑**：可选择将 DNS 服务器节点全部放在 SLB（Server Load Balancer，负载均衡）后方，或采用 OSPF Anycast 架构等部署形式，从而提高 DNS 系统的可靠性。
 - **部署位置考虑**：可选择数据中心自建集群 + 公有云服务混合异构部署，利用云的分布式优势进一步增强 DNS 系统健壮性，同时提升 DNS 系统在遭受 DDoS 攻击时的抵御能力。
 
-如图 2-7 所示，亚马逊 amazon.com 和 facebook.com 的权威域体系对比，amazon.com 的权威解析服务器分散在不同的 AS 内，所以它的抗风险能力肯要强于 Facebook。
+如图 2-7 所示，amazon.com 和 facebook.com 的权威域体系对比：amazon.com 的权威解析服务器分散在不同的 AS 内，所以它的抗风险能力肯要强于 Facebook。
 
 <div  align="center">
 	<img src="../assets/dns-1.png" width = "220"  align=center />
