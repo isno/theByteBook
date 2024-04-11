@@ -7,7 +7,7 @@ Facebook 史诗级故障事件发生在 2021 年 10 月 4 日，故障绕过了�
 	<p>图2-5 Facebook宕机 </p>
 </div>
 
-Facebook 官方在故障后续发布原因总结是：**运维人员修改 BGP 路由规则时，误将 Facebook 的 AS32934（Autonomous System，自治域）内的权威解析服务器的路由给删除了**。这个操作的直接后果就是所有请求 Facebook 域名的解析请求都会丢弃在网络路由中，世界各地 DNS 解析器都无法再正常解析 Facebook 相关的域名。
+Facebook 官方在故障后续发布原因总结是：**运维人员修改 BGP 路由规则时，误将 Facebook 的自治域 AS32934 [^1]内的权威解析服务器的路由给删除了**。这个操作的直接后果就是所有请求 Facebook 域名的解析请求都会丢弃在网络路由中，世界各地 DNS 解析器都无法再正常解析 Facebook 相关的域名。
 
 ## 1.故障现象
 
@@ -60,4 +60,6 @@ Facebook 这次故障带给我们以下几点关于 DNS 系统设计的思考：
 	<img src="../assets/dns-2.png" width = "350"  align=center />
 	<p>图2-7  amazon.com 与 facebook.com 域名结构对比</p>
 </div>
+
+[^1]: AS（Autonomous System，自治域）是具有统一路由策略的巨型网络或网络群组。连接到 Internet 的每台计算机或设备都连接到一个 AS。各个开放的 AS 连接起来就成了互联网。
 
