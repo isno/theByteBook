@@ -5,7 +5,7 @@
 世界上有两个设计软件的方法，一种方法是设计的尽量简单，以至于明显的没有什么缺陷，另外一种方式是使他尽量的复杂，以至于其缺陷不那么明显。
 
 :::right
-—— by C.A.R. Hoare
+—— by C.A.R. Hoare[^1]
 :::
 
 促使 Docker 引领容器技术潮流的潜能是 cgroup 么？或者是 namespace？ 再或者是镜像和联合文件系统？ 我想这些都不是，而是 Docker 容器的出现和普及终于能为工程师提供一种友好的封装应用和服务的媒介，并一步步地把传统应用的开发和运维变成一种全新的方式。
@@ -16,3 +16,5 @@
 <div  align="center">
   <img src="../assets/container-summary.png" width = "550"  align=center />
 </div>
+
+[^1]: Charles Antony Richard Hoare 缩写为C. A. R. Hoare，著名的计算科学家，图灵奖获得者，以设计了快速排序算法、霍尔逻辑、通信顺序进程闻名。
