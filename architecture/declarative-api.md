@@ -5,8 +5,8 @@
 :::
 
 和声明式设计相对的则是过程式设计（Imperative 或 Procedural），两者的区别是：
-- 声明式设计中，我们描述的是目标状态（what），过程（how）由内部系统去操心；
-- 而在过程式设计中，我们描述的是一系列的动作，这一系列的动作如果被正确的顺利执行，最终结果达到我们期望的目标状态。
+- 过程式设计：命令「机器」如何去做事情（how），这样不管你想要的是什么(what），它都会按照你的命令实现；
+- 声明式设计：告诉「机器」你想要的是什么（what），让机器想出如何去做（how）。
 
 <div  align="center">
 	<img src="../assets/declarative.svg" width = "400"  align=center />
@@ -21,7 +21,7 @@ SQL 其实就是一种常见的声明式编程语言，它能够让开发者自�
 SELECT * FROM users WHERE gender = boy AND name LIKE 'xiaoming%';
 ```
 
-我们来看看相同设计的 YAML，如下代码示例。
+我们来看看相同设计的 YAML，如下代码示例，定义了一个名为 nginx-deployment 的 Deployment 资源，apiVersion 指定了使用的 API 版本，kind 指定了要创建的资源类型。metadata 中包含了资源的名称和其他元数据信息。spec 部分定义了 Deployment 的具体配置，包括副本数（replicas）、选择器（selector）和容器模板（template）。在 template 中，我们指定了容器的名称、镜像等配置信息。
 
 ```
 apiVersion: apps/v1
@@ -46,7 +46,6 @@ spec:
         ports:
         - containerPort: 80
 ```
-上面定义了一个名为 nginx-deployment 的 Deployment 资源，apiVersion 指定了使用的 API 版本，kind 指定了要创建的资源类型。metadata 中包含了资源的名称和其他元数据信息。spec 部分定义了 Deployment 的具体配置，包括副本数（replicas）、选择器（selector）和容器模板（template）。在 template 中，我们指定了容器的名称、镜像等配置信息。
 
 通过编写 YAML 文件来定义 Kubernetes 资源、服务的拓扑结构和状态，只需要表达我们的需求和意图，资源如何创建、服务如何关联，这些全部交由 Kubernetes 实现。
 
