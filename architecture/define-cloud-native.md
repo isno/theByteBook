@@ -75,6 +75,6 @@ CNCF 是 Linux 基金会旗下的基金会，可以理解为一个非盈利组�
 
 了解云原生的定义之后，1.4 节继续讨论云原生技术的目标。
 
-[^1]: Pivotal 是云原生概念提出的鼻祖，属于云原生的先驱者和探路者。Pivotal 还推出了 Pivotal Cloud Foundry 和 Spring 系列开发框架。2019 年，Pivotal 被 VMware 收购。
+[^1]: Pivotal 是云原生概念提出的鼻祖，是行业先驱和探路者。Pivotal 还推出了 Pivotal Cloud Foundry 和 Spring 系列开发框架。2019 年，Pivotal 被 VMware 收购。
 [^2]: 参见 https://pivotal.io/cloud-native
 [^3]: 参见 https://github.com/cncf/toc/blob/main/DEFINITION.md

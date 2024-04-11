@@ -4,7 +4,7 @@
 
 你猜世界上规模最大、交互最频繁且最没存在感的分布式系统是什么？
 :::
-DNS 是最重要的互联网基础设施系统，没有之一，请求无法到达了，后端任何的高可用设计还有什么意义呢？2021 年期间互联网发生了几起影响颇大的服务宕机故障均与 DNS 系统有关：
+DNS 是最重要的互联网基础设施系统，没有之一。2021 年期间互联网发生了几起影响颇大的服务宕机故障均与 DNS 系统有关：
 - 7月22日 Aakamai Edge DNS 故障，造成 PlayStation Network、HBO、UPS、Airbnb、Salesforce 等众多知名网站宕机[^1]；
 - 不久之后的10月4日，社交网络平台 Facebook 及旗下服务 Messenger、Instagram、WhatsApp、Mapillary 与 Oculus 发生全球性宕机[^2]。
 
