@@ -35,7 +35,11 @@ OCI 项目启动后不久，Docker 公司便开始自行拆分 docker 并形成�
 	<img src="../assets/docker-arc.png" width = "550"  align=center />
 </div>
 
-从 Docker 的拆分来看，容器运行时根据功能的不同分成了两类：只关注如 namespace、cgroups、镜像拆包等基础的容器运行时实现被称为**低层运行时（low-level container runtime）**， 目前应用最广泛的低层运行时是 runc；支持更多高级功能，例如镜像管理、CRI 实现的运行时被称为**高层运行时（high-level container runtime）**，目前应用最广泛高层运行时是 containerd。这两类运行时按照各自的分工，共同协作完成容器整个生命周期的管理工作。
+从 Docker 的拆分来看，容器运行时根据功能的不同分成了两类：
+- 只关注如 namespace、cgroups、镜像拆包等基础的容器运行时实现被称为**低层运行时（low-level container runtime）**， 目前应用最广泛的低层运行时是 runc；
+- 支持更多高级功能，例如镜像管理、CRI 实现的运行时被称为**高层运行时（high-level container runtime）**，目前应用最广泛高层运行时是 containerd。
+
+这两类运行时按照各自的分工，共同协作完成容器整个生命周期的管理工作。
 
 
 ## CRI
@@ -77,8 +81,8 @@ CRI 实现上是一套通过 Protocol Buffer 定义的 API，如下图：
 由于 Docker 的“固执己见”且 Docker 是当时容器技术主流存在，Kuberentes 虽然提出了 CRI 接口规范，仍然需要去适配 CRI 与 Docker 的对接，因此它需要一个中间层（shim，垫片）来对接 Kubelet 和 Docker 运行时实现。
 
 此时，Kubernetes 里就出现了两种调用链：
-- CRI 接口调用 dockershim，然后 dockershim 调用 Docker，Docker 再走 containerd 去操作容器。
-- CRI 接口直接调用 containerd 去操作容器。
+1. CRI 接口调用 dockershim，然后 dockershim 调用 Docker，Docker 再走 containerd 去操作容器。
+2. CRI 接口直接调用 containerd 去操作容器。
 
 <div  align="center">
 	<img src="../assets/k8s-runtime-v2.png" width = "500"  align=center />
@@ -95,7 +99,7 @@ Kubernetes 在 v1.24 版本正式删除和弃用 dockershim，这件事情的本
 	<img src="../assets/k8s-runtime-v3.png" width = "500"  align=center />
 </div>
 
-Kubernetes 从 1.10 版本宣布开始支持 containerd 1.1，在调用链中已经能够完全抹去 Docker Engine 的存在。此时，再观察 Kubernetes 到容器运行时的调用链，你会发现调用步骤会比通过 DockerShim、Docker Engine 与 containerd 交互的步骤要减少两步，用户只要愿意抛弃掉 Docker 情怀，在容器编排上便可至少省略一次 HTTP 调用，获得性能上的收益。
+Kubernetes 从 1.10 版本宣布开始支持 containerd 1.1，在调用链中已经能够完全抹去 Docker Engine 的存在。此时，再观察 Kubernetes 到容器运行时的调用链，你会发现调用步骤会比通过 DockerShim、Docker Engine 与 containerd 交互的步骤要减少两步，用户只要愿意抛弃掉 Docker 情怀，在容器编排上便可至少省略一次调用，获得性能上的收益。
 
 从 Kubernetes 角度看，选择 containerd 作为运行时的组件，调用链更短、更稳定、占用节点资源也更少。根据 Kubernetes 官方给出的测试数据[^1]，containerd1.1 对比 Docker 18.03：Pod 的启动延迟降低了大约 20%；CPU 使用率降低了 68%；内存使用率降低了 12%，这是一个相当大的性能改善。
 
@@ -116,7 +120,9 @@ Kubernetes 从 1.10 版本宣布开始支持 containerd 1.1，在调用链中已
 
 Kata Containers 安全容器的诞生解决了许多普通容器场景无法解决的问题，譬如多租户安全保障、差异化 SLO混合部署、可信/不可信容器混合部署等等。在这些优势的基础上，Kata Containers 也在虚拟化上也追求极致的轻薄，从而让整体资源消耗和弹性能力接近 runc 容器方案，以此达到 Secure as VM、Fast as Container 的技术目标。
 
-Kata Containers 运行符合 OCI 规范，同时兼容 Kubernetes CRI（虚拟机级别的 Pod 实现）。为了缩短容器的调用链、高效地和 Kubernetes CRI 集成，Kata-Container 直接将 containerd-shim 和 kata-shim 以及 kata-proxy 融合到一起。CRI 和 Kata Containers 的集成下图所示：
+为了缩短容器的调用链、高效地和 Kubernetes CRI 集成，Kata-Container 直接将 containerd-shim 和 kata-shim 以及 kata-proxy 融合到一起。并做到了运行符合 OCI 规范，同时兼容 Kubernetes CRI（虚拟机级别的 Pod 实现）。
+
+CRI 和 Kata Containers 的集成如下图所示：
 
 <div  align="center">
 	<img src="../assets/kata-container.png" width = "600"  align=center />

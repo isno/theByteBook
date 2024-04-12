@@ -1,8 +1,12 @@
 # 7.10 小结
 
+笔者终于松了口气，Kubernetes 章节太难写了，边界之广让作者写作期间难受得想哭。容器编排、资源调度、网络模型、存储方案、安全设计等诸多内容实在无法完整表达。
+
+受限于笔者的能力，只能尽力描绘出十之一二的内容，管中窥豹。
+
 参考 
 
-- k8s 基于 cgroup 的资源限额 https://arthurchiao.art/blog/k8s-cgroup-zh
+- 《k8s 基于 cgroup 的资源限额》https://arthurchiao.art/blog/k8s-cgroup-zh
 - 《凤凰架构》以容器设计系统
 - 《容器镜像格式二十年的螺旋进化之路》https://linux.cn/article-12442-1.html
 - 《从风口浪尖到十字路口，写在 Kubernetes 两周年之际》https://mp.weixin.qq.com/s/hrgXzt7YKVf6ZCFzJ-WTFA
