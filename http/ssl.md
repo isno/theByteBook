@@ -1,12 +1,16 @@
 # 2.5.2 SSL 层优化实践
 
-HTTPS 建立连接的过程中，TLS 握手阶段最长可以花费 2-RTT，除去握手延迟外，SSL 层还有其他的一些隐形消耗，不做任何优化措施情况下，网络耗时和加解密耗时影响会让 HTTPS 连接效率比 HTTP 慢上几百毫秒，在高延迟网络环境下，HTTPS 延迟问题更加明显。
+HTTPS 建立连接的过程中，TLS 握手阶段最长可以花费 2-RTT，除去握手延迟外，SSL 层还有其他的一些隐形消耗，不做任何优化措施情况下，网络耗时和加解密耗时影响会让 HTTPS 连接效率比 HTTP 慢上几百毫秒。高延迟网络环境下，HTTPS 延迟问题更加明显。
 
 2.5.1 节中，已介绍 SSL 层的原理，从中总结，对于 SSL 层的优化，我们从两个环节入手：**协议升级、证书优化**。
 
 ## 1. 协议升级
 
-优化 SSL 层，效果最为明显的方式是升级最新 TLS1.3 协议[^1]。TLS 1.3 协议放弃了安全性较低的加密功能的支持，并改进了 TLS 握手流程。TLS 1.3 协议中的 TLS 握手只需要一次 RTT 而不是两次，如果客户端复用之前连接，TLS 握手的往返次数可以为零，这使 HTTPS 连接更快，能显著减少延迟并改善用户体验。如图 2-17 所示，如果使用 TLS 1.2 需要两次往返（ 2-RTT ）才能完成握手，然后才能发送请求。
+优化 SSL 层，效果最为明显的方式是升级最新 TLS1.3 协议[^1]。
+
+TLS 1.3 协议放弃了安全性较低的加密功能的支持，并改进了 TLS 握手流程。TLS 1.3 协议中的 **TLS 握手只需要一次 RTT 而不是两次，如果客户端复用之前连接，TLS 握手的往返次数可以为零**，这使 HTTPS 连接更快，能显著减少延迟并改善用户体验。
+
+如图 2-17 所示，如果使用 TLS 1.2 需要两次往返（ 2-RTT ）才能完成握手，然后才能发送请求。
 
 <div  align="center">
 	<img src="../assets/tls1.2.png" width = "350"  align=center />
@@ -53,13 +57,12 @@ server {
 }
 ```
 
-
 2. 检查服务端是否已开启 OCSP Stapling。
 
 ```shell 
 openssl s_client -connect thebyte.com.cn:443 -servername thebyte.com.cn -status -tlsextdebug < /dev/null 2>&1 | grep "OCSP" 
 ```
-若结果中存在”successful“，则表示已开启 OCSP Stapling 服务。
+若结果中存在「successful」关键字，则表示已开启 OCSP Stapling 服务。
 ```plain
 OCSP response:
 OCSP Response Data:
@@ -75,9 +78,9 @@ OCSP Response Data:
 - ECDHE 密钥交换、RSA 签名。
 - ECDHE 密钥交换、ECDSA 签名。
 
-内置 ECDSA 公钥的证书一般被称之为 ECC 证书，内置 RSA 公钥的证书就是 RSA 证书，相比 RSA，ECC 证书具有安全性高，处理速度更快的优点，尤其适合在移动设备上使用。但是其唯一的缺点就是兼容性问题，古代的 XP 和 Android2.3 不支持这种加密方式。不过 Nginx 从 1.11.0 版本起开始提供了对 RSA/ECC 双证书的支持，它可以在 TLS 握手的时候根据客户端支持的加密方法选择对应的证书，以向下兼容古代客户端。
+内置 ECDSA 公钥的证书一般被称之为 ECC 证书，内置 RSA 公钥的证书就是 RSA 证书，相比 RSA，ECC 证书具有安全性高，处理速度更快的优点，尤其适合在移动设备上使用。2019 年之前的缺点就是兼容性问题，古代的 XP 和 Android2.3 不支持这种加密方式。不过 2019 年 Nginx 发布了 1.11.0 版本，开始提供了对 RSA/ECC 双证书的支持，它可以在 TLS 握手的时候根据客户端支持的加密方法选择对应的证书，以向下兼容古代客户端。
 
-如图 2-19 所示，256 位 ECC Key 在安全性上等同于 3072 位 RSA Key，加上 ECC 运算速度更快，ECDHE 密钥交换 + ECDSA 数字签名无疑是最好的选择。由于同等安全条件下，ECC 算法所需的 Key 更短，所以 ECC 证书文件体积比 RSA 证书要小一些。
+如图 2-19 所示，256 位 ECC Key 在安全性上等同于 3072 位 RSA Key，加上 ECC 运算速度更快，ECDHE 密钥交换 + ECDSA 数字签名无疑是最好的选择。同等安全条件下，ECC 算法所需的 Key 更短，所以 ECC 证书文件体积比 RSA 证书要小一些。
 
 <div  align="center">
     <img src="../assets/ecc.png" width = "420"  align=center />
