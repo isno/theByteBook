@@ -10,7 +10,7 @@
 1. HTTP 客户端发送 Accept-Encoding 首部（其中包含它所支持的压缩算法，以及各自的优先级），
 2. 服务器则从中选择一种，使用该算法对响应的消息主体进行压缩，并且发送 Content-Encoding 首部来告知 HTTP 客户端它选择了哪一种算法。
 
-协商流程如如图 2-9 所示。
+协商过程如图 2-9 所示。
 
 <div  align="center">
 	<img src="../assets/compress.png" width = "400"  align=center />
@@ -27,7 +27,7 @@ Brotli 是 Google 推出的开源无损压缩算法，通过变种的 LZ77 算�
 Brotli 内部有一个预定义的字典，该字典包含超过 13000 个常用单词、短语和其他子字符串，在这种预定义字典下，一个词会作为一个整体被匹配，这种方式可以大大提升较小文件的压缩密度。
 :::
 
-可以看出，Brotli 侧重于 HTTP 文本型内容的压缩，压缩率比常使用的 Gzip 高 `17~30%`。如图 2-10 所示，各类型的压缩算法压缩率对比。
+如图 2-10 所示，各类型的压缩算法压缩率对比。Brotli 因为侧重于 HTTP 文本型内容的压缩，压缩率比常使用的 Gzip 高 `17~30%`。
 
 <div  align="center">
 	<img src="../assets/brotli.jpeg" width = "480"  align=center />
