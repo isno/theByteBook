@@ -105,7 +105,7 @@ Facebook 2021 年 10 月宕机故障中，使用 dig 排查各个公共 Recursiv
 ..
 ```
 
-下一节，我们以 Facebook 为例，介绍 Authoritative nameserver 出现故障时会是什么影响。
+下一节，我们以 Facebook 为例，体会 Authoritative nameserver 出现故障时会是什么影响。
 
 [^1]: 参见 https://www.akamai.com/blog/news/akamai-summarizes-service-disruption-resolved
 [^2]: 参见 https://en.wikipedia.org/wiki/2021_Facebook_outage
