@@ -28,14 +28,14 @@ DNS（Domain Name System，域名系统）是最重要的互联网基础设施�
 	<p>图 2-4 DNS 解析流程</p>
 </div>
 
-- 用户向 Recursive resolver（ DNS 解析器，例如电信运营商的 114.114.114.114）发出解析 thebyte.con.cn 域名请求。
-- Recursive resolver 判断是否存在解析缓存，如存在返回缓存结果。如无则就近向 Root nameserver（根域名服务器）请求所属 TLD nameserver。
-- 获取 com. 域的 TLD nameserver 后， 向该地址请求 thebyte.con.cn. 的 Authoritative nameserver（权威解析服务器）。
-- 得到 Authoritative nameserver 地址后，向该服务获取域名对应的 IP 地址，域名解析过程结束。 
+1. 用户向 Recursive resolver（ DNS 解析器，例如电信运营商的 114.114.114.114）发出解析 thebyte.con.cn 域名请求。
+2. Recursive resolver 判断是否存在解析缓存，如存在返回缓存结果。如无则就近向 Root nameserver（根域名服务器）请求所属 TLD nameserver。
+3. 获取 com. 域的 TLD nameserver 后， 向该地址请求 thebyte.con.cn. 的 Authoritative nameserver（权威解析服务器）。
+4. 得到 Authoritative nameserver 地址后，向该服务获取域名对应的 IP 地址，域名解析过程结束。 
 
 回顾整个流程，有 2 个环节容易发生问题：
-1. Recursive resolver 是客户端与 DNS 域名服务器的中间人，容易出现解析污染或者 DNS 解析器宕机，这种情况会导致域名解析出现**局部不可用**；
-2. Authoritative nameserver 出现故障，这种情况会导致**全局域名解析不可用**，但出现故障的概率极低。
+- Recursive resolver 是客户端与 DNS 域名服务器的中间人，容易出现解析污染或者 DNS 解析器宕机，这种情况会导致域名解析出现**局部不可用**；
+- Authoritative nameserver 出现故障，这种情况会导致**全局域名解析不可用**，但出现故障的概率极低。
 
 下面我们继续看看如果 DNS 解析出现故障了该如何排查。
 
@@ -104,5 +104,8 @@ Facebook 2021 年 10 月宕机故障中，使用 dig 排查各个公共 Recursiv
 ;whatsapp.com.            IN    A
 ..
 ```
+
+下一节，我们以 Facebook 为例，介绍 Authoritative nameserver 出现故障时会是什么影响。
+
 [^1]: 参见 https://www.akamai.com/blog/news/akamai-summarizes-service-disruption-resolved
 [^2]: 参见 https://en.wikipedia.org/wiki/2021_Facebook_outage
