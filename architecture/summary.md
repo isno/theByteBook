@@ -4,7 +4,7 @@
 你知道比 Web 服务更难拓展的是什么吗? 寻找可以持续 20 年且仍然感觉良好的基础思想.
 
 ::: right
-—— by Shopify 创始人 Tobias Lütke
+—— by Shopify 创始人 Tobias Lütke[^1]
 
 :::
 
@@ -17,3 +17,5 @@
 	<img src="../assets/cloud-summary.png" width = "450"  align=center />
 	<p>图 1-1 本章内容导读</p>
 </div>
+
+[^1]: Tobias Lütke 是 Shopify 的联合创始人兼首席执行官。他是 Ruby on Rails 框架核心团队的一员，并创建了 Active Merchant 等开源库。截至 2022 年，他是加拿大第 11 位富豪。

@@ -47,8 +47,10 @@ spec:
         - containerPort: 80
 ```
 
-以上 yaml 文件提交给 Kubernetes 之后，Kubernetes 会创建具有三个副本的 nginx 服务实例，并将持续保证我们所期望的状态。
+以上 yaml 文件提交给 Kubernetes 之后，Kubernetes 会创建具有三个副本的 nginx 服务实例，并将持续保证我们所期望的状态。通过编写 yaml 文件来定义 Kubernetes 资源、服务的拓扑结构和状态，只需要表达我们的需求和意图，资源如何创建、服务如何关联，这些全部交由 Kubernetes 实现。
 
-通过编写 yaml 文件来定义 Kubernetes 资源、服务的拓扑结构和状态，只需要表达我们的需求和意图，资源如何创建、服务如何关联，这些全部交由 Kubernetes 实现。
+只描述想要什么，中间过程、细节不需关系，让工程师们通过站在更高层面写代码，更多的专注于 what，而这正是我们开发软件真正的目标。
+
+
 
 
