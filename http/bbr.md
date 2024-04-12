@@ -111,7 +111,7 @@ BBR 状态机是实现以上思路的基础，使用 BBR 进行拥塞控制时�
 
 ### 5. BBR 实践结论
 
-如图 2-29 的 BBR 性能测试报告所示，BBR 算法在大带宽长链路（例如典型跨海网络、跨国、跨多个运营商），尤其是在有轻微丢包的网络环境下，相较传统的，以丢包为条件的 Cubic 算法有大幅的提升。
+如图 2-29 所示的 BBR 性能测试报告，BBR 算法在大带宽长链路（例如典型跨海网络、跨国、跨多个运营商），尤其是在有轻微丢包的网络环境下，相较传统以丢包为条件的 Cubic 算法有大幅的提升。
 
 Cisco 的工程师 Andree Toonk 在他的博客使用不同拥塞控制算法、延迟和丢包参数所做的各种 TCP 吞吐量测试的全套测试，证明了在一定的丢包率（1.5%、3%）的情况下 BBR 的出色表现[^3]。
 
@@ -123,7 +123,7 @@ Cisco 的工程师 Andree Toonk 在他的博客使用不同拥塞控制算法、
 笔者实践结论中，通过对 Cubic 和 BBR 进行吞吐量测试，使用 BBR 后网络约提升了 30% ~ 45% 的吞吐率。
  
 [^1]: 笔者做过弱网环境服务治理优化的工作，其中一项改善明显的措施是尝试切换了 TCP 拥塞控制算法，把 Linux 默认的 Cubic 算法替换为 BBR 算法，调整之后网络吞吐量大约提升了 45% 。
-[^1]: 参见 https://datatracker.ietf.org/doc/html/rfc896
-[^2]: 参见 https://research.google/pubs/pub45646/
-[^3]: 参见 https://toonk.io/tcp-bbr-exploring-tcp-congestion-control/index.html
+[^2]: 参见 https://datatracker.ietf.org/doc/html/rfc896
+[^3]: 参见 https://research.google/pubs/pub45646/
+[^4]: 参见 https://toonk.io/tcp-bbr-exploring-tcp-congestion-control/index.html
 
