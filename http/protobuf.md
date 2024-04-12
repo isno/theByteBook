@@ -98,13 +98,13 @@ Varint 确实是一种紧凑的表示数字的方法，因为从统计学的角�
 
 ### 3.2 Message 结构
 
-介绍 Protobuf 时，还提到了一个很重要的特性：向后兼容。实现这个特性的关键在于 message 的结构设计。
+介绍 Protobuf 时，还提到了一个很重要的特性：向后兼容。实现这个特性的关键在于 Message 的结构设计。
 
-如图 2-11 所示，Protobuf 的 message 是一系列键值对，message 的序列化后只是使用字段号(field's number 和 wire_type) 作为 key。每个字段的名称和声明类型只能在解码端通过消息类型的定义（即 .proto 文件）来确定，如果没有数据结构描述 .proto 文件，拿到数据以后无法解释成正常的数据。这也是人们常说的 protocol buffer 比 JSON、XML 安全的原因，
+如图 2-11 所示，Protobuf 的 Message 是一系列键值对，Message 的序列化后只是使用字段号(field's number 和 wire_type) 作为 key。每个字段的名称和声明类型只能在解码端通过消息类型的定义（即 .proto 文件）来确定，如果没有数据结构描述 .proto 文件，则无法解释成正常的数据。这也是人们常说的 Protobuf 比 JSON、XML 安全的原因。
 
 <div  align="center">
 	<img src="../assets/protobuf_example.png" width = "550"  align=center />
 	<p>图2-11 Message 结构</p>
 </div> 
 
-由于采用了 tag-value 的形式，所以 optional 类型的字段如果有，就存在这个 message buffer 中，如果没有，就不会在这里，这一点也算是压缩了 message 的大小了。当消息编码时，键和值被连接成一个字节流，当消息被解码时，**解析器跳过它无法识别的字段**。这样，就可以将新字段添加到消息中，而不会破坏不知道它们的旧程序，继而实现向后兼容特性。
+由于采用了 tag-value 的形式，所以 optional 类型的字段如果有，就存在这个 Message Buffer 中，如果没有，就不会在这里，这一点也算穷举脑力压缩 Message 的大小了。当消息编码时，键和值被连接成一个字节流，当消息被解码时，**解析器跳过它无法识别的字段**。这样，就可以将新字段添加到消息中，而不会破坏不知道它们的旧程序，继而实现向后兼容特性。
