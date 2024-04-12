@@ -12,9 +12,8 @@
 
 正如编程语言“面向对象”给开发者带来便利的同时也带来数量庞大且难以管理的“类”。服务面向容器的转变中，同样也带来数量庞大关系复杂的容器集群。就这样，容器编排诞生了。
 
-
 <div  align="center">
   <img src="../assets/container-summary.png" width = "550"  align=center />
 </div>
 
-[^1]: Charles Antony Richard Hoare 缩写为C. A. R. Hoare，著名的计算科学家，图灵奖获得者，以设计了快速排序算法、霍尔逻辑、通信顺序进程闻名。
+[^1]: Charles Antony Richard Hoare（缩写为 C. A. R. Hoare），著名的计算科学家，图灵奖获得者，以设计了快速排序算法、霍尔逻辑、通信顺序进程闻名。
