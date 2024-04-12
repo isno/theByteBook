@@ -1,10 +1,12 @@
-# 2.8 使用 QUIC 协议
+# 2.8 使用新一代的传输协议 QUIC
 
-2022 年 6 月 6 日，IETF QUIC 和 HTTP 工作组成员 Robin Mark 在推特上宣布：“历时 5 年，HTTP/3 终于被标准化为 RFC 9114”。HTTP/3 发布之后，有工程师对各个版本的 HTTP 进行时延测试（从上海请求旧金山 HTTP 服务器），得到如下测试结果 “HTTP/1.1 平均在 3500 ms，HTTP/2 平均在 2500 ms，而 HTTP/3 平均在 1300 ms”，数据证明 HTTP/3 带来的性能提升明显。
+2022 年 6 月 6 日，IETF QUIC 和 HTTP 工作组成员 Robin Mark 在推特上宣布：「历时 5 年，HTTP/3 终于被标准化为 RFC 9114」，这对于 HTTP 服务性能意义重大。HTTP/3 发布之后，国内有位工程师使用基准测试的方法对各个版本的 HTTP 协议进行了延时测试（从上海请求旧金山 HTTP 服务器）[^1]，测试结果表明「HTTP/1.1 平均在 3500 ms，HTTP/2 平均在 2500 ms，而 HTTP/3 平均在 1300 ms」，数据证明 HTTP/3 带来的性能提升明显。
 
 <div  align="center">
 	<img src="../assets/http3.png" width = "500"  align=center />
 	<p>图2-11 HTTP 性能测试</p>
 </div> 
 
-HTTP/3 为何性能提升如此明显？想知道这个问题的答案，你得先了解 HTTP/3 的下层协议 QUIC。
+HTTP/3 的性能为何提升如此明显？带着这个疑问，我们进入「快速 UDP 网络连接」这一节。
+
+[^1]: 出处《从旧金山到上海, HTTP/3 非常快! 》，https://www.cnblogs.com/myshowtime/p/16227260.html

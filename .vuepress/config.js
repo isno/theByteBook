@@ -135,7 +135,7 @@ export default defineUserConfig({
                     '/http/Edge-Acceleration.md',
 
                     {
-                        text: '2.8 使用 QUIC 协议',
+                        text: '2.8 使用新一代的传输协议 QUIC',
                         link:  '/http/http3.md',
                         children: [
                             '/http/quic.md',
