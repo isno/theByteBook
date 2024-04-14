@@ -4,8 +4,7 @@
 
 Linux 网络协议栈的处理是一套相对固定和封闭的流程，整套处理过程中，除了网络设备层能看到一点点程序以设备的形式介入处理的空间外，其他过程似乎就没有什么可提供程序插手的空间了。然而事实并非如此，从 Linux 内核 2.4 版本起，内核就开放了一套通用的，可提供代码干预数据在协议栈流转的过滤框架 -- Netfilter。
 
-如图 3-3 所示，该架构图来自 Netfilter 项目[^1]，图片名称为 《Packet flow in Netfilter and General Networking》，该设计图较全面介绍了内核网络设计原理，包含了 XDP、Netfilter 和 traffic control 部分。带颜色的部分为 Netfilter 模块，有着更细节的内核协议栈各 hook 点位置和 iptables 规则优先级的经典配图。
-
+如图 3-3 所示，该架构图《Packet flow in Netfilter and General Networking》来自 Netfilter 项目[^1]，较全面的介绍了内核网络设计原理，包含了 XDP、Netfilter 和 traffic control 部分。带颜色的部分为 Netfilter 模块，有着更细节的内核协议栈各 hook 点位置和 iptables 规则优先级的经典配图。
 
 <div  align="center">
 	<img src="../assets/Netfilter-packet-flow.svg" width = "800"  align=center />
