@@ -151,6 +151,7 @@ export default defineUserConfig({
                 link: '/network/summary.md',
                 sidebarDepth: 2,
                 children: [
+                    '/network/network-layer.md',
                     '/network/networking.md',
                     {
                         text: '3.2 Linux 内核网络框架',

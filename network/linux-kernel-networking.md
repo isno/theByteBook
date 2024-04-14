@@ -2,13 +2,18 @@
 
 近几年由于容器、可观测技术等技术的发展，对于工程师而言，或者出于参考借鉴的目的，或者从事网络开发/维护，了解 Linux 内核网络协议栈都是绕不开的点。
 
-Linux 网络协议栈的处理是一套相对固定和封闭的流程，整套处理过程中，除了网络设备层能看到一点点程序以设备的形式介入处理的空间外，其他过程似乎就没有什么可提供程序插手的空间了。然而事实并非如此，从 Linux 内核 2.4 版本起，内核就开放了一套通用的，可提供代码干预数据在协议栈流转的过滤框架 -- Netfilter。
+Linux 网络协议栈的处理是一套相对固定和封闭的流程，整套处理过程中，除了网络设备层能看到一点点程序以设备的形式介入处理的空间外，其他过程似乎就没有什么可提供程序插手的空间了。然而事实并非如此，从 Linux 内核 2.4 版本起，内核就开放了一套通用的，可提供代码干预数据在协议栈流转的过滤框架 —— Netfilter。
 
+:::tip Netfilter
+
+Netfilter 是 Linux 内核中的一个软件框架，用于管理网络数据包。不仅具有网络地址转换（NAT）的功能，也具备数据包内容修改、以及数据包过滤等防火墙功能。
+
+:::
 如图 3-3 所示，该架构图《Packet flow in Netfilter and General Networking》来自 Netfilter 项目[^1]，较全面的介绍了内核网络设计原理，包含了 XDP、Netfilter 和 traffic control 部分。带颜色的部分为 Netfilter 模块，有着更细节的内核协议栈各 hook 点位置和 iptables 规则优先级的经典配图。
 
 <div  align="center">
 	<img src="../assets/Netfilter-packet-flow.svg" width = "800"  align=center />
-	<p>图 3-3 网络数据包流程和 Netfilter 框架</p>
+	<p>图 3-3 网络数据包通过 Netfilter 时的工作流向</p>
 </div>
 
 Netfilter 实际上就是一个过滤器框架，Netfilter 在网络包收发以及路由的“管道”中，一共切了 5 个口（hook），分别是 PREROUTING、FORWARD、POSTROUTING、INPUT 以及 OUTPUT，其它内核模块(例如 iptables、IPVS 等)可以向这些 hook 点注册处理函数。每当有数据包留到网络层，就会自动触发内核模块注册在这里的回调函数，这样程序代码就能够通过回调函数来干预 Linux 的网络通信，进而实现对数据包过滤、修改、SNAT/DNAT 等各类功能。
