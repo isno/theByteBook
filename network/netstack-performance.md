@@ -8,18 +8,18 @@
 
 如图 3-16 所示，握手流程中有两个队列比较关键，当队列满时多余的连接将会被丢弃。
 
-<div  align="center">
-	<img src="../assets/TCP.svg" width = "550"  align=center />
-	<p>图 3-16 TCP 握手概览</p>
-</div>
-
-- SYN Queue（半连接队列）是内核保持未被 ACK 的 SYN 包最大队列长度，通过内核参数 net.ipv4.tcp_max_syn_backlog 设置。
-- Accept Queue（全连接队列）是 socket 上等待应用程序 accept 的最大队列长度，取值为 min(backlog，net.core.somaxconn)。
+1. SYN Queue（半连接队列）是内核保持未被 ACK 的 SYN 包最大队列长度，通过内核参数 net.ipv4.tcp_max_syn_backlog 设置。
+2. Accept Queue（全连接队列）是 socket 上等待应用程序 accept 的最大队列长度，取值为 min(backlog，net.core.somaxconn)。
 
 backlog 创建 TCP 连接时设置，用法如下。
 ```plain
 int listen(int sockfd, int backlog)
 ```
+
+<div  align="center">
+	<img src="../assets/TCP.svg" width = "550"  align=center />
+	<p>图 3-16 TCP 握手概览</p>
+</div>
 
 ## 2. TCP 连接保活
 
@@ -33,7 +33,7 @@ TCP 建立连接后有个发送一个空 ACK 的探测行为来保持连接（ke
 
 ## 3. TCP 连接断开
 
-由于 TCP 双全工的特性，安全关闭一个连接需要四次挥手，如图 3-17 所示。但复杂的网络环境中存在很多异常情况，异常断开连接会导致产生“孤儿连”，这种连接既不能发送数据，也无法接收数据，累计过多，会消耗大量系统资源，资源不足时产生 Address already in use: connect 类似的错误。
+由于 TCP 双全工的特性，安全关闭一个连接需要四次挥手，如图 3-17 所示。但复杂的网络环境中存在很多异常情况，异常断开连接会导致产生「孤儿连」，这种连接既不能发送数据，也无法接收数据，累计过多，会消耗大量系统资源，资源不足时产生 Address already in use: connect 类似的错误。
 
 <div  align="center">
 	<img src="../assets/tcp_disconnect.svg" width = "550"  align=center />
@@ -51,25 +51,24 @@ TIME_WAIT 问题在反向代理节点中出现概率较高，例如 client 传�
 
 ## 4. 相关配置参考
 
-笔者整理了部分内核参数配置，以供读者参考。但注意使用场景不同和机器配置不同，相关的配置起到的作用也不尽相同，生产环境中的参数配置，得在知晓原理基础上，根据实际情况进行调整。
+笔者部分内核参数配置[^1]，以供读者参考。但注意使用场景不同和机器配置不同，相关的配置起到的作用也不尽相同，生产环境中的参数配置，得在知晓原理基础上，根据实际情况进行调整。
 
 ```plain
-net.ipv4.tcp_tw_recycle = 0
-net.ipv4.tcp_tw_reuse = 1
-net.ipv4.ip_local_port_range = 1024 65535
-net.ipv4.tcp_rmem = 16384 262144 8388608
-net.ipv4.tcp_wmem = 32768 524288 16777216
-net.core.somaxconn = 8192
-net.core.rmem_max = 16777216
-net.core.wmem_max = 16777216
-net.core.wmem_default = 2097152
-net.ipv4.tcp_max_tw_buckets = 5000
-net.ipv4.tcp_max_syn_backlog = 10240
-net.core.netdev_max_backlog = 10240
-net.netfilter.nf_conntrack_max = 1000000
+net.ipv4.tcp_tw_reuse = 1 // 是否复用 TIME_WAIT socket
+net.ipv4.ip_local_port_range = 1024 65535 // 端口范围
+net.ipv4.tcp_rmem = 16384 262144 8388608 // TCP 收包缓冲
+net.ipv4.tcp_wmem = 32768 524288 16777216 // TCP 发包缓冲
+net.core.somaxconn = 8192  // 一个 socket 上等待应用程序 accept() 的最大队列长度
+net.core.rmem_max = 16777216 // 接收缓冲
+net.core.wmem_max = 16777216 // 发送缓冲
+net.core.wmem_default = 2097152 // 所有协议的发送缓冲
+net.ipv4.tcp_max_tw_buckets = 5000 // 同一时间最多能有多少 TIME_WAIT 状态
+net.ipv4.tcp_max_syn_backlog = 10240 // 内核保持的未被 ACK 的 SYN 包最大队列长度
+net.core.netdev_max_backlog = 10240 // 网络协议栈的收包队列，网卡收到的所有报文都在此队列中等待软中断处理
+net.netfilter.nf_conntrack_max = 1000000  // 连接跟踪表最大值
 net.ipv4.netfilter.ip_conntrack_tcp_timeout_established = 7200
-net.core.default_qdisc = fq_codel
-net.ipv4.tcp_congestion_control = bbr
+net.core.default_qdisc = fq_codel // egress traffic control 和 qos 相关的问题
+net.ipv4.tcp_congestion_control = bbr // 拥塞控制算法
 net.ipv4.tcp_slow_start_after_idle = 0
 ```
 
@@ -82,3 +81,5 @@ net.ipv4.tcp_slow_start_after_idle = 0
 最大努力交付计算机工程最典型的体现就是 TCP 协议，TCP 需要三次握手来建立连接，也是为了降低不确定性。再看本节所有的调整，只不过是在「最大努力交付」的框内「不那么努力」一点。
 
 :::
+
+[^1]: https://www.starduster.me/2020/03/02/linux-network-tuning-kernel-parameter/
