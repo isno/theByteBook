@@ -1,4 +1,4 @@
-# 2.3.4 使用 HTTPDNS 解决中间商问题
+# 2.3.2 使用 HTTPDNS 解决中间商问题
 
 解决 Authoritative nameserver 可用性之后，再回过头看看 Recursive resolver 的问题。
 
