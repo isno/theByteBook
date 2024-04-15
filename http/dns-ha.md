@@ -6,7 +6,7 @@ Facebook 史诗级故障事件发生在 2021 年 10 月 4 日，故障绕过了�
 
 <div  align="center">
 	<img src="../assets/facebook-404-error.jpeg" width = "450"  align=center />
-	<p>图2-5 Facebook宕机 </p>
+	<p>图 2-4 Facebook宕机 </p>
 </div>
 
 Facebook 官方在故障后续发布原因总结是：**运维人员修改 BGP 路由规则时，误将 Facebook 的自治域 AS32934 [^1]内的权威解析服务器的路由给删除了**。这个操作的直接后果就是所有请求 Facebook 域名的解析请求都会丢弃在网络路由中，世界各地 DNS 解析器都无法再正常解析 Facebook 相关的域名。
@@ -24,11 +24,11 @@ Facebook 官方在故障后续发布原因总结是：**运维人员修改 BGP �
 ;facebook.com.            IN    A
 ```
 
-因为 Facebook 用户太多了，用户无法正常登陆 APP 时会疯狂地发起重试。如图 2-6 所示，CloudFlare 的 DNS 解析器（1.1.1.1）请求瞬间增大了 30 倍，如果 1.1.1.1 宕机，恐怕整个互联网会出现相当一段时间不可用。
+因为 Facebook 用户太多了，用户无法正常登陆 APP 时会疯狂地发起重试。如图 2-5 所示，CloudFlare 的 DNS 解析器（1.1.1.1）请求瞬间增大了 30 倍，如果 1.1.1.1 宕机，恐怕整个互联网会出现相当一段时间不可用。
 
 <div  align="center">
 	<img src="../assets/cloudflare-dns.png" width = "650"  align=center />
-	<p>图2-6 cloudflare 监控到 Facebook 故障时期的请求数 </p>
+	<p>图 2-5 cloudflare 监控到 Facebook 故障时期的请求数 </p>
 </div>
 
 故障从美国东部标准时间上午 11 点 51 分开始，最终 6 个小时以后才恢复。
@@ -47,14 +47,14 @@ Facebook 这次故障带给我们以下几点关于 DNS 系统设计的思考：
 - **部署形式考虑**：可选择将 Authoritative nameserver 节点全部放在 SLB（Server Load Balancer，负载均衡）后方，或采用 OSPF Anycast 架构[^2]等部署形式，从而提高 DNS 系统的可靠性。
 - **部署位置考虑**：可选择数据中心自建集群 + 公有云服务混合异构部署，利用云的分布式优势进一步增强 DNS 系统健壮性，同时提升 DNS 系统在遭受 DDoS 攻击时的抵御能力。
 
-如图 2-7 所示，amazon.com 和 facebook.com 的权威域体系对比：amazon.com 的权威解析服务器分散在不同的 AS 内，所以它的抗风险能力肯要强于 Facebook。
+如图 2-6 所示，amazon.com 和 facebook.com 的权威域体系对比：amazon.com 的权威解析服务器分散在不同的 AS 内，所以它的抗风险能力肯要强于 Facebook。
 
 <div  align="center">
 	<img src="../assets/dns-1.png" width = "220"  align=center />
 </div>
 <div  align="center">
 	<img src="../assets/dns-2.png" width = "350"  align=center />
-	<p>图2-7  amazon.com 与 facebook.com 域名结构对比</p>
+	<p>图 2-6  amazon.com 与 facebook.com 域名结构对比</p>
 </div>
 
 ## 3.运维操作的警示

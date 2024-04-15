@@ -6,11 +6,11 @@
 
 一个完整、无任何缓存、未复用连接的 HTTPS 请求需要经过以下 5 个阶段：**DNS 域名解析、TCP 握手、SSL 握手、服务器处理、内容传输**。
 
-如图 2-2 请求阶段分析所示，这些阶段共需要 5 个 RTT[^2] = 1 RTT（域名解析）+ 1 RTT（TCP 握手）+ 2 RTT（SSL 握手）+ 1 RTT（HTTP 内容请求传输）。
+如图 2-1 请求阶段分析所示，这些阶段共需要 5 个 RTT[^2] = 1 RTT（域名解析）+ 1 RTT（TCP 握手）+ 2 RTT（SSL 握手）+ 1 RTT（HTTP 内容请求传输）。
 
 <div  align="center">
 	<img src="../assets/http-process.png" width = "450"  align=center />
-	<p>图2-2 HTTPS（TLS1.2 协议）请求阶段分析</p>
+	<p>图 2-1 HTTPS（使用 TLS1.2 协议）请求阶段分析</p>
 </div>
 
 RTT 是评估服务延迟的重要因素。举个例子，假设北京到美国洛杉矶的 RTT 延迟为 190 毫秒，从北京访问美国洛杉矶 HTTP 服务时延就是`5*190+后端业务时延（ms）`，「5」代表的是 HTTPS 请求的 5 个 RTT。

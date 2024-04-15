@@ -14,7 +14,7 @@
 
 <div  align="center">
 	<img src="../assets/dsa.png" width = "550"  align=center />
-	<p>图 2-11 动态加速网络服务</p>
+	<p>图 2-30 动态加速网络服务</p>
 </div>
 
 笔者使用过 Akamai 的加速服务，从抽样的数据看，如表 2-4 所示，整体连接速度提升了 30% 右。

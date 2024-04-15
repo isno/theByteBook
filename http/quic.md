@@ -41,7 +41,7 @@ QUIC 采用 UDP 作为其传输协议，与 TCP 相比没有丢包自动重传�
 
 <div  align="center">
 	<img src="../assets/quic-connection.png" width = "580"  align=center />
-	<p>图2-14 QUIC 支持连接迁移</p>
+	<p>图 2-32 QUIC 支持连接迁移</p>
 </div>
 
 ### 低时延连接
@@ -50,7 +50,7 @@ QUIC 采用 UDP 作为其传输协议，与 TCP 相比没有丢包自动重传�
 
 <div  align="center">
 	<img src="../assets/quic-handshake.png" width = "580"  align=center />
-	<p>图 2-15 QUIC 请求 RTT 示例</p>
+	<p>图 2-33 QUIC 请求 RTT 示例</p>
 </div>
 
 ### 可插拔拥塞控制
@@ -65,7 +65,7 @@ QUIC 为每个 Stream 设计和实现单独的流量控制，解决了影响整�
 
 <div  align="center">
 	<img src="../assets/quic-head-block.png" width = "480"  align=center />
-	<p>图 2-16 QUIC 流</p>
+	<p>图 2-34 QUIC 流</p>
 </div>
 
 这样，通过全方位无死角的优化设计，保证了 QUIC 在当今网络环境下比 TCP 更安全、更快速的连接、更高的传输效率。

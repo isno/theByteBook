@@ -6,7 +6,7 @@ HTTP/3 发布之后，国内有位工程师使用基准测试的方法对各个�
 
 <div  align="center">
 	<img src="../assets/http3.png" width = "500"  align=center />
-	<p>图2-11 HTTP 性能测试</p>
+	<p>图2-31 HTTP 性能测试</p>
 </div> 
 
 HTTP/3 的性能为何提升如此明显？带着这个疑问，我们进入「快速 UDP 网络连接」这一节。

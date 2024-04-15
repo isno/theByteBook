@@ -1,6 +1,6 @@
 # 2.9 小结
 
-本章参考内容:
+本章参考：
 
 - DNS 服务器类型，https://www.cloudflare.com/zh-cn/learning/dns/dns-server-types/
 - 《A Question of Timing》，https://blog.cloudflare.com/a-question-of-timing/
