@@ -1,4 +1,4 @@
-# 3.2.2 连接跟踪 conntrack
+# 3.3.2 连接跟踪 conntrack
 
 conntrack 是 connection track（连接跟踪）的缩写，顾名思义，这个模块就是用来做连接跟踪的。
 

@@ -1,4 +1,4 @@
-# 3.2.1 iptables 
+# 3.3.1 iptables 
 
 Netfilter 的钩子回调固然强大，但仍要通过程序编码才能使用，并不适合系统管理员日常运维。用过 Linux 系统的开发人员或多或少都使用过 iptables，它常被称为 Linux 系统「自带的防火墙」，然而 iptables 能做的事情已经远超防火墙的范畴，严谨地讲，iptables 的定位应是能够代替 netfilter 多数常规功能的 IP 包过滤工具。
 

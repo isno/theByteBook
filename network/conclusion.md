@@ -1,4 +1,4 @@
-# 3.5 小结
+# 3.6 小结
 
 本章我们介绍了 Linux 内核网络框架 netfilter 以及 iptables 、conntrack 等机制，这些是后续容器网络、负载均衡等应用的基石。此外，DPDK、XDP 篇节也展示了极致网络优化的方向。
 

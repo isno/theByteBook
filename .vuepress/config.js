@@ -154,7 +154,7 @@ export default defineUserConfig({
                     '/network/network-layer.md',
                     '/network/networking.md',
                     {
-                        text: '3.2 Linux 内核网络框架',
+                        text: '3.3 Linux 内核网络框架',
                         link: "/network/linux-kernel-networking.md",
                         children: [
                             '/network/netfilter.md',
@@ -163,7 +163,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '3.3 内核参数优化实践',
+                        text: '3.4 内核参数优化实践',
                         link: '/network/kernel-performance.md',
                         children: [
                             "/network/RSS.md",
@@ -172,7 +172,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '3.4 Linux 网络虚拟化',
+                        text: '3.5 Linux 网络虚拟化',
                         link: "/network/linux-vritual-net.md",
                         children: [
                             "/network/network-namespace.md",
