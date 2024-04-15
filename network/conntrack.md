@@ -58,7 +58,7 @@ conntrack 是许多高级网络应用的基础，譬如经常使用的 NAT（Net
 
 首先 Kubernetes 的 Service 本质是个反向代理，访问 Service 时会进行 DNAT，将原本访问 ClusterIP:Port 的数据包 NAT 成 Service 的某个 Endpoint (PodIP:Port)，然后内核将连接信息插入 conntrack 表以记录连接，目的端回包的时候内核从 conntrack 表匹配连接并反向 NAT，这样原路返回形成一个完整的连接链路。
 
-但是 Linux 网桥是一个虚拟的二层转发设备，而 iptables conntrack 工作在三层。所以问题来了，如果直接访问同一网桥内的地址，会走二层转发，不经过 conntrack，由于没有原路返回，客户端与服务端的通信就不在一个 「频道」 上，不认为处在同一个连接，也就无法正常通信。
+但是 Linux Bridge（Linux 网桥）是一个虚拟的二层转发设备，而 iptables conntrack 工作在三层。所以问题来了，如果直接访问同一网桥内的地址，会走二层转发，不经过 conntrack，由于没有原路返回，客户端与服务端的通信就不在一个 「频道」 上，不认为处在同一个连接，也就无法正常通信。
 
 设置 bridge-nf-call-iptables 这个内核参数 (设置为 1)，表示 bridge 设备在二层转发时也去调用 iptables 配置的三层规则 (包含 conntrack)，所以开启这个参数就能够解决上述 Service 同节点通信问题。
 
