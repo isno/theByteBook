@@ -14,9 +14,9 @@ DPDK（Data Plane Development Kit，数据平面开发套件）为 Intel 处理�
 
 :::
 
-在内核看来，DPDK 就是一个普通的用户态进程，它的编译、连接和加载方式和普通程序没有什么两样，如图 3-18 所示，DPDK 与 传统内核网络的对比。
+如图 3-18 所示的 DPDK 与 传统内核网络对比，在内核看来，DPDK 就是一个普通的用户态进程，它的编译、连接和加载方式和普通程序没有什么两样：
 
-- 左边是原来的方式：数据从网卡 -> 驱动 -> 协议栈 -> Socket 接口 -> 业务。
+- 左边是原内核方式：数据从网卡 -> 驱动 -> 协议栈 -> Socket 接口 -> 业务。
 - 右边是 DPDK 方式：基于 UIO（Userspace I/O）旁路数据。数据从网卡 -> DPDK 轮询模式-> DPDK 基础库 -> 业务。
 
 <div  align="center">
@@ -26,7 +26,7 @@ DPDK（Data Plane Development Kit，数据平面开发套件）为 Intel 处理�
 
 很多企业如 Facebook 的 Katran、美团的 MGW、爱奇艺的 DPVS 等使用 DPDK 或 eBPF 技术进行跨内核，直接全部在用户态进行数据包的处理，正是基于此，才得以实现单机千万并发的性能指标。
 
-如图 3-19 所示的 L4 负载均衡基本测试，DPVS 与 LVS 在 PPS 转发上的指标对比，dvps 性能提升约 300%。
+如图 3-19 所示的 L4 负载均衡基准测试，DPVS 与 LVS 在 PPS 转发上的指标对比，dvps 性能提升约 300%。
 
 <div  align="center">
 	<img src="../assets/dpvs-performance.png" width = "550"  align=center />
