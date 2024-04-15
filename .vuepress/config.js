@@ -146,7 +146,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第三章：Linux 内核网络',
+                text: '第三章：深入 Linux 内核网络',
                 collapsable: true,
                 link: '/network/summary.md',
                 sidebarDepth: 2,
@@ -188,7 +188,7 @@ export default defineUserConfig({
             },
             
             {
-                text: '第四章：负载均衡概论',
+                text: '第四章：负载均衡技术概论',
                 link: '/balance/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
