@@ -36,11 +36,11 @@ chroot 被认为是最早的容器化技术之一，它可以重定向进程及�
 
 开发者基于镜像可以打包任何容器进程所依赖的环境，而不用改造应用来适配 PaaS 定义的运行环境。
 
-如图 1-15 所示，Docker 的宣传口号是「Build，Ship and Run Any App，Anywhere」，「Run Any App」一举打破了 PaaS 行业面临的困境，创造出了无限的可能性。所以说，促使 Docker 一问世就惊艳世间的，并不是什么黑科技式的秘密武器，而是它符合历史潮流的创意和设计理念，还有充分开放的生态运营。
+如图 1-14 所示，Docker 的宣传口号是「Build，Ship and Run Any App，Anywhere」，「Run Any App」一举打破了 PaaS 行业面临的困境，创造出了无限的可能性。所以说，促使 Docker 一问世就惊艳世间的，并不是什么黑科技式的秘密武器，而是它符合历史潮流的创意和设计理念，还有充分开放的生态运营。
 
 <div  align="center">
 	<img src="../assets/docker.png" width = "500"  align=center />
-	<p>图1-15 Docker 的愿景：Build, Ship, and Run Any App, Anywhere</p>
+	<p>图 1-14 Docker 的愿景：Build, Ship, and Run Any App, Anywhere</p>
 </div>
 
 至此，容器技术体系已经解决了最核心的两个问题「如何运行软件和如何发布软件」，云计算开始进入容器阶段。
@@ -63,11 +63,11 @@ OCI 项目启动后，为了符合 OCI 标准，Docker 推动自身的架构持�
 
 接着进一步重构了 Docker Daemon 子系统，把其中与运行时交互的部分抽象为了 containerd 项目，并在 2016 年，将 containerd 捐献给了 CNCF 管理 。containerd 是一个负责管理容器执行、分发、监控、网络、构建、日志等功能的核心模块，其内部会为每个容器运行时创建一个 containerd-shim 适配进程，默认与 runC 搭配工作，但也可以切换到其他 OCI Runtime 实现上（实际并没做到，containerd 仍是紧密绑定于 runC）。
 
-此后 Docker 运行就不是简单通过 Docker Daemon 来启动了，而是集成 containerd、containerd-shim、runC 等多个组件共同完成，架构如图 1-16 所示。
+此后 Docker 运行就不是简单通过 Docker Daemon 来启动了，而是集成 containerd、containerd-shim、runC 等多个组件共同完成，架构如图 1-15 所示。
 
 <div  align="center">
 	<img src="../assets/docker-arc.png" width = "600"  align=center />
-	<p>图1-16 Docker 架构</p>
+	<p>图 1-15 Docker 架构</p>
 </div>
 
 ## 5.容器编排阶段：封装集群
@@ -91,20 +91,20 @@ Kubernetes 设计了一套稳定可扩展的 API 接口、预置服务发现、�
 2015 年 7 月 21 日，Google 带头成立了 Cloud Native Computing Foundation（CNCF，云原生基金会）。
 
 CNCF 宗旨是构建云原生计算 —— 一种围绕着微服务、容器和应用动态调度的、以基础设施为中心的架构，并促进其广泛使用。OCI 和 CNCF 这两个围绕容器的基金会对云原生生态的发展发挥了非常重要的作用，二者不是竞争而是相辅相成，共同制定了一系列行业事实标准。
-其中与容器相关的最为重要的几个规范包括：CRI、CNI、CSI、OCI Distribution Spec、OCI Image Spec、OCI Runtime Spec 和 Shimv2，如图 1-17 所示。
+其中与容器相关的最为重要的几个规范包括：CRI、CNI、CSI、OCI Distribution Spec、OCI Image Spec、OCI Runtime Spec 和 Shimv2，如图 1-16 所示。
 
 这些行业事实标准的确立，为软件相关的各行业注入了无限活力，基于接口的标准的具体实现不断涌现，呈现出一片百花齐放的景象。
 
 <div  align="center">
 	<img src="../assets/container-2.jpeg" width = "650"  align=center />
-	<p>图1-17 容器编排生态</p>
+	<p>图 1-16 容器编排生态</p>
 </div>
 
 在容器编排大战期间，以 Kubernetes 为底层资源调度和应用生命周期管理的 CNCF 生态系统得以迅猛发展，云原生成为云计算市场的技术新热点。
 
-如图 1-18 所示，迄今为止在其 CNCF 公布的云原生全景图中，显示了近 30 个领域、数百个项目的繁荣发展，从数据存储、消息传递，到持续集成、服务编排乃至网络管理无所不包、无所不含。
+如图 1-17 所示，迄今为止在其 CNCF 公布的云原生全景图中，显示了近 30 个领域、数百个项目的繁荣发展，从数据存储、消息传递，到持续集成、服务编排乃至网络管理无所不包、无所不含。
 
 <div  align="center">
 	<img src="../assets/landscape.png" width = "100%"  align=center />
-	<p>图1-18 CNCF 云原生项目 Landscape </p>
+	<p>图 1-17 CNCF 云原生项目 Landscape </p>
 </div>

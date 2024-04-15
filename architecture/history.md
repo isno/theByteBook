@@ -16,11 +16,11 @@
 
 Intel 创始人之一 Gordon Earle Moore 曾提出非常有名的摩尔定律，简而言之「每隔18个月，芯片的性能会增加一倍」。**虚拟化技术的出现使应用能够充分利用硬件快速发展的性能，得以让应用更加充分灵活的利用物理机的硬件资源**。
 
-如图 1-2 所示，2000 年前后，虚拟化技术逐渐发展成熟。
+如图 1-1 所示，2000 年前后，虚拟化技术逐渐发展成熟。
 
 <div  align="center">
 	<img src="../assets/cloud-history-1.svg" width = "620"  align=center />
-	<p>图1-2 虚拟化技术走向成熟</p>
+	<p>图1-1 虚拟化技术走向成熟</p>
 </div>
 
 这一时期，云计算的重要里程碑之一是 2001 年 VMware 发布了第一个针对 x86 服务器的虚拟化产品 —— VMware ESX。使用 VMware ESX 可以在同一台物理机器上运行多个虚拟机，这意味着可以降低服务器的数量，而且速度和弹性也远超物理机。
@@ -35,7 +35,7 @@ Intel 创始人之一 Gordon Earle Moore 曾提出非常有名的摩尔定律，
 
 <div  align="center">
 	<img src="../assets/cloud-history-2.svg" width = "620"  align=center />
-	<p>图1-3 云计算走向成熟</p>
+	<p>图1-2 云计算走向成熟</p>
 </div>
 
 基于虚拟化技术诞生了众多的云计算产品，陆续出现了 IaaS、PaaS、SaaS 以及公有云、私有云、混合云等多种云服务模型。如图 1-3 所示，在这期间出现了云计算领域多个重要里程碑：
@@ -66,10 +66,10 @@ Docker 的宣传口号是「Build，Ship and Run Any App，Anywhere」。
 
 <div  align="center">
 	<img src="../assets/cloud-history-3.svg" width = "600"  align=center />
-	<p>图 1-4 容器技术兴起</p>
+	<p>图 1-3 容器技术兴起</p>
 </div>
 
-如图 1-4 所示，这里有三个重要的里程碑：
+如图 1-3 所示，这里有三个重要的里程碑：
 
 - 2013 年，Docker 发布，容器逐步替代虚拟机（Virtual Machine，VM），云计算进入容器时代。
 - 2017 年底，Kubernetes 赢得容器编排的胜利，云计算进入 Kubernetes 时代。
@@ -84,11 +84,11 @@ Docker 的宣传口号是「Build，Ship and Run Any App，Anywhere」。
 - 隔离单元：无论是启动时间还是单元大小，物理机、虚拟机、容器一路走来，实现了从重量级到轻量级的转变。
 - 供应商：从闭源到开源，从单一供应商到跨越多个供应商。
 
-图 1-6 形象地概述了这二十年云计算的演进过程：从传统预制 IT、托管到云，以及云服务模型不同的形态如 IaaS、PaaS、SaaS 等。
+图 1-5 形象地概述了这二十年云计算的演进过程：从传统预制 IT、托管到云，以及云服务模型不同的形态如 IaaS、PaaS、SaaS 等。
 
 <div  align="center">
 	<img src="../assets/xaas.svg" width = "750"  align=center />
-	<p>图 1-6 XaaS 演进 </p>
+	<p>图 1-5 XaaS 演进 </p>
 </div>
 
 对于 XaaS 的一路演进，可以简单归纳为：

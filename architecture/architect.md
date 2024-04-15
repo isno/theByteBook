@@ -2,11 +2,11 @@
 
 云原生架构是优雅的、灵活的、弹性的...，无数的布道内容却回避实现这些特性的技术极度复杂和抽象。如果你有志投入云原生领域，并希望能构建一个高可用的云原生架构，对能力要求已提升到史无前例的程度。
 
-总结来说，云原生实践中除掌握 Docker 和 Kubernetes，如图 1-39 所示，知晓以下几个领域尤佳。
+总结来说，云原生实践中除掌握 Docker 和 Kubernetes，如图 1-34 所示，知晓以下几个领域尤佳。
 
 <div  align="center">
 	<img src="../assets/cloud.svg" width = "650"  align=center />
-	<p>图 1-39 云原生代表技术栈</p>
+	<p>图 1-34 云原生代表技术栈</p>
 </div>
 
 1. 容器运行时：Docker、Containerd、CRI-O、Kata Containers。
