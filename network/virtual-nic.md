@@ -11,7 +11,7 @@
 
 <div  align="center">
 	<img src="../assets/tun.svg" width = "400"  align=center />
-	<p>图 2-25 VPN 中数据流动示意图</p>
+	<p>图 3-20 VPN 中数据流动示意图</p>
 </div>
 
 tun/tap 设备通常用作 overlay 网络传输，如图示例，应用程序通过 tun 发送数据包，tun 设备如果发现另一读被 VPN 程序打开，便会通过字符设备发送给 VPN，VPN 收到数据包，重新修改成新报文，然后作为报文体，再封装到另一个发送给 B 地址的新报文中，这种将一个数据包封装到另一个数据包的处理方式被称为 「隧道」，隧道技术是构建虚拟逻辑网络的经典做法。OpenVPN、Vtun、Flannel 等都是基于 tun/tap 实现隧道封装的，后续章节讲到的 VXLAN 网卡也是一种 tun 设备。
@@ -26,14 +26,14 @@ veth 是另一种主流的虚拟网卡方案，在 Linux Kernel 2.6 版本支持
 
 <div  align="center">
 	<img src="../assets/veth.svg" width = "450"  align=center />
-	<p>图 2-22 veth 设备对</p>
+	<p>图 3-21 veth 设备对</p>
 </div>
 
 因为 veth 这个特性，它常常充当着一个桥梁，连接着宿主机内的虚拟网络，典型的例子像两个隔离的网络命名空间之间的连接、Bridge（Linux 网桥） 和 OVS （Open vSwitch）之间的连接等，通过这种方式，从而构建出复杂的虚拟网络拓扑架构。
 
 <div  align="center">
 	<img src="../assets/cni0.svg" width = "550"  align=center />
-	<p>图 2-23 Pod 通过 veth 互联以及链接到 Linux 网桥</p>
+	<p>图 3-22 Pod 通过 veth 互联以及链接到 Linux 网桥</p>
 </div>
 
 我们在 Kubernetes 宿主机中查看网卡设备，总能看到一堆 veth 开头的网卡设备信息，这些就是为不同 Pod 之间通信而创建的虚拟网卡。

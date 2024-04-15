@@ -10,5 +10,5 @@ Linux Bridge 是 Linux 内核 2.2 版本开始提供的二层转发工具，与�
 
 <div  align="center">
     <img src="../assets/linux-bridge.svg" width = "500"  align=center />
-    <p>图 2-24 conntrack 示例</p>
+    <p>图 3-23 veth 网卡与 Linux Bridge</p>
 </div>

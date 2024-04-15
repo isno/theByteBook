@@ -2,14 +2,14 @@
 
 conntrack 是 connection track（连接跟踪）的缩写，顾名思义，这个模块就是用来做连接跟踪的。
 
-不过这里的链接需要同 TCP 协议中的连接区分开来，它指的是通信的两个端点之间用于传输数据的连接，因此它不止可以用来跟踪 TCP 的连接，还可以跟踪 UDP、ICMP 协议保报文这样「连接」。如图 3-11 所示，这是一台 IP 地址为 10.1.1.3 的 Linux 机器，能看到这台机器上有两条连接：
+不过这里的链接需要同 TCP 协议中的连接区分开来，它指的是通信的两个端点之间用于传输数据的连接，因此它不止可以用来跟踪 TCP 的连接，还可以跟踪 UDP、ICMP 协议保报文这样「连接」。如图 3-10 所示，这是一台 IP 地址为 10.1.1.3 的 Linux 机器，能看到这台机器上有两条连接：
 
 1. 机器访问外部 HTTP 服务的连接（目的端口 80）。
 2. 机器访问外部 DNS 服务的连接（目的端口 53）。
 
 <div  align="center">
 	<img src="../assets/conntrack.png" width = "400"  align=center />
-	<p>图3-11 conntrack 示例</p>
+	<p>图 3-10 conntrack 示例</p>
 </div>
 
 连接跟踪所做的事情就是发现并跟踪这些连接的状态，具体包括：
@@ -37,21 +37,21 @@ ipv4     2 tcp      6 88 ESTABLISHED src=10.0.12.12 dst=10.0.12.14 sport=48318 d
 
 conntrack 是许多高级网络应用的基础，譬如经常使用的 NAT（Network Address Translation，网络地址转换）、iptables 的状态匹配等。
 
-如图 3-12 所示，机器自己的 IP 10.1.1.3 可以与外部正常通信，但 192.168 网段是私有 IP 段，外界无法访问，源 IP 地址是 192.168 的包，其应答包也无法回来，因此：
+如图 3-11 所示，机器自己的 IP 10.1.1.3 可以与外部正常通信，但 192.168 网段是私有 IP 段，外界无法访问，源 IP 地址是 192.168 的包，其应答包也无法回来，因此：
 
 - 当源地址为 192.168 网段的包要出去时，机器会先将源 IP 换成机器自己的 10.1.1.3 再发送出去，进行 SNAT（对源地址 source 进行 NAT）。
 - 收到应答包时，再进行相反的转换，进行 DNAT（对目的地址 destination 进行 NAT）。
 
 <div  align="center">
 	<img src="../assets/nat.png" width = "400"  align=center />
-	<p>图 3-12</p>
+	<p>图 3-11</p>
 </div>
 
-当 NAT 网关收到内部网络的请求包之后，会做 SNAT，同时将本次连接记录保存到连接跟踪表，当收到响应包之后，就可以根据连接跟踪表确定目的主机，然后做 DNAT，DNAT + SNAT 其实就是 Full NAT，如图3-13所示。
+当 NAT 网关收到内部网络的请求包之后，会做 SNAT，同时将本次连接记录保存到连接跟踪表，当收到响应包之后，就可以根据连接跟踪表确定目的主机，然后做 DNAT，DNAT + SNAT 其实就是 Full NAT，如图 3-12 所示。
 
 <div  align="center">
 	<img src="../assets/conntrack-nat.png" width = "450"  align=center />
-	<p>图 3-13 FullNAT</p>
+	<p>图 3-12 FullNAT</p>
 </div>
 
 部署 Kubernetes 时有一条配置 `net.bridge.bridge-nf-call-iptables = 1`，很多同学不明其意，笔者结合 conntrack 说明这个配置的作用。

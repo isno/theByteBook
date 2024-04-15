@@ -6,7 +6,7 @@ Linux 内核源于对资源隔离的需求，从 2.4.19 版本起陆续开始支
 
 <div  align="center">
 	<img src="../assets/network-namespace.svg" width = "550"  align=center />
-	<p>图 2-21 网络命名空间</p>
+	<p>图 3-19 网络命名空间</p>
 </div>
 
 由于每个容器都有自己的网络服务，在网络命名空间的作用下，这就使得一个主机内运行两个同时监听 80 端口的 Nginx 服务成为可能（当然，外部访问还需宿主机 NAT）。

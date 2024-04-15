@@ -6,7 +6,7 @@
 
 ## 1. TCP 握手流程
 
-如图 3-16 所示，握手流程中有两个队列比较关键，当队列满时多余的连接将会被丢弃。
+如图 3-15 所示，握手流程中有两个队列比较关键，当队列满时多余的连接将会被丢弃。
 
 1. SYN Queue（半连接队列）是内核保持未被 ACK 的 SYN 包最大队列长度，通过内核参数 net.ipv4.tcp_max_syn_backlog 设置。
 2. Accept Queue（全连接队列）是 socket 上等待应用程序 accept 的最大队列长度，取值为 min(backlog，net.core.somaxconn)。
@@ -18,7 +18,7 @@ int listen(int sockfd, int backlog)
 
 <div  align="center">
 	<img src="../assets/TCP.svg" width = "550"  align=center />
-	<p>图 3-16 TCP 握手概览</p>
+	<p>图 3-15 TCP 握手概览</p>
 </div>
 
 ## 2. TCP 连接保活
@@ -33,14 +33,14 @@ TCP 建立连接后有个发送一个空 ACK 的探测行为来保持连接（ke
 
 ## 3. TCP 连接断开
 
-由于 TCP 双全工的特性，安全关闭一个连接需要四次挥手，如图 3-17 所示。但复杂的网络环境中存在很多异常情况，异常断开连接会导致产生「孤儿连」，这种连接既不能发送数据，也无法接收数据，累计过多，会消耗大量系统资源，资源不足时产生 Address already in use: connect 类似的错误。
+由于 TCP 双全工的特性，安全关闭一个连接需要四次挥手，如图 3-16 所示。但复杂的网络环境中存在很多异常情况，异常断开连接会导致产生「孤儿连」，这种连接既不能发送数据，也无法接收数据，累计过多，会消耗大量系统资源，资源不足时产生 Address already in use: connect 类似的错误。
 
 <div  align="center">
 	<img src="../assets/tcp_disconnect.svg" width = "550"  align=center />
-	<p>图 3-17 TCP 挥手概览</p>
+	<p>图 3-16 TCP 挥手概览</p>
 </div>
 
-“孤儿连”的问题和 TIME_WAIT 紧密相关。TIME_WAIT 是 TCP 挥手的最后一个状态，当收到被动方发来的 FIN 报文后，主动方回复 ACK，表示确认对方的发送通道已经关闭，继而进入 TIME_WAIT 状态，等待 2MSL 时间后关闭连接。如果发起连接一方的 TIME_WAIT 状态过多，会占满了所有端口资源，则会导致无法创建新连接。
+「孤儿连」的问题和 TIME_WAIT 紧密相关。TIME_WAIT 是 TCP 挥手的最后一个状态，当收到被动方发来的 FIN 报文后，主动方回复 ACK，表示确认对方的发送通道已经关闭，继而进入 TIME_WAIT 状态，等待 2MSL 时间后关闭连接。如果发起连接一方的 TIME_WAIT 状态过多，会占满了所有端口资源，则会导致无法创建新连接。
 
 可以尝试调整以下参数减小 TIME_WAIT 影响：
 

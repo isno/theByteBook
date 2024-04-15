@@ -8,11 +8,11 @@
 
 XDP 本质上是 Linux 内核网络模块中的一个 BPF Hook，能够动态挂载 eBPF 程序逻辑，使得 Linux 内核能够在数据报文到达 L2（网卡驱动层）时就对其进行针对性高速处理，无需再「循规蹈矩」地进入到内核网络协议栈。
 
-如图3-14所示的 XDP 工作原理，XDP 程序在内核提供的网卡驱动中直接取得网卡收到的数据帧，然后直接送到用户态应用程序。应用程序利用 AF_XDP[^2] 类型的 socket 接收数据。
+如图 3-13 所示的 XDP 工作原理，XDP 程序在内核提供的网卡驱动中直接取得网卡收到的数据帧，然后直接送到用户态应用程序。应用程序利用 AF_XDP[^2] 类型的 socket 接收数据。
 
 <div  align="center">
 	<img src="../assets/XDP.svg" width = "500"  align=center />
-	<p>图 3-14 XDP 流程概念</p>
+	<p>图 3-13 XDP 流程概念</p>
 </div>
 
 ## 2. XDP 应用示例
@@ -28,7 +28,7 @@ XDP 本质上是 Linux 内核网络模块中的一个 BPF Hook，能够动态挂
 
 <div  align="center">
 	<img src="../assets/cilium.svg" width = "500"  align=center />
-	<p>图 3-15 conntrack Cilium 方案</p>
+	<p>图 3-14 conntrack Cilium 方案</p>
 </div>
 
 由于 Cilium 方案的连接跟踪机制独立于 Netfilter，因此它的 conntrack 和 NAT 信息也没有存储在内核中的 conntrack table 和 NAT table 中，常规的 conntrack/netstats/ss/lsof 等工具看不到 nat、conntrack 数据，所以需要另外使用 Cilium 的命令查询，例如：

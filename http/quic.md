@@ -12,11 +12,11 @@ QUIC (Quick UDP Internet Connection，快速 UDP 网络连接) 是一种基于 U
 - 2018 年末，IETF 正式批准了 HTTP over QUIC 使用 HTTP/3 的版本号，将其确立为最新一代的互联网标准。
 - 2022 年 6月 6 日，历时 9 年，IETF 正式标准化基于 QUIC 协议的 HTTP/3 为 RFC9114。
 
-如图 2-13 所示，各个版本的 HTTP 协议对比，HTTP/3 最大的特点是使用 QUIC 协议，并在内部直接集成 TLS 协议。
+如图 2-32 所示，各个版本的 HTTP 协议对比，HTTP/3 最大的特点是使用 QUIC 协议，并在内部直接集成 TLS 协议。
 
 <div  align="center">
 	<img src="../assets/http-quic.png" width = "550"  align=center />
-	<p>图2-13 HTTP协议对比</p>
+	<p>图 2-32 HTTP协议对比</p>
 </div>
 
 ## 1.QUIC 出现的背景
@@ -41,7 +41,7 @@ QUIC 采用 UDP 作为其传输协议，与 TCP 相比没有丢包自动重传�
 
 <div  align="center">
 	<img src="../assets/quic-connection.png" width = "580"  align=center />
-	<p>图 2-32 QUIC 支持连接迁移</p>
+	<p>图 2-33 QUIC 支持连接迁移</p>
 </div>
 
 ### 低时延连接
@@ -50,7 +50,7 @@ QUIC 采用 UDP 作为其传输协议，与 TCP 相比没有丢包自动重传�
 
 <div  align="center">
 	<img src="../assets/quic-handshake.png" width = "580"  align=center />
-	<p>图 2-33 QUIC 请求 RTT 示例</p>
+	<p>图 2-34 QUIC 请求 RTT 示例</p>
 </div>
 
 ### 可插拔拥塞控制
@@ -65,7 +65,7 @@ QUIC 为每个 Stream 设计和实现单独的流量控制，解决了影响整�
 
 <div  align="center">
 	<img src="../assets/quic-head-block.png" width = "480"  align=center />
-	<p>图 2-34 QUIC 流</p>
+	<p>图 2-35 QUIC 流</p>
 </div>
 
 这样，通过全方位无死角的优化设计，保证了 QUIC 在当今网络环境下比 TCP 更安全、更快速的连接、更高的传输效率。

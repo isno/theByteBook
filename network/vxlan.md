@@ -13,7 +13,7 @@ SDN 的核心思想是在物理网络之上，再构建一层虚拟化的网络�
 
 <div  align="center">
 	<img src="../assets/overlay.svg" width = "500"  align=center />
-	<p>图 2-26 SDN 网络模型</p>
+	<p>图 3-24 SDN 网络模型</p>
 </div>
 
 VXLAN 你可能没有听说过，但 VLAN（Virtual Local Area Network，虚拟局域网）相信只要从事计算机行业的人都有所了解，VLAN 是一种早期的网络虚拟化技术，由于二层网络本身特性决定它非常依赖广播，但当设备非常多、广播又非常频繁的时候，很容易形成广播风暴。因此 VLAN 的首要职责是划分广播域，将同一个物理网络的设备区分出来。具体的做法是在以太网的报头增加 VLAN tag，让所有广播只针对相同的 VLAN tag 的设备生效，这样就缩小了广播域，也提高了安全性和可管理性。
@@ -26,19 +26,19 @@ VXLAN 你可能没有听说过，但 VLAN（Virtual Local Area Network，虚拟�
 
 <div  align="center">
 	<img src="../assets/vxlan-data.png" width = "300"  align=center />
-	<p>图 2-27 VXLAN 报文结构</p>
+	<p>图 3-25 VXLAN 报文结构</p>
 </div>
 
 VXLAN 完美地弥补了 VLAN 的上述不足：
-- 一方面通过 VXLAN 中的 24 比特 VNI 字段（如图 2-27 所示）提供多达 16M 租户的标识能力，远大于 VLAN 的 4000；
+- 一方面通过 VXLAN 中的 24 比特 VNI 字段（如图 3-25 所示）提供多达 16M 租户的标识能力，远大于 VLAN 的 4000；
 - 另一方面，VXLAN 本质上在两台交换机之间构建了一条穿越数据中心基础 IP 网络的虚拟隧道，将数据中心网络虚拟成一个巨型「二层交换机」，满足虚拟机大范围动态迁移的需求。
 
 
-VXLAN 的通信原理如图 2-2 所示，VXLAN 每个边缘入口都部署了一个 VTEP（VXLAN Tunnel Endpoints，VXLAN 隧道端点），VTEP 是 VXLAN 隧道的起点和终点，VXLAN 对用户原始数据帧的封装和解封装均在 VTEP 上进行，VTEP 既可以是一台独立的网络设备，也可以是在服务器中的虚拟交换机。源服务器发出的原始数据帧，在 VTEP 上被封装成 VXLAN 格式的报文，并在 IP 网络中传递到另外一个 VTEP 上，并经过解封转还原出原始的数据帧，最后转发给目的服务器。
+VXLAN 的通信原理如图 3-26 所示，VXLAN 每个边缘入口都部署了一个 VTEP（VXLAN Tunnel Endpoints，VXLAN 隧道端点），VTEP 是 VXLAN 隧道的起点和终点，VXLAN 对用户原始数据帧的封装和解封装均在 VTEP 上进行，VTEP 既可以是一台独立的网络设备，也可以是在服务器中的虚拟交换机。源服务器发出的原始数据帧，在 VTEP 上被封装成 VXLAN 格式的报文，并在 IP 网络中传递到另外一个 VTEP 上，并经过解封转还原出原始的数据帧，最后转发给目的服务器。
 
 <div  align="center">
 	<img src="../assets/VXLAN.png" width = "500"  align=center />
-	<p>图 2-28 VXLAN 通信概览</p>
+	<p>图 3-26 VXLAN 通信概览</p>
 </div>
 
 VXLAN 对网络基础设施的要求很低，不需要专门的硬件只要三层可达的网络就可以部署 VXLAN。从 Linux 内核 3.2 起，一台 Linux 主机经过简单配置之后，就可以把 Linux Bridge 作为 VETP 设备使用。VXLAN 带来了很高的灵活性、扩展性和可管理性，已经成为当前构建数据中心的主流技术，绝大多数的公有云的 VPC 都是用 VXLAN 来作为数据转发层面。
