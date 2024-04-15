@@ -14,6 +14,7 @@
 
 <div  align="center">
 	<img src="../assets/http-summary.png" width = "550"  align=center />
+	<p>图 2-0 本章内容导读 </p>
 </div>
 
 [^1]: Andrew S. Tanenbaum，计算机科学家，专长于操作系统，为荷兰阿姆斯特丹自由大学的计算机科学教授。他最早以 Minix 作者的身份以及所编写的计算机科学教科书而为人熟知。
