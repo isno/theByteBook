@@ -45,3 +45,7 @@ $ ip addr
     inet6 fe80::e07c:c8ff:fe36:d714/64 scope link 
        valid_lft forever preferred_lft forever
 ```
+
+虽然 veth 以模拟网卡直连的方式，很好地解决了两个容器之间的通信问题，然而对多个容器间通信，如果仍然单纯只用 veth pair 的话，事情就会变得非常麻烦，毕竟，让每个容器都为与它通信的其他容器建立一对专用的 veth pair，根本就不实际，真正做起来成本会很高。
+
+因此这时，就迫切需要有一台虚拟化的交换机，来解决多容器之间的通信问题了

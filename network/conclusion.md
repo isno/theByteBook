@@ -7,4 +7,6 @@
 本章参考内容
 
 - 张彦飞《深入理解Linux网络》
-- https://github.com/leandromoreira/linux-network-performance-parameters
+- 《linux-network-performance-parameters
+》，https://github.com/leandromoreira/linux-network-performance-parameters
+- 《虚拟网络》，https://qiankunli.github.io/2015/04/24/virtual_network.html
