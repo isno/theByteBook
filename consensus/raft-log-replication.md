@@ -15,7 +15,7 @@
 
 ## 日志复制
 
-raft 是强 leader 模型的算法，日志项只能由 leader 复制给其他成员，这意味着日志复制时单向的，leader 从来不会覆盖本地的日志项，即所有的日志项以 leader 为准。
+raft 是强 leader 模型的算法，日志项只能由 leader 复制给其他成员，这意味着日志复制是单向的，leader 从来不会覆盖本地的日志项，即所有的日志项以 leader 为准。
 
 <div  align="center">
 	<img src="../assets/raft-log-commit.png" width = "500"  align=center />
