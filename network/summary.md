@@ -13,7 +13,7 @@
 这一章，我们看看数据包从用户端到达服务端后，内核是如何处理的。分析的过程中再去学习一些诸如 netfilter、iptables、conntrack 以及虚拟化网络等内容，为本书后续要介绍的负载均衡、容器网络、服务网格等技术储备一些基础知识。
 
 <div  align="center">
-	<img src="../assets/linux-summary.png" width = "500"  align=center />
+	<img src="../assets/network-summary.png" width = "500"  align=center />
 	<p>图 3-0 本章内容导读 </p>
 </div>
 

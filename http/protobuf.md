@@ -103,7 +103,7 @@ Varint 确实是一种紧凑的表示数字的方法，因为从统计学的角�
 如图 2-10 所示，Protobuf 的 Message 是一系列键值对，Message 的序列化后只是使用字段号(field's number 和 wire_type) 作为 key。每个字段的名称和声明类型只能在解码端通过消息类型的定义（即 .proto 文件）来确定，如果没有数据结构描述 .proto 文件，则无法解释成正常的数据。这也是人们常说的 Protobuf 比 JSON、XML 安全的原因。
 
 <div  align="center">
-	<img src="../assets/protobuf_example.png" width = "550"  align=center />
+	<img src="../assets/protobuf_message.svg" width = "500"  align=center />
 	<p>图 2-10 Message 结构</p>
 </div> 
 
