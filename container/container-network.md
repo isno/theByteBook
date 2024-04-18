@@ -26,29 +26,27 @@ Kubernetes 本身不实现集群内的网络模型，而是通过将其抽象出
 
 - **underlay 模式** 基于 macvlan、ipvlan 等，这种模式所配置的容器网络同主机网络在同一个 LAN 里面，可以具有和主机一样的网络能力，并且没有其它诸如 bridge 等方式带来的 bridge 处理和地址翻译的负担，这种方式能最大限度的利用硬件的能力，往往有着最优先的性能表现，但也由于它直接依赖硬件和底层网络环境限制，必须根据软硬件情况部署，没有 overlay 那样开箱即用的灵活性。
 
-
-此外，对于容器编排系统来说，网络并非孤立的功能模块，还要能提供各类的网络访问策略能力支持，譬如 Kubernetes 的 Network Policy 这种用于描述 Pod 之间访问这类 ACL 策略以及加密通信，这些也明显不属于 CNI 范畴，因此并不是每个 CNI 插件都会支持这些额外的功能。如果你有这方面的需求，那么第一个就要排除 Flannel 了，如果按功能的丰富度而言，受到广泛关注的无疑是 Calico 和 Cilium。
-
-
 对于插件性能表现方面，笔者引用 cilium 官方的测试数据[^2]，受限于篇幅，笔者给出文章内一部分性能占用表现（运行 32 个并行的 netperf 进程，按 TCP-CRR 的策略测试 cilium 与 Calico 的每秒请求数以及资源占用情况），其结果如下图所示。
 
 :::tip 额外知识
-
 TCP-CRR 表示在一次 TCP 链接中只进行一组 Request/Response 通信即断开，并不断新建 TCP 链接时的响应效率。TCP-CRR 在 Web 服务器访问中较为普遍。
-
 :::
 
 <div  align="center">
 	<img src="../assets/bench_tcp_crr_32_processes.png" width = "500" align=center />
 	<p>性能表现</p>
 </div>
-
 <div  align="center">
 	<img src="../assets/bench_tcp_crr_32_processes_cpu.png" width = "500"  align=center />
 	<p>资源占用表现</p>
 </div>
 
-从结果上看，综合吞出量、延迟表现或者资源占用的表现 Cilium 无疑非常出色。最后，且刨除网络受限环境的影响，假设所有的 CNI 插件我们都可以选择，笔者给到以下建议：如果只是一个小型节点集群，且不关心安全性，那么建议使用最轻最稳定的 Flannel；如果是一个标准化的集群，且看中 CNI 之外的功能（譬如可观测、Network Policy、加密通信），笔者建议就选择势头正劲的 Cilium。
+从结果上看，综合吞出量、延迟表现或者资源占用的表现 Cilium 无疑非常出色。
+
+
+最后，考虑对于容器编排系统来说，网络并非孤立的功能模块，还要能提供各类的网络访问策略能力支持，譬如 Kubernetes 的 Network Policy 这种用于描述 Pod 之间访问这类 ACL 策略以及加密通信，这些明显不属于 CNI 范畴，因此并不是每个 CNI 插件都会支持这些额外的功能。如果你有这方面的需求，那么第一个就要排除 Flannel 了，如果按功能的丰富度而言，受到广泛关注的无疑是 Calico 和 Cilium。
+
+且刨除网络受限环境的影响，假设所有的 CNI 插件我们都可以选择，笔者给到以下建议：如果只是一个小型节点集群，且不关心安全性，那么建议使用最轻最稳定的 Flannel；如果是一个标准化的集群，且看中 CNI 之外的功能（譬如可观测、Network Policy、加密通信），笔者建议就选择势头正劲的 Cilium。
 
 [^1]: 参见 https://landscape.cncf.io/guide#runtime--cloud-native-network
 [^2]: 参见 https://cilium.io/blog/2021/05/11/cni-benchmark/
