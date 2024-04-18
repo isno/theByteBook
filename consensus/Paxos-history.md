@@ -44,8 +44,7 @@ we were not able to understand the complete protocol until after reading several
 
 注意 Raft 这篇文章发表于 2013 年，而《Paxos Made Simple》是 2001年 发表的，也就是说 Paxos 已经被研究了十几年，直到 Google 的 Chubby 横空出世，使用 Paxos 解决了现实中的分布式共识的问题，并将其整理成正式的论文发表之后，得益于 Google 的行业影响力，辅以 Chubby 作者 Mike Burrows 那略显夸张但足够吸引眼球的评价推波助澜，Paxos 开始从理论界进入工业实践，并逐渐被大家熟知和认可。
 
-80 年代的分布式系统理论进展，触及了彼时无法想象的未来，最终 Lamport 凭借他在分布式领域的贡献，于 2013 年获得图灵奖。
-
+最终 Lamport 凭借他在分布式领域的贡献，于 2013 年获得图灵奖。
 
 [^2]: 参见 https://lamport.azurewebsites.net/pubs/pubs.html#lamport-paxos
 [^3]: 参见 https://lamport.azurewebsites.net/pubs/lamport-paxos.pdf
