@@ -62,5 +62,7 @@ conntrack 是许多高级网络应用的基础，譬如经常使用的 NAT（Net
 
 设置 bridge-nf-call-iptables 这个内核参数 (设置为 1)，表示 bridge 设备在二层转发时也去调用 iptables 配置的三层规则 (包含 conntrack)，所以开启这个参数就能够解决上述 Service 同节点通信问题。
 
-这也是为什么在 Kubernetes 环境中，大多都要求开启 bridge-nf-call-iptables 的原因。
+这也是为什么在 Kubernetes 环境中，大多都要求开启 bridge-nf-call-iptables 的原因。[^1]
+
+[^1]: 具体参见本书第 3 章 5.3 节 Linux Bridge
 
