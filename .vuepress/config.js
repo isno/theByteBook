@@ -217,7 +217,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: "第五章：分布式事务",
+                text: "第五章：分布式事务概论",
                 link: '/distributed-transaction/summary.md',
                 children: [
                     '/distributed-transaction/ACID.md',
@@ -236,7 +236,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第六章：分布式共识',
+                text: '第六章：分布式共识问题及算法',
                 collapsable: true,
                 link: '/consensus/summary.md',
                 sidebarDepth: 2,
