@@ -217,7 +217,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: "第五章：分布式事务概论",
+                text: "第五章：CAP 定理与分布式事务",
                 link: '/distributed-transaction/summary.md',
                 children: [
                     '/distributed-transaction/ACID.md',
