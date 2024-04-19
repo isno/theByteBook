@@ -1,6 +1,8 @@
 # 6.3.2 Basic Paxos
 
-希望你没有对前篇 Paxos 的“复杂”做的铺垫所吓倒，反正又不是要读论文，也不是要实现它。放弃严谨、简化掉最繁琐的分支细节和特殊情况的话 Paxos 还是可以能通俗地理解的。这一节，我们从故事回到算法本身，正式开始学习 Paxos。
+希望你没有对前篇 Paxos 的「复杂」做的铺垫所吓倒，多副本一致性其实已经算是一个古老的领域，已经有无数更简洁更直白的视频、论文等资料进行过描述。譬如在网络中流传甚广的 raft 和 paxos 视频讲解[^1]，即使没有多少技术背景，也能通俗地理解 Paxos。
+
+这一节，我们从故事回到算法本身，正式开始学习 Paxos。
 
 Paxos 算法包含两个部分：其中一部分是**核心算法**（Basic Paxos）；另外一部分是基于核心算法扩展的**完整算法**（Multi Paxos）。在笔者看来 Basic Paxos 是 Multi-Paxos 思想的核心，说直接点 Multi-Paxos 就是多执行几次 Basic Paxos，所以掌握了 Basic Paxos，我们便能更好的理解后面基于 Multi-Paxos 思想的共识算法（譬如 raft 算法）。
 
@@ -162,3 +164,4 @@ Paxos Basic 只能对一个值形成决议，而且决议形成至少需要两�
 
 
 [^1]: 参见 https://lamport.azurewebsites.net/pubs/time-clocks.pdf
+[^1]: 讲解作者是斯坦福教授 John Ousterhunt，他还指导了 Diego Ongaro 写出了 Raft 的论文。本章配图也多来源于 John Ousterhunt 所发表的内容。

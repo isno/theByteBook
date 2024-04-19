@@ -8,3 +8,4 @@
 
 - raft 动画 https://raft.github.io/raftscope/index.html
 - 《In Search of an Understandable Consensus Algorithm》https://raft.github.io/raft.pdf
+- 《Raft 分布式系统一致性协议探讨》https://zhuanlan.zhihu.com/p/510220698

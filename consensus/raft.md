@@ -23,6 +23,6 @@ Raft 论文开篇第一句就描述了 Raft 的证明和 Paxos 等价，Raft 天
 Raft is a consensus algorithm for managing a replicated log. It produces a result equivalent to (multi-)Paxos, and it is as efficient as Paxos, but its structure is different from Paxos;
 :::
 
-作为一个强 leader 模型算法，本节内容就以领导者选举、日志复制为线索讲解困扰 Paxos 难以落地的问题在 Raft 算法中是如何解决的。
+作为一个强领导者模型算法，本节内容就以领导者选举、日志复制为线索讲解困扰 Paxos 难以落地的问题在 Raft 算法中是如何解决的。
 
-[^1]: 参见 https://raft.github.io/raft.pdf
+[^1]: 论文参见 https://raft.github.io/raft.pdf，该论文是斯坦福教授 John Ousterhunt 指导 Diego Ongaro 完成的博士论文。
