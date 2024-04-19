@@ -20,7 +20,7 @@ lamport 在论文中对 Multi Paxos 的描述称之为 **Implementing a State Ma
 	<p></p>
 </div>
 
-多副本日志问题是如何保证日志数据在每台机器上都一样？不过，笔者先不回到这个问题，我们再继续返回到 Multi Paxos 。
+多副本日志问题是如何保证日志数据在每台机器上都一样？我们看看 Multi Paxos 的思路。
 
 既然 Paxos Basic 可以确定一个值，**想确定多个值（日志）那就运行多个 Paxos Basic ，然后将这些值列成一个序列（ Replicated log），在这个过程中并解决效率问题** —— 这就是 Multi Paxos 。
 
@@ -37,7 +37,11 @@ Replicated log 类似一个数组，因此我们需要知道当次请求是在�
 	<p></p>
 </div>
 
-我们思考一下上面的流程中的一些问题，jump 提案经历了 3 轮 Basic Paxos，共需要 6 个 RTT。除此，当多个节点同时进行提议的时候，对于 index 的争抢会比较严重，会出现冲突导致活锁。Paxos 想要从理论走向实践，必须要解决这两类问题。
+我们思考一下上面的流程中的一些问题：
+1. jump 提案经历了 3 轮 Basic Paxos，共花费 6 个 RTT。
+2. 当多个节点同时进行提议的时候，对于 index 的争抢会比较严重，会出现冲突导致活锁。
+
+Paxos 想要从理论走向现实，必须要解决这两类问题。
 
 Lamport 的第一个想法是**选择一个 Leader，任意时刻只有一个 Proposer，这样就可以避免冲突**。关于 Leader 的选举，Lamport 提出了一种简单的方式：让 server_id 最大的节点成为 Leader（在上篇说到提案编号由自增 id 和 server_id 组成，就是这个 server_id）。如此，节点之间就要维持 T 间隔的心跳，如果一个节点在 2T 时间内没有收到比自己 server_id 更大的心跳，那它自己就转为 Leader，担任 Proposer 和 Acceptor 的职责，并开始处理客户端请求。那些非 Leader 的节点如果收到客户端的请求，要么丢弃要么将请求重定向到 Leader 节点。
 

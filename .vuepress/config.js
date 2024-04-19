@@ -242,9 +242,8 @@ export default defineUserConfig({
                 sidebarDepth: 2,
                 children: [
                     '/consensus/consensus.md',
-                    '/consensus/The-Byzantine-General-Problem.md',
                     {
-                        text: "6.3 Paxos 算法",
+                        text: "6.2 Paxos 算法",
                         link: '/consensus/Paxos.md',
                         children: [
                             '/consensus/Paxos-history.md',
@@ -253,7 +252,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: "6.4 Raft 算法",
+                        text: "6.3 Raft 算法",
                         link: '/consensus/Raft.md',
                         children: [
                             '/consensus/raft-leader-election.md',
