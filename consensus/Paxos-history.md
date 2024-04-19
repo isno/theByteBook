@@ -27,7 +27,7 @@ Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文�
 :::
 《The Part-Time Parliament》[^3] 最终在 1998 年公开发表。
 
-这篇论文发表之后，还是有很多人抱怨这篇论文看不懂，人们只记住了那个奇怪的故事，而不是 Paxos 算法，Lamport 走到哪都要被人抱怨一通。于是他忍无可忍，2001 年使用计算机领域的概念重新描述了一遍算法，并发表了论文 《Paxos Made Simple》[^4]。这是一篇很短的论文，摘要只有一句话 “The Paxos algorithm, when presented in plain English, is very simple.”！语气无法掩盖作者对 Paxos 的策略没有奏效的失望。
+这篇论文发表之后，还是有很多人抱怨这篇论文看不懂，人们只记住了那个奇怪的故事，而不是 Paxos 算法，Lamport 走到哪都要被人抱怨一通。于是他忍无可忍，2001 年使用计算机领域的概念重新描述了一遍算法，并发表了论文 《Paxos Made Simple》[^4]。这是一篇很短的论文，摘要只有一句话 “The Paxos algorithm, when presented in plain English, is very simple.”！语气完全无法掩盖作者对 Paxos 的策略没有奏效的失望。
 
 <div  align="center">
 	<img src="../assets/paxos.png" width = "350"  align=center />
