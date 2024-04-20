@@ -21,10 +21,10 @@ Paxos 算法包含两个部分：其中一部分是**核心算法**（Basic Paxo
 
 如图 6-3 所示，当有多个客户端（张三、李四，Proposer）访问这个系统，试图创建同一个只读变量（发起一个提案 Proposal，set x=1，提议张三当村长）时，集群中所有的节点（村委）该如何达成共识，实现各个节点中的 x 值的一致呢（所有的民村一致认为张三是村长）？
 
-<div  align="center">
-	<img src="../assets/paxos-consensus.svg" width = "350"  align=center />
-	<p>图6-3 如何实现多个节点 x 值一致性</p>
-</div>
+:::center
+  ![](../assets/paxos-consensus.svg)
+  图 6-3 如何实现多个节点 x 值一致性
+:::
 
 实现多个节点 x 值一致的复杂度主要来源于以下两个因素的共同影响：
 
@@ -43,26 +43,27 @@ Basic Paxos 的问题背景相信已经讲清楚了，那怎么解决？
 
 如图 6-4 所示，最简单的场景是多个提议节点、单个决策节点，决策节点接受第一个发给它的值，作为被选中的值，但问题是如果决策节点故障，整个系统就会不可用。
 
-<div  align="center">
-	<img src="../assets/quorum-base.png" width = "250"  align=center />
-	<p>图6-4 只有一个决策节点会有单点故障</p>
-</div>
+:::center
+  ![](../assets/quorum-base.png)
+  图 6-4 只有一个决策节点会有单点故障
+:::
 
 为了克服单点故障问题，我们借鉴多数派（Quorum）的机制，思路就是写入一半以上的节点。如果集群中有 N 个节点，客户端需要写入 W >= N/2 + 1 个节点，那么使用多数派的机制最多可容忍 (N-1)/2 个节点故障。但是问题还是存在，**每个决策节点该接受几个提案呢**? 
 
 我们先看第一种情况，**按时序决策节点只接受它收到的第一个提案**。但考虑多个提议节点同时对一个提案进行提议，最后可能没有一个提议能够取得多数的投票，出现了平票问题（Split Votes）。如图 6-5 所示，red 和 blue 各有 2 票，没办法确定谁被选择？ 这也就意味着我们无法保证在一轮投票中达成共识，这就无法实现活性（Liveness）需求。
 
-<div  align="center">
-	<img src="../assets/paxos_split_votes.png" width = "500"  align=center />
-	<p>图6-5 多个决策节点会遇到平票问题</p>
-</div>
+
+:::center
+  ![](../assets/paxos_split_votes.png)
+  图 6-5 多个决策节点会遇到平票问题
+:::
 
 再看第二种情况，决策节点就需要允许接受多个不同的提案，用多数派的机制解决平票问题问题。但新的问题是有了少数服从多数原则，就会碰到冲突的问题。如图 6-6 所示，不同提案节点提议不同的值，可能都会被选择（S~3~ 收到了 blue 和 red，S~3~ 该确认选择哪个值？ ），这就破坏了每个提案只有一个值的原则，这违背了安全性（Safety）的需求。
 
-<div  align="center">
-	<img src="../assets/paxos_conflict_choices.png" width = "500"  align=center />
-	<p>图6-6 接受多个不同的提案会遇到冲突问题</p>
-</div>
+:::center
+  ![](../assets/paxos_conflict_choices.png)
+  图 6-6 接受多个不同的提案会遇到冲突问题
+:::
 
 :::tip 注意，Paxos 强调
 Once a value has been chosen, future proposals must propose the same value.
@@ -80,10 +81,10 @@ Once a value has been chosen, future proposals must propose the same value.
 
 仅单纯使用二阶段协议仍然无法解决这个问题，分布式系统中的网络延迟无法忽视。如图 6-7 所示，S~1~ 和 S~5~ 在第一个阶段都发现没有其他的值被选中，因此提出自己的提案，但在这个时序下会有两个不同的值被选中。
 
-<div  align="center">
-	<img src="../assets/paxos_2pc_choice.png" width = "500"  align=center />
-	<p>图6-7 网络延迟导致冲突</p>
-</div>
+:::center
+  ![](../assets/paxos_2pc_choice.png)
+  图 6-7 网络延迟导致冲突
+:::
 
 所以你会发现，矛盾的点其实就是这个 S~3~，也就是少数服从多数原则，能保证任意的大多数都是有交集的。交集中的点会发现矛盾（和之前接受的值有矛盾理应选择拒绝）。
 
@@ -115,12 +116,12 @@ Basic Paxos 对于此问题的解决方案是，定义一个 Proposal Number 来
 
 下一阶段就是**接受阶段** accept(value,n)，如果接受者发现自己目前收到的 n，没有比 accpet 给的 n 大，就接受这个值，并且更新自己的 n，否则就拒绝（这里就保证提交者能够发现自己变老了或者被拒绝了）。如果接受者发现提交号大于自己当前的最大提交号，就接受这个值，不然就拒绝。当提交者从大多数人那里接受到返回以后发现有拒绝的情况，就进行重试拿一个新的 n 开始，否则这个值就被接受了。
 
-总结 Basic Paxos 中的值就是设置一次，不存在再设置一次的情况，整个流程如下图所示。
+总结 Basic Paxos 中的值就是设置一次，不存在再设置一次的情况，整个流程如下图 6-8 所示。
 
-<div  align="center">
-	<img src="../assets/basic-paxos.png" width = "500"  align=center />
-	<p>图6-8 Basic Paxos 流程</p>
-</div>
+:::center
+  ![](../assets/basic-paxos.png)
+  图 6-8 Basic Paxos 流程
+:::
 
 ## 2. Basic Paxos 验证
 
@@ -128,33 +129,33 @@ Basic Paxos 对于此问题的解决方案是，定义一个 Proposal Number 来
 
 **情况一：提案已 Chosen** 譬如，S~1~ 选定的提案 ID 是 3.1（全局唯一 ID 加上节点编号），先取得了多数派决策节点的 Promise 和 Accepted 应答，此时 S~5~ 选定提案 ID 是 4.5，发起 Prepare 请求，收到的多数派应答中至少会包含 1 个此前应答过 S~1~ 的决策节点，假设是 S~3~，那么 S~3~ 提供的 Promise 中必将包含 S~1~ 已设定好的值 X，S~5~ 就必须无条件地用 X 代替 Y 作为自己提案的值，由此整个系统对“取值为 X”这个事实达成一致。整个流程如下图所示。
 
-<div  align="center">
-	<img src="../assets/paxos-p1.png" width = "500"  align=center />
-	<p>图6-9 提案已 Chosen</p>
-</div>
+:::center
+  ![](../assets/paxos-p1.png)
+  图 6-9 提案已 Chosen
+:::
 
 **情况二：提案未 Chosen，Proposer 可见** 事实上，对于情况一，X 被选定为最终值是必然结果，但从上图中可以看出，X 被选定为最终值并不是必定需要多数派的共同批准，只取决于 S~5~ 提案时 Promise 应答中是否已包含了批准过 X 的决策节点，譬如图 6-3 所示，S~5~ 发起提案的 Prepare 请求时，X 并未获得多数派批准，但由于 S~3~ 已经批准的关系，最终共识的结果仍然是 X。
 
-<div  align="center">
-	<img src="../assets/paxos-conflict-2.png" width = "500"  align=center />
-	<p>图6-10 提案未 Chosen，Proposer 可见</p>
-</div>
+:::center
+  ![](../assets/paxos-conflict-2.png)
+  图 6-10 提案未 Chosen，Proposer 可见
+:::
 
 **情况三：提案未提交，Proposer 不可见** 当然，另外一种可能的结果是 S~5~  提案时 Promise 应答中并未包含批准过 X 的决策节点，譬如应答 S~5~ 提案时，节点 S~1~ 已经批准了 X，节点 S~2~ 、S~3~ 未批准但返回了 Promise 应答，此时 S~5~ 以更大的提案 ID 获得了 S~3~、S~4~、S~5~ 的 Promise，这 3 个节点均未批准过任何值，那么 S~3~ 将不会再接收来自 S~1~ 的 Accept 请求，因为它的提案 ID 已经不是最大的了，这 3 个节点将批准 Y 的取值，整个系统最终会对“取值为 Y”达成一致，如图下图所示。
 
-<div  align="center">
-	<img src="../assets/paxos-conflict3.png" width = "500"  align=center />
-	<p>图6-11 提案未提交，Proposer 不可见</p>
-</div>
+:::center
+  ![](../assets/paxos-conflict3.png)
+  图 6-11 提案未提交，Proposer 不可见
+:::
 
 **情况四：出现活锁**
 
 从情况三可以推导出另一种极端的情况，如果 2 个提案节点交替使用更大的提案 ID 使得准备阶段成功，但是批准阶段失败的话，这个过程理论上可以无限持续下去，形成活锁（Live Lock）。例如 S~3~、S~4~、S~5~ 拿着更高的提交号导致 S~1~、S~2~、S~3~ 的 accept 被拒绝重新进行提交，又把 S~3~、S~4~、S~5~ 给拒绝了，提议者没有看到先前提议的情况下，当 S~1~ 发现自己的提议没有通过，就会发起新一轮 Prepare RPC，然后就有可能又封锁了 S~5~ 的提议，S~5~ 又会回到 Prepare 阶段，有概率双方都轮流封锁对方的协议，导致无法达成共识。
 
-<div  align="center">
-	<img src="../assets/paxos-liveness.png" width = "500"  align=center />
-	<p>图6-12 出现活锁问题</p>
-</div>
+:::center
+  ![](../assets/paxos-liveness.png)
+  图 6-12 出现活锁问题
+:::
 
 解决这个问题的办法就是把重试时间进行一些随机化，减少这种巧合发生，或者把重试的时间指数增长等等。
 

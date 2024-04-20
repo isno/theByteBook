@@ -29,10 +29,11 @@ Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文�
 
 这篇论文发表之后，还是有很多人抱怨这篇论文看不懂，人们只记住了那个奇怪的故事，而不是 Paxos 算法，Lamport 走到哪都要被人抱怨一通。于是他忍无可忍，2001 年使用计算机领域的概念重新描述了一遍算法，并发表了论文 《Paxos Made Simple》[^4]。这是一篇很短的论文，摘要只有一句话 “The Paxos algorithm, when presented in plain English, is very simple.”！语气完全无法掩盖作者对 Paxos 的策略没有奏效的失望。
 
-<div  align="center">
-	<img src="../assets/paxos.png" width = "350"  align=center />
-	<p>图6-2 Paxos 论文摘要</p>
-</div>
+:::center
+  ![](../assets/paxos.png)
+  
+  图 6-2 Paxos 论文摘要
+:::
 
 然而，这篇论文还是非常难以理解，引用 Diego Ongaro 和 John Ousterhout 在设计 Raft 时发表的论文[^5]中对 Paxos 的描述：
 

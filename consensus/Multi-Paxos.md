@@ -15,10 +15,10 @@ lamport 在论文中对 Multi Paxos 的描述称之为 **Implementing a State Ma
 
 分布式系统为了实现多副本状态机（Replicated state machine），常常需要一个**多副本日志**（Replicated log）系统，如果日志的内容和顺序都相同，多个进程从同一状态开始，并且以相同的顺序获得相同的输入，那么这些进程将会生成相同的输出，并且结束在相同的状态。
 
-<div  align="center">
-	<img src="../assets/Replicated-state-machine.webp" width = "500"  align=center />
-	<p>图6-13 多副本状态机</p>
-</div>
+:::center
+  ![](../assets/Replicated-state-machine.webp)
+  图 6-13 多副本状态机
+:::
 
 多副本日志问题是如何保证日志数据在每台机器上都一样？我们看看 Multi Paxos 的思路。
 
@@ -32,10 +32,10 @@ Replicated log 类似一个数组，因此我们需要知道当次请求是在�
 - 继续找下一个没有选中的位置 —— 也就是第 4 位，由于 S~2~ 已经存在 sub，产生冲突，最终 sub 在日志项 4 达成共识。
 - S~1~ 继续尝试下一个日志项，直到给 jmp 找到一个可以达成共识的位置（日志项 4）。
 
-<div  align="center">
-	<img src="../assets/multi_paxos.png" width = "650"  align=center />
-	<p>图6-14 当节点收到客户端的请求命令 jmp（提案）时情况</p>
-</div>
+:::center
+  ![](../assets/multi_paxos.png)
+  图 6-14 当节点收到客户端的请求命令 jmp（提案）时情况
+:::
 
 我们思考一下上面的流程中的一些问题：
 1. jump 提案经历了 3 轮 Basic Paxos，共花费 6 个 RTT。

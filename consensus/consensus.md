@@ -21,11 +21,10 @@ Paxos、Raft、ZAB 等等属于 consensus 的理论/实现，明显使用「共�
 3. 日志应用到状态机。
 4. 服务端返回请求结果。
 
-<div  align="center">
-	<img src="../assets/raft-state-machine.png" width = "450"  align=center />
-	<p>图 6-1 复制状态机工作过程</p>
-</div>
-
+:::center
+  ![](../assets/raft-state-machine.png)
+  图 6-1 复制状态机工作过程
+:::
 
 既然共识在分布式下容错系统下如此重要，那么到底是什么共识？实现共识有哪些难点？毫无疑问，搞清楚这些问题从 Leslie Lamport[^2] 发表的 Paxos 论文开始最合适不过。
 
