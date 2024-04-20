@@ -14,7 +14,7 @@ DNS（Domain Name System，域名系统）是最重要的互联网基础设施�
 
 我们在浏览器输入一个域名时，DNS 负责将该域名解析为相应的 IP 地址，以便后续与目标服务器建立 TCP/IP 连接。
 
-分析 DNS 工作原理之前，我们先了解域名的结构。如图 2-2 所示，域名是一种树状结构，最顶层的域名是根域名（注意是一个点「.」，它是 .root 的含义），然后是顶级域名（top-level domain，简写 TLD），再是一级域名、二级域名、三级域名。
+分析 DNS 工作原理之前，我们先了解域名的结构。如图 2-2 所示，域名是一种树状结构，最顶层的域名是根域名（注意是一个点「.」，它是 .root 的含义，不过现在常被隐藏掉），然后是顶级域名（top-level domain，简写 TLD），再是一级域名、二级域名、三级域名。
 
 <div  align="center">
 	<img src="../assets/dns-tree.webp" width = "350"  align=center />
@@ -30,7 +30,7 @@ DNS（Domain Name System，域名系统）是最重要的互联网基础设施�
 
 1. 用户向 Recursive resolver（ DNS 解析器，例如电信运营商的 114.114.114.114）发出解析 thebyte.con.cn 域名请求。
 2. Recursive resolver 判断是否存在解析缓存，如存在返回缓存结果。如无则就近向 Root nameserver（根域名服务器）请求所属 TLD nameserver。
-3. 获取 com. 域的 TLD nameserver 后， 向该地址请求 thebyte.con.cn. 的 Authoritative nameserver（权威解析服务器）。
+3. 获取 com.cn. 域的 TLD nameserver 后， 向该地址请求 [thebyte].com.cn. 的 Authoritative nameserver（权威解析服务器）。
 4. 得到 Authoritative nameserver 地址后，向该服务获取域名对应的 IP 地址，域名解析过程结束。 
 
 回顾整个流程，有 2 个环节容易发生问题：

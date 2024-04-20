@@ -10,7 +10,7 @@
 
 <div  align="center">
 	<img src="../assets/raft-log.svg" width = "450"  align=center />
-	<p>日志项</p>
+	<p>图6-17 日志项</p>
 </div>
 
 ## 日志复制
@@ -19,9 +19,8 @@ raft 是强 leader 模型的算法，日志项只能由 leader 复制给其他�
 
 <div  align="center">
 	<img src="../assets/raft-log-commit.png" width = "500"  align=center />
-	<p>日志项</p>
+	<p>图6-18 日志项</p>
 </div>
-
 
 - Leader 首先以日志项（log entry）的形式将事务请求追加（append）至本地日志中
 - Leader 并行地通过消息（AppendEntries RPC）将日志项广播给所有的 follower。
@@ -52,7 +51,7 @@ raft 是强 leader 模型的算法，日志项只能由 leader 复制给其他�
 
 <div  align="center">
 	<img src="../assets/raft-log-fix.svg" width = "500"  align=center />
-	<p>领导者处理不一致日志</p>
+	<p>图6-19 领导者处理不一致日志</p>
 </div>
 
 领导者处理不一致的具体过程分析如下：
@@ -65,7 +64,7 @@ raft 是强 leader 模型的算法，日志项只能由 leader 复制给其他�
 
 <div  align="center">
 	<img src="../assets/raft-log-fix-action.svg" width = "450"  align=center />
-	<p>领导者处理不一致日志</p>
+	<p>图6-20 领导者处理不一致日志</p>
 </div>
 
 从上面的步骤看到，leader 通过日志复制 RPC 消息的一致性检查，比较 index 和 term，从而找到 follower 节点上与自己相同日志项的最大索引值，然后复制并更新该索引值之后的日志项，实现各个节点日志自动趋于一致。

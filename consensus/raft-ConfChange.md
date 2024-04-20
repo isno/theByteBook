@@ -14,7 +14,7 @@
 
 <div  align="center">
 	<img src="../assets/raft-ConfChange.png" width = "350"  align=center />
-	<p>成员变更的某一时刻 Cold 和 Cnew 中同时存在两个不相交的多数派</p>
+	<p>图6-21 成员变更的某一时刻 Cold 和 Cnew 中同时存在两个不相交的多数派</p>
 </div>
 
 如上图所示，3 个节点的集群扩展到 5 个节点，直接扩展可能会造成 Server1 和 Server2 构成老成员配置的多数派，Server3、Server4 和 Server5 构成新成员配置的多数派。因为这两个多数派不存在相交的成员，所以有可能在一个日志索引上会提交两个不同的日志项，从而导致协议冲突，影响 Raft 的安全性。
@@ -25,7 +25,7 @@ Diego Ongaro 在论文中提出了一种两阶段的成员变更方法 Joint Con
 
 <div  align="center">
 	<img src="../assets/raft-single-server.png" width = "550"  align=center />
-	<p>穷举集群添加节点的情况</p>
+	<p>图6-22 穷举集群添加节点的情况</p>
 </div>
 
 目前绝大多数的 Raft 算法，例如 Etcd、Hashicrop Raft 都是使用单节点变更方法。联合共识的方案由于其复杂性和落地难度笔者就不再过多介绍，有兴趣的同学阅读 Raft 论文。
