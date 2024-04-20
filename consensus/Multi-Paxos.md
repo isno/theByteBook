@@ -1,7 +1,7 @@
 # 6.3.3 Multi Paxos
 
 :::tip 额外知识
-lamport 提到的 Multi Paxos 是一种思想，所以 Multi Paxos 算法实际上是个统称，Multi Paxos 算法是指基于 Multi Paxos 思想，通过多个 Basic Paxos 实例实现的一系列值的共识算法。
+Multi-Paxos 算法是一种思想，而不是具体的算法。它通过执行多个Basic Paxos实例，实现一系列值的共识。
 :::
 
 lamport 在论文中对 Multi Paxos 的描述称之为 **Implementing a State Machine**，我们从理论转向现实问题，探讨分布式中的 State Machine。
@@ -17,7 +17,7 @@ lamport 在论文中对 Multi Paxos 的描述称之为 **Implementing a State Ma
 
 <div  align="center">
 	<img src="../assets/Replicated-state-machine.webp" width = "500"  align=center />
-	<p></p>
+	<p>图6-13 多副本状态机</p>
 </div>
 
 多副本日志问题是如何保证日志数据在每台机器上都一样？我们看看 Multi Paxos 的思路。
@@ -34,7 +34,7 @@ Replicated log 类似一个数组，因此我们需要知道当次请求是在�
 
 <div  align="center">
 	<img src="../assets/multi_paxos.png" width = "650"  align=center />
-	<p></p>
+	<p>图6-14 当节点收到客户端的请求命令 jmp（提案）时情况</p>
 </div>
 
 我们思考一下上面的流程中的一些问题：
@@ -58,5 +58,5 @@ Lamport 提出的选举方案是一种很简单的策略，有同时出现 2 个
 
 后续，如果 Leader 接收到超过半数的 Acceptor 回复了 noMoreAccepted，那 Leader 就不需要发送 Prepare 请求了，直接发送 Accept 请求即可，这样只需要一轮 RPC。
 
-最后，把上述共识问题分解为领导者选举、日志复制和安全性三个问题来思考，解题思路即“Raft 算法” ，Diego Ongaro 和 John Ousterhout 在 2014 年 发表的题为《In Search of an Understandable Consensus Algorithm》的论文提出了 Raft 算法，并获得了 USENIX ATC 2014 大会的 Best Paper，后来更是成为 Etcd、Consul 等分布式程序的实现基础。
+最后，把上述共识问题分解为领导者选举、日志复制和安全性三个问题来思考，就是下一节我们要讨论的 Raft 算法中的内容。2014 年 斯坦福的学者 Diego Ongaro 和 John Ousterhout 在发表一篇名为《In Search of an Understandable Consensus Algorithm》的论文中提出了 Raft 算法，并获得了 USENIX ATC 2014 大会的 Best Paper，后来更是成为 Etcd、Consul 等分布式程序的实现基础。
 

@@ -31,6 +31,7 @@ Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文�
 
 <div  align="center">
 	<img src="../assets/paxos.png" width = "350"  align=center />
+	<p>图6-2 Paxos 论文摘要</p>
 </div>
 
 然而，这篇论文还是非常难以理解，引用 Diego Ongaro 和 John Ousterhout 在设计 Raft 时发表的论文[^5]中对 Paxos 的描述：
