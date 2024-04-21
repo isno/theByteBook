@@ -20,14 +20,13 @@
 注意 Mebibyte 和 Megabyte 的区分，123 Mi = `123*1024*1024B` 、123 M = `1*1000*1000 B`。1M < 1Mi，显然使用带小 i 的更准确。
 
 
-由于每台 node 上会运行 kubelet/docker/containerd 等 k8s 相关基础服务，因此并不是一台 node 的所有资源都能给 k8s 创建 pod 用。 所以，k8s 在资源管理和调度时，需要把这些基础服务的资源使用量和 enforcement 单独拎出来。
+由于每台 node 上会运行 kubelet/docker/containerd 等 Kubernetes 相关基础服务，因此并不是一台 node 的所有资源都能给 Kubernetes 创建 pod 用。 所以，Kubernetes 在资源管理和调度时，需要把这些基础服务的资源使用量和 enforcement 单独拎出来。
 
-为此，k8s 提出了 Node Allocatable Resources 提案。
+为此，Kubernetes 提出了 Node Allocatable Resources 提案。
 
-
-- SystemReserved：操作系统的基础服务，例如 systemd、journald 等，k8s 不能管理这些资源的分配，但是能管理这些资源的限额。
-- KubeReserved：预留 k8s 基础设施服务，包括 kubelet/docker/containerd 等等使用的资源。
-- Allocatable：可供 k8s 创建 pod 使用的资源
+- SystemReserved：操作系统的基础服务，例如 systemd、journald 等，Kubernetes 不能管理这些资源的分配，但是能管理这些资源的限额。
+- KubeReserved：预留 Kubernetes 基础设施服务，包括 kubelet/docker/containerd 等等使用的资源。
+- Allocatable：可供 Kubernetes 创建 pod 使用的资源
 
 ## 资源申请及限制
 
@@ -40,20 +39,11 @@ Kubernetes 抽象了两个概念 requests 和 limits 用以描述容器资源的
 
 Pod 是由一到多个容器组成，所以资源的需求作用在容器上的。如下图所示，每一个容器都可以独立地通过 resources 属性设定相应的 requests 和 limits，
 
-
-
-CPU 属于可压缩资源，其中 CPU 资源的分配和管理是 Linux 内核借助于完全公平调度算法（ CFS ）和 Cgroup 机制共同完成的。简单地讲，如果 pod 中服务使用 CPU 超过设置的 CPU limits， pod 的 CPU 资源会被限流（ throttled ）。对于没有设置 limit 的 pod ，一旦节点的空闲 CPU 资源耗尽，之前分配的 CPU 资源会逐渐减少。不管是上面的哪种情况，最终的结果都是 Pod 已经越来越无法承载外部更多的请求，表现为应用延时增加，响应变慢。
-
-
-容器的资源调度以 requests 为准。
-
-有的 Pod 内部进程在初始化启动时会提前开辟出一段内存空间。比如 JVM 虚拟机在启动的时候会申请一段内存空间，如果内存 requests 指定的数值小于 JVM 虚拟机向系统申请的内存，导致内存申请失败（ oom-kill ），从而 Pod 出现不断地失败重启。
-
 <div  align="center">
 	<img src="../assets/requests-limits.png" width = "500"  align=center />
 </div>
 
-笔者再举一个详细的例子说明容器的资源限制设定。如下代码所示，该资源对象指定容器进程需要 50/1000 核（5%）才能被调度，并且允许最多使用 100/1000 核（10%）。
+笔者举例子说明容器的资源限制设定。如下代码所示，该资源对象指定容器进程需要 50/1000 核（5%）才能被调度，并且允许最多使用 100/1000 核（10%）。
 
 ```plain
 container:
@@ -65,6 +55,8 @@ container:
 	        cpu: 100m
 	        memory: 100Mi
 ```
+
+容器的资源调度以 requests 为准。有的 Pod 内部进程在初始化启动时会提前开辟出一段内存空间。比如 JVM 虚拟机在启动的时候会申请一段内存空间，如果内存 requests 指定的数值小于 JVM 虚拟机向系统申请的内存，导致内存申请失败（ oom-kill ），从而 Pod 出现不断地失败重启。
 
 ## 服务质量 Qos 等级
 

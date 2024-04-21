@@ -269,6 +269,7 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
+                    '/container/borg-omega-k8s.md',
                     '/container/Container-Orchestration-Wars.md',
                     '/container/API.md',
                     '/container/orchestration.md',
