@@ -1,4 +1,4 @@
-# 7.1 从 Borg 到 Kubernetes 的演进
+# 7.1 容器编排系统的演进：从 Borg 到 Kubernetes
 
 Google 在 2016 年发表了一篇著名的论文《Borg、Omega、K8s：Google 十年三代容器管理系统的设计与思考》，介绍了开发和运维 Borg、Omega 和 Kubernetes 系统所学习到的经验与教训。虽然论文是 7 年前的文章，但内容并不过时，尤其能让读者能更清楚地明白 Kubernetes 里的很多架构、功能和设计是怎么来的。
 

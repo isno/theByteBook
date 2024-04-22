@@ -8,13 +8,11 @@
 —— by C.A.R. Hoare[^1]
 :::
 
-已经有非常多的著作、文章介绍 Kubernetes，也介绍过 Kubernetes 来源于 Google 内部的 Borg 系统。
+已经有非常多的著作、文章介绍 Kubernetes，介绍 Kubernetes 的架构设计、各个组件原理，也介绍 Google 几十年来分布式系统开发、部署、管理经验的演进在助推。
 
-让 Docker 大行其道的潜能是 cgroups？或者是 namespace？再或者是镜像和联合文件系统？我想这些都不是，而是 Docker 容器的出现和普及终于能为工程师提供一种友好的封装应用和服务的媒介，并一步步地把传统应用的开发和运维变成一种全新的方式。
+但直接切入 Kubernetes 各个工程细节，实际很难感受到 Google 工程师们的思考，也无法体会到 Kubernetes 为何这么设计。Google 在 2006 年陆续公布了几篇论文《Borg, Omega, and Kubernetes》，介绍了开发和运维 Borg、Omega 和 Kubernetes 系统所学习到的经验与教训。
 
-譬如多个亲密容器之间如何协作、容器之间网络如何互联、资源如何编排调度。
-
-正如编程语言“面向对象”给开发者带来便利的同时也带来数量庞大且难以管理的“类”。服务面向容器的转变中，同样也带来数量庞大关系复杂的容器集群。就这样，容器编排诞生了。
+虽然论文是 7 年前的文章，但内容并不过时，尤其能让读者能更清楚地明白 Kubernetes 里的很多架构、功能和设计是怎么来的。
 
 <div  align="center">
   <img src="../assets/container-summary.png" width = "550"  align=center />
