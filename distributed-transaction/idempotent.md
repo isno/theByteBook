@@ -10,10 +10,10 @@
 ## 使用全局唯一 ID
 实现系统的幂等性有多种方式，最常用的是：**使用全局唯一 ID 方案**。这种方案利用全局唯一 ID 及数据库主键唯一特性解决重复提交的问题，对于相同的 ID 重复插入时，产生 `result in duplicate entry for key primary` 错误，这种方式的流程如下。
 
-<div  align="center">
-	<img src="../assets/id-service.png" width = "500"  align=center />
-	<p>图5-5 使用全局唯一 ID 解决重复提交</p>
-</div>
+:::center
+  ![](../assets/id-service.png)
+  图 5-5 使用全局唯一 ID 解决重复提交
+:::
 
 生成全局唯一 ID 最合适的是使用 snowflake（雪花算法，取自世界上没有两片相同的雪花之意），这是 Twitter 开源的分布式自增 ID 算法，使用分布式部署的情况下每秒可生成百万个不重复、递增 id。
 
@@ -54,10 +54,11 @@ update order set price = price+1 where id = 1;
 
 我们看一下使用乐观锁的处理逻辑，如图 5-6 所示。
 
-<div  align="center">
-	<img src="../assets/ABA.svg" width = "550"  align=center />
-	<p>图5-6 使用乐观锁解决数据 ABA 问题</p>
-</div>
+:::center
+  ![](../assets/ABA.svg)
+  图 5-6 使用乐观锁解决数据 ABA 问题
+:::
+
 
 从上面的流程图中，当商家第一次更新价格时，数据库更新成功，但因某些特殊原因，未能成功通知商家（也就是说没有拿到最新的 version），第二次更改价格时，由于本地的 version 已经失效，数据库会执行失败。这时候，只有产品逻辑上或刷新页面、或其用他方式，获取到最新的版本号才能继续修改。
 

@@ -6,10 +6,11 @@ CAP 是分不是系统中关于一致性与可用性的权衡理论，也是理�
 
 虽然 Eric A.Brewer 提出了 CAP，但此时的 CAP 仅是一种猜想，并没有被从理论上证明。2002 年，麻省理工学院的 Seth Gilbert 和 Nancy Lynch 联合发表了一篇论文[^3]，用严谨的数学推理证明了 CAP 的正确性，此后 CAP 从原理转变成定理，并开始深远地影响着分布式系统领域。
 
-<div  align="center">
-	<img src="../assets/cap-theorem.png" width = "450"  align=center />
-	<p>图5-1 CAP 定理</p>
-</div>
+:::center
+  ![](../assets/cap-theorem.png)
+  
+  图 5-1 CAP 定理
+:::
 
 CAP 定理描述的是**一个分布式系统中，涉及共享数据问题时，以下三个特性最多只能同时满足其中两个**。
 
