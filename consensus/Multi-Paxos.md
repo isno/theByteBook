@@ -1,4 +1,4 @@
-# 6.3.3 Multi Paxos
+# 6.2.3 Multi Paxos
 
 :::tip 额外知识
 Multi-Paxos 算法是一种思想，而不是具体的算法。它通过执行多个Basic Paxos实例，实现一系列值的共识。
