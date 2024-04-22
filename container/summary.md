@@ -8,11 +8,9 @@
 —— by C.A.R. Hoare[^1]
 :::
 
-已经有非常多的著作、文章介绍 Kubernetes，介绍 Kubernetes 的架构设计、各个组件原理，也介绍 Google 几十年来分布式系统开发、部署、管理经验的演进在助推。
+已经有非常多的著作、文章 Kubernetes 的架构设计、各个组件原理，但这些内容大部分直面 Kubernetes 各个工程细节。如果片面的了解一些「是什么」、「怎么做」等内容，实际很难感受到 Google 工程师们的思考，也无法体会到 Kubernetes 为何这么设计。
 
-但直接切入 Kubernetes 各个工程细节，实际很难感受到 Google 工程师们的思考，也无法体会到 Kubernetes 为何这么设计。Google 在 2006 年陆续公布了几篇论文《Borg, Omega, and Kubernetes》，介绍了开发和运维 Borg、Omega 和 Kubernetes 系统所学习到的经验与教训。
-
-虽然论文是 7 年前的文章，但内容并不过时，尤其能让读者能更清楚地明白 Kubernetes 里的很多架构、功能和设计是怎么来的。
+Google 在 2006 年陆续公布了几篇论文《Borg, Omega, and Kubernetes》，介绍了开发和运维 Borg、Omega 和 Kubernetes 系统所学习到的经验与教训。本章内容，我们先了解 Google 内部系统是怎么演变的，学习他们的经验教训，能让我们更深入的理解到「为什么」，也能真正体会到如何在不断迭代优化中设计系统。
 
 <div  align="center">
   <img src="../assets/container-summary.png" width = "550"  align=center />
