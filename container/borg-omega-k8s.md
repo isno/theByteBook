@@ -3,7 +3,7 @@
 这几年业界对容器技术兴趣越来越大，但在 Google 内部十几年前就已经开始大规模容器实践了，这个过程中也先后设计了三套不同的容器管理系统。 这三代系统虽然出于不同目的设计，但每一代都受前一代的强烈影响。
 
 ## Borg
-Borg 是 Google 内部第一代容器管理系统。如图 7-1 所示，Borg 是非常典型的 Master(BorgMaster) + Agent(Borglet)架构。用户的操作请求提交给 Master，由 Master 负责记录下「某某实例运行在某某机器上」这类元信息，然后 Agent 通过与 Master 通讯得知分配给自己的任务、在单机上执行管理操作。
+Borg 是 Google 内部第一代容器管理系统。如图 7-1 所示，Borg 是非常典型的 Master(BorgMaster) + Agent(Borglet)架构。用户的操作请求提交给 Master，由 Master 负责记录下「某某实例运行在某某机器上」这类元信息，然后 Agent 通过与 Master 通讯得知分配给自己的任务、在 Work 节点中执行管理操作。
 
 :::center
   ![](../assets/borg-arch.png)<br/>
@@ -52,17 +52,17 @@ Omega 的开发并没有复用 Borg 的代码，但吸取了 Borg 的设计思�
 ## Kubernetes
 
 Google 开发的第三套容器管理系统叫 Kubernetes。开发这套系统的背景是：
-- 全球越来越多的开发者也开始对 Linux 容器感兴趣；
-- Google 已经把公有云基础设施作为一门业务在卖，且在持续增长。
+- 全球越来越多的开发者也开始对 Linux 容器感兴趣（Google 是 Linux 容器的主要贡献者，却被 Docker 偷师）；
+- Google 已经把公有云基础设施作为一门业务在卖，且在持续增长（Google 是云计算概念提出者，但起了大早赶了个晚集，云计算领域 AWS 、阿里云早已占尽了先机）。
 
-2013 年夏天，Google 的工程师们开始讨论借鉴 Borg 的经验进行容器编排系统的开发，并希望借此在错失的云计算市场中用 Google 十几年的技术积累改变格局。Kubernetes 项目获批后，Google 在 2014 年 6 月的 DockerCon 大会上正式宣布将其开源。
+2013 年夏天，Google 的工程师们开始讨论借鉴 Borg 的经验进行容器编排系统的开发，并希望用 Google 十几年的技术积累影响错失的云计算市场格局。Kubernetes 项目获批后，Google 在 2014 年 6 月的 DockerCon 大会上正式宣布将其开源。
 
 :::center
   ![](../assets/k8s-arch.svg)<br/>
   图 7-3 Kubernetes 架构视图
 :::
 
-如图 7-3 所示，能看出 Kubernetes 的架构大量概念来源于 Borg/Omega：分布式的彼此交互组件构成的 Master 架构、Pod（Borg Alloc）、工作节点中的 Kublet（之 Borglet）、etcd（之 Omega 集群状态存储 store）。
+如图 7-3 所示，能看出 Kubernetes 的架构大量概念来源于 Borg/Omega：分布式的彼此交互组件构成的 Master 架构、Pod（之 Borg Alloc）、工作节点中的 Kublet（之 Borglet）、etcd（之 Omega 集群状态存储 store）。
 
 与 Borg 和 Omega 不同的是，Kubernetes  在设计时就非常注重应用开发者的体验，首要设计目标就是在享受容器带来的资源利用率提升的同时，让部署和管理复杂分布式系统的基础设施标准化且简单。
 

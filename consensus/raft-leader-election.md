@@ -8,7 +8,7 @@ Raft 算法中，节点有三种角色，并且可以互相转换：
 
 Raft 算法中，节点之间采用 RPC 进行通信，下面 2 种 RPC 是 Raft 基础功能的必要实现：
 
-1. **RequestVote RPC（请求投票 RPC）**：Follower 在选举期间发起，用于通知其他节点投票。
+1. **RequestVote RPC（请求投票 RPC）**：Candidate 在选举期间发起，用于通知其他节点拉取投票。
 2. **AppendEntries RPC（日志复制 RPC）**：由 Leader 发起，用于复制日志和提供心跳消息。
 
 
