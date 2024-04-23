@@ -270,8 +270,6 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/container/borg-omega-k8s.md',
-                    '/container/API.md',
-                    '/container/orchestration.md',
                     '/container/image.md',
                     '/container/runtime.md',
                     "/container/container-network.md",
