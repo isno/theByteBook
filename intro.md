@@ -1,6 +1,4 @@
-# 《深入架构原理与实践》
-
-## 前言
+# 前言
 
 如果你是一位互联网从业者，我猜出这几年你大概率被这些层出不穷的概念包围：云计算、PaaS、FaaS、CaaS、ServiceMesh、Serverless、可观测性、OLAP，当然不能遗漏了各种 Ops，诸如 DevOps、GitOps、MLOps、FinOps 等等。
 
