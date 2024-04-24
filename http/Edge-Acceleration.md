@@ -23,13 +23,13 @@
 
 区域|直连|Akamai 加速|提升
 :---|:--:|:--:|:--
-Bangkok|0.58s|0.44|31%
-jakarta|0.57s|0.44|31%
+Bangkok|0.58s|0.44s|31%
+jakarta|0.57s|0.44s|31%
 Kuala Lumpur|0.52s|0.38|36%
-Taibei|0.51s|0.40|37%
-Hanoi Bac Mai|0.54s|0.41|30%
-Singapore|0.58s|0.39|48%
-Hong Kong|0.38s|0.24|58%
+Taibei|0.51s|0.40s|37%
+Hanoi Bac Mai|0.54s|0.41s|30%
+Singapore|0.58s|0.39s|48%
+Hong Kong|0.38s|0.24s|58%
 Tokyo|0.60s|0.45s|32%
 Surabaya|0.67s|0.52s|29%
 Manila|0.46s|0.34s|36%

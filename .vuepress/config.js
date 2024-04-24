@@ -270,24 +270,12 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                     '/container/borg-omega-k8s.md',
+                    '/container/orchestration.md',
                     '/container/image.md',
                     '/container/runtime.md',
                     "/container/container-network.md",
                     '/container/resource-limit.md',
                     '/container/auto-scaling.md',
-                    {
-                        text: '7.7 生产级kubernetes部署实践',
-                        link:'/container/k8s-deploy.md',
-                        collapsable: false,
-                        sidebarDepth: 1,
-                        children: [
-                            '/container/k8s-deploy-prepare.md',
-                            '/container/k8s-deploy-tls.md',
-                             '/container/k8s-deploy-etcd.md',
-                            '/container/k8s-deploy-containerd.md',
-                            '/container/k8s-deploy-cilium.md',
-                        ]
-                    },
                     '/container/conclusion.md',
                 ]
             },
