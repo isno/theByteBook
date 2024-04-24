@@ -19,7 +19,6 @@
 ```
 注意 Mebibyte 和 Megabyte 的区分，123 Mi = `123*1024*1024B` 、123 M = `1*1000*1000 B`。1M < 1Mi，显然使用带小 i 的更准确。
 
-
 由于每台 node 上会运行 kubelet/docker/containerd 等 Kubernetes 相关基础服务，因此并不是一台 node 的所有资源都能给 Kubernetes 创建 pod 用。 所以，Kubernetes 在资源管理和调度时，需要把这些基础服务的资源使用量和 enforcement 单独拎出来。
 
 为此，Kubernetes 提出了 Node Allocatable Resources 提案。
@@ -30,9 +29,7 @@
 
 ## 资源申请及限制
 
-百闻不如一见，百见不如一干，如何描述一台 node 当前的资源分配状态。
-
-Kubernetes 抽象了两个概念 requests 和 limits 用以描述容器资源的分配。
+Kubernetes 抽象了两个概念用来描述容器资源的分配。
 
 - **requests** 容器需要的最小资源量。举例来讲，对于一个 Spring Boot 业务容器，这里的 requests 必须是容器镜像中 JVM 虚拟机需要占用的最少资源。
 - **limits** 容器最大可以消耗的资源上限，防止过量消耗资源导致资源短缺甚至宕机。
