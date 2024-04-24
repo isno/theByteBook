@@ -1,8 +1,6 @@
 # 7.3 从 Container 到 Pod
 
-从字面上，“Container” 这个词很难让人形象地理解其真正含义，容器编排生态中的另外一个词 “Pod” 也是如此。
-
-仅看一些概念性的解释并不能给我们清晰的认识，甚至会引起误解，例如把容器比作轻量化虚拟机(VM)。
+从字面上，“Container” 这个词很难让人形象地理解其真正含义，容器编排生态中的另外一个词 “Pod” 也是如此。仅看一些概念性的解释并不能给我们清晰的认识，甚至会引起误解，例如把容器比作轻量化虚拟机(VM)。
 
 :::tip 如果容器类似虚拟机
 那就应该有一种普适的方法把虚拟机里面的应用无缝地迁移到容器中，可是现实世界中并没有这种方法。
@@ -18,7 +16,7 @@ chroot 隔离能力对安全性至关重要，比如创建一个隔离环境，�
 
 仅需几步，就能创建一个 chroot 环境。
 
-```
+```shell
 $ mkdir -p new-root/{bin,lib64,root}
 $ cp /bin/bash new-root/bin
 $ cp /lib64/{ld-linux-x86-64.so*,libc.so*,libdl.so.2,libreadline.so*,libtinfo.so*} new-root/lib64
@@ -29,7 +27,7 @@ $ sudo chroot new-root
 
 这个 jail 的用处不大，只有 bash 以及内置的函数，例如 cd、pwd 等。但也足以说明它的作用：运行在此 jail 下的进程的文件系统与宿主机隔离了。
 
-```
+```shell
 bash-4.2# cd bin 
 bash-4.2# pwd
 /bin
