@@ -284,9 +284,10 @@ export default defineUserConfig({
                             "/container/Qos.md",
                             "/container/kube-scheduler.md",
                             "/container/scheduling-framework.md",
+                            "/container/auto-scaling.md",
                         ]
                     },
-                    '/container/auto-scaling.md',
+                    
                     '/container/conclusion.md',
                 ]
             },
