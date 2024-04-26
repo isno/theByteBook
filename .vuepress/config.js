@@ -274,7 +274,18 @@ export default defineUserConfig({
                     '/container/image.md',
                     '/container/runtime.md',
                     "/container/container-network.md",
-                    '/container/resource-limit.md',
+                    {
+                        text: '7.5 资源模型与调度',
+                        collapsable: false,
+                        sidebarDepth: 1,
+                        link: '/container/Resource-scheduling.md',
+                        children: [
+                            "/container/resource.md",
+                            "/container/Qos.md",
+                            "/container/kube-scheduler.md",
+                            "/container/scheduling-framework.md",
+                        ]
+                    },
                     '/container/auto-scaling.md',
                     '/container/conclusion.md',
                 ]
