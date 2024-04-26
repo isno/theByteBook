@@ -1,6 +1,6 @@
 # 7.5 资源模型
 
-与调度关系最密切的物理资源是处理器（CPU）和内存/显存，根据资源不足表现的差异，调度的资源类型又可分为可压缩和不可压缩两类。
+与调度关系最密切的物理资源是处理器（CPU）和内存/显存，根据资源不足表现的差异，调度的资源类型可分为以下两类：
 
 - **可压缩的资源**：典型的是 CPU，此类资源超限时，容器进程使用 CPU 会被限制，应用表现变得卡顿，业务延迟明显增加，但**容器进程不会被杀掉**。CPU 资源其实准确来讲，指的是 CPU 时间。所以它的基本单位为 millicores，1 个核等于 1000 millicores。也代表了 kubernetes 可以将单位 CPU 时间细分为 1000 份。
 
@@ -25,16 +25,14 @@
 - --system-reserved=[cpu=100mi][,][memory=100Mi][,][ephemeral-storage=1Gi]：预留给系统的 CPU、memory 和存储资源
 
 
-这两块预留之后的资源才是 Pod 真正能使用的，不过考虑到 eviction 机制，kubelet 会保证节点上的资源使用率不会真正到 100%，因此 Pod 的实际可使用资源会稍微再少一点。
+这两块预留之后的资源才是 Pod 真正能使用的，不过考虑到 eviction 机制，kubelet 会保证节点上的资源使用率不会真正到 100%，因此 Pod 的实际可使用资源会稍微再少一点。一个 Node 节点的资源逻辑分配如下图所示。
 
 :::center
   ![](../assets/k8s-resource.svg)<br/>
-  图 7-1 Borg 架构图
+  图 7-1 Node 资源逻辑分配图
 :::
 
-节点的可用资源为：
-
-Node Allocatable Resource = Node Capacity - Kube-reserved - system-reserved - eviction-threshold
+节点的可用资源 Node Allocatable Resource = Node Capacity - Kube Reserved - System Reserved - Eviction-Threshold
 
 
 
