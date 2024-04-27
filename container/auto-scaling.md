@@ -10,6 +10,13 @@ Kubernetes 弹性伸缩组件可以从伸缩方向和伸缩对象两个维度进
 | Horizontal | Horizontal Pod Autoscaler（HPA，水平 Pod 垂直自动伸缩器）| Cluster AutoScaler | 
 
 
+:::center
+  ![](../assets/HPA.svg)<br/>
+  图 7-1 Node 资源逻辑分配图
+:::
+
+
+
 先来看 VPA 组件，它确保工作负载适配的方式是调整 Pod 资源上限而不是水平扩展它们。但这里有一个问题：增强型的 Pod 并不一定好。普适的观点是大多数情况下使用多个进程处理数据远比使用一个大且强的进程更高效。
 
 HPA 组件根据资源利用率或者自定义指标自动调整 Deployment、StatefulSet 或其他类似资源的扩展和缩减，实现部署的规模接近于实际服务的负载。HPA 最初的 v1 版本只支持 CPU 指标的伸缩，局限性明显。因为传统的指标如 CPU 或内存不一定就能代表服务的负载情况，比如事件驱动的应用程序 Kafka，传入 kafka 事件的数量才是确定负载的真实指标。在持续集成（CI）流水线中，当提交代码时，可能会触发一系列的流水线作业（镜像编译、应用打包、可用性测试），如果持续集成的作业出现瓶颈，这里的度量标准应该是等待执行的任务数，那么基于作业队列数量伸缩比仅仅观察 CPU 或者内存指标更有效。
@@ -81,9 +88,6 @@ Cluster AutoScaler 是一个自动扩展和收缩 Kubernetes 集群 Node 的扩�
 </div>
 
 Cluster Autoscaler 虽然是 Kubernetes 官方标准，但是由于他深度依赖公有云厂商，因此具体使用方法，功能以及限制以公有云厂商具体实现为准。
-
-## 离/在线混部
-
 
 [^1]: 参见 https://keda.sh/docs/2.12/scalers/
 [^2]: 参见 https://keda.sh/community/#end-users
