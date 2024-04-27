@@ -26,9 +26,9 @@
 
 和 HPA 的思路相似，只不过 VPA 调整的是单个 pod 的 request 值（包括 CPU 和 memory）。VPA 包括三个组件：
 
-- Recommander：消费 metrics server 或者其他监控组件的数据，然后计算 pod 的资源推荐值
-- Updater：找到被 vpa 接管的 pod 中和计算出来的推荐值差距过大的，对其做 update 操作（目前是 evict，新建的 pod 在下面 admission controller 中会使用推荐的资源值作为 request）
-- Admission Controller：新建的 pod 会经过该 Admission Controller，如果 pod 是被 vpa 接管的，会使用 recommander 计算出来的推荐值
+- Recommander：消费 metrics server 或者其他监控组件的数据，然后计算 pod 的资源推荐值。
+- Updater：找到被 vpa 接管的 pod 中和计算出来的推荐值差距过大的，对其做 update 操作（目前是 evict，新建的 pod 在下面 admission controller 中会使用推荐的资源值作为 request）。
+- Admission Controller：新建的 pod 会经过该 Admission Controller，如果 pod 是被 vpa 接管的，会使用 Recommander 计算出来的推荐值。
 
 可以看到，这三个组件的功能是互相补充的，共同实现了动态修改 Pod 请求资源的功能。
 
