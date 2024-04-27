@@ -282,9 +282,9 @@ export default defineUserConfig({
                         children: [
                             "/container/resource.md",
                             "/container/Qos.md",
+                            "/container/auto-scaling.md",
                             "/container/kube-scheduler.md",
                             "/container/scheduling-framework.md",
-                            "/container/auto-scaling.md",
                         ]
                     },
                     

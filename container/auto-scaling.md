@@ -1,31 +1,40 @@
-# 7.6 资源动态调整
+# 7.5.3 资源动态调整
 
-弹性伸缩（Auto Scaling）目标是通过解决欠配置（损失服务可用性）和过度配置（导致不必要的成本）而实现容量与成本之间博弈的平衡。
+应用的实际流量会不断变化，因此使用率也是不断变化的，为了应对应用流量的变化，我们应用能够自动调整应用的资源。比如在线商品应用在促销的时候访问量会增加，我们应该自动增加 pod 运算能力来应对；当促销结束后，有需要自动降低 pod 的运算能力防止浪费。
 
-Kubernetes 弹性伸缩组件可以从伸缩方向和伸缩对象两个维度进行解读，如下表所列。
+运算能力的增减有两种方式：改变单个 pod 的资源，增减 pod 的数量。这两种方式对应了 kubernetes 的 HPA 和 VPA。
 
-|| Pod | Node |
-|:--|:--|:--|
-| Vertical | Vertical Pod Autoscaler（VPA，垂直 Pod 自动伸缩器）| 无 | 
-| Horizontal | Horizontal Pod Autoscaler（HPA，水平 Pod 垂直自动伸缩器）| Cluster AutoScaler | 
+## Horizontal Pod AutoScaling（横向 Pod 自动扩展）
 
+横向 Pod 自动扩展的思路是这样的：kubernetes 会运行一个 controller，周期性地监听 pod 的资源使用情况：
+- 当高于设定的阈值时，会自动增加 pod 的数量；
+- 当低于某个阈值时，会自动减少 pod 的数量。
+
+自然，这里的阈值以及 pod 的上限和下限的数量都是需要用户配置的。
 
 :::center
   ![](../assets/HPA.svg)<br/>
   图 7-1 Node 资源逻辑分配图
 :::
 
+上面这句话隐藏了一个重要的信息：HPA 只能和 RC、deployment、RS 这些可以动态修改 replicas 的对象一起使用，而无法用于单个 Pod、Daemonset（因为它控制的 pod 数量不能随便修改）等对象。
+
+目前官方的监控数据来源是 metrics server 项目，可以配置的资源 CPU、自定义的监控数据（比如 prometheus） 等。
 
 
-先来看 VPA 组件，它确保工作负载适配的方式是调整 Pod 资源上限而不是水平扩展它们。但这里有一个问题：增强型的 Pod 并不一定好。普适的观点是大多数情况下使用多个进程处理数据远比使用一个大且强的进程更高效。
+## Vertical Pod AutoScaling（垂直 Pod 自动扩展）
 
-HPA 组件根据资源利用率或者自定义指标自动调整 Deployment、StatefulSet 或其他类似资源的扩展和缩减，实现部署的规模接近于实际服务的负载。HPA 最初的 v1 版本只支持 CPU 指标的伸缩，局限性明显。因为传统的指标如 CPU 或内存不一定就能代表服务的负载情况，比如事件驱动的应用程序 Kafka，传入 kafka 事件的数量才是确定负载的真实指标。在持续集成（CI）流水线中，当提交代码时，可能会触发一系列的流水线作业（镜像编译、应用打包、可用性测试），如果持续集成的作业出现瓶颈，这里的度量标准应该是等待执行的任务数，那么基于作业队列数量伸缩比仅仅观察 CPU 或者内存指标更有效。
+和 HPA 的思路相似，只不过 VPA 调整的是单个 pod 的 request 值（包括 CPU 和 memory）。VPA 包括三个组件：
 
-当然，Kubernetes 也看到了这一点。HPA 在经过三个大版本的演进之后，最新的 autoscaling/v2 实现支持 Custom Metrics（自定义指标）和 External Metrics（额外指标）的缩放。
+- Recommander：消费 metrics server 或者其他监控组件的数据，然后计算 pod 的资源推荐值
+- Updater：找到被 vpa 接管的 pod 中和计算出来的推荐值差距过大的，对其做 update 操作（目前是 evict，新建的 pod 在下面 admission controller 中会使用推荐的资源值作为 request）
+- Admission Controller：新建的 pod 会经过该 Admission Controller，如果 pod 是被 vpa 接管的，会使用 recommander 计算出来的推荐值
 
-## 基于事件驱动的方式
+可以看到，这三个组件的功能是互相补充的，共同实现了动态修改 Pod 请求资源的功能。
 
-HPA 虽然能基于外部指标实现弹性伸缩，但缺点是扑面来而的复杂、不直观的配置以及仅与 Prometheus 指标关联。
+## 基于事件驱动的 HPA 增强
+
+HPA 虽然能基于外部指标实现弹性伸缩，但缺点是仅与 Prometheus 指标关联。
 
 如果你想要更好的处理好资源，那么你可以了解 KEDA 这个项目。
 
@@ -77,9 +86,7 @@ minReplicaCount 和 maxReplicaCount 分别定义了要伸缩的对象的最小�
 
 ## Cluster AutoScaler
 
-集群可用资源变多，不等于整体开支降低。通过弹性释放出来的资源总不能空置吧，那么就回收（还给云商）或者利用它（离在线混部）。
-
-集群节点的弹性伸缩本来是一件非常麻烦的事情，好在现在的集群大多都是构建在云上，云上可以直接调用接口添加删除节点，这就使得集群节点弹性伸缩变得非常方便。
+随着业务的发展，应用会逐渐增多，每个应用使用的资源也会增加，总会出现集群资源不足的情况。为了动态地应对这一状况，我们还需要 CLuster Auto Scaler，能够根据整个集群的资源使用情况来增减节点。
 
 Cluster AutoScaler 是一个自动扩展和收缩 Kubernetes 集群 Node 的扩展。当集群容量不足时，它会自动去 Cloud Provider（支持绝大部分的云服务商 GCE、GKE、Azure、AKS、AWS 等等）创建新的 Node，而在 Node 长时间（超过 10 分钟）资源利用率很低时（低于 50%）自动 Pod 会自动调度到其他 Node 上面，并删除节点以节省开支。
 
