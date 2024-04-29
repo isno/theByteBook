@@ -14,27 +14,29 @@
 
 ## 异构资源
 
-Kubernetes 默认仅支持 CPU、内存资源的调度，当容器需要运行特殊资源时，Kubernetes 就无能为力了。异构资源千千万，每种方法使用也不一样，譬如有 RoCE 网卡、GPU、NPU、FPGA 等各种硬件，仅单纯的 GPU 管理，就可以有“每个容器挂 1 个 GPU”，或者“几个容器共用 1 个GPU ”，甚至“1个GPU切分成多个vGPU分别给不同容器用”多种用法。
+当容器运行需要一些特殊资源，Kubernetes 就无能为力了，为了支持异构计算和高性能网络，Kubernetes 提供了 Device Plugin 与各类高性能硬件集成。
 
-为了管理这些异构资源，Kubernetes 提供了 Device-plugin 插件。用户需要自己完成这个Device-plugin的开发对接，来实时通知K8s节点上面GPU的使用情况，辅助K8s按需分配GPU算力。
+通过提供通用设备插件机制和标准的设备API接口。这样设备厂商只需要实现相应的API接口，无需修改Kubelet主干代码，就可以实现支持譬如 RoCE 网卡、GPU、NPU、FPGA 等各种设备的扩展
 
+实际上 Device plugins 是简单的 grpc server，需要实现以下两个方法 ListAndWatch和Allocate，并监听在/var/lib/kubelet/device-plugins/目录下的Unix Socket，比如/var/lib/kubelet/device-plugins/nvidia.sock
 
-整个Device Plugin的工作流程可以分成两个部分：
-- 一个是启动时刻的资源上报。其中ListAndWatch对应资源的上报，同时还提供健康检查的机制。当设备不健康的时候，可以上报给Kubernetes不健康设备的ID，让Device Plugin Framework将这个设备从可调度设备中移除
-- 另一个是用户使用时刻的调度和运行。Allocate会被Device Plugin在部署容器时调用，传入的参数核心就是容器会使用的设备ID，返回的参数是容器启动时，需要的设备、数据卷以及环境变量。
+其中：
+
+- ListAndWatch: Kubelet会调用该API做设备发现和状态更新（比如设备变得不健康）
+- Allocate: 当Kubelet创建要使用该设备的容器时， Kubelet会调用该API执行设备相应的操作并且通知Kubelet初始化容器所需的device，volume和环境变量的配置。
+
 
 :::center
   ![](../assets/Device-plugin.webp)<br/>
 :::
 
+device plugin 能实现一些异构资源基本支持，但面临复杂的场景还是有点能力不足。譬如大模型训练场依赖高性能网络，而高性能网络的节点间通信需要用到 RDMA 协议和支持 RDMA 协议的网络设备，而这些设备又和 GPU 在节点上的系统拓扑层面是紧密协作的，这就要求在分配 GPU 和 RDMA 时需要感知硬件拓扑，尽可能就近分配这种设备。
 
+Kubernetes 从 v1.26 开始引入 DRA（Dynamic Resource Allocation，动态资源分配）机制，用于解决现有 Device Plugin 机制的不足。相比于现有的 Device Plugin ，DRA 更加开放和自主，能够满足一些复杂的使用场景。
 
-
-device plugin 交互实现整套机制，这套机制在 K8s 早期还是够用的，但也有局限性。
-
-譬如大模型训练依赖高性能网络，而高性能网络的节点间通信需要用到 RDMA 协议和支持 RDMA 协议的网络设备，而这些设备又和 GPU 在节点上的系统拓扑层面是紧密协作的，这就要求在分配 GPU 和 RDMA 时需要感知硬件拓扑，尽可能就近分配这种设备
-
-Kubernetes从 v1.26 开始引入DRA机制，DRA（Dynamic Resource Allocation，动态资源分配）是对现有Device Plugin机制的补充，并不是要替代Device Plugin机制。
+:::center
+  ![](../assets/DRA.png)<br/>
+:::
 
 
 ## 节点可用资源
