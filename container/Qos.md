@@ -108,7 +108,6 @@ Pod 也是不平等的，有些 pod 要比其他 pod 更重要。只管来说，
 
 这个问题解决也很简单，延缓 kubelet 上报资源状态的。--eviction-pressure-transition-period 参数可以指定 kubelet 多久才上报节点的状态，因为默认的上报状态周期比较短，频繁更改节点状态会导致驱逐波动。
 
-
 ```
 –eviction-soft=memory.available<80%,nodefs.available<2Gi \
 –eviction-soft-grace-period=memory.available=1m30s,nodefs.available=1m30s \
