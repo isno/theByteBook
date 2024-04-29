@@ -8,7 +8,7 @@ Kubernetes 默认调度器是以 Pod 为调度单元进行依次调度的，并�
 
 :::center
   ![](../assets/scheduling-framework-extensions.png)<br/>
-  图 7-1 Scheduling Framework 扩展
+  pod 的调度流程和调度框架公开的扩展点；Filter也就是谓词过滤器（predicate filter），Scoring等同于优先算法(Priority function)，注册的插件将会在对应的扩展点被调用。
 :::
 
 目前业内开源的一些调度器，譬如华为 Volcano、阿里巴巴 Koordinator 等，虽功能上有些差异，但总体而言是先实现基本的 Gang Scheduling 功能，提供主流架构的 CPU、GPU 在内的异构设备混合调度能力，再补些 MPI 等辅助功能。
