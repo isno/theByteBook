@@ -14,9 +14,7 @@
 
 ## 异构资源
 
-当容器运行需要一些特殊资源，Kubernetes 就无能为力了，为了支持异构计算和高性能网络，Kubernetes 提供了 Device Plugin 与各类高性能硬件集成。
-
-通过提供通用设备插件机制和标准的设备API接口。这样设备厂商只需要实现相应的API接口，无需修改Kubelet主干代码，就可以实现支持譬如 RoCE 网卡、GPU、NPU、FPGA 等各种设备的扩展
+当容器运行需要一些特殊资源，Kubernetes 就无能为力了，为了支持异构计算和高性能网络，Kubernetes 提供了 Device Plugin 与各类高性能硬件集成。如此，设备厂商只需要实现相应的 API 接口，无需修改 Kubelet 主干代码，就可以实现譬如 RoCE 网卡、GPU、NPU、FPGA 等各种设备的扩展
 
 实际上 Device plugins 是简单的 grpc server，需要实现以下两个方法 ListAndWatch和Allocate，并监听在/var/lib/kubelet/device-plugins/目录下的Unix Socket，比如/var/lib/kubelet/device-plugins/nvidia.sock
 
