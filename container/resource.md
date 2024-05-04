@@ -14,18 +14,39 @@
 
 ## 异构资源
 
-当容器运行需要一些特殊资源，Kubernetes 就无能为力了，为了支持异构计算和高性能网络，Kubernetes 提供了 Device Plugin 与各类高性能硬件集成。如此，设备厂商只需要实现相应的 API 接口，无需修改 Kubelet 主干代码，就可以实现譬如 RoCE 网卡、GPU、NPU、FPGA 等各种设备的扩展
+当容器运行需要一些特殊资源，Kubernetes 就无能为力了，为了支持异构计算和高性能网络，Kubernetes 提供了 Device Plugin 与各类高性能硬件集成。如此，设备厂商只需要实现相应的 API 接口，无需修改 Kubelet 主干代码，就可以实现譬如 RoCE 网卡、GPU、NPU、FPGA 等各种设备的扩展。
 
-实际上 Device plugins 是简单的 grpc server，需要实现以下两个方法 ListAndWatch和Allocate，并监听在/var/lib/kubelet/device-plugins/目录下的Unix Socket，比如/var/lib/kubelet/device-plugins/nvidia.sock
+如下代码所示，在安装好驱动的前提下，两个步骤就可以使用 GPU 资源：
 
-其中：
+1. 安装 NVIDIA 设备插件来识别和管理 GPU 资源。
 
-- ListAndWatch: Kubelet会调用该API做设备发现和状态更新（比如设备变得不健康）
-- Allocate: 当Kubelet创建要使用该设备的容器时， Kubelet会调用该API执行设备相应的操作并且通知Kubelet初始化容器所需的device，volume和环境变量的配置。
+```
+kubectl create -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/v0.9.0/nvidia-device-plugin.yml
+```
 
+2. 创建一个需要一个 NVIDIA GPU 的 Pod。
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gpu-pod
+spec:
+  containers:
+    - name: cuda-container
+      image: nvidia/cuda:10.0-base
+      resources:
+        limits:
+          nvidia.com/gpu: 1
+```
+
+实际上 Device plugins 就是需要实现 ListAndWatch 和 Allocate 两个接口的 grpc server，其中：
+
+- ListAndWatch: Kubelet 会调用该 API 做设备发现和状态更新（比如设备变得不健康）；
+- Allocate: 当 Kubelet 创建要使用该设备的容器时，Kubelet 会调用该 API 执行设备相应的操作并且通知 Kubelet 初始化容器所需的 device、volume 和环境变量的配置。
 
 :::center
-  ![](../assets/Device-plugin.webp)<br/>
+  ![](../assets/device-plugin.png)<br/>
 :::
 
 device plugin 能实现一些异构资源基本支持，但面临复杂的场景还是有点能力不足。譬如大模型训练场依赖高性能网络，而高性能网络的节点间通信需要用到 RDMA 协议和支持 RDMA 协议的网络设备，而这些设备又和 GPU 在节点上的系统拓扑层面是紧密协作的，这就要求在分配 GPU 和 RDMA 时需要感知硬件拓扑，尽可能就近分配这种设备。
