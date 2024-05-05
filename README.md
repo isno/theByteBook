@@ -20,10 +20,13 @@
 
 我会持续更新这个仓库的内容，如果想要关注可以点 `star` 。
 
-<div  align="center">
-	<img src="./assets/star-history-20231218.png" width = "460"  align=center />
-	<p><a href="https://github.com/isno/theByteBook">https://github.com/isno/theByteBook</a></p>
-</div>
+
+:::center
+
+[![Star History Chart](https://api.star-history.com/svg?repos=isno/thebytebook&type=Date)](https://star-history.com/#isno/thebytebook&Date)
+<p><a href="https://github.com/isno/theByteBook">https://github.com/isno/theByteBook</a></p>
+:::
+
 
 
 ## 如何阅读

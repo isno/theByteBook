@@ -16,15 +16,15 @@
 
 这也让当时 Docker 阵营和粉丝们无比担心 Docker 的命运，不管最终鹿死谁手，容器技术的分裂对所有牵涉其中的人没有任何好处，于是 Linux 基金会出面调和，双方各退一步，最终结果是 Linux 基金会于 2015 年 6 月在  DockerCon 大会上宣布成立 OCI（Open Container Initiative，开放容器倡议）项目[^1]。
 
-OCI 的创始成员包括 Amazon、Microsoft、CoreOS、Docker、Intel、Mesosphere 和 Red Hat。Docker 在这个名单内只能算一个小角色，OCI 的成立最终结束了容器技术标准之争，Docker 公司也被迫放弃自己的独家控制权。作为回报，Docker 的容器格式被 OCI 采纳为新标准的基础，并且由 Docker 起草 OCI 草案规范的初稿。
+OCI 的成立最终结束了容器技术标准之争，Docker 公司也被迫放弃自己的独家控制权。作为回报，Docker 的容器格式被 OCI 采纳为新标准的基础，并且由 Docker 起草 OCI 草案规范的初稿。
 
-当然这个“标准起草者” 也不是那么好当的，Docker 需要提交自己的容器引擎源码作为启动资源。首先是 Docker 最初使用的容器引擎 libcontainer，这是 Docker 在容器运行时方面的核心组件之一 ，用于实现容器的创建、管理和运行。Docker 将 libcontainer 捐赠给了OCI，成为 OCI Runtime Specification 的基础。在 OCI 的基础上，OCI Runtime Specification 进一步发展演进，并形成了一个名为"runtime-spec" 的项目，后来为了更好地推进容器运行时的标准化和互操作性，OCI runtime-spec 项目与 OCI 的其他相关项目合并，形成了 OCI Runtime Bundle 规范，并将容器运行时的核心组件命名为"runc"。
+当然这个“标准起草者” 也不是那么好当的，Docker 需要提交自己的容器引擎源码作为启动资源。首先是 Docker 最初使用的容器引擎 libcontainer，这是 Docker 在容器运行时方面的核心组件之一 ，用于实现容器的创建、管理和运行。Docker 将 libcontainer 捐赠给了OCI，成为 runtime-spec 的基础。在 OCI 的基础上，后来为了更好地推进容器运行时的标准化和互操作性，OCI runtime-spec 项目与 OCI 的其他相关项目合并，形成了 OCI Runtime Bundle 规范，并将容器运行时的核心组件命名为"runc"。
 
 :::tip runc
 
-RunC 是非常小的运行核，其目的在于提供一个干净简单的运行环境，他就是负责隔离 CPU、内存、网络等形成一个运行环境，可以看作一个小的操作系统。
+RunC 是非常小的运行核，其目的在于提供一个干净简单的运行环境，他就是负责隔离 CPU、内存、网络等形成一个运行环境，可以看作一个小的操作系统。RunC 的使用者都是一些 CaaS 服务商，个人开发者知晓的并不是太多。
 
-Docker 是从1.11支持RunC的，想必 Docker 当时的心态也很复杂：一方面作为 OCI 成员必须支持 RunC，但是另一方面他会担心 RunC 对 Docker 的替代的威胁。
+Docker 是从 1.11 支持 RunC 的，想必 Docker 当时的心态也很复杂：一方面作为 OCI 成员必须支持 RunC，但是另一方面他会担心 RunC 对 Docker 的替代的威胁。
 :::
 
 

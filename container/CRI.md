@@ -30,9 +30,9 @@ CRI 实现上是一套通过 Protocol Buffer 定义的 API，如下图：
 
 ## containerd
 
-不过 Docker 也没有“坐以待毙”，与其将来被人分离或者抛弃不用，不如主动革新。
+不过 Docker 也没有“坐以待毙”，与其将来被人分离或者抛弃不用，不如主动革新。docker 采取了“断臂求生”的策略推动自身的重构，把原本单体架构的 Docker Engine 拆分成了多个模块，早期 containerd 单独开源，后来捐献给了 CNCF，目的希望与 Kubernetes 深度绑定在一起。
 
-于是 Docker 采取了“断臂求生”的策略推动自身的重构，把原本单体架构的 Docker Engine 拆分成了多个模块，其中的 Docker daemon 部分就捐献给了 CNCF，形成了 containerd 与 Kubernetes 深度绑定在一起。containerd 作为 CNCF 的托管项目，自然符合 CRI 标准的。但 Docker 出于自己诸多原因的考虑，它只是在 Docker Engine 里调用了 containerd，外部的接口仍然保持不变，也就是说还不与 CRI 兼容。
+containerd 作为 CNCF 的托管项目，自然符合 CRI 标准的。但 Docker 出于自己诸多原因的考虑，它只是在 Docker Engine 里调用了 containerd，外部的接口仍然保持不变，也就是说还不与 CRI 兼容。
 
 由于 Docker 的“固执己见”且 Docker 是当时容器技术主流存在，Kuberentes 虽然提出了 CRI 接口规范，仍然需要去适配 CRI 与 Docker 的对接，因此它需要一个中间层（shim，垫片）来对接 Kubelet 和 Docker 运行时实现。
 
