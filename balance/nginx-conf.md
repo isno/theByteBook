@@ -6,10 +6,10 @@
 
 Nginx 的主配置文件是 nginx.conf，这个配置文件一共由三部分组成，分别为全局块、events 块和 http 块。http 块中又包含 http 全局块、多个 server 块。每个 server 块中可以包含 server 全局块和多个 location 块，在同一配置块中嵌套的配置块，各个之间不存在次序关系。
 
-<div  align="center">
-	<img src="../assets/nginx-conf.png" width = "450"  align=center />
-    <p>图 4-14 Nginx 配置</p>
-</div>
+:::center
+  ![](../assets/nginx-conf.png)<br/>
+  图 4-14 Nginx 配置
+:::
 
 同一个指令放在不同层级的块中，其作用域也不同，一般情况下，高一级块中的指令可以作用于自身所在的块和此块包含的所有低层级块。如果某个指令在两个不同层级的块中同时出现，则采用「就近原则」，即以较低层级块中的配置为准。
 
