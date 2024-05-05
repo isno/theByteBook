@@ -91,6 +91,7 @@ CRI 和 Kata Containers 的集成如下图所示：
 	<img src="../assets/runtime.png" width = "550"  align=center />
 </div>
 
+
 [^1]: 参见 https://kubernetes.io/blog/2018/05/24/kubernetes-containerd-integration-goes-ga/
 
 [^2]: 图片来源 https://medium.com/kata-containers/inject-workloads-with-kata-containers-in-istio-4730a57b33fd
