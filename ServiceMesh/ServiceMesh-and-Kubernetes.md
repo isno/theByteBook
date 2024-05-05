@@ -1,10 +1,8 @@
 # 8.4 服务网格与 Kubernetes
 
-以 Kubernetes 为基础构建起的云原生世界里，Sidecar 模式无疑是最经典的设计。
+以 Kubernetes 为基础构建起的云原生世界里，Sidecar 模式无疑是最经典的设计。当需要为应用提供与自身逻辑无关的辅助功能时，在应用 Pod 内注入对应功能的 Sidecar 显然是最 Kubernetes Native 的方式。
 
-当需要为应用提供与自身逻辑无关的辅助功能时，在应用 Pod 内注入对应功能的 Sidecar 显然是最 Kubernetes Native 的方式。服务网格通过在 Pod 内的 Sidecar Proxy 实现透明代理，通过更接近微服务应用层的抽象，实现服务间的流量、安全性和可观察性细粒度管理。
-
-如下图所示，服务网格（Istio）最大化地利用 Kubernetes 这个基础设施，两者叠加形成一套从底层的负载部署运行到综合服务治理的完整基础设施。
+服务网格通过在 Pod 内的 Sidecar Proxy 实现透明代理，通过更接近微服务应用层的抽象，实现服务间的流量、安全性和可观察性细粒度管理。如下图所示，服务网格（Istio）最大化地利用 Kubernetes 这个基础设施，两者叠加形成一套从底层的负载部署运行到综合服务治理的完整基础设施。
 
 <div  align="center">
 	<img src="../assets/ServiceMesh-and-Kubernetes.png" width = "450"  align=center />
