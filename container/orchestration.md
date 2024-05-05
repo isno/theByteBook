@@ -47,68 +47,15 @@ root@028f46a5b7db:/# cd bin
 root@028f46a5b7db:/bin# pwd
 /bin
 ```
-看起来跟 chroot 差不多，也是一个与宿主机隔离的文件系统环境，那这是否意味着 chroot 就是容器了呢？ 肯定不是：**chroot 只是改变了根目录，而非创建了真正的独立隔离、安全的环境**，chroot 后的进程、文件系统、网络、设备等等都没有被隔离。
+看起来跟 chroot 差不多，也是一个与宿主机隔离的文件系统环境，那这是否意味着 chroot 就是容器了呢？ 肯定不是：**chroot 只是改变了根目录，而非创建了真正的独立隔离、安全的环境**，chroot 后的进程可以通过几行代码就能从当前的 jail 中逃逸，而且文件系统、网络、设备等等都没有被隔离。
 
-### 文件系统没有被完全隔离
-
-如下代码，在 jail 内切换相对路径，创建一个新的 jail 就会覆盖当前的 jail。用几行代码就从 jail 中逃逸了。
-
-```c
-#include <sys/stat.h>
-#include <unistd.h>
-int main(void) {  
-  mkdir(".out", 0755);  
-  chroot(".out");  
-  chdir("../../");  
-  chroot(".");  
-  return execl("/bin/bash", "-i", NULL);
-}
-```
-原本的 jail 之内没有 ls 命令。
-
-```shell
-bash-4.2# ls
-bash: ls: command not found
-```
-
-从 jail 逃逸之后，因为根路径被修改了，所以有了 ls 命令。
-
-```
-$ ls
-a.out                     logs                 openssl-1.1.1g
-```
-
-### 进程没有被隔离
-
-在真实的 Linux 机器上，我们通过 pstree -p 可以看到 PID=1 的是 systemd 进程。
-
-```
-$ pstree -p
-systemd(1)─┬─acpid(554)
-           ├─agetty(1129)
-```
-
-而进入 Docker 容器时，我们可以看到 Pid = 1 的是我们通过 docker run 指令指定的程序，容器内的 PID=1 的进程和容器外的 PID=1 进程完全是独立的。
-
-```
-$ docker run -t -i ubuntu:18.04 /bin/bash
-root@ca3d02c7ad37:/# ps -ef
-UID        PID  PPID  C STIME TTY          TIME CMD
-root         1     0  0 15:14 pts/0    00:00:00 /bin/bash
-```
-
-再看 chroot 之后的进程号，通过 echo $$ 打印当前 shell 的 PID。
-```
-bash-4.2# echo $$
-15380
-```
-运行的 /bin/bash 并非是 1 号进程，没有和宿主机隔离。我们还可以通过 mount 挂载外部的 /proc ，看到外部进程的情况，甚至杀死监狱之外的进程。因此，缺少隔离和具备离开监狱的能力，就会导致许多与安全相关的问题。如何解决这个问题呢？ 这就是要介绍的 Linux 名称空间的能力了。
+因此，缺少隔离和具备离开监狱的能力，就会导致许多与安全相关的问题。
 
 ## 7.3.2 资源全方位隔离
 
-Chroot 最初的目的是为了实现文件的隔离，并非为了容器而设计。后来 Linux 吸收了这些理念，从 2.4.19 引入了 Mount 名称空间。
+Chroot 最初的目的是为了实现文件的隔离，并非为了容器而设计。后来 Linux 吸收了这些理念，最初在 2.4.19 引入了 Mount 命名空间，这样就可以隔离挂载文件系统。
 
-后来又陆续添加了 UTS、IPC、PID、Network、User 等命名空间，这些命名空间由内核直接提供的全局资源封装，针对进程设计的访问隔离机制，使得名称空间内的进程看起来拥有自己的全局资源隔离实例。
+后来又想到进程间通信也需要隔离，又有了 IPC。同时，容器还需要一个独立的主机名以便在网络中标识自己，有了网络，自然要有独立的 IP、端口、路由等...。从 Linux 内核 2.6.19 起，又陆续添加了 UTS、IPC、PID、Network、User 等命名空间。至 Linux 内核 3.8 版本，Linux 已经完成容器所需的 6 项最基本资源隔离。
 
 表 7-1 Linux 目前支持的八类名称空间
 
@@ -140,7 +87,7 @@ int flags = CLONE_NEWNS | CLONE_NEWPID | CLONE_NEWIPC | CLONE_NEWNET | CLONE_NEW
 int pid = clone(main_function, stack_size, flags | SIGCHLD, NULL); 
 ```
 
-新创建的这个进程将会“看到”一个全新的进程空间，在这个进程空间里，它的 PID 是 1，只能看到各自 Mount 名称空间里挂载的目录和文件，只能访问到各自 Network 名称空间里的网络设备。
+新创建的这个进程将会“看到”一个全新的系统环境，这个环境内，进程的 PID 是 1，只能看到各自 Mount 名称空间里挂载的目录和文件，只能访问到各自 Network 名称空间里的网络设备。
 
 ## 7.3.3 资源全方位限制
 
@@ -203,7 +150,7 @@ $ pstree -g
 
 如果容器想要实现类似操作系统进程组那般互相协作，容器下一步的演进就是要找到与“进程组”相对应的概念，这是实现容器从隔离到协作的第一步。
 
-## 7.3.5 超亲密容器组
+## 7.3.5 超亲密容器组 Pod
 
 Kubernetes 中这个设计叫做 Pod，Pod 是一组紧密关联的容器集合，它们共享 IPC、Network、UTS 等名称空间，是 Kubernetes 调度的基本单位。
 
@@ -236,7 +183,7 @@ spec:
   shareProcessNamespace: true
 ```
 
-## 7.3.6 承担调度原子单位的职责
+## 7.3.6 Pod 是调度的原子单位
 
 Pod 承担的另外一个重要职责是 - 作为调度的原子单位。
 
