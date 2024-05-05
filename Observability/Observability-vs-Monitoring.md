@@ -6,23 +6,23 @@
 监控告诉我们系统哪些部分是工作的，可观测性告诉我们那里为什么不工作了
 
 :::right
-——《高性能 MySQL》作者 by Baron Schwartz 
+——by《高性能 MySQL》作者 Baron Schwartz 
 :::
 
 最近几年发展的趋势是将可观测性放在一个更高的位置，监控只是可观测性的一个子集，如下所示。
 
-<div  align="center">
-	<img src="../assets/Monitoring-vs-Observability.png" width = "450"  align=center />
-</div>
-
+:::center
+  ![](../assets/Monitoring-vs-Observability.png)<br/>
+  监控与可观测性
+:::
 
 过去，一台物理机器的状态确实可以通过几个监控指标描述，但是随着系统越来越复杂，监控的对象渐渐地从基础设施转到应用，观察行为也从监控（Monitoring）进化到观测（Observability）。这两者虽然只是文字上的差别（也确实容易引起误解），但请仔细思考背后的含义。
 
 笔者再借用 Donald Rumsfeld（前美国国防部长）关于 Known、Unknowns 的名言[^1]解释两者的区别，我们把系统的理解程度和可收集信息之间的关系进行象限化分析，如下图所示。
 
-<div  align="center">
-	<img src="../assets/observability-knowns.png" width = "500"  align=center />
-</div>
+:::center
+  ![](../assets/observability-knowns.png)<br/>
+:::
 
 X 轴的右侧称为 Known Knows（已知且理解）和 Known Unknowns（已知但不理解），这些信息通常是普适的事实，也就是在系统上线之前我们一定就能想到、并监控起来的（CPU Load、内存、TPS、QPS 之类的指标）。
 

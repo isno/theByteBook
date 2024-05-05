@@ -6,10 +6,10 @@
 
 Profiles 数据一般表示成火焰图、堆栈图，内存分析图等形式，2021年国内某站崩溃，工程师们就是使用火焰图观察到到一处 Lua 代码存在异常，才找到问题的源头[^1]。
 
-<div  align="center">
-	<img src="../assets/lua-cpu-flame-graph.webp" width = "500"  align=center />
-	<p>Lua 级别的 CPU 火焰图</p>
-</div>
+:::center
+  ![](../assets/lua-cpu-flame-graph.webp)<br/>
+  Lua 级别的 CPU 火焰图
+:::
 
 可观测中的 Profiles 数据由多种不同的 Profiler 组成，常见的有：
 

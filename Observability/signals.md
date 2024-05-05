@@ -4,9 +4,11 @@
 
 2017 年的分布式追踪峰会结束后，Peter Bourgon 撰写的文章《Metrics, Tracing, and Logging》[^1]系统地阐述了这三者的定义、特征以及它们之间的关系与差异，受到了业界的广泛认可。三者之间的关系，如下韦恩图所示。
 
-<div  align="center">
-	<img src="../assets/observability.jpg"  align=center />
-</div>
+:::center
+  ![](../assets/observability.jpg)<br/>
+ Metrics, Tracing, and Logging
+:::
+
 
 - **Metrics（度量）**：系统事件发生数量的统计聚合。事件例如服务 QPS、API 响应延迟、某个接口的失败数等，聚合结果是呈具有时间属性的数字化指标，指标度量常作为发现问题的起点，一个典型例子是你收到一条告警”请求成功率跌到了 10%“，意识到不妙并立即开始处理，结合其他 Signals 找到 root cause，从而解决问题。
 - **Logging（日志）**：日志描述一系列离散的事件，特别是非预期的行为。在缺乏有力的 APM 系统时，分析日志数据是工程师定位问题时最直接的手段。如果说 Metrics 告诉你应用程序出现问题，那么 Logging 就告诉你为什么出现问题。

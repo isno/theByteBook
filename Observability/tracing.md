@@ -2,10 +2,10 @@
 
 参阅 Uber 公开的技术文档[^1]，它们的微服务架构中大约有 2,200 个服务，引用其中的配图，感受扑面而来的复杂。
 
-<div  align="center">
-	<img src="../assets/uber-microservice.png" width = "350"  align=center />
-	<p>Uber 使用 Jaeger 生成的追踪链路拓扑</p>
-</div>
+:::center
+  ![](../assets/uber-microservice.png)<br/>
+  Uber 使用 Jaeger 生成的追踪链路拓扑
+:::
 
 分布式链路追踪所要做的事情就是解决复杂链路排查困难的问题，**它的核心是通过请求粒度的轨迹追踪与数据透传，以实现这种规模下服务之间链路调用的确定性关联**。
 
@@ -25,19 +25,19 @@ Span 代表系统中一个逻辑运行单元，Span 之间通过嵌套或者顺�
 
 每一次 Trace 实际上都是由若干个有顺序、有层级关系的 Span 所组成一颗“追踪树”（Trace Tree），如下图所示。
 
-<div  align="center">
-	<img src="../assets/Dapper-trace-span.png" width = "350"  align=center />
-	<p>Trace 和 Spans</p>
-</div>
+:::center
+  ![](../assets/Dapper-trace-span.png)<br/>
+  Trace 和 Spans
+:::
 
 总结分布式链路追踪的原理就是在分布式应用的接口方法中设置一些观察点，在入口节点给每个请求分配一个全局唯一的标识 TraceId，当请求流经这些观察点时就会记录一条对应的链路日志（Span），最后通过 TraceId 将一次请求的所有链路日志进行组装，就能还原出该次请求的链路轨迹。
 
 如图所示，根据拓扑图中 Span 记录的时间信息和响应结果，我们就可以定位到出错或者缓慢的服务。
 
-<div  align="center">
-	<img src="../assets/skywalking-ui.jpeg" width = "550"  align=center />
-	<p>Skywalking 链路分析</p>
-</div>
+:::center
+  ![](../assets/skywalking-ui.jpeg)<br/>
+  Skywalking 链路分析
+:::
 
 ## 追踪技术的核心
 
@@ -66,14 +66,12 @@ Dapper 论文中提出的链路追踪系统的设计原则须满足以下两个�
 
 最开始是 Twitter 受到 Dapper 的启发，开发了自己的分布式追踪系统 Zipkin，Zipkin 是第一个被广泛采用的开源的分布式链路追踪系统，提供了数据收集、存储和查询的功能以及友好的 UI 界面来展示追踪信息。2017年 Uber 在基于 Zipkin 思想和经验的基础上开源了 Jaeger，增加了自适应采样、提供了更加强大和灵活的查询能力等，后来 Jaeger 成为 CNCF 的托管项目，并在 2019年 成为 graduated 级别。
 
-<div  align="center">
-	<img src="../assets/tracing.png" width = "520"  align=center />
-	<p>CNCF 下分布式链路追踪产品生态</p>
-</div>
-
+:::center
+  ![](../assets/tracing.png)<br/>
+  CNCF 下分布式链路追踪产品生态
+:::
 
 除以上两个项目外，国内的工程师应该非常熟悉 Skywalking，这是一款本土开源的调用链分析以及应用监控分析工具，特点是支持多种插件，UI 功能较强，接入端无代码侵入（Java Agent 技术）。
-
 
 [^1]: 参见 https://www.uber.com/en-IN/blog/microservice-architecture/
 [^2]: 参见《Dapper, a Large-Scale Distributed Systems Tracing Infrastructure》https://research.google/pubs/dapper-a-large-scale-distributed-systems-tracing-infrastructure/
