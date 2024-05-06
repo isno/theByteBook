@@ -272,7 +272,7 @@ export default defineUserConfig({
                     '/container/borg-omega-k8s.md',
                     '/container/orchestration.md',
                     '/container/image.md',                    {
-                        text: '7.3 容器运行时：从 Docker 到 CRI',
+                        text: '7.4 容器运行时：从 Docker 到 CRI',
                         collapsable: false,
                         sidebarDepth: 1,
                         link: '/container/runtime.md',
@@ -281,10 +281,10 @@ export default defineUserConfig({
                             "/container/CRI.md"
                         ]
                     },
-
+                    "/container/storage.md",
                     "/container/container-network.md",
                     {
-                        text: '7.5 资源模型与调度',
+                        text: '7.7 资源模型与调度',
                         collapsable: false,
                         sidebarDepth: 1,
                         link: '/container/Resource-scheduling.md',
