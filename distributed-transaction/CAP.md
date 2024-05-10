@@ -43,5 +43,5 @@ ACID 在英文中有的「酸」的含义，对应系统设计的强一致性，
 
 [^1]: 参见 https://ieeexplore.ieee.org/document/798396
 [^2]: 参见 https://dl.acm.org/doi/10.1145/343477.343502
-[^3]: 参见 https://groups.csail.mit.edu/tds/papers/Gilbert/Brewer2.pdf
+[^3]: 参见 https://dl.acm.org/doi/abs/10.1145/564585.564601
 
