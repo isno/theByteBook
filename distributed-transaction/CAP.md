@@ -1,10 +1,10 @@
 # 5.2 一致性与可用性的权衡 
 
-CAP 是分布式系统中关于一致性与可用性的权衡理论，也是理解分布式系统的起点。
+CAP 是分布式系统中**关于一致性与可用性的权衡理论**，也是理解分布式系统的起点。
 
 1999 年，美国工程院院士 Eric A.Brewer 发表的论文《Harvest, Yield, and Scalable Tolerant Systems》[^1] 中，首次提出了 CAP 原理（CAP principle）。一年之后，Eric A.Brewer 又在 PODC 大会上演讲了名为《HTowards robust distributed systems》的主题[^2]，并在会上详细介绍了 CAP 原理，之后 CAP 的概念开始流传。
 
-虽然 Eric A.Brewer 提出了 CAP，但此时的 CAP 仅是一种猜想，并没有被从理论上证明。2002 年，麻省理工学院的 Seth Gilbert 和 Nancy Lynch 联合发表了一篇论文[^3]，用严谨的数学推理证明了 CAP 的正确性，此后 CAP 从原理转变成定理，并开始深远地影响着分布式系统领域。
+虽然 Eric A.Brewer 提出了 CAP，但此时的 CAP 仅是一种猜想，并没有被从理论上证明。2002 年，麻省理工学院的 Seth Gilbert 和 Nancy Lynch 联合发表了一篇论文[^3]，用严谨的数学推理证明了 CAP 的正确性，此后 CAP 从原理转变成定理，并开始在分布式系统领域产生深远的影响。
 
 :::center
   ![](../assets/cap-theorem.png)
