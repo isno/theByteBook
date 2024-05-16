@@ -146,7 +146,13 @@ $ pstree -g
 
 那么，现在思考一个问题：如果把上面的进程用容器改造跑起来，该如何设计？
 
-如果是使用 Docker，自然会想到启动一个 Docker 容器，里面运行两个进程：rsyslogd 执行业务、imklog 处理业务日志。可是这样设计会有一个问题：**容器里面 PID=1 的进程该是谁**？这个问题的核心在于 **Docker 容器的设计本身是一种“单进程”模型**，Docker 只能通过监视 PID 为 1 的进程的运行状态来判断容器的工作状态是否正常。
+如果是使用 Docker，自然会想到启动一个 Docker 容器，里面运行两个进程：rsyslogd 执行业务、imklog 处理业务日志。可是这样设计会有一个问题：**容器里面 PID=1 的进程该是谁**？这个问题的核心在于 **Docker 容器的设计本身是一种“单进程”模型**，Docker 只能通过监视 PID 为 1 的进程的运行状态来判断容器的工作状态是否正常（即由 ENTRYPOINT 启动的进程）。
+
+:::tip 额外知识
+在 Linux 系统中，PID 为 1 的进程是 init，它是所有其他进程的祖先进程。它不断地检查进程状态，一旦某个子进程因为父进程错误成为孤儿进程，init 就会回收这个子进程。所以，实现的容器中，启动的第一个进程也需要实现类似 init 功能，处理 SIGTERM\SIGINT 等信号，优雅地结束容器内的进程。
+
+因此，如果确实需要在一个 Docker 容器中运行多个进程，最先启动的命令进程应该具有资源监控和回收等管理能力，譬如针对容器开发的 tinit。
+:::
 
 如果容器想要实现类似操作系统进程组那般互相协作，容器下一步的演进就是要找到与“进程组”相对应的概念，这是实现容器从隔离到协作的第一步。
 
@@ -156,11 +162,11 @@ Kubernetes 中这个设计叫做 Pod，Pod 是一组紧密关联的容器集合�
 
 容器之间原本是被 Linux Namespace 和 cgroups 隔开的，Pod 第一个要解决的问题是怎么去打破这个隔离，让 Pod 内的容器可以像进程组一样天然的共享资源和数据。
 
-Kubernetes 中使用了一个特殊的容器（Infra Container）解决这个了问题。Infra Container 是整个 Pod 中第一个启动的容器，只有几百 KB 大小，它负责申请容器组的 UTS、IPC、网络等名称空间，Pod 内其他容器通过 setns（Linux 系统调用，把进程加入到某个名称空间中）方式共享 Infra Container 容器的命名空间。
+Kubernetes 中使用了一个特殊的容器（Infra Container）解决这个了问题。Infra Container 是整个 Pod 中第一个启动的容器，只有 300 KB 左右的 大小，它负责申请容器组的 UTS、IPC、网络等名称空间，Pod 内其他容器通过 setns（Linux 系统调用，把进程加入到某个名称空间中）方式共享 Infra Container 容器的命名空间，其他它还可作为 init 进程，用来管理子进程、回收资源等。
 
 :::tip 额外知识
-Infra Container 启动之后，永远处于 Pause 状态，所以也常被称为“pause 容器”。
-默认情况下 infra 镜像的地址为 k8s.grc.io/pause.3.5，很多时候我们部署应用一直处于 Pending状态 ，大部分原因就是这个镜像地址在国内无法访问造成。
+Infra Container 中的代码仅是注册 SIGTERM、SIGINT、SIGCHILD 等信号处理，启动之后执行一个永远循环的 pause（） 方法，所以也常被称为“pause 容器”。
+默认情况下 infra 镜像的地址为 k8s.grc.io/pause.3.5，很多时候我们部署应用一直处于 Pending 状态 ，大部分原因就是这个镜像地址在国内无法访问造成。
 :::
 
 <div  align="center">
@@ -182,6 +188,9 @@ PID 的隔离令每个容器都有独立的进程 ID 编号，如果要共享 PI
 spec:
   shareProcessNamespace: true
 ```
+
+设置之后，Infra Container 中的进程将作为 PID 1 进程，其他容器的进程作为它的子进程存在，后续将由 Infra Container 来负责信号处理、子进程的资源回收等。
+
 
 ## 7.3.6 Pod 是调度的原子单位
 
