@@ -8,9 +8,11 @@
 —— by C.A.R. Hoare[^1]
 :::
 
-已经有非常多的著作、文章介绍 Kubernetes 的架构设计、各个组件原理，但这些内容大部分直面 Kubernetes 各个工程细节。如果笔者再循规蹈矩地了解一些「是什么」、「怎么做」等内容，一则重复前人的工作，二则读者们也很难体会到 Kubernetes 为何这么设计。
+Kubernetes 除强大功还其因非常陡峭的学习曲线而闻名，它的设计源于对操作系统的抽象，在抽象之上则是支撑分布式系统底层基础设施的各类封装，复杂不是刻意为之而是与生俱来。
 
-Google 在 2016 年陆续公布了几篇论文《Borg, Omega, and Kubernetes》，介绍了开发和运维 Borg、Omega 和 Kubernetes 系统所学习到的经验与教训。本章内容，我们先了解 Google 内部系统是怎么演变的，深入的理解到「为什么」，再来体会 Kubernetes 计算、网络、存储的设计。
+包括官方文档，绝大部分介绍 Kubernetes的内容都直面各个工程细节，并不解释缘由。如果笔者再循规蹈矩地了解一些「是什么」、「怎么做」等内容，一则重复前人的工作，二则也无法真正解释清楚 Kubernetes 为何这么设计。
+
+Google 在 2016 年陆续公布了几篇论文《Borg, Omega, and Kubernetes》，介绍了开发和运维 Borg、Omega 和 Kubernetes 系统所学习到的经验与教训，我们从这一篇论文着手，了解 Google 内部系统是怎么演变的，再来体会关于计算、网络、存储逻辑中的各类精妙设计。
 
 <div  align="center">
   <img src="../assets/container-summary.png" width = "550"  align=center />
