@@ -22,10 +22,11 @@
 
 乍一看，这么多的类型，这么多的操作，实在难以下手。然而，总结起来其实主要有两种类型：
 
-- 非持久化的 Volume（Non-Persistent Volume or also called ephemeral storage）
-- 持久化的 PersistentVolume
+- 普通的 Volume
+- 持久化的 Volume
+- 特殊的 Volume（譬如 Secret、Configmap，将 Kubernetes 集群的配置信息以 Volume 方式挂载到 Pod 中，并实现 POSIX 接口来访问这些对象中的数据）
 
-## 非持久化的 Volume
+## 普通的 Volume
 
 非持久化的 Volume 跟 Docker 比较类似。
 
@@ -156,11 +157,13 @@ https://kubernetes-csi.github.io/docs/drivers.html
 现在，基于 StorageClass 的动态资源提供模式已经逐步成为各类云平台的标准存储管理模式。
 
 
-## 从 in-tree 到 out-tree 的转变
+## 持久卷的类型
+
+PV 持久卷是用插件的形式支持支持，Kubernetes 最开始内置了 20 多种存储插件，内置的插件称为 in-tree（树内类型），但内置的往往满足不了定制化的需求，所以，和 CNI 一样，Kubernetes 也对外暴露存储接口，只要实现对应的接口方法，那么就可以创建属于自己的存储插件。
 
 CSI 存储提供商有两种类型，一种是 in-tree（树内类型），一种是 out-tree（树外类型）。前者是运行在k8s核心组件内部的存储插件；后者是一个独立于 Kubernetes 组件运行的存储插件，代码实现与 Kubernetes 本身解耦。
 
-Kubernetes 最开始内置了 20 多种存储插件，但内置的往往满足不了定制化的需求。所以，和 CNI 一样，Kubernetes 也对外暴露存储接口，只要实现对应的接口方法，那么就可以创建属于自己的存储插件。
+，。
 
 ~~FlexVolume~~ 这个功能特性在 Kubernetes v1.2 引入
 
