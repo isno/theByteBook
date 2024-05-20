@@ -14,7 +14,9 @@
 
 :::
 
-所以，在调度的基本职责之上，我们还要加一个“高效地”限定。Google 在 Omega 的论文中提出了一种共享状态（Shared State）的双循环调度机制。这种调度机制后来不仅应用在 Google 的 Omega 系统中，也同样被 Kubernetes 继承了下来。Kubernetes 默认调度器 kube-scheduler 双循环架构如下所示：
+所以，调度的基本职责之上要加一个“高效地”限定。Google 在 Omega 的论文中提出了一种共享状态（Shared State）的双循环调度机制，这种调度机制后来不仅应用在 Google 的 Omega 系统中，也同样被 Kubernetes 继承了下来。
+
+Kubernetes 默认调度器 kube-scheduler 双循环架构如下所示：
 
 :::center
   ![](../assets/kube-scheduler.png)<br/>

@@ -34,7 +34,7 @@ CRI 实现上是一套通过 Protocol Buffer 定义的 API，如下图：
 
 containerd 作为 CNCF 的托管项目，自然符合 CRI 标准的。但 Docker 出于自己诸多原因的考虑，它只是在 Docker Engine 里调用了 containerd，外部的接口仍然保持不变，也就是说还不与 CRI 兼容。
 
-由于 Docker 的“固执己见”且 Docker 是当时容器技术主流存在，Kuberentes 虽然提出了 CRI 接口规范，仍然需要去适配 CRI 与 Docker 的对接，因此它需要一个中间层（shim，垫片）来对接 Kubelet 和 Docker 运行时实现。
+Kuberentes 虽然提出了 CRI 接口规范，但由于 Docker 是当时容器技术主流存在，仍然需要去适配 CRI 与 Docker 的对接，因此它需要一个中间层（shim）来对接 Kubelet 和 Docker 运行时实现。
 
 此时，Kubernetes 里就出现了两种调用链：
 1. CRI 接口调用 dockershim，然后 dockershim 调用 Docker，Docker 再走 containerd 去操作容器。

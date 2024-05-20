@@ -8,42 +8,46 @@
 
 :::
 
-那么容器如何实现持久化存储呢？我们先看看在计算机体系中是怎么设计的。在计算机体系中，硬盘被定义为外设，如果要使用，得先添加（Attach）一块磁盘（Volume），然后再挂载（Mount）到某个目录。设计容器目的是实现操作系统的虚拟化，自然地 Volume 和 Mount 的设计自然也被继承到容器系统中。 
+那么容器如何实现持久化存储呢？我们先看看在计算机体系中是怎么设计的。在计算机体系中，硬盘被定义为外设，如果要使用，得先添加（Attach）一块磁盘（Volume），然后再挂载（Mount）到某个目录。设计容器目的是实现操作系统的虚拟化，自然地 Volume 和 Mount 的设计自然也被继承到容器系统中。
 
-不论是 Docker 或者 Kubernetes 都抽象出了数据卷（Volume）来解决持久化存储的问题。有了数据卷，容器的存储就变成了**只读层（容器镜像） + 读写层 + 外置存储（数据卷）**。
+要理解容器的存储设计，不妨先从 Docker 看起。
 
-但存储本来就不是一件简单的事情：存储位置不限于宿主机（还有网络存储）、存储的介质不限于只是磁盘（还有 tmpfs）、存储的管理不限于简单的映射关系（还有各种访问模式）、存储的类型又有临时和持久之分等等。
+目前，Docker 支持3 中挂载的方式：
 
-反应到 Kubernetes 持久化存储设计中，仅 Volume 的类型就有十几种之多。
+:::center
+  ![](../assets/types-of-mounts-volume.webp)<br/>
+:::
+
+
+- Bind mount 是 Docker 最早支持的挂载类型，实现原理就是利用 Linux 的 bind mount 将宿主机中的目录映射到 Docker 内部。
+- Volume 属于 bind mount 的升级，它存储在宿主机的额定目录下，在 Linux 中该目录是 /var/lib/docker/volumes/，这个目录由 docker 实施全面的管理，宿主机中的其他非 Docker 进程不应该修改这些目录。
+- 另外 Docker 还支持通过 tmpfs 将文件存储在宿主机的内存中（显然这种方式不会持久存储）。
+
+无论选择哪种挂载方式，从容器的内部来看都是相同的：数据都是以容器系统中的目录或者单个文件暴露出来的。
+
+
+从 bind mount 到 volume 的升级，Docker 意识到：容器存储绝对不是简单的映射关系那么简单，存储位置不限于宿主机、存储的介质不限于宿主机的磁盘，而且这些存储也并不是需要先挂载到操作系统，再挂载到容器某个目录。如果 Docker 想越过操作系统，就需要知道使用何种协议（譬如块存储 iSCSI、文件系统 POSIX）
+
+存储的类型众多，紧靠 Docker 自己实现并不现实，为此 Docker 提出了 Volume Driver 的概念，用户可以通过 docker plugin install 安装额外的第三方卷驱动，就能对接 NFS(Network File System), SSHFS(SSH Filesystem) 甚至是 AWS S3 等等。
+
+
+我们从 Docker 返回到 Kubernetes 中，同 Docker 类似，Kubernetes 也抽象出了数据卷（Volume）来解决持久化存储，也具有相同的操作目录，也设计存储驱动（Volume Plugin）支持众多的存储类型。
+
+如下图所示。Kubernetes 支持的 Volume 的类型。
 
 :::center
   ![](../assets/volume-list.png)<br/>
 :::
 
-乍一看，这么多的类型，这么多的操作，实在难以下手。然而，总结起来其实主要有两种类型：
+乍一看，这么多的类型，这么多的操作，实在难以下手。然而，总结起来其实主要有 3 种类型：
 
 - 普通的 Volume
-- 持久化的 Volume
 - 特殊的 Volume（譬如 Secret、Configmap，将 Kubernetes 集群的配置信息以 Volume 方式挂载到 Pod 中，并实现 POSIX 接口来访问这些对象中的数据）
+- 持久化的 Volume
 
 ## 普通的 Volume
 
-非持久化的 Volume 跟 Docker 比较类似。
-
-使用 Docker 时，类似下面的命令，创建 Volume 数据卷，然后挂载到指定容器的指定路径下，以实现容器数据的持久化存储（持久化在宿主机节点，不能和 Kubernetes 的持久化等同而论）。 
-
-```
-docker run -v /usr/share/nginx/html:/data nginx:lastest
-```
-
-上面的操作实际上相当于在容器中执行下面类似的代码。
-
-```
-// 将宿主机中的 /usr/share/nginx/html 挂载到 rootfs 指定的挂载点 /data 上
-mount("/usr/share/nginx/html","rootfs/data", "none", MS_BIND, nulll)
-```
-
-Volume 的设计目标并不是为了持久地保存数据，而是为同一个 Pod 中多个容器提供可共享的存储资源。
+设计普通 Volume 的目标并不是为了持久地保存数据，而是为同一个 Pod 中多个容器提供可共享的存储资源。
 
 :::center
   ![](../assets/volume.svg)<br/>
@@ -51,13 +55,10 @@ Volume 的设计目标并不是为了持久地保存数据，而是为同一个 
 
 从上面的架构图所示，Volume 是包在 Pod 内的，因此其生命周期与挂载它的 Pod 是一致的，当 Pod 因某种原因被销毁时，Volume 也会随之删除。
 
-EmptyDir 就是一种典型的 Non-Persistent Volume。常见的应用方式是一个 sidecar 容器通过 EmtpyDir 来读取另外一个容器的日志文件。
+EmptyDir 就是一种典型的 Non-Persistent Volume。常见的应用方式是一个 sidecar 容器通过 EmtpyDir 来读取另外一个容器的日志文件。另外一种 HostPath，它是将宿主机节点上的文件系统上的文件或目录，直接挂载到 Pod 中。我们使用 Loki 日志系统，第一步就是要 Pod 挂载相同的宿主机 hostPath Volume，这样才能读取到所有 Pod 写入的日志。
 
 
-另外一种 HostPath，它是将宿主机节点上的文件系统上的文件或目录，直接挂载到 Pod 中。我们使用 Loki 日志系统，第一步就是要 Pod 挂载相同的宿主机 hostPath Volume，这样才能读取到所有 Pod 写入的日志。
-
-
-## 从临时卷到持久化存储
+## 持久化的 Volume
 
 想要让数据能够持久化，首先就需要将 Pod 和卷的声明周期分离，这也就是引入持久卷 PersistentVolume(PV) 的原因。
 
