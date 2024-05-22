@@ -134,7 +134,7 @@ PVC 和 PV 的设计，其实跟“面向对象”的思想完全一致：
 
 前面通过人工管理 PV 的方式叫作 Static Provisioning，如果是小规模的集群，这种方式倒也不是什么问题。但在一个大规模的 Kubernetes 集群里很可能有成千上万个 Pod，这肯定没办法靠人工的方式提前创建出成千上万个 PVC。所以，Kubernetes 为我们提供了一套可以自动创建 PV 的机制，即：Dynamic Provisioning。
 
-Dynamic Provisioning 机制工作的核心在于一个名叫 StorageClass 的 API 对象，这个对象的作用其实就是创建 PV 的模板，它的定义主要包名称、存储提供者（provisioner）以及存储的相关参数。
+Dynamic Provisioning 机制工作的核心在于 StorageClass 对象，这个对象的作用其实就是创建 PV 的模板，它的定义中包含了名称、存储提供者（provisioner）以及存储的相关参数。
 
 如下示例，定义了一个名为 standard 的 StorageClass，存储提供者为 为 aws-ebs，其存储参数设置了一个 type ，值为 gp2，回收策略为 Retain。
 
@@ -153,31 +153,49 @@ mountOptions:
 volumeBindingMode: Immediate
 ```
 
-https://kubernetes-csi.github.io/docs/drivers.html
-
 现在，基于 StorageClass 的动态资源提供模式已经逐步成为各类云平台的标准存储管理模式。
 
 
-## 持久卷的类型
+## Kuberneters 的存储架构
 
-PV 持久卷是用插件的形式支持支持，Kubernetes 最开始内置了 20 多种存储插件，内置的插件称为 in-tree（树内类型），但内置的往往满足不了定制化的需求，所以，和 CNI 一样，Kubernetes 也对外暴露存储接口，只要实现对应的接口方法，那么就可以创建属于自己的存储插件。
 
-CSI 存储提供商有两种类型，一种是 in-tree（树内类型），一种是 out-tree（树外类型）。前者是运行在k8s核心组件内部的存储插件；后者是一个独立于 Kubernetes 组件运行的存储插件，代码实现与 Kubernetes 本身解耦。
+每一个卷在被 Pod 使用时都会经历四个操作，也就是附着（Attach）、挂载（Mount）、卸载（Unmount）和分离（Detach）。
 
-，。
 
-~~FlexVolume~~ 这个功能特性在 Kubernetes v1.2 引入
+根据源码的位置可将 Volume Plugins 分为 In-Tree 和 Out-of-Tree 两类：
 
-从 1.9 开始又引入了 Container Storage Interface（CSI）机制，CSI 的设计思想是将存储管理和容器编排系统解耦，使得新的存储系统可以通过实现一组标准化的接口来与 Kubernetes 进行集成，而无需修改 Kubernetes 的核心代码。
-CSI 驱动器的出现为 Kubernetes 用户带来了更多的存储选择，同时也为存储供应商和开发者提供了更方便的接入点，使得集群的存储管理更加灵活和可扩展。值得注意的是 CSI 是整个容器生态的标准存储接口，同样适用于 Mesos、Cloud Foundry 等其他的容器集群调度系统。
+- In-Tree 表示源码是放在 Kubernetes 内部的，和 Kubernetes 一起发布、管理与迭代，缺点及时迭代速度慢、灵活性差；
+- Out-of-Tree 类的 Volume Plugins 的代码独立于 Kubernetes，它是由存储商提供实现的
+
+PV Controller、AD Controller、Volume Manager 主要是进行操作的调用，而具体操作则是由 Volume Plugins 实现。比如说挂载一个 NAS 的操作 `"mount -t nfs *"`，该命令其实就是在 Volume Plugins 中实现的，它会去调用远程的一个存储挂载到本地。
+
+:::center
+  ![](../assets/k8s-volume.svg)<br/>
+:::
+
+我们再来看一个带有 PVC 的 Pod 挂载过程。:
+
+1. 用户创建了一个包含 PVC 的 Pod，该 PVC 要求使用动态存储卷。
+2. Scheduler 根据 Pod 配置、节点状态、PV 配置等信息，把 Pod 调度到一个合适的 Worker 节点上
+3. PV Controller 会不断观察 ApiServer，如果它发现一个 PVC 已经创建完毕但仍然是未绑定的状态，它就会试图把一个 PV 和 PVC 绑定。PV Controller 首先会在集群内部找到一个适合的 PV 进行绑定，如果未找到相应的 PV，就调用 Volume Plugin 去做 Provision。Provision 就是从远端上一个具体的存储介质创建一个 Volume，并且在集群中创建一个 PV 对象，然后将此 PV 和 PVC 进行绑定；
+
+4. 如果有一个 Pod 调度到某个节点之后，它所定义的 PV 还没有被挂载（Attach），此时 AD Controller 就会调用 VolumePlugin，把远端的 Volume 挂载到目标节点中的设备上（如：/dev/vdb）
+
+5. 在 Worker 节点上，当 Volum Manager 发现一个 Pod 调度到自己的节点上并且 Volume 已经完成了挂载，它就会执行 mount 操作，将本地设备（也就是刚才得到的 /dev/vdb）挂载到 Pod 在节点上的一个子目录 `/var/lib/kubelet/pods/[pod uid]/volumes/kubernetes.io~iscsi/[PV name]（以 iscsi 为例）`；
+6. Kubelet 通过容器运行时（如 containerd）启动 Pod 的 Containers，用 bind mount 方式将已挂载到本地全局目录的卷映射到容器中。
 
 
 :::center
-  ![](../assets/csi-k8s.png)<br/>
+  ![](../assets/pvc-flow.png)<br/>
 
+  [图片来源](https://www.huweihuang.com/article/kubernetes-notes/principle/flow/pvc-flow/)
 :::
 
-由于 CSI 的机制复杂、涉及的组件众多，详细介绍 CSI 工作原理也偏离了本节内容的范畴，相关的内容就不再过多介绍。接下来，我们从原理分析转回到开发者应用视角。得益 Kubernetes 的开放性设计，通过下图感受支持 CSI 的存储生态，基本上包含了市面上所有的存储供应商。
+
+上面流程的每个步骤，其实就对应了 CSI 提供的标准接口，云存储厂商只需要按标准接口实现自己的云存储插件，即可与 K8s 底层编排系统无缝衔接起来，提供多样化的云存储、备份、快照(snapshot)等能力。
+
+
+得益 Kubernetes 的开放性设计，通过下图感受支持 CSI 的存储生态，基本上包含了市面上所有的存储供应商。
 
 :::center
   ![](../assets/CSI.png)<br/>
@@ -185,7 +203,7 @@ CSI 驱动器的出现为 Kubernetes 用户带来了更多的存储选择，同�
   CNCF 下的 Kubernetes 存储生态
 :::
 
-上述众多的存储系统实在无法一一展开，但无论多少种系统/供应商，总结其提供的存储类型来说无外乎 3 种：文件存储、块存储和对象存储。
+上述众多的存储系统实在无法一一展开，但无论是内置的存储插件还是第三方存储插件，总结其提供的存储类型来说无外乎 3 种：文件存储、块存储和对象存储。
 
 ### 块存储
 
