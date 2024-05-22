@@ -62,9 +62,9 @@ mount("/usr/share/nginx/html","rootfs/data", "none", MS_BIND, nulll)
 
 ## 持久化的 Volume
 
-对于一个编排系统，Pod 随时可能被调度到另外一台 Node 节点，如果想要数据持久化，肯定不能存储在本地，远程存储是最合适的方式，这也就是引入持久卷 PersistentVolume(PV) 的原因。
+对于一个编排系统，Pod 随时可能被调度到另外一台 Node 节点，如果想要数据持久化，肯定不能存储在本地，网络存储是最合适的方式，这也就是引入持久卷 PersistentVolume(PV) 的原因。
 
-PV 为 Kubernete 集群提供了一个使用使用远程存储的抽象，如下代码所示，声明了一个 PV 存储对象，并描述了存储能力、访问模式、存储类型、回收策略、远程存储类型等信息。
+PV 为 Kubernete 集群提供了一个使用使用远程存储的抽象，如下代码所示，声明了一个 PV 存储对象，并描述了存储能力、访问模式、存储类型、回收策略、网络存储类型等信息。
 
 ```
 apiVersion: v1
@@ -90,7 +90,6 @@ PVC 和 PV 的设计，跟“面向对象”的思想一致：
 - 而这个持久化存储的实现部分则由 PV 负责完成。
 
 作为应用开发者，我们只需要跟 PVC 这个“接口”打交道，而不必关心底层存储是怎么配置或者实现的。
-
 
 如下声明一个 PVC，与某个 PV 绑定后再被应用（Pod）消费。
 
@@ -138,7 +137,7 @@ spec:
 
 ## 从静态到动态
 
-Pod 使用存储有一个原则：**先规划 → 后申请 → 再使用**，如果在系统中没有满足 PVC 要求的 PV，PVC 则一直处于 Pending 状态，直到系统里产生了一个合适的 PV，在这期间 Pod 将无法正常启动。
+Pod 使用存储有一个原则：**先规划 -> 后申请 -> 再使用**，如果在系统中没有满足 PVC 要求的 PV，PVC 则一直处于 Pending 状态，直到系统里产生了一个合适的 PV，在这期间 Pod 将无法正常启动。
 
 如果是一个小规模的集群，我们可以预先创建多个各种各样的 PV 等待 PVC 申请即可。但在一个大规模的 Kubernetes 集群里很可能有成千上万个 Pod，这肯定没办法靠人工的方式提前创建出成千上万个 PV。为此，Kubernetes 为我们提供了一套可以自动创建 PV 的机制 —— Dynamic Provisioning（前面通过人工管理 PV 的方式叫作 Static Provisioning）。
 
@@ -176,13 +175,15 @@ StorageClass 被创建之后，当 PVC 的需求来了，它就会自动的去�
 - 然后，将准备好的存储附加（Attach）到系统中，Attach 可类比为将存储设备接入操作系统，此时尽管设备还不能使用，但你已经可以用操作系统的fdisk -l命令查看到设备
 - 最后，将附加好的存储挂载（Mount）到系统中，Mount 可类比为将设备挂载到系统的指定位置，也就是操作系统中mount命令的作用，它的逆向操作是 卸载（Unmount）。
 
+如果 Pod 中使用的是 EmptyDir、HostPath 这种类型的卷，那么这些卷并不会经历附着和分离的操作，它们只会被挂载和卸载到某一个的 Pod 中。
+
 以上提到的 Provision、Delete、Attach、Detach、Mount、Unmount 并不是在 Kubernetes 的内部实现的，而具体操作则是由 Volume Plugins 实现。比如说挂载一个 NAS 的操作 `"mount -t nfs *"`，该命令其实就是在 Volume Plugins 中实现的，它会去调用远程的一个存储挂载到本地。
 
 :::center
   ![](../assets/k8s-volume.svg)<br/>
 :::
 
-理解了一些基本的知识，我们再来看一个带有 PVC 的 Pod 挂载过程:
+理解基本的前置知识，我们再来看一个带有 PVC 的 Pod 挂载过程:
 
 1. 用户创建了一个包含 PVC 的 Pod，该 PVC 要求使用动态存储卷。
 2. Scheduler 根据 Pod 配置、节点状态、PV 配置等信息，把 Pod 调度到一个合适的 Worker 节点上
