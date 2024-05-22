@@ -14,9 +14,9 @@ Borg 是 Google 内部第一代容器管理系统。如图 7-1 所示，Borg 是
 - **long-running service（长期运行的服务）**：通常是对请求延迟敏感的在线业务，譬如 Gmail、Google Docs 和 Web 搜索以及内部基础设施服务（如 BigTable）。
 - **batch job（批处理作业任务）**：对短期性能波动并不敏感，运行时间在几秒到几天不等。典型的 batch job 为各色的离线计算任务。
 
-Borg 为什么需要区分两种不同的 workload 呢？原因在于：
+区分这 2 种不同类型 workload 原因在于：
 
-- **二者的运行状态机不同**：long-running service 存在『环境准备ok，但进程没有启动』、『健康检查失败』等状态，这些状态 batch job 是没有的。状态机的不同，决定了对这些应用有着不同的『操作接口』，进一步影响了用户的API设计。
+- **两者运行状态机不同**：long-running service 存在『环境准备ok，但进程没有启动』、『健康检查失败』等状态，这些状态 batch job 是没有的。状态机的不同，决定了对这些应用有着不同的『操作接口』，进一步影响了用户的 API 设计。
 - **关注点与优化方向不一样**：一般而言，long-running service 关注的是服务的『可用性』，而 batch job 关注的是系统的整体吞吐。关注点的不同，会进一步导致内部实现的彻底分化。
 
 Borg 中大多数 long-running service 都会被赋予高优先级并划分为生产环境级别的任务（prod），而 batch job 则会被赋予低优先级（non-prod）。在实际环境中，prod 任务会被分配和占用大部分的 CPU 和内存资源。正是由于有了这样的划分，Borg 的“资源抢占”模型才得以实现，即 prod 任务可以占用 non-prod 任务的资源。
