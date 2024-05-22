@@ -179,11 +179,14 @@ Kubernetes 的 Volume 继承了 Docker 和 操作系统的的设计么，新增�
 如果 Pod 中使用的是 EmptyDir、HostPath 这类非网络存储型的卷，这些卷并不会经历附着和分离的操作，它们只会被挂载和卸载到某一个 Pod 中。
 
 Volume 的创建和管理在 Kubernetes 中主要由卷管理器 VolumeManager 和 AttachDetachController 和 PVController 三个组件负责，前面提到的 Provision、Delete、Attach、Detach、Mount、Unmount 则由 Volume Plugins 实现。
+
+理解基本的前置知识，我们再来看一个带有 PVC 的 Pod 挂载过程:
+
 :::center
   ![](../assets/k8s-volume.svg)<br/>
 :::
 
-理解基本的前置知识，我们再来看一个带有 PVC 的 Pod 挂载过程:
+
 
 1. 用户创建了一个包含 PVC 的 Pod，该 PVC 要求使用动态存储卷。
 2. Scheduler 根据 Pod 配置、节点状态、PV 配置等信息，把 Pod 调度到一个合适的 Worker 节点上
@@ -195,11 +198,6 @@ Volume 的创建和管理在 Kubernetes 中主要由卷管理器 VolumeManager �
 6. Kubelet 通过容器运行时（如 containerd）启动 Pod 的 Containers，用 bind mount 方式将已挂载到本地全局目录的卷映射到容器中。
 
 
-:::center
-  ![](../assets/pvc-flow.png)<br/>
-
-  [图片来源](https://www.huweihuang.com/article/kubernetes-notes/principle/flow/pvc-flow/)
-:::
 
 
 上面流程的每个步骤，其实就对应了 CSI 提供的标准接口，云存储厂商只需要按标准接口实现自己的云存储插件，即可与 K8s 底层编排系统无缝衔接起来，提供多样化的云存储、备份、快照(snapshot)等能力。
