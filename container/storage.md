@@ -32,7 +32,9 @@ mount("/usr/share/nginx/html","rootfs/data", "none", MS_BIND, nulll)
 
 其次，虽然容器被广泛使用，**容器存储绝对不是简单的映射关系那么简单**，存储位置不限于宿主机（还有可能是网络存储）、存储的介质不限于磁盘（还可能是 tmpfs）、存储的类型也不仅仅是文件系统（还有可能是块设备或者对象存储），而且**存储也并不是都需要先挂载到操作系统，再挂载到容器某个目录，如果 Docker 想越过操作系统，就需要知道使用何种协议（譬如网络硬盘 iSCSI 协议、网络文件 NFS 协议）**。
 
-为此 Docker 提供全新的挂载类型 Volume，它首先在宿主机开辟了一块属于 Docker 空间（Linux 中该目录是 /var/lib/docker/volumes/），这样就解决了 Bind mount 映射宿主机绝对路径的问题。考虑存储的类型众多，仅靠 Docker 自己实现并不现实，为此 Docker 提出了 Volume Driver 的概念，借助社区力量丰富 Docker 的存储驱动种类。这样用户只要通过 docker plugin install 安装额外的第三方卷驱动，就能使用网络存储或者各类云厂商提供的存储。
+为此 Docker 提供全新的挂载类型 Volume：
+- 它首先在宿主机开辟了一块属于 Docker 空间（Linux 中该目录是 /var/lib/docker/volumes/），这样就解决了 Bind mount 映射宿主机绝对路径的问题；
+- 考虑存储的类型众多，仅靠 Docker 自己实现并不现实，为此 Docker 提出了 Volume Driver 的概念，借助社区力量丰富 Docker 的存储驱动种类。这样用户只要通过 docker plugin install 安装额外的第三方卷驱动，就能使用网络存储或者各类云厂商提供的存储。
 
 我们从 Docker 返回到 Kubernetes 中，同 Docker 类似，Kubernetes 也抽象出了数据卷（Volume）来解决持久化存储，也开辟了属于 Kubernetes 的空间（该目录是 /var/lib/kubelet/pods/[pod uid]/volumes）、也设计了存储驱动（Volume Plugin）的概念用以支持出众多的存储类型。
 
@@ -177,8 +179,7 @@ StorageClass 被创建之后，当 PVC 的需求来了，它就会自动的去�
 
 如果 Pod 中使用的是 EmptyDir、HostPath 这种类型的卷，那么这些卷并不会经历附着和分离的操作，它们只会被挂载和卸载到某一个的 Pod 中。
 
-以上提到的 Provision、Delete、Attach、Detach、Mount、Unmount 并不是在 Kubernetes 的内部实现的，而具体操作则是由 Volume Plugins 实现。比如说挂载一个 NAS 的操作 `"mount -t nfs *"`，该命令其实就是在 Volume Plugins 中实现的，它会去调用远程的一个存储挂载到本地。
-
+Volume 的创建和管理在 Kubernetes 中主要由卷管理器 VolumeManager 和 AttachDetachController 和 PVController 三个组件负责，前面提到的 Provision、Delete、Attach、Detach、Mount、Unmount 则由 Volume Plugins 实现。
 :::center
   ![](../assets/k8s-volume.svg)<br/>
 :::
