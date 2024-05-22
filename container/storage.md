@@ -30,20 +30,19 @@ mount("/usr/share/nginx/html","rootfs/data", "none", MS_BIND, nulll)
 
 这种挂载的方式显然有非常明显的缺陷：**通过映射的方式挂载宿主机中的一个绝对路径，这就跟操作系统强相关**。这意味着 Bind mount 无法写在 dockerfile 中，不然镜像有可能无法启动。其次，宿主机中的目录虽然被挂载，但其他非 Docker 的进程也可以进行读写，存在安全隐患。
 
-其次，虽然容器被广泛使用，**容器存储绝对不是简单的映射关系那么简单**，存储位置不限于宿主机（还有可能是网络存储）、存储的介质不限于磁盘（还可能是 tmpfs）、存储的类型也不仅仅是文件系统（还有可能是块设备或者对象存储），而且**存储也并不是都需要先挂载到操作系统，再挂载到容器某个目录，如果 Docker 想越过操作系统，就需要知道使用何种协议（譬如块存储 iSCSI、网络存储 NFS 协议）**。
+其次，虽然容器被广泛使用，**容器存储绝对不是简单的映射关系那么简单**，存储位置不限于宿主机（还有可能是网络存储）、存储的介质不限于磁盘（还可能是 tmpfs）、存储的类型也不仅仅是文件系统（还有可能是块设备或者对象存储），而且**存储也并不是都需要先挂载到操作系统，再挂载到容器某个目录，如果 Docker 想越过操作系统，就需要知道使用何种协议（譬如网络硬盘 iSCSI 协议、网络文件 NFS 协议）**。
 
 为此 Docker 提供全新的挂载类型 Volume，它首先在宿主机开辟了一块属于 Docker 空间（Linux 中该目录是 /var/lib/docker/volumes/），这样就解决了 Bind mount 映射宿主机绝对路径的问题。考虑存储的类型众多，仅靠 Docker 自己实现并不现实，为此 Docker 提出了 Volume Driver 的概念，借助社区力量丰富 Docker 的存储驱动种类。这样用户只要通过 docker plugin install 安装额外的第三方卷驱动，就能使用网络存储或者各类云厂商提供的存储。
 
+我们从 Docker 返回到 Kubernetes 中，同 Docker 类似，Kubernetes 也抽象出了数据卷（Volume）来解决持久化存储，也开辟了属于 Kubernetes 的空间（该目录是 /var/lib/kubelet/pods/[pod uid]/volumes）、也设计了存储驱动（Volume Plugin）的概念用以支持出众多的存储类型。
 
-我们从 Docker 返回到 Kubernetes 中，同 Docker 类似，Kubernetes 也抽象出了数据卷（Volume）来解决持久化存储，也具有相同的操作目录，也设计了存储驱动（Volume Plugin）扩展出众多的存储类型。
-
-如下图所示。Kubernetes 支持的 Volume 的类型。
+不过作为一个工业级的容器编排系统，Kubernetes 支持的 Volume 的类型要比 Docker 多一丢丢。
 
 :::center
   ![](../assets/volume-list.png)<br/>
 :::
 
-乍一看，这么多的类型，这么多的操作，实在难以下手。然而，总结起来其实主要有 3 种类型：
+乍一看，这么多的类型，难以下手。然而，总结起来其实主要有 3 种类型：
 
 - 普通的 Volume
 - 特殊的 Volume（譬如 Secret、Configmap，将 Kubernetes 集群的配置信息以 Volume 方式挂载到 Pod 中，并实现 POSIX 接口来访问这些对象中的数据）
@@ -51,22 +50,21 @@ mount("/usr/share/nginx/html","rootfs/data", "none", MS_BIND, nulll)
 
 ## 普通的 Volume
 
-设计普通 Volume 的目标并不是为了持久地保存数据，而是为同一个 Pod 中多个容器提供可共享的存储资源。
+普通的 Volume 和 docker 的 Volume 非常相似，区别在于挂载在本地而非远端存储。
+
+如下图所示，Volume 是包在 Pod 内，生命周期与挂载它的 Pod 是一致的当 Pod 因某种原因被销毁时，Volume 也会随之删除。
 
 :::center
   ![](../assets/volume.svg)<br/>
 :::
 
-从上面的架构图所示，Volume 是包在 Pod 内的，因此其生命周期与挂载它的 Pod 是一致的，当 Pod 因某种原因被销毁时，Volume 也会随之删除。
-
-EmptyDir 就是一种典型的 Non-Persistent Volume。常见的应用方式是一个 sidecar 容器通过 EmtpyDir 来读取另外一个容器的日志文件。另外一种 HostPath，它是将宿主机节点上的文件系统上的文件或目录，直接挂载到 Pod 中。我们使用 Loki 日志系统，第一步就是要 Pod 挂载相同的宿主机 hostPath Volume，这样才能读取到所有 Pod 写入的日志。
-
+**设计普通 Volume 的目标并不是为了持久地保存数据，而是为同一个 Pod 中多个容器提供可共享的存储资源**。这类 Volume 的典型是 EmptyDir，常见的应用方式是一个 sidecar 容器通过 EmtpyDir 来读取另外一个容器的日志文件。另外一种 HostPath，和 EmptyDir 的区别是 HostPath 的 Volume 可以被所有的 Pod 共享 。我们使用 Loki 日志系统，第一步就是要 Pod 挂载相同的宿主机 hostPath Volume，这样才能读取到所有 Pod 写入的日志。
 
 ## 持久化的 Volume
 
-想要让数据能够持久化，首先就需要将 Pod 和卷的声明周期分离，这也就是引入持久卷 PersistentVolume(PV) 的原因。
+对于一个编排系统，Pod 随时可能被调度到另外一台 Node 节点，如果想要数据持久化，肯定不能存储在本地，远程存储是最合适的方式，这也就是引入持久卷 PersistentVolume(PV) 的原因。
 
-PV 为 Kubernete 集群提供了一个如何提供并且使用存储的抽象，如下代码所示，声明了一个 PV 存储对象，并描述了存储能力、访问模式、存储类型、回收策略、后端存储类型等信息。
+PV 为 Kubernete 集群提供了一个使用使用远程存储的抽象，如下代码所示，声明了一个 PV 存储对象，并描述了存储能力、访问模式、存储类型、回收策略、远程存储类型等信息。
 
 ```
 apiVersion: v1
@@ -85,7 +83,13 @@ spec:
     server: 172.17.0.2
 ```
 
-PV 描述了详细的存储信息，但对应用层的开发者却不太友好，应用层开发者只想知道我有多大的空间、I/O 是否满足要求，并不关心存储底层的配置。这时就需要对存储服务再次进行抽象，把应用开发者关心的逻辑再抽象一层出来，这就是 PVC（Persistent Volume Claim）。
+PV 描述了详细的存储信息，但对应用层的开发者却不太友好，应用层开发者只想知道我有多大的空间、I/O 是否满足要求，并不关心存储底层的配置。那我们就把存储服务再次进行抽象，把应用开发者关心的逻辑再抽象一层出来，这就是 PVC（Persistent Volume Claim）。
+
+PVC 和 PV 的设计，跟“面向对象”的思想一致：
+- PVC 为持久化存储的“接口”，它提供了对某种持久化存储的描述，声明需要的存储类型、大小、访问模式等需求；
+- 而这个持久化存储的实现部分则由 PV 负责完成。
+
+作为应用开发者，我们只需要跟 PVC 这个“接口”打交道，而不必关心底层存储是怎么配置或者实现的。
 
 
 如下声明一个 PVC，与某个 PV 绑定后再被应用（Pod）消费。
@@ -104,7 +108,12 @@ spec:
       storage: 3Gi
 ```
 
-在 Pod 中使用存储：
+细心的读者到这里可能会有一个疑问：**PV 和 PVC 两者之间并没有明确相关的绑定参数**。PV 和 PVC 的绑定实际是一个自动过程：
+
+- 第一个条件：当然是 PV 和 PVC 的 spec 参数，譬如 存储的大小
+- 第二个条件：则是 PV 和 PVC 的 storageClassName 必须一致（稍后介绍）。
+
+当 PVC 匹配到 PV 之后，就可以在 Pod 中使用了。
 
 ```
 apiVersion: v1
@@ -127,25 +136,17 @@ spec:
 
 此时 NFS 的远端存储就挂载了到 Pod 中 nginx 容器的 /data 目录下。
 
-PVC 和 PV 的设计，其实跟“面向对象”的思想完全一致：
-- PVC 可以理解为持久化存储的“接口”，它提供了对某种持久化存储的描述，声明需要的存储类型、大小、访问模式等需求；
-- 而这个持久化存储的实现部分则由 PV 负责完成。
-
-作为应用开发者，我们只需要跟 PVC 这个“接口”打交道，而不必关心底层存储实现是 NFS 还是 Ceph。
-
-
 ## 从静态到动态
 
-如果我们只创建 PVC，不创建 PV，那会是什么状况呢？ 
+Pod 使用存储有一个原则：**先规划 → 后申请 → 再使用**，如果在系统中没有满足 PVC 要求的 PV，PVC 则一直处于 Pending 状态，直到系统里产生了一个合适的 PV，在这期间 Pod 将无法正常启动。
 
-前面通过人工管理 PV 的方式叫作 Static Provisioning，如果是小规模的集群，这种方式倒也不是什么问题。但在一个大规模的 Kubernetes 集群里很可能有成千上万个 Pod，这肯定没办法靠人工的方式提前创建出成千上万个 PVC。所以，Kubernetes 为我们提供了一套可以自动创建 PV 的机制，即：Dynamic Provisioning。
+如果是一个小规模的集群，我们可以预先创建多个各种各样的 PV 等待 PVC 申请即可。但在一个大规模的 Kubernetes 集群里很可能有成千上万个 Pod，这肯定没办法靠人工的方式提前创建出成千上万个 PV。为此，Kubernetes 为我们提供了一套可以自动创建 PV 的机制 —— Dynamic Provisioning（前面通过人工管理 PV 的方式叫作 Static Provisioning）。
 
-Dynamic Provisioning 机制工作的核心在于 StorageClass 对象，这个对象的作用其实就是创建 PV 的模板，它的定义中包含两类参数：
-- provisioner（存储提供者)，前缀为 "kubernetes.io" 并打包在 Kubernetes 中
+Dynamic Provisioning 核心在于 StorageClass 对象，这个对象的作用其实就是创建 PV 的模板，它的定义中包含两类关键信息：
+- **PV 的属性**：譬如存储空间的大小、读写模式、回收策略等
+- **Provisioner 的信息**：即声明采用何种存储插件以及插件的参数信息。存储插件有两类：一种内置在 Kubernetes 源码中，这种类型的插件称为 In-Tree 类型，前缀一般为 "kubernetes.io"；另外一种根据 Kubernetes 提供的存储接口，由第三方的存储供应商实现，代码独立于 Kubernetes，这种类型的插件被称为 Out-of-Tree 类型。 
 
-PV 了名称、存储提供者（provisioner）以及存储的相关参数。
-
-如下示例，定义了一个名为 standard 的 StorageClass，存储提供者为 为 aws-ebs，其存储参数设置了一个 type ，值为 gp2，回收策略为 Retain。
+如下示例，定义了一个名为 standard 的 StorageClass，存储提供者为 aws-ebs，其存储参数设置了一个 type ，值为 gp2，回收策略为 Retain。
 
 ```
 apiVersion: storage.k8s.io/v1
@@ -165,27 +166,23 @@ volumeBindingMode: Immediate
 StorageClass 被创建之后，当 PVC 的需求来了，它就会自动的去创建 PV，这样 PV 的创建就从静态转向了动态。
 
 
-现在，基于 StorageClass 的动态资源提供模式已经逐步成为各类云平台的标准存储管理模式。
+## Kuberneters 的存储系统设计
 
+通过上面的介绍相信绝大部分读者对于如何使用 Volume 没什么疑问了。那么我们再深入一点，了解真实的存储系统是如何接入到新创建的 Pod 中。
 
-## Kuberneters 的存储架构
+本文开篇介绍了 Kubernetes 参考了操作系统的 Volume 设计，那么操作系统要新增一块硬盘是怎么操作的呢?
 
+- 首先，Provision 它的逆向操作是 分离（Detach）。
+- 然后，将准备好的存储附加（Attach）到系统中，Attach 可类比为将存储设备接入操作系统，此时尽管设备还不能使用，但你已经可以用操作系统的fdisk -l命令查看到设备
+- 最后，将附加好的存储挂载（Mount）到系统中，Mount 可类比为将设备挂载到系统的指定位置，也就是操作系统中mount命令的作用，它的逆向操作是 卸载（Unmount）。
 
-每一个卷在被 Pod 使用时都会经历四个操作，也就是附着（Attach）、挂载（Mount）、卸载（Unmount）和分离（Detach）。
-
-
-根据源码的位置可将 Volume Plugins 分为 In-Tree 和 Out-of-Tree 两类：
-
-- In-Tree 表示源码是放在 Kubernetes 内部的，和 Kubernetes 一起发布、管理与迭代，缺点及时迭代速度慢、灵活性差；
-- Out-of-Tree 类的 Volume Plugins 的代码独立于 Kubernetes，它是由存储商提供实现的
-
-PV Controller、AD Controller、Volume Manager 主要是进行操作的调用，而具体操作则是由 Volume Plugins 实现。比如说挂载一个 NAS 的操作 `"mount -t nfs *"`，该命令其实就是在 Volume Plugins 中实现的，它会去调用远程的一个存储挂载到本地。
+以上提到的 Provision、Delete、Attach、Detach、Mount、Unmount 并不是在 Kubernetes 的内部实现的，而具体操作则是由 Volume Plugins 实现。比如说挂载一个 NAS 的操作 `"mount -t nfs *"`，该命令其实就是在 Volume Plugins 中实现的，它会去调用远程的一个存储挂载到本地。
 
 :::center
   ![](../assets/k8s-volume.svg)<br/>
 :::
 
-我们再来看一个带有 PVC 的 Pod 挂载过程。:
+理解了一些基本的知识，我们再来看一个带有 PVC 的 Pod 挂载过程:
 
 1. 用户创建了一个包含 PVC 的 Pod，该 PVC 要求使用动态存储卷。
 2. Scheduler 根据 Pod 配置、节点状态、PV 配置等信息，把 Pod 调度到一个合适的 Worker 节点上
@@ -206,6 +203,8 @@ PV Controller、AD Controller、Volume Manager 主要是进行操作的调用，
 
 上面流程的每个步骤，其实就对应了 CSI 提供的标准接口，云存储厂商只需要按标准接口实现自己的云存储插件，即可与 K8s 底层编排系统无缝衔接起来，提供多样化的云存储、备份、快照(snapshot)等能力。
 
+
+## Kubernetes 的 CSI 存储生态
 
 得益 Kubernetes 的开放性设计，通过下图感受支持 CSI 的存储生态，基本上包含了市面上所有的存储供应商。
 
