@@ -8,30 +8,34 @@
 
 :::
 
-那么容器如何实现持久化存储呢？我们先看看在计算机体系中是怎么设计的。在计算机体系中，硬盘被定义为外设，如果要使用，得先添加（Attach）一块磁盘（Volume），然后再挂载（Mount）到某个目录。设计容器目的是实现操作系统的虚拟化，自然地 Volume 和 Mount 的设计自然也被继承到容器系统中。
+在计算机体系中，硬盘被定义为外设，如果要使用硬盘，得先添加（Attach）一块磁盘（Volume），然后再挂载（Mount）到某个目录。设计容器目的是实现操作系统的虚拟化，Volume 和 Mount 的设计自然也被继承到容器系统中。
 
-要理解容器的存储设计，不妨先从 Docker 看起。
-
-目前，Docker 支持3 中挂载的方式：
+为理解容器/容器编排系统的存储设计，我们先从 Docker 看起。目前，Docker 支持 3 中挂载的方式：
 
 :::center
   ![](../assets/types-of-mounts-volume.webp)<br/>
 :::
 
+Bind mount 是 Docker 最早支持的挂载类型，
 
-- Bind mount 是 Docker 最早支持的挂载类型，实现原理就是利用 Linux 的 bind mount 将宿主机中的目录映射到 Docker 内部。
-- Volume 属于 bind mount 的升级，它存储在宿主机的额定目录下，在 Linux 中该目录是 /var/lib/docker/volumes/，这个目录由 docker 实施全面的管理，宿主机中的其他非 Docker 进程不应该修改这些目录。
-- 另外 Docker 还支持通过 tmpfs 将文件存储在宿主机的内存中（显然这种方式不会持久存储）。
+```
+docker run -v /usr/share/nginx/html:/data nginx:lastest
+```
+上面的命令实际上就是下面的 MS_BIND 类型的 mount 系统调用。
 
-无论选择哪种挂载方式，从容器的内部来看都是相同的：数据都是以容器系统中的目录或者单个文件暴露出来的。
+```
+// 将宿主机中的 /usr/share/nginx/html 挂载到 rootfs 指定的挂载点 /data 上
+mount("/usr/share/nginx/html","rootfs/data", "none", MS_BIND, nulll)
+```
+
+这种挂载的方式显然有非常明显的缺陷：**通过映射的方式挂载宿主机中的一个绝对路径，这就跟操作系统强相关**。这意味着 Bind mount 无法写在 dockerfile 中，不然镜像有可能无法启动。其次，宿主机中的目录虽然被挂载，但其他非 Docker 的进程也可以进行读写，存在安全隐患。
+
+其次，虽然容器被广泛使用，**容器存储绝对不是简单的映射关系那么简单**，存储位置不限于宿主机（还有可能是网络存储）、存储的介质不限于磁盘（还可能是 tmpfs）、存储的类型也不仅仅是文件系统（还有可能是块设备或者对象存储），而且**存储也并不是都需要先挂载到操作系统，再挂载到容器某个目录，如果 Docker 想越过操作系统，就需要知道使用何种协议（譬如块存储 iSCSI、网络存储 NFS 协议）**。
+
+为此 Docker 提供全新的挂载类型 Volume，它首先在宿主机开辟了一块属于 Docker 空间（Linux 中该目录是 /var/lib/docker/volumes/），这样就解决了 Bind mount 映射宿主机绝对路径的问题。考虑存储的类型众多，仅靠 Docker 自己实现并不现实，为此 Docker 提出了 Volume Driver 的概念，借助社区力量丰富 Docker 的存储驱动种类。这样用户只要通过 docker plugin install 安装额外的第三方卷驱动，就能使用网络存储或者各类云厂商提供的存储。
 
 
-从 bind mount 到 volume 的升级，Docker 意识到：容器存储绝对不是简单的映射关系那么简单，存储位置不限于宿主机、存储的介质不限于宿主机的磁盘，而且这些存储也并不是需要先挂载到操作系统，再挂载到容器某个目录。如果 Docker 想越过操作系统，就需要知道使用何种协议（譬如块存储 iSCSI、文件系统 POSIX）
-
-存储的类型众多，紧靠 Docker 自己实现并不现实，为此 Docker 提出了 Volume Driver 的概念，用户可以通过 docker plugin install 安装额外的第三方卷驱动，就能对接 NFS(Network File System), SSHFS(SSH Filesystem) 甚至是 AWS S3 等等。
-
-
-我们从 Docker 返回到 Kubernetes 中，同 Docker 类似，Kubernetes 也抽象出了数据卷（Volume）来解决持久化存储，也具有相同的操作目录，也设计存储驱动（Volume Plugin）支持众多的存储类型。
+我们从 Docker 返回到 Kubernetes 中，同 Docker 类似，Kubernetes 也抽象出了数据卷（Volume）来解决持久化存储，也具有相同的操作目录，也设计了存储驱动（Volume Plugin）扩展出众多的存储类型。
 
 如下图所示。Kubernetes 支持的 Volume 的类型。
 
@@ -132,9 +136,14 @@ PVC 和 PV 的设计，其实跟“面向对象”的思想完全一致：
 
 ## 从静态到动态
 
+如果我们只创建 PVC，不创建 PV，那会是什么状况呢？ 
+
 前面通过人工管理 PV 的方式叫作 Static Provisioning，如果是小规模的集群，这种方式倒也不是什么问题。但在一个大规模的 Kubernetes 集群里很可能有成千上万个 Pod，这肯定没办法靠人工的方式提前创建出成千上万个 PVC。所以，Kubernetes 为我们提供了一套可以自动创建 PV 的机制，即：Dynamic Provisioning。
 
-Dynamic Provisioning 机制工作的核心在于 StorageClass 对象，这个对象的作用其实就是创建 PV 的模板，它的定义中包含了名称、存储提供者（provisioner）以及存储的相关参数。
+Dynamic Provisioning 机制工作的核心在于 StorageClass 对象，这个对象的作用其实就是创建 PV 的模板，它的定义中包含两类参数：
+- provisioner（存储提供者)，前缀为 "kubernetes.io" 并打包在 Kubernetes 中
+
+PV 了名称、存储提供者（provisioner）以及存储的相关参数。
 
 如下示例，定义了一个名为 standard 的 StorageClass，存储提供者为 为 aws-ebs，其存储参数设置了一个 type ，值为 gp2，回收策略为 Retain。
 
@@ -152,6 +161,9 @@ mountOptions:
   - debug
 volumeBindingMode: Immediate
 ```
+
+StorageClass 被创建之后，当 PVC 的需求来了，它就会自动的去创建 PV，这样 PV 的创建就从静态转向了动态。
+
 
 现在，基于 StorageClass 的动态资源提供模式已经逐步成为各类云平台的标准存储管理模式。
 
