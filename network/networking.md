@@ -1,13 +1,13 @@
 # 3.2 Linux 系统收包流程
 
-一个请求从客户端经过 DNS、HTTP、拥塞控制... 历经千辛万难，终于到达目的地网卡（eth0）。这一节，我们结合 Linux ingress 的架构（图 3-1），了解数据包在 Linux 内核中被如何处理。
+一个请求从客户端经过 DNS、HTTP、拥塞控制... 历经千辛万难，终于到达目的地网卡（eth0）。这一节，笔者将根据图 3-1 所示的Linux ingress 架构，概述数据包在 Linux 内核中是被如何处理的。
 
 <div  align="center">
 	<img src="../assets/networking.svg" width="650"  align=center />
 	<p>图 3-1 Linux ingress 架构概览 </p>
 </div>
 
-如图 3-1 所示，总结 Linux 系统收包过程如下：
+根据 Linux ingress 架构，总结 Linux 系统收包过程如下：
 
 1. 网卡 eth0 收到数据包。
 2. 网卡通过 DMA（Direct Memory Access，直接内存访问）将数据包拷贝到内核 Ring Buffer（环形缓冲区），如果 Ring Buffer 满了则产生丢包 。
