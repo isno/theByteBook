@@ -59,7 +59,7 @@ Google 开发的第三套容器管理系统叫 Kubernetes。开发这套系统�
 
 :::center
   ![](../assets/k8s-arch.svg)<br/>
-  图 7-3 Kubernetes 架构视图
+  图 7-3 Kubernetes 架构以及组件概览 [图片来源](https://link.medium.com/oWobLWzCQJb)
 :::
 
 如图 7-3 所示 Kubernetes 的架构，能看出其中大量概念来源于 Borg/Omega 系统：分布式的彼此交互组件构成的 Master 架构、Pod（之 Borg Alloc）、工作节点中的 Kublet（之 Borglet）、etcd（之 Omega 集群状态存储 store）。
