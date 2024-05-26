@@ -8,8 +8,7 @@
 
 :::
 
-
-为理解容器/容器编排系统的存储设计，我们由浅入深，先从 Docker 看起。目前，Docker 支持 3 中挂载的方式：
+那么容器系统怎么解决持久化存储呢？我们由浅入深，先从 Docker 看起。目前，Docker 支持 3 中挂载的方式：
 
 :::center
   ![](../assets/types-of-mounts-volume.webp)<br/>

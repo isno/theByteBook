@@ -66,7 +66,10 @@ prometheus_http_requests_total{status="200", method="GET"}
 
 ## 收集指标
 
-不同监控系统收集 Metrics 数据手段各有不同，但总结无非是通过 push 到中心 Collector 方式采集（譬如各种 Agent 采集器，Telegraf 等），又或者是中心 Collector 通过 pull 的方式主动获取。
+不同监控系统收集 Metrics 数据基本就两种方式：
+
+- 通过 push 到中心 Collector 方式采集（譬如各种 Agent 采集器，Telegraf 等），
+- 又或者是中心 Collector 通过 pull 的方式主动获取；
 
 如下图所示，Prometheus 主动地从数据源拉取数据 Exporter（Exporter 实例称 target ）暴露的 HTTP 服务地址（通常是/metrics）拉取监控样本数据。
 
@@ -100,18 +103,16 @@ Prometheus 相比 zabbix 这类只监控机器的传统监控系统，最大的�
 
 ## 存储指标
 
-Prometheus的数据是典型的时序数据，prometheus本身会将数据存储在本地磁盘上。要注意的是，本地存储不可复制，无法构建集群，如果本地磁盘或节点出现故障，存储将无法扩展和迁移。
+如果是 Metrics 的数据的主要作用是监控，那么这类的数据其实不存在长期存储的意义。默认地，Prometheus 将数据存储在采用内置的 TSDB 时序数据库，这个数据库设计初衷是为可监控数据的查询，更多考虑的是高性能而非分布式，如果本地磁盘或节点出现故障，存储将无法扩展和迁移。
 
-Prometheus 的作者及社区核心开发者都秉承一个理念：Prometheus 只聚焦核心的功能，扩展性的功能留给社区解决。Prometheus 扩展了远端存储扩展（Remote Read/Write API），从而可以将数据存储到任意一个第三方存储上。
-
-到目前，社区也涌现出大量长期存储的方案，如 Thanos、Grafana Cortex/Mimir、VictoriaMetrics、Wavefront、Splunk、Sysdig、SignalFx、InfluxDB、Graphite 等。
+如果内置的 TSDB 无法满足你，那么你可以通过 Prometheus 扩展的远端存储扩展（Remote Read/Write API），将数据存储到任意一个第三方存储上。到目前，社区也涌现出大量长期时序类型存储的方案，如 Thanos、Grafana Cortex/Mimir、VictoriaMetrics、Wavefront、Splunk、Sysdig、SignalFx、InfluxDB、Graphite 等。
 
 <div  align="center">
 	<img src="../assets/prometheus-storage.jpeg" width = "100%"  align=center />
 	<p>长期存储方案</p>
 </div>
 
-基于多维度对上述介绍的 Prometheus 长期存储方案进行横向对比，数据持久化到硬盘的方案里，VictoriaMetrics 是更好的选择，如果是对象存储方案，Thanos 则更受欢迎。
+基于多维度对上述介绍的 Prometheus 长期存储方案进行横向对比，读者们可以根据基于以上的对比选择合适自己的。
 
 ## 生成报表
 
