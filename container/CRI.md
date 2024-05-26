@@ -74,7 +74,7 @@ Kubernetes 从 1.10 版本宣布开始支持 containerd 1.1，在调用链中已
 将虚拟机的安全优势与容器的高速及可管理性相结合，为用户提供标准化、安全、高性能的容器解决方案，于是就有了 Kata Containers 。
 
 <div  align="center">
-	<img src="../assets/kata-container.webp" width = "550"  align=center />
+	<img src="../assets/kata-container.jpeg" width = "550"  align=center />
 	<p>Kata Containers 与传统容器技术的对比[^1]</p>
 </div>
 
