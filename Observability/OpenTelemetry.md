@@ -8,9 +8,9 @@ OpenTracing 推出不久之后，Google 成为异意者，和微软推出了 Ope
 
 OpenCensus 在定义分布式追踪协议的基础上，不仅纳入了指标度量，还提供了包含 Agent 和 Collector SDK 的实现。遵循 OpenCensus 协议的产品有 Prometheus、SignalFX、Stackdriver 和 Zipkin 等。
 
-对很多开发人员而言，一边是老牌 APM 厂商，一边是影响力巨大的 Google 和微软。选择困难症发作的同时，一个新的想法不断被讨论：是否能有一个能够将 OpenTracing 和 OpenCensus，并且能够支持 Log 日志相关可观测数据的项目呢？
+对很多开发人员而言，一边是老牌 APM 厂商，一边是影响力巨大的 Google 和微软。选择困难症发作的同时，一个新的想法不断被讨论：**是否能有一个统一标准，能够同时支持 Metrics、Tracing、Logs 相关可观测数据的项目呢？**
 
-为了更好的将 Traces、Metrics 和 Logs 融合在一起，OpenTelemetry 诞生了。
+为了更好的将 Traces、Metrics 和 Logs 融合在一起，OpenTelemetry（简称 OTel）诞生了。
 
 作为 CNCF 的孵化项目，OpenTelemetry 由 OpenTracing 和 OpenCensus 项目合并而成，为众多开发人员带来 Metrics、Tracing、Logs 的统一标准，并提供了一组针对多语言的开箱即用的 SDK 实现工具。
 
