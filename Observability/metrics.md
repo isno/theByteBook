@@ -122,7 +122,7 @@ Grafana Labs 公司成立之前，Grafana Dashboard 就已经在各个开源社�
 - 2016年，在猎鹰9号火箭首次发射期间，Grafana 出现在 SpaceX 控制中心的屏幕上；
 - 几周后，微软发布一段宣传视频，展示了他们的水下数据中心，同样出现了 Grafana 的身影[^3]。
 
-Grafana 的 slogan 是“Dashboard anything. Observe everything.” ，Prometheus 定义了功能强大的 promQL，可以满足各种复杂的查询场景。而 Grafana 提供了对 PromQL 的完整支持。两者结合的反应：只要你能想到的数据[^1]就能转成任何你想要的图表[^2]。
+Grafana 的 slogan 是“Dashboard anything. Observe everything.” ，Prometheus 定义了功能强大的 promQL，可以满足各种复杂的查询场景。而 Grafana 提供了对 PromQL 的完整支持。两者结合的结果是：只要你能想到的数据就能转成任何你想要的图表。
 
 <div  align="center">
 	<img src="../assets/grafana-dashboard-english.png" width = "550"  align=center />
