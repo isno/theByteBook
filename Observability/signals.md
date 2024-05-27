@@ -15,8 +15,6 @@
 
 - **Tracing（追踪）**：分布式系统中多个服务之间或多或少存在依赖，Tracing 通过有向无环图的方式记录分布式系统依赖中发生事件之间的因果关系，从而可以轻松分析出请求中异常点。
 
-来自于 Cindy Sridharan 的著作《Distributed Systems Observability》进一步将这三个类型的数据称为可观测性的三大支柱（three pillars），不过将它们成为支柱容易让人产生误解，支柱就像一个房子的均匀受力支撑点，缺一不可。而事实上这三者都可以独立存在，系统中只存在 logging、tracing 也不是不行。
-
-现在，CNCF 发布的最新可观测性白皮书中，将这些可观测的数据统一称为信号（Signals），主要的信号除了 metrics、logs、traces 之外又额外增加了 Profiles 和 Dumps。
+来自于 Cindy Sridharan 的著作《Distributed Systems Observability》进一步将这三个类型的数据称为可观测性的三大支柱（three pillars）。现在，CNCF 发布的最新可观测性白皮书中，将这些可观测的数据统一称为 Signals（信号），主要的 Signals 除了 metrics、logs、traces 之外又增加了 Profiles 和 Dumps。
 
 [^1]: 参见 https://peter.bourgon.org/blog/2017/02/21/metrics-tracing-and-logging.html
