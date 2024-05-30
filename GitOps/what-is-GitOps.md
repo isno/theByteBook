@@ -2,11 +2,11 @@
 
 再进一步解释 GitOps 三个核心理念：
 
-- **一切皆代码**：因为 GitOps 要将一切（应用程序、基础设施）代码化，然后用 Git 进行版本控制，对于应用程序或者基础设施的变更也都是通过 Git 进行。围绕这个点就有了 IaC（基础设施即代码）、安全策略即代码（Security Policy as Code）等。
+- **一切皆代码**：因为 GitOps 要将一切（应用程序、基础设施）代码化，然后用 Git 进行版本控制，对于应用程序或者基础设施的变更也都是通过 Git 进行。围绕这个点就有了 IaC（Infrastructure as Code，基础设施即代码）、SPC（Security Policy as Code，安全策略即代码）等。
 - **Git 为单一可信源**：GitOps 中，所有的变更都是从 Git 仓库侧发起（例如 GitLab、GitHub），使用版本化控制，方便代码的安全和审计。 
 - **声明式系统为基座**：以声明式系统（包括基础设施和应用程序）为基座（典型如 Kubernetes）。
 
-再来看 GitOps 下的 CI/CD 实践流程，如下图所示：
+通过下图感受 GitOps 下的 CI/CD 实践过程。
 
 :::center
   ![](../assets/gitops-workflow.webp)<br/>
