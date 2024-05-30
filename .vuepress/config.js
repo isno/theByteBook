@@ -350,8 +350,8 @@ export default defineUserConfig({
                         link: '/GitOps/Tekton.md',
                         children: [
                             '/GitOps/Tekton-install.md',
+                            '/GitOps/Tekton-CRD.md',
                             '/GitOps/container-image-build.md',
-                            '/GitOps/Tekton-Log4j2.md'
                         ]
                     },
                     '/GitOps/ArgoCD.md'

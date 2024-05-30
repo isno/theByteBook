@@ -1,25 +1,18 @@
 # 10.4.1 用更安全的方式构建镜像
 
-现在大部分的 CI/CD 系统运行的容器内，镜像的构成也是在容器内完成。这时候通常用两种方式完成镜像构建：
+现在大部分的 CI/CD 系统运行的容器内，镜像的构成也是在容器内完成。如果想要在 Pod 内使用 docker 编译镜像，那就得将宿主机上的 /var/run/docker.sock 文件通过 hostPath 的方式挂载到 pod 容器内
 
+但这种方式有很大的弊端，**在 docker daemon 无法暴露或者用户没有权限获取 docker daemon 进程的前提下，用 docker build 来构建镜像就变的非常困难了**。
 
-1. 挂载宿主机的 socket 文件到容器内部
+在 Kubernetes 多租户的场景下，上面风险是不能接受的。那是否有一种不需要特殊权限，还能快速构建容器镜像的方法呢？答案就是下面介绍的 Kaniko。
 
-然后在容器内部用 docker build 构建镜像
+:::tip Kaniko 是什么
 
-由于 docker 依赖于 docker daemon 进程，docker daemon 进程是一个 Unix Socket 连接，且 /var/run/docker.sock 文件是root权限，在 docker daemon 无法暴露或者用户没有权限获取 docker daemon 进程的前提下，用 docker build 来构建镜像就变的非常困难了。
+Kaniko 是谷歌开源的一款构建容器镜像的工具。
 
-上述两种方法，都能满足在容器内构建容器镜像且推送镜像至远端仓库的需求，但是从安全角度来讲：
-- 需要root 权限(第一种方式)
-- 提供特权(第二种方式)都使得风险增大
+Kaniko 并不依赖于 Docker 守护进程，完全在用户空间根据 Dockerfile 的内容逐行执行命令来构建镜像，这就使得在一些无法获取 docker 守护 进程的环境下也能够构建镜像。
 
-在 Kubernetes 多租户的场景下，上面风险是不能接受的。那是否有一种不需要特殊权限，还能快速构建容器镜像的方法呢？答案就是下面将的 Kaniko。
-
-## 使用 Kaniko 构建镜像
-
-Kaniko 是谷歌开源的一款用来构建容器镜像的工具。
-
-与 docker 不同，Kaniko 并不依赖于 Docker daemon 进程，完全是在用户空间根据 Dockerfile 的内容逐行执行命令来构建镜像，这就使得在一些无法获取 docker daemon 进程的环境下也能够构建镜像，比如在标准的 Kubernetes Cluster 上。
+:::
 
 <div  align="center">
 	<img src="../assets/kaniko.png" width = "500"  align=center />
@@ -30,11 +23,6 @@ Kaniko 会先提取基础镜像(Dockerfile FROM 之后的镜像)的文件系统�
 
 
 ## 集成 Kaniko 到 Tekton 流水线
-
-
-我们先前面讲述过，容器镜像实际上就是利用 UnionFs 实现的一个特殊文件系统。那么容器镜像的构建就是基于底层 rootfs （基础镜像）定制上层配置、文件、依赖等信息。我们把每一层修改、操作命令都写入一个脚本，用这个脚本来构建、定制镜像，这个脚本就是 Dockerfile。
-
-有了 Dockerfile 之后, 就可以制定自己的镜像规则，在 Dockerfile 上添加或者修改指令, 就可生成镜像产物。
 
 
 ## 2. 镜像构建
