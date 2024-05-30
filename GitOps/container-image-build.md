@@ -1,10 +1,8 @@
 # 10.4.1 用更安全的方式构建镜像
 
-现在大部分的 CI/CD 系统运行的容器内，镜像的构成也是在容器内完成。如果想要在 Pod 内使用 docker 编译镜像，那就得将宿主机上的 /var/run/docker.sock 文件通过 hostPath 的方式挂载到 pod 容器内
+我们编译镜像大部分使用 docker build 的方式，而现在大部分的 CI/CD 系统运行在容器内，如果要在容器内编译镜像，你或者会想到将宿主机上的 /var/run/docker.sock 文件通过 hostPath 的方式挂载到 pod 容器内。
 
-但这种方式有很大的弊端，**在 docker daemon 无法暴露或者用户没有权限获取 docker daemon 进程的前提下，用 docker build 来构建镜像就变的非常困难了**。
-
-在 Kubernetes 多租户的场景下，上面风险是不能接受的。那是否有一种不需要特殊权限，还能快速构建容器镜像的方法呢？答案就是下面介绍的 Kaniko。
+但这种方式存在明显的缺陷：**得在宿主机额外安装 Docker 且有安全风险**。那是否有一种能脱离 Docker，不用额外的权限，且能快速构建容器镜像的方法呢？这就是下面要介绍的 Kaniko。
 
 :::tip Kaniko 是什么
 
@@ -23,6 +21,31 @@ Kaniko 会先提取基础镜像(Dockerfile FROM 之后的镜像)的文件系统�
 
 
 ## 集成 Kaniko 到 Tekton 流水线
+
+有了 kaniko，在 Pod 内构建镜像就变得简单了。如下定义了一个镜像编译的 Task。
+
+```
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: build-and-push
+spec:
+  resources:
+    inputs:
+      - name: repo
+        type: git
+  steps:
+    - name: build-and-push
+      image: gcr.io/kaniko-project/executor:v1.3.0
+      env:
+        - name: DOCKER_CONFIG
+          value: /tekton/home/.docker
+      command:
+        - /kaniko/executor
+        - --dockerfile=Dockerfile
+        - --context=/workspace/repo/src
+        - --destination=arthurk/tekton-test:latest
+```
 
 
 ## 2. 镜像构建
