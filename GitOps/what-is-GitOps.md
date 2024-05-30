@@ -8,9 +8,11 @@
 
 再来看 GitOps 下的 CI/CD 实践流程，如下图所示：
 
-<div  align="center">
-  <img src="../assets/gitops-workflow.webp" width = "550"  align=center />
-</div>
+:::center
+  ![](../assets/gitops-workflow.webp)<br/>
+  图 GitOps 实践流程
+:::
+
 
 1. 首先，团队成员 fork 仓库进行业务逻辑开发，然后提交 Pull Request。
 2. 接下来运行 CI 流水线，进行校验配置文件、执行自动化测试、构建镜像、推送到镜像仓库等。

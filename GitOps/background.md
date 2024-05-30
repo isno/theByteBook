@@ -2,10 +2,10 @@
 
 我们先来看一个传统的云原生应用如何进行持续交付。下图是一个典型的 Push 交付模型，包含了从开发人员提交代码到代码构建检测再到镜像构建最后进行数据以及后续测试的流程。
 
-<div  align="center">
-	<img src="../assets/cicd-push.png" align=center />
-	图 10-1 云原生架构中的 Push 交付模型
-</div>
+:::center
+  ![](../assets/cicd-push.png)<br/>
+  图 Push 交付模型
+:::
 
 当做好自动化以后，可以很好的实践持续集成、持续部署、持续交付，从而提升研发效率。
 
@@ -29,11 +29,11 @@
 
 云原生应用的部署底座是 Kubernetes，而 Kubernetes 是一种声明式系统，这意味着应用可以用 yaml 文件进行描述（譬如使用 kustomize、Helm 定义应用）。把这些 yaml 文件存储在 Git 仓库中，再有一个自动同步的机制 —— 完成 Git 仓库中描述文件变更到 kubernetes 集群上应用的自动更新。
 
-如此，以声明式系统为基座、以 Git 为单一可信源的一种新型交付理念出现了。
+如此，以声明式系统为基座、以 Git 为单一可信源的一种新型交付模型出现了。
 
-<div  align="center">
-	<img src="../assets/gitops.svg" width="400px" align=center />
-	
-</div>
 
+:::center
+  ![](../assets/gitops.svg)<br/>
+  图 GitOps 模型
+:::
 
