@@ -47,6 +47,13 @@ spec:
         - --destination=arthurk/tekton-test:latest
 ```
 
+上面的 Task 中，将将 git 作为输入，定义了一个名为 build-and-push 的步骤。
+
+执行的命令就是 /kaniko/executor，通过 --dockerfile 指定 Dockerfile 路径，--context 指定构建上下文，我们这里当然就是项目的根目录了，然后 --destination 参数指定最终我们的镜像名称。
+
+
+
+
 
 ## 2. 镜像构建
 
