@@ -1,6 +1,6 @@
 # 10.4.1 安装 Tekton
 
-安装 Tekton 非常简单，可以直接通过 tektoncd/pipeline 的 GitHub 仓库中的 release.yaml 文件进行安装，资源清单文件安装后，会创建一个名为 tekton-pipelines 的命名空间，在该命名空间下面会有大量和 tekton 相关的资源对象。
+安装 Tekton 非常简单，通过 tekton 提供的 release.yaml 文件进行安装（注意 Kubernetes 集群版本要求 1.25+）。资源清单文件安装后，会创建一个名为 tekton-pipelines 的命名空间，在该命名空间下面会有大量和 tekton 相关的资源对象。
 
 ```
 $ kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml

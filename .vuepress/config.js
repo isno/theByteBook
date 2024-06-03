@@ -351,7 +351,10 @@ export default defineUserConfig({
                         children: [
                             '/GitOps/Tekton-install.md',
                             '/GitOps/Tekton-CRD.md',
-                            '/GitOps/container-image-build.md',
+                            '/GitOps/Tekton-test.md',
+                            '/GitOps/Tekton-build-image.md',
+                            '/GitOps/Tekton-trigger.md',
+
                         ]
                     },
                     '/GitOps/ArgoCD.md'

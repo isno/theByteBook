@@ -1,4 +1,4 @@
-# 10.4.3 使用 Kaniko 构建镜像
+# 10.4.4 使用 Kaniko 构建镜像
 
 我们编译镜像大部分使用 docker build 的方式，而现在大部分的 CI/CD 系统运行在容器内，如果要在容器内编译镜像，你或许会想到将宿主机上的 /var/run/docker.sock 文件通过 hostPath 的方式挂载到 pod 容器内。
 
