@@ -1,6 +1,6 @@
 # 10.4.4 构建镜像以及创建 Pipeline
 
-我们编译镜像大部分使用 docker build 的方式，而现在大部分的 CI/CD 系统运行在容器内，那么我们就要换一种完全在容器内编译镜像的方式，这就是下面要介绍的 Kaniko。
+我们通常使用 docker build 编译镜像，但现在大部分的 CI/CD 系统运行在容器内，那么我们就要换一种完全在容器内编译镜像的方式，这就是下面要介绍的 Kaniko。
 
 :::tip Kaniko 是什么
 
@@ -15,12 +15,10 @@ Kaniko 并不依赖于 Docker 守护进程，完全在用户空间根据 Dockerf
 	<p>Kaniko 如何工作</p>
 </div>
 
-Kaniko 会先提取基础镜像(Dockerfile FROM 之后的镜像)的文件系统，然后根据 Dockerfile 中所描述的，一条条执行命令，每一条命令执行完以后会在用户空间下面创建一个 snapshot，并与存储与内存中的上一个状态进行比对，如果有变化，就将新的修改生成一个镜像层添加在基础镜像上，并且将相关的修改信息写入镜像元数据中。等所有命令执行完，kaniko 会将最终镜像推送到指定的远端镜像仓库。
+Kaniko 读取并解析指定的 Dockerfile，先拉取基础镜像，在用户空间中重建其文件系统层，然后按顺序执行 Dockerfile 中的每条指令（如 RUN、COPY、ADD），并将更改应用到镜像层中。构建完成后，Kaniko 将最终镜像推送到指定的远端镜像仓库。
 
 
-## 集成 Kaniko 到 Tekton 流水线
-
-有了 kaniko，在 Pod 内构建镜像就变得简单了。如下定义了一个镜像编译的 Task。
+有了 Kaniko，在 Tekton 内构建镜像就变得简单了。如下定义了一个镜像编译的 Task。
 
 ```
 apiVersion: tekton.dev/v1beta1
@@ -45,13 +43,11 @@ spec:
         - --destination=arthurk/tekton-test:latest
 ```
 
-上面的 Task 中，将将 git 作为输入，定义了一个名为 build-and-push 的步骤。
-
-执行的命令就是 /kaniko/executor，通过 --dockerfile 指定 Dockerfile 路径，--context 指定构建上下文，我们这里当然就是项目的根目录了，然后 --destination 参数指定最终我们的镜像名称。
+Task 中的steps 就是执行 /kaniko/executor，通过 --dockerfile 指定 Dockerfile 路径，--context 指定构建上下文，我们这里当然就是项目的根目录了，然后 --destination 参数指定最终我们的镜像名称。
 
 ## 创建流水线
 
-到目前，我们已经完成两个 task 的创建，现在我们创建一个流水线来将这两个任务组织起来。
+到目前，我们已经完成两个 Task 的创建，创建一个 Pipeline 将这两个 Task 组织起来。
 
 ```
 apiVersion: tekton.dev/v1beta1
@@ -75,7 +71,7 @@ spec:
       - name: username
         value: $(params.username)
 ```
-pipeline 中通过 spec.tasks 指定多个 task，每个 task 里通过 taskRef.name 关联到具体的 task 实例。然后在 spec.tasks 里也需要再次定义 params，不过 task 里直接通过 $(params.username) 获取具体值。
+Pipeline 通过 spec.tasks 指定多个 task，再通过 taskRef.name 关联到具体的 Task。
 
 :::tip 注意
  需要注意的是，tasks 中的任务不保证先后顺序，因此如果不同任务之间有依赖关系可以使用 runAfter 字段来指定先后关系。
