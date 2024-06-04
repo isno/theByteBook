@@ -169,13 +169,15 @@ StorageClass 被创建之后，当 PVC 的需求来了，它就会自动的去�
 
 通过上面的介绍相信绝大部分读者对于如何使用 Volume 没什么疑问了。下面我们再了解真实的存储系统是如何接入到新创建的 Pod 中。在这之前，我们先预备一些前置知识。
 
-Kubernetes 的 Volume 继承了 Docker 和 操作系统的的设计么，新增或者卸载存储设备分解为以下三个操作：
+Kubernetes 的 Volume 继承了Docker和操作系统的设计，并将新增或者卸载存储设备分解为以下三个操作：
 
-- 首先，首先得准备（Provision）哪种设备，Provision 类似给操作系统准备一块新的硬盘，这一步确定了接入存储设备的类型、容量等基本参数。它的逆向操作是 delete（移除）设备。
+- 首先，得 Provision（准备）哪种设备，Provision 类似给操作系统准备一块新的硬盘，这一步确定了接入存储设备的类型、容量等基本参数。它的逆向操作是 delete（移除）设备。
 - 然后，将准备好的存储附加（Attach）到系统中，Attach 可类比为将存储设备接入操作系统，此时尽管设备还不能使用，但你已经可以用操作系统的fdisk -l 命令查看到设备，这一步确定存储设备的名称、驱动方式等面向系统侧的信息，它的逆向操作是 Detach（分离）设备。
 - 最后，将附加好的存储挂载（Mount）到系统中，Mount 可类比为将设备挂载到系统的指定位置，也就是操作系统中mount命令的作用，它的逆向操作是 卸载（Unmount）存储设备。
 
+:::tip <i/>
 如果 Pod 中使用的是 EmptyDir、HostPath 这类非网络存储型的卷，这些卷并不会经历附着和分离的操作，它们只会被挂载和卸载到某一个 Pod 中。
+:::
 
 Volume 的创建和管理在 Kubernetes 中主要由卷管理器 VolumeManager 和 AttachDetachController 和 PVController 三个组件负责，前面提到的 Provision、Delete、Attach、Detach、Mount、Unmount 则由 Volume Plugins 实现。
 
