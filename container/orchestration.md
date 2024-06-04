@@ -77,7 +77,7 @@ int clone(int (*fn)(void *), void *child_stack,
          /* pid_t *ptid, struct user_desc *tls, pid_t *ctid */ );
 ```
 
-如果要为创建的子进程设置各类资源隔离，需要通过 flags 参数指定具体的命名空间。
+如果要为创建的子进程设置各类资源隔离，需要通过flags参数指定具体的命名空间。
 
 如下代码，创建一个新的子进程，新创建的这个进程将会“看到”一个全新的系统环境。这个环境内，进程的 PID 是 1，只能看到各自 Mount 名称空间里挂载的目录和文件，只能访问到各自 Network 名称空间里的网络设备。
 
