@@ -1,12 +1,12 @@
 # 10.4.1 安装 Tekton
 
-安装 Tekton 非常简单，通过 tekton 提供的 release.yaml 文件进行安装（注意 Kubernetes 集群版本要求 1.25+）。资源清单文件安装后，会创建一个名为 tekton-pipelines 的命名空间，在该命名空间下面会有大量和 tekton 相关的资源对象。
+安装 Tekton 非常简单，通过官方提供的文件进行安装（注意 Kubernetes 集群版本要求 1.25+）。Tekton 安装后，会创建一个名为 tekton-pipelines 的命名空间，该命名空间内有大量和 tekton 相关的资源对象。
 
 ```
 $ kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
 ```
 
-查看该命名空间中 Pod 状态确认安装是否成功。
+查看 Tekton 命名空间中 Pod 状态确认安装是否成功。
 
 ```
 $ kubectl get pods --namespace tekton-pipelines --watch
@@ -20,7 +20,8 @@ tekton-pipelines-webhook-9485cfb96-th9pt       1/1     Running            0     
 ```
 $ kubectl apply --filename https://storage.googleapis.com/tekton-releases/dashboard/latest/release.yaml
 ```
-临时性通过 kubectl 端口转发将 tekton dashboard 服务暴漏到集群外部（如果是正式使用，可通过 Ingress 绑定 Service 的形式提供外部服务）。
+临时性通过 kubectl 端口转发将 tekton dashboard 服务暴漏到集群外部（如果是正式使用，可通过 Ingress 绑定 Service 的形式提供服务）。
+
 ```
 $ kubectl --namespace tekton-pipelines port-forward svc/tekton-dashboard 9097:9097
 ```

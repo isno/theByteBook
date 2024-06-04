@@ -89,6 +89,45 @@ sudo mount -t overlay overlay \
   <p>镜像文件系统概览</p>
 </div>
 
+## 镜像的构建
+
+构建镜像最有挑战性之一的就是使用镜像尽可能小，小的镜像不论在大规模集群部署、故障转移、存储成本方面都有巨大的优势。构建镜像尽可能小的方式有两种：选用精简的基础镜像以及使用多阶段构建。
+
+```dockerfile
+#第1阶段
+FROM skillfir/alpine:gcc AS builder01
+RUN wget https://nginx.org/download/nginx-1.24.0.tar.gz -O nginx.tar.gz && \
+tar -zxf nginx.tar.gz && \
+rm -f nginx.tar.gz && \
+cd /usr/src/nginx-1.24.0 && \
+ ./configure --prefix=/app/nginx --sbin-path=/app/nginx/sbin/nginx && \
+  make && make install
+  
+#第2阶段
+FROM skillfir/alpine:glibc
+RUN apk update && apk upgrade && apk add pcre openssl-dev pcre-dev zlib-dev 
+
+COPY --from=builder01 /app/nginx /app/nginx
+WORKDIR /app/nginx
+EXPOSE 80
+CMD ["./sbin/nginx","-g","daemon off;"]
+```
+
+构建镜像。
+
+```bash
+$ docker build -t alpine:nginx .
+```
+
+查看镜像产物，使用两阶段构建之后镜像只有 23.4 MB。
+
+```bash
+$ docker images 
+REPOSITORY                TAG             IMAGE ID       CREATED          SIZE
+alpine                    nginx           ca338a969cf7   17 seconds ago   23.4MB
+```
+
+
 ## 镜像下载加速
 
 镜像文件是从远程仓库下载而来，那么镜像下载的效率会受带宽、镜像仓库瓶颈的影响。

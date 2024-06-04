@@ -26,17 +26,16 @@ spec:
 
 然后下面的 steps 就是来定义执行运行测试命令的步骤：在根目录中运行 go test 命令。
 
-定义完成后使用 kubectl 创建该任务：
+定义完成后使用 kubectl 创建该任务。
 
 ```
 $ kubectl apply -f task-test.yaml
 task.tekton.dev/test created
 ```
 
-Task 任务只是一个模版，并不会被执行，得再创建一个 TaskRun 引用它并提供所有必需输入的数据才行。
+但是仅创建 Task 是没有用的，Task 只是声明了我们要做什么，是一个静态的对象，如果要得到其结果，需要借助 TaskRun 才行。
 
-
-接下来我们就可以创建 TaskRun 对象了，内容如下所示：
+接下来创建 TaskRun 对象了，内容如下所示：
 
 ```
 apiVersion: tekton.dev/v1
@@ -51,30 +50,25 @@ spec:
       value: "https://github.com/isno/tekton-example"
 ```
 
-上面通过 taskRef 引用上面定义的 Task 和 git 仓库作为输入
+上面通过 taskRef 引用上面定义的 Task 以及定义了名称为 git-repository-url 的参数。
 
 :::tip 注意
 
-TaskRun 这里我们没有指定 name，而是用的 generateName。同时该对象也必须使用 create 命令来创建，而不是 apply。
+TaskRun 这里没有指定 name，而是用的 generateName。同时该对象也必须使用 create 命令来创建，而不是 apply。
 
-这是因为一个 TaskRun 只能触发一次任务运行，而一个任务可能会反复运行，如果在 TaskRun 中写死名称，就会导致该任务只会触发一次，就算 apply 多次都会因为内容没有任何变化而直接被忽略掉。
+这是因为一个 TaskRun 只能触发一次任务运行，而一个任务可能会反复运行，如果在 TaskRun 中写死名称，就会导致该任务只会触发一次，就算 apply 多次也会因内容没有变化被忽略掉。
 
 :::
 
+将 TaskRun 提交到 kubernetes 之后开始运行任务。
 
-现在我们创建这个资源对象过后，就会开始运行了：
-
-```
+```bash
 $ kubectl create -f hello-taskrun.yaml 
 ```
 
-创建后，我们可以通过查看 TaskRun 资源对象的状态来查看构建状态：
+通过 TaskRun 资源对象的状态查看构建结果。
 
-```
-$ kubectl get pods
-NAME                READY   STATUS      RESTARTS   AGE
-testrun-pod-pds5z   0/2     Completed   0          4m27s
-
+```bash
 $ kubectl get taskrun
 NAME      SUCCEEDED   REASON      STARTTIME   COMPLETIONTIME
 testrun   True        Succeeded   70s         57s
