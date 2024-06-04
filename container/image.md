@@ -12,14 +12,14 @@
 
 :::
 
-不过 Docker 镜像和 rootfs 还是有一些区别， Docker 镜像并没有沿用以前制作 rootfs 的流程，而是做了一个小小的创新，基于 UnionFS（Union File System，联合文件系统）采用堆叠的方式，对 rootfs 进行分层（layer）设计，这样镜像内的公共部分（层）就可以在不同容器之间复用。
+不过 Docker 镜像和 rootfs 还是有一些区别，Docker 镜像并没有沿用以前制作 rootfs 的流程，而是做了一个小小的创新：基于 UnionFS（Union File System，联合文件系统）采用堆叠的方式，对 rootfs 进行分层设计，这样镜像内的公共部分就可以在不同容器之间复用了。
 
 :::tip UnionFS 是什么
 
 UnionFS（联合文件系统）技术能够将不同的层整合成一个文件系统，为这些层提供了一个统一视角，这样就隐藏了多层的存在，在用户的角度看来，只存在一个文件系统。
-:::
 
 UnionFS 有很多种实现，例如 OverlayFS、Btrfs 等。在 Linux 内核 3.18 版本中，OverlayFS 代码正式合入 Linux 内核的主分支。在这之后，OverlayFS 也就逐渐成为各个主流 Linux 发行版本里缺省使用的容器文件系统了。
+:::
 
 Stripe 工程师 Julia Evans 曾撰写过一篇文章《How containers work: overlayfs》[^1]，文中作者用漫画形式说明容器镜像如何工作。
 
@@ -53,10 +53,9 @@ sudo mount -t overlay overlay \
 ```
 使用 mount 命令并指定文件系统类型为 overlay，挂载后的文件系统视图如下所示。
 
-<div  align="center">
-  <img src="../assets/overfs.jpeg"  align=center />
-</div>
-
+:::center
+  ![](../assets/overfs.jpeg)<br/>
+:::
 
 指定文件系统为 OverlayFS。这一条命令有几个 overlay 文件系统的关键的参数：lowerdir（只读层）、upperdir（读写层）、merged（挂载后，最终呈现给用户视图）
 
@@ -78,16 +77,17 @@ sudo mount -t overlay overlay \
 
 下面是 Docker 官方的一张描述文件系统的图片，显示了联合文件系统如何在串联镜像层和容器层起到的作用。
 
-<div  align="center">
-  <img src="../assets/overlay.png"  align=center />
-</div>
+:::center
+  ![](../assets/overlay.png)<br/>
+  联合文件系统
+:::
 
 再来概览容器的文件系统，启动一个容器(或来自同一镜像的多个容器)时，使用 layer 层复用，并使用 cow 创建薄薄的可写容器层。如此，不仅节省空间，还缩短了启动时间。
 
-<div  align="center">
-  <img src="../assets/docker-file-system.png"  align=center />
-  <p>镜像文件系统概览</p>
-</div>
+:::center
+  ![](../assets/docker-file-system.png)<br/>
+  镜像文件系统概览
+:::
 
 ## 镜像的构建
 
@@ -113,26 +113,20 @@ EXPOSE 80
 CMD ["./sbin/nginx","-g","daemon off;"]
 ```
 
-构建镜像。
+构建镜像，并查看镜像产物，使用两阶段构建之后镜像只有 23.4 MB。
 
 ```bash
 $ docker build -t alpine:nginx .
-```
-
-查看镜像产物，使用两阶段构建之后镜像只有 23.4 MB。
-
-```bash
 $ docker images 
 REPOSITORY                TAG             IMAGE ID       CREATED          SIZE
 alpine                    nginx           ca338a969cf7   17 seconds ago   23.4MB
 ```
 
-
 ## 镜像下载加速
 
-镜像文件是从远程仓库下载而来，那么镜像下载的效率会受带宽、镜像仓库瓶颈的影响。
+镜像文件从远程仓库下载而来，那么镜像下载的效率会受带宽、镜像仓库瓶颈的影响，这也直接影响到容器的启动时间。
 
-如果讨论提高镜像下载的效率？你一定能想到 P2P 网络加速。而 Dragonfly 就是基于这一网络模型的容器镜像分发系统。
+那么思考如下提高镜像下载的效率？或许你会想到 P2P 网络加速。Dragonfly 就是基于 P2P 网络实现的容器镜像分发加速系统。
 
 :::tip 什么是 Dragonfly
 
@@ -141,12 +135,11 @@ Dragonfly 是一款基于 P2P 技术的文件分发和镜像加速系统，它�
 目前 Dragonfly 在 CNCF 托管作为孵化级项目。
 :::
 
-Dragonfly 提供了一种无侵入（不修改容器、仓库等源码）的镜像下载加速解决方案，它的工作流程如下图所示。当下载一个镜像或文件时，通过 Peer（类似 p2p 的节点） 的 HTTP Proxy 将下载请求代理到 Dragonfly。Peer 首先会 Scheduler（类似 p2p 调度器）注册 task。Scheduler 会查看 Task 的信息，判断 Task 是否在 P2P 集群内第一次下载
+Dragonfly 提供了一种无侵入（不用修改容器、仓库等源码）的镜像下载加速解决方案，它的工作流程如下图所示。当下载一个镜像或文件时，通过 Peer（类似 p2p 的节点） 中的 HTTP Proxy 将下载请求代理到 Dragonfly。Peer 首先会 Scheduler（类似 p2p 调度器）注册 task。Scheduler 会查看 Task 的信息，判断 Task 是否在 P2P 集群内第一次下载。
 
-- 第一次下载优先触发 Seed Peer 进行回源下载，并且下载过程中对 Task 基于 Piece 级别切分。Peer 每下载成功一个 Piece， 会将信息上报给 Scheduler 供下次调度使用。
-- 如果 Task 在 P2P 集群内非第一次下载，那么 Scheduler 会调度其他 Peer 给当前 Peer 下载。
-
-Peer 从不同的 Peer 下载 Piece，拼接并返回整个文件，那么 P2P 下载就完成了。
+- 第一次下载优先触发 Seed Peer 进行回源下载，并且下载过程中对 Task 基于 Piece 级别切分。Peer 每下载成功一个 Piece，都将信息上报给 Scheduler 供下次调度使用。
+- 如果 Task 在 P2P 集群内非第一次下载，那么 Scheduler 会调度其他 Peer 加速当前的 Peer 中的下载。
+- 最后，Peer 从不同的 Peer 下载 Piece，拼接并返回整个文件，整个 P2P 下载流程就结束了。
 
 <div  align="center">
 	<img src="../assets/dragonfly.png" width = "550"  align=center />
