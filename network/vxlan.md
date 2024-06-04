@@ -29,9 +29,9 @@ VLAN 是一种早期的网络虚拟化技术，由于二层网络本身特性决
 
 ## VXLAN
 
-为了解决 VLAN 的设计缺陷，IETF 又重新定义了 VXLAN 规范，这是三层虚拟化网络（Network Virtualization over Layer 3，NVO3）的标准技术规范之一，是一种典型的 overlay 网络。
+为了解决 VLAN 的设计缺陷，IETF 又重新定义了 VXLAN 规范，这是三层虚拟化网络（Network Virtualization over Layer 3，NVO3）的标准技术规范之一。
 
-虽然从名字上看，VXLAN 是 VLAN 的一种扩展协议，但 VXLAN 内在已经与 VLAN 迥然不同，VXLAN 本质上是一种隧道封装技术，它使用 TCP/IP 协议栈的惯用手法「封装/解封装技术」，将 L2 的以太网帧（Ethernet frames）封装成 L4 的 UDP 数据报，然后在 L3 的网络中传输，效果就像 L2 的以太网帧在一个广播域中传输一样，不再受数据中心传输的限制。
+虽然从名字上看，VXLAN 是 VLAN 的一种扩展协议，但 VXLAN 内在已经与 VLAN 迥然不同，VXLAN 本质上是一种隧道封装技术，属于典型的 overlay 网络，它使用 TCP/IP 协议栈的惯用手法「封装/解封装技术」，将 L2 的以太网帧（Ethernet frames）封装成 L4 的 UDP 数据报，然后在 L3 的网络中传输，效果就像 L2 的以太网帧在一个广播域中传输一样，不再受数据中心传输的限制。
 
 <div  align="center">
 	<img src="../assets/vxlan-data.png" width = "300"  align=center />
