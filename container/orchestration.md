@@ -48,15 +48,11 @@ root@028f46a5b7db:/# cd bin
 root@028f46a5b7db:/bin# pwd
 /bin
 ```
-看起来跟 chroot 差不多，也是一个与宿主机隔离的文件系统环境，那这是否意味着 chroot 就是容器了呢？ 肯定不是：**chroot 只是改变了根目录，而非创建了真正的独立隔离、安全的环境**，chroot 后的进程可以通过几行代码就能从当前的 jail 中逃逸，而且文件系统、网络、设备等等都没有被隔离。
-
-因此，缺少隔离和具备离开监狱的能力，就会导致许多与安全相关的问题。
+看起来跟 chroot 差不多，也是一个与宿主机隔离的文件系统环境，那这是否意味着 chroot 就是容器了呢？肯定不是：**chroot 只是改变了根目录，而非创建了真正的独立隔离、安全的环境**，chroot 后的进程通过几行代码就能从当前的 jail 中逃逸，而且文件系统、网络、设备等等都没有被隔离。
 
 ## 7.3.2 资源全方位隔离
 
-Chroot 最初的目的是为了实现文件的隔离，并非为了容器而设计。
-
-后来 Linux 吸收了这些理念，先是在 2.4.19 引入了 Mount 命名空间，这样就可以隔离挂载文件系统。后来又想到进程间通信也需要隔离，又有了 IPC。同时，容器还需要一个独立的主机名以便在网络中标识自己，有了网络，自然要有独立的 IP、端口、路由等...。从 Linux 内核 2.6.19 起，又陆续添加了 UTS、IPC、PID、Network、User 等命名空间。
+Chroot 最初的目的是为了实现文件的隔离，并非为了容器而设计。后来 Linux 吸收了Chroot的理念，先是在 2.4.19 引入了 Mount 命名空间，这样就可以隔离挂载文件系统。后来又想到进程间通信也需要隔离，就有了 IPC 命名空间。同时，容器还需要一个独立的主机名以便在网络中标识自己，有了网络，自然还要有独立的 IP、端口、路由等...。从 Linux 内核 2.6.19 起，又陆续添加了 UTS、IPC、PID、Network、User 等命名空间。
 
 至 Linux 内核 3.8 版本，Linux 已经完成容器所需的 6 项最基本资源隔离。
 
@@ -73,7 +69,7 @@ Chroot 最初的目的是为了实现文件的隔离，并非为了容器而设�
 | Cgroup| 使进程拥有一个独立的 cgroup 控制组 | 4.6 |
 | Time| 隔离系统时间 | 5.6 |
 
-名称空间使用的方式是通过系统调用，我们创建进程通常使用 fork()，但 fork 背后调用的是 clone()，clone 暴露的参数更多，它的函数定义如下。
+我们创建进程通常使用fork()，fork 背后调用的是 clone()，clone 暴露的参数更多，它的函数定义如下。
 
 ```
 int clone(int (*fn)(void *), void *child_stack,
@@ -81,9 +77,9 @@ int clone(int (*fn)(void *), void *child_stack,
          /* pid_t *ptid, struct user_desc *tls, pid_t *ctid */ );
 ```
 
-创建的子进程如果想要 mount 自己的根目录、设置自己的 hostname 以及做其他一些事情，就需要通过 flags 参数指定各类名称空间。
+如果要为创建的子进程设置各类资源隔离，需要通过 flags 参数指定具体的命名空间。
 
-如下代码，创建一个新的子进程，新创建的这个进程将会“看到”一个全新的系统环境，这个环境内，进程的 PID 是 1，只能看到各自 Mount 名称空间里挂载的目录和文件，只能访问到各自 Network 名称空间里的网络设备。
+如下代码，创建一个新的子进程，新创建的这个进程将会“看到”一个全新的系统环境。这个环境内，进程的 PID 是 1，只能看到各自 Mount 名称空间里挂载的目录和文件，只能访问到各自 Network 名称空间里的网络设备。
 
 ```
 int flags = CLONE_NEWNS | CLONE_NEWPID | CLONE_NEWIPC | CLONE_NEWNET | CLONE_NEWUTS;
@@ -92,13 +88,15 @@ int pid = clone(main_function, stack_size, flags | SIGCHLD, NULL);
 
 ## 7.3.3 资源全方位限制
 
-进程的资源视图隔离已经完成，如果再对使用资源进行额度限制，那么就能对进程的运行环境实现一个进乎完美的隔离。这就要用 Linux 内核的第二项技术： Linux Control Cgroup（控制群组）—— 简称 cgroups。
+进程的资源隔离已经完成，如果再对使用资源进行额度限制，那么就能对进程的运行环境实现一个进乎完美的隔离。这就要用 Linux 内核的第二项技术： Linux Control Cgroup（控制群组）—— 简称 cgroups。
 
 :::tip cgroups（控制群组）
 
-cgroups 是一种内核级别的资源管理机制，可以实现对 Linux 进程或者进程组的资源限制、隔离和统计功能，最早由 Google 工程师 Paul Menage 和 Rohit Seth 在 2006 年发起，在 2008年 合并到 2.6.24 版内核后正式对外发布，这一阶段的 cgroups 被称为第一代 cgroups。
+cgroups 是一种内核级别的资源管理机制，可以实现对 Linux 进程或者进程组的资源限制、隔离和统计功能，最早由 Google 工程师 Paul Menage 和 Rohit Seth 于 2006 年发起，在 2008年合并到 2.6.24 版内核后正式对外发布，这一阶段的 cgroups 被称为第一代 cgroups。
 
-2016年3月发布的 Linux 内核4.5版本中，搭载了由 Facebook 工程师 Tejun Heo 重新编写的 “第二代cgroups”，相较于 v1版本，Facebook 工程师编写的 cgroups 提供了更加统一的资源控制接口，使得对于CPU、内存、I/O等资源的限制更加一致和统一。不过由于兼容性和稳定性原因，目前多数容器运行时默认使用的是 第一代 cgroups。
+2016年3月发布的 Linux 内核4.5版本中，搭载了由 Facebook 工程师 Tejun Heo 重新编写的“第二代cgroups”，相较于v1版本，Facebook 工程师编写的 cgroups提供了更加统一的资源控制接口，使得对于CPU、内存、I/O等资源的限制更加一致和统一。
+
+不过由于兼容性和稳定性原因，目前多数容器运行时默认使用的是 第一代 cgroups。
 :::
 
 通过 /sys/fs/cgroup 查看系统支持的被限制的资源种类。
