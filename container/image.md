@@ -68,15 +68,15 @@ sudo mount -t overlay overlay \
 
 :::
 
-写时复制的大致的流程如下。
+写时复制的大致的流程如下：
 
 - 新建文件时：这个文件会出现在 upper 目录中。
 - 删除文件时：
-  - 如果删除 ”in_upper.txt”，这个文件会在 upper 目录中消失。
-  - 如果删除 ”in_lower.txt”, lower 目录里内的 ”in_lower.txt” 文件不会有变化，会在 upper 目录中增加一个特殊文件来告诉 OverlayFS ”in_lower.txt’这个文件不能出现在 merged 里了，这就表示它已经被删除了。
-- 修改文件：如果修改”in_lower.txt”，会在 upper 目录中新建一个”in_lower.txt”文件，包含更新的内容，而在lower/中的原来的实际文件”in_lower.txt”不会改变
+  - 如果删除“in_upper.txt”，文件会在 upper 目录中消失。
+  - 如果删除“in_lower.txt”, lower 目录里内的 ”in_lower.txt” 文件不会有变化，但 upper 目录中会增加一个特殊文件表示“in_lower.txt”这个文件不能出现在 merged 里了，这就表示它已经被删除了。
+- 修改文件：如果修改“in_lower.txt”，会在 upper 目录中新建一个“in_lower.txt”文件，包含更新的内容，而在 lower 中的原来的实际文件“in_lower.txt”不会改变。
 
-下面是 Docker 官方的一张描述文件系统的图片，显示了一张联合文件系统在串联镜像层和容器层起到的作用。
+下面是 Docker 官方的一张描述文件系统的图片，显示了联合文件系统如何在串联镜像层和容器层起到的作用。
 
 <div  align="center">
   <img src="../assets/overlay.png"  align=center />
