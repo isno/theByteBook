@@ -5,14 +5,14 @@
 如下，创建一个 task-test.yaml 的资源文件，内容如下所示。
 
 ```
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1
 kind: Task
 metadata:
   name: test
 spec:
   resources:
     inputs:
-      - name: repo
+      - name: git-repository-url
         type: git
   steps:
     - name: run-test
@@ -35,53 +35,37 @@ task.tekton.dev/test created
 
 Task 任务只是一个模版，并不会被执行，得再创建一个 TaskRun 引用它并提供所有必需输入的数据才行。
 
-先创建一个 PipelineResource 对象来定义输入信息，内容如下所示：
-
-```
-apiVersion: tekton.dev/v1alpha1
-kind: PipelineResource
-metadata:
-  name: cnych-tekton-example
-spec:
-  type: git
-  params:
-    - name: url
-      value: https://github.com/isno/tekton-example/
-    - name: revision
-      value: master
-```
-
-定义完成后使用 kubectl 创建资源：
-
-```
-$ kubectl apply -f pipelineresource.yaml
-pipelineresource.tekton.dev/arthurk-tekton-example created
-```
 
 接下来我们就可以创建 TaskRun 对象了，内容如下所示：
 
 ```
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1
 kind: TaskRun
 metadata:
-  name: testrun
+  generateName: testrun
 spec:
   taskRef:
     name: test
-  resources:
-    inputs:
-      - name: repo
-        resourceRef:
-          name: arthurk-tekton-example
+    params:
+    - name: git-repository-url
+      value: "https://github.com/isno/tekton-example"
 ```
 
-上面通过 taskRef 引用上面定义的 Task 和 git 仓库作为输入，resourceRef 也是引用上面定义的 PipelineResource 资源对象。
+上面通过 taskRef 引用上面定义的 Task 和 git 仓库作为输入
+
+:::tip 注意
+
+TaskRun 这里我们没有指定 name，而是用的 generateName。同时该对象也必须使用 create 命令来创建，而不是 apply。
+
+这是因为一个 TaskRun 只能触发一次任务运行，而一个任务可能会反复运行，如果在 TaskRun 中写死名称，就会导致该任务只会触发一次，就算 apply 多次都会因为内容没有任何变化而直接被忽略掉。
+
+:::
+
 
 现在我们创建这个资源对象过后，就会开始运行了：
 
 ```
-$ kubectl apply -f taskrun.yaml
-taskrun.tekton.dev/testrun created
+$ kubectl create -f hello-taskrun.yaml 
 ```
 
 创建后，我们可以通过查看 TaskRun 资源对象的状态来查看构建状态：
@@ -96,14 +80,3 @@ NAME      SUCCEEDED   REASON      STARTTIME   COMPLETIONTIME
 testrun   True        Succeeded   70s         57s
 ```
 
-查看容器的日志信息来了解任务的执行结果信息。
-
-```
-$ kubectl logs testrun-pod-pds5z --all-containers
-{"level":"info","ts":1588477119.3692405,"caller":"git/git.go:136","msg":"Successfully cloned https://github.com/arthurk/tekton-example @ 301aeaa8f7fa6ec01218ba6c5ddf9095b24d5d98 (grafted, HEAD, origin/master) in path /workspace/repo"}
-{"level":"info","ts":1588477119.4230678,"caller":"git/git.go:177","msg":"Successfully initialized and updated submodules in path /workspace/repo"}
-PASS
-ok  	_/workspace/repo/src	0.003s
-```
-
-看到 PASS 关键词，表明我们的测试已经通过。

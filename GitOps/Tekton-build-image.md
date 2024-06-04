@@ -1,8 +1,6 @@
-# 10.4.4 使用 Kaniko 构建镜像
+# 10.4.4 构建镜像以及创建 Pipeline
 
-我们编译镜像大部分使用 docker build 的方式，而现在大部分的 CI/CD 系统运行在容器内，如果要在容器内编译镜像，你或许会想到将宿主机上的 /var/run/docker.sock 文件通过 hostPath 的方式挂载到 pod 容器内。
-
-但这种方式存在明显的缺陷：**得在宿主机额外安装 Docker 且有安全风险**。那是否有一种能摆脱 Docker，能快速安全的构建容器镜像的方法呢？这就是下面要介绍的 Kaniko。
+我们编译镜像大部分使用 docker build 的方式，而现在大部分的 CI/CD 系统运行在容器内，那么我们就要换一种完全在容器内编译镜像的方式，这就是下面要介绍的 Kaniko。
 
 :::tip Kaniko 是什么
 
@@ -36,7 +34,7 @@ spec:
         type: git
   steps:
     - name: build-and-push
-      image: gcr.io/kaniko-project/executor:v1.3.0
+      image: gcr.io/kaniko-project/executor:latest
       env:
         - name: DOCKER_CONFIG
           value: /tekton/home/.docker
@@ -51,9 +49,55 @@ spec:
 
 执行的命令就是 /kaniko/executor，通过 --dockerfile 指定 Dockerfile 路径，--context 指定构建上下文，我们这里当然就是项目的根目录了，然后 --destination 参数指定最终我们的镜像名称。
 
+## 创建流水线
+
+到目前，我们已经完成两个 task 的创建，现在我们创建一个流水线来将这两个任务组织起来。
+
+```
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: hello-goodbye
+spec:
+  params:
+  - name: username
+    type: string
+  tasks:
+    - name: hello
+      taskRef:
+        name: hello
+    - name: goodbye
+      runAfter:
+        - hello
+      taskRef:
+        name: goodbye
+      params:
+      - name: username
+        value: $(params.username)
+```
+pipeline 中通过 spec.tasks 指定多个 task，每个 task 里通过 taskRef.name 关联到具体的 task 实例。然后在 spec.tasks 里也需要再次定义 params，不过 task 里直接通过 $(params.username) 获取具体值。
+
+:::tip 注意
+ 需要注意的是，tasks 中的任务不保证先后顺序，因此如果不同任务之间有依赖关系可以使用 runAfter 字段来指定先后关系。
+:::
 
 
+```
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: hello-goodbye-run
+spec:
+  pipelineRef:
+    name: hello-goodbye
+  params:
+  - name: username
+    value: "Tekton"
+```
 
+```
+kubectl create -f hello-goodbye-run.yaml 
+```
 
 ## 2. 镜像构建
 
