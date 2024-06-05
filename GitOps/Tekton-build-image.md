@@ -92,8 +92,8 @@ spec:
   - name: repo
     value: "https://github.com/isno/tekton-example"
 ```
-使用 create，将 PipelineRun 提交到 Kubernetes，之后就会触发我们的流水线任务了。
+使用 create 的方式将 PipelineRun 提交到 Kubernetes，之后就会触发我们的流水线任务了。
 
 ```
-kubectl create -f test-build-push-run.yaml 
+$ kubectl create -f test-build-push-run.yaml 
 ```
