@@ -11,3 +11,8 @@ given enough eyeballs, all bugs are shallow.
 
 从生产所需到概念发声，加之包括 Google 在内的众多大厂一拥而上。至此，「可观测性」逐渐取代「监控」，成为云原生技术领域最热门的话题之一。
 
+:::center
+  ![](../assets/observability.png)<br/>
+  图 9-0 本章内容导读
+:::
+
