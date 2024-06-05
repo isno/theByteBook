@@ -50,7 +50,7 @@ root@028f46a5b7db:/bin# pwd
 
 ## 7.3.2 资源全方位隔离
 
-Chroot 最初的目的是为了实现文件的隔离，并非为了容器而设计。后来 Linux 吸收了Chroot的理念，先是在 2.4.19 引入了 Mount 命名空间，这样就可以隔离挂载文件系统。后来又想到进程间通信也需要隔离，就有了 IPC 命名空间。同时，容器还需要一个独立的主机名以便在网络中标识自己，有了网络，自然还要有独立的 IP、端口、路由等...。从 Linux 内核 2.6.19 起，又陆续添加了 UTS、IPC、PID、Network、User 等命名空间。
+chroot 最初的目的是为了实现文件的隔离，并非为了容器而设计。后来 Linux 吸收了Chroot的理念，先是在 2.4.19 引入了 Mount 命名空间，这样就可以隔离挂载文件系统。后来又想到进程间通信也需要隔离，就有了 IPC 命名空间。同时，容器还需要一个独立的主机名以便在网络中标识自己，有了网络，自然还要有独立的 IP、端口、路由等...。从 Linux 内核 2.6.19 起，又陆续添加了 UTS、IPC、PID、Network、User 等命名空间。
 
 至 Linux 内核 3.8 版本，Linux 已经完成容器所需的6项最基本资源隔离。
 
@@ -69,7 +69,7 @@ Chroot 最初的目的是为了实现文件的隔离，并非为了容器而设�
 | Cgroup| 使进程拥有一个独立的 cgroup 控制组 | 4.6 |
 | Time| 隔离系统时间 | 5.6 |
 
-我们创建进程通常使用fork()，fork 背后调用的是 clone()，clone 暴露的参数更多，它的函数定义如下。
+我们创建进程通常使用 fork()，fork 背后调用的是 clone()，clone 暴露的参数更多，它的函数定义如下。
 
 ```
 int clone(int (*fn)(void *), void *child_stack,
@@ -77,9 +77,7 @@ int clone(int (*fn)(void *), void *child_stack,
          /* pid_t *ptid, struct user_desc *tls, pid_t *ctid */ );
 ```
 
-如果要为创建的子进程设置各类资源隔离，需要通过flags参数指定具体的命名空间。
-
-如下代码，创建一个新的子进程，新创建的这个进程将会“看到”一个全新的系统环境。这个环境内，进程的 PID 是 1，只能看到各自 Mount 名称空间里挂载的目录和文件，只能访问到各自 Network 名称空间里的网络设备。
+如果要为创建的子进程设置各类资源隔离，使用 clone 并指定 flags 参数即可。如下代码所示，新创建的这个进程将会“看到”一个全新的系统环境。这个环境内，进程的 PID 为 1，只能看到各自 Mount 命名空间内挂载的目录和文件，只能访问到各自 Network 命名空间内的网络设备。
 
 ```
 int flags = CLONE_NEWNS | CLONE_NEWPID | CLONE_NEWIPC | CLONE_NEWNET | CLONE_NEWUTS;
@@ -88,7 +86,7 @@ int pid = clone(main_function, stack_size, flags | SIGCHLD, NULL);
 
 ## 7.3.3 资源全方位限制
 
-进程的资源隔离已经完成，如果再对使用资源进行额度限制，那么就能对进程的运行环境实现一个进乎完美的隔离。这就要用 Linux 内核的第二项技术： Linux Control Cgroup（控制群组）—— 简称 cgroups。
+进程的资源隔离已经完成，如果再对使用资源进行额度限制，那么就能对进程的运行环境实现一个进乎完美的隔离。这就要用 Linux 内核的第二项技术： Linux Control Cgroup —— 简称 cgroups。
 
 :::tip cgroups（控制群组）
 
