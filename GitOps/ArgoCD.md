@@ -5,14 +5,14 @@
 Argo CD 是以 Kubernetes 作为基础设施，遵循声明式 GitOps 理念的持续交付工具，Argo CD 支持多种配置管理，包括 ksonnet/jsonnet、kustomize 和 Helm 等。它的配置和使用非常简单，并自带一个简单易用的可视化界面。
 :::
 
-Argo CD 是一个专注于持续交付的工具，被部署在集群之后，它将持续监控应用当前的实际状态是否与 Git 仓库中声明的期望状态相匹配，如不匹配则自动同步修正。
+如图 10-10 所示，Argo CD 部署在集群之后，它将持续监控应用当前的实际状态是否与 Git 仓库中声明的期望状态相匹配，如不匹配则自动同步修正。
 
 :::center
   ![](../assets/argocd_architecture.png)<br/>
   图 10-10 Argo CD 如何工作 [图片来源](https://argo-cd.readthedocs.io/en/stable/)
 :::
 
-接下来，笔者通过在集群内安装 Argo CD 以及部署一个应用示例，以便读者了解 Argo CD 应用概况。
+接下来，笔者将演示在集群内安装 Argo CD 以及部署一个应用示例，介绍 Argo CD 的使用概况。
 
 ## 10.5.1 安装 Argo CD
 
@@ -76,4 +76,4 @@ spec:
   图 10-11 Argo CD 应用部署示例
 :::
 
-如此，后续无论是通过 CI 流水线触发更新 git 仓库中的编排文件，还是工程师直接修改，Argo CD 都会自动拉取最新的配置并应用到 Kubernetes 集群中。
+如此，后续无论是通过 CI 触发更新 git 仓库中的编排文件，还是工程师直接修改，Argo CD 都会自动拉取最新的配置并应用到 Kubernetes 集群中。
