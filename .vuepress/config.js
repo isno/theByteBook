@@ -357,7 +357,8 @@ export default defineUserConfig({
 
                         ]
                     },
-                    '/GitOps/ArgoCD.md'
+                    '/GitOps/ArgoCD.md',
+                    '/GitOps/conclusion.md',
                 ]
             }
         ]
