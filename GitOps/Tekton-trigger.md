@@ -1,26 +1,26 @@
 # 10.4.5 自动触发任务
 
-前面我们都是通过创建 TaskRun/PipelineRun 手动触发流水线，本节我们讨论使用 Tekton Trigger 组件**通过外部事件自动触发流水线**。
+前面我们都是通过手动的方式创建 TaskRun/PipelineRun 触发流水线，本节我们讨论使用 Tekton Trigger 组件**通过外部事件自动触发流水线**。
 
 :::tip 外部事件
 
-gitlab、github 的 webhook 就是一种最常用的外部事件，通过 Trigger 组件监听这部分事件，而从实现在提交代码后自动运行某些任务。
+gitlab、github 的 Webhook 就是一种最常用的外部事件，通过 Trigger 组件监听这部分事件，而从实现在提交代码后自动运行某些任务。
 :::
 
-通过 Trigger 构建自动流水线的流程如图所示，它会先启动一个事件监听器 EventListener，并通过 HTTP 方式暴露接收外部事件推送。当接收到外部事件（例如 github push）时：
+通过 Trigger 构建自动流水线的流程如图 10-8 所示，它会先启动一个事件监听器 EventListener，然后通过 HTTP 方式暴露服务，接收来自外部事件推送。当接收到外部事件（例如 github push）时：
 
 1. 首先会由 Interceptors 进行有效性验证等处理：
-	- 无效的事件会被丢弃；
-	- 有效事件则交给 TriggerBinding 处理。
+	- 无效的事件直接丢弃；
+	- 有效事件交给 TriggerBinding 处理。
 2. TriggerBinding 负责从事件内容中提取任务对应的参数，然后将参数传递给 TriggerTemplate。
 3. TriggerTemplate 根据预先定义的模版以及收到的参数创建 TaskRun 或者 PipelineRun 对象。
 
 :::center
   ![](../assets/TriggerFlow.svg)<br/>
- Tekton 触发任务工作流程 [图片来源](https://tekton.dev/docs/getting-started/triggers/)
+ 图 10-8 Tekton 触发任务工作流程 [图片来源](https://tekton.dev/docs/getting-started/triggers/)
 :::
 
-接下来，我们配置一个触发器，接收来自 Github 的 Webhook 事件，关联前面定义的 pipeline，实现代码测试、镜像编译的自动化。
+接下来，我们配置一个触发器，接收来自 Github 的 Webhook 事件，关联前面定义的 Pipeline，实现代码测试、构建镜像自动化。
 
 ## 1. 创建触发器
 
@@ -62,71 +62,18 @@ spec:
       bindings:
       - ref: github-push-binding
       template:
-        ref: github-echo-template
+        ref: github-push-template
 ```
 
-## 3. 为触发器授权
+上面定义的 EventListener 用于监听 GitHub 上的 Push 事件，当有 Push 事件发生时，会触发一个名为 github-trigger 的操作，该操作会执行一个名为 github-push-template 的任务模板。在监听之前，会执行一个名为 github 的拦截器，用于验证 GitHub 事件，并使用提供的密钥进行身份验证。
 
-由于 EventListener 对象需要访问 Kubernetes 集群内其他资源对象，通过 spec.serviceAccountName 声明 RBAC 为 EventListener 授权。
-
-```yaml
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: tekton-triggers-github-sa
-secrets:
-  - name: github-secret
----
-kind: Role
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: tekton-triggers-github-minimal
-rules:
-  # Permissions for every EventListener deployment to function
-  - apiGroups: ["triggers.tekton.dev"]
-    resources: ["eventlisteners", "triggerbindings", "triggertemplates"]
-    verbs: ["get"]
-  - apiGroups: [""]
-    # secrets are only needed for Github/Gitlab interceptors, serviceaccounts only for per trigger authorization
-    resources: ["configmaps", "secrets", "serviceaccounts"]
-    verbs: ["get", "list", "watch"]
-  # Permissions to create resources in associated TriggerTemplates
-  - apiGroups: ["tekton.dev"]
-    resources: ["pipelineruns", "pipelineresources", "taskruns"]
-    verbs: ["create"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: tekton-triggers-github-binding
-subjects:
-  - kind: ServiceAccount
-    name: tekton-triggers-github-sa
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: tekton-triggers-github-minimal
-```
-
-新增一个Github 的 Webhook 的 Secret Token。
-
-```
-apiVersion: v1
-kind: Secret
-metadata:
-  name: github-secret
-type: Opaque
-stringData:
-  secretToken: "123456"
-```
-
-提交到 Kubernetes 集群。
+将定义的 EventListener 资源提交到 Kubernetes 集群。
 
 ```
 $ kubectl apply -f github-push-listener.yaml
 ```
 
-## 4. 通过 TriggerBinding 提取事件参数
+## 2. 通过 TriggerBinding 提取事件参数
 
 TriggerBinding 通过 $() 包裹的 JSONPath 表达式提取 Github Webhook 发送过来的数据，至于能够提取哪些参数值，你可以在官网帮助查看 github/gitlab 的 WebHook 的说明[^1]。
 
@@ -145,7 +92,7 @@ spec:
 
 接下在 TriggerTemplate 对象中通过参数来读取上面 TriggerBinding 中定义的参数值了。
 
-## 5. 接收参数并关联 PipelineRun
+## 3. 接收参数并关联 PipelineRun
 
 定义一个如下所示的 TriggerTemplate 对象，声明一个 TaskRun 的模板。
 
@@ -156,8 +103,7 @@ metadata:
   name: github-pipeline-template
 spec:
   params: # 定义参数，和 TriggerBinding 中的保持一致
-    - name: git-revision
-    - name: git-repository-url
+    - name: repo
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun # 定义 PipelineRun 模板
@@ -166,10 +112,7 @@ spec:
       spec:
         pipelineRef:
           name: github-pipeline
-      params:
-        - name: git-revision
-          value: $(tt.params.git-revision)
-        - name: git-repository-url
+        - name: repo
           value: $(tt.params.git-repository-url)
 ```
 :::tip 注意
@@ -181,7 +124,7 @@ TriggerTemplate 里的 Pipeline 也要使用 generateName，否则名字相同�
 $ kubectl apply -f trigger-binding.yaml
 ```
 
-## 5. 通过 Ingress 暴露服务
+## 4. 通过 Ingress 暴露服务
 
 EventListener 创建完成后会生成一个名为 el-gitlab-listener 的 Service 对外暴露用于接收事件响应。我们通过 Ingress 对象绑定 tekton-trigger.thebyte.com.cn 将服务暴露到外网，yaml 文件内容如下（el-gitlab-listener.yaml）。
 
@@ -210,15 +153,15 @@ spec:
 $ kubectl apply -f el-gitlab-listener.yaml
 ```
 
-## 6. 设置 Github Webhook
+## 5. 设置 Github Webhook
 
-上面我们已经设置完 EventListener，下面我们在 github 中为仓库设置 Webhook，如下图所示，填写 Playload Url、Secret 等信息。
+上面我们已经设置完 EventListener，下面我们在 github 中为仓库设置 Webhook，如图 10-9 所示，填写 Playload Url、Secret 等信息。
 
 :::center
   ![](../assets/github-tekton.png)<br/>
+  图 10-9 设置 Github Webhook
 :::
 
-配置完之后，推送代码进行测试，查看 Pipeline 是否被触发吧。
-
+配置完之后，推送代码，Github 将产生一个 Webhook 事件，请求 tekton-trigger.thebyte.com.cn，然后触发我们定义的流水线。
 
 [^1]: 参见 https://docs.gitlab.com/ee/user/project/integrations/webhook_events.html#push-events

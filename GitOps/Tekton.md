@@ -6,10 +6,11 @@ Tekton 的前身是 Knative 项目的 build-pipeline 项目，这个项目是为
 
 :::
 
-Tekton 基于 Kubernetes 定义了一系列的 CRD 组装 CI/CD 流水线，并利用 Pod 来执行流水线中的任务。这些设计让 Tekton 相比于传统的 CI 系统（例如 Gitlab CI、Jenkins 等）成为 Kubernetes 下最符合云原生理念的 CI/CD 解决方案。
+Tekton 基于 Kubernetes 定义了一系列自定义资源定义（CRD），用于灵活地在 Kubernetes 中创建、管理和运行 CI/CD 流水线。由于完全基于 Kubernetes 实现，Tekton 相比于传统的 CI 系统（如 Gitlab CI、Jenkins 等），更符合云原生理念，成为当下最具优势的 CI/CD 解决方案。
 
-<div  align="center">
-	<img src="../assets/Tekton.png" align=center />
-</div>
+:::center
+  ![](../assets/Tekton.png)<br/>
+  图 10-5 Tekton 的 slogan：Cloud Native CI/CD
+:::
 
-本节，我将通过安装 Tekton，定义一系列的 Task，并按顺序构建一个涉及应用程序测试、镜像构建、镜像推送的 CI 流水线。 
+本节，我们将通过定义 Task 来构建一个包含程序测试、镜像构建和镜像推送的 CI 流水线，从而深入了解 Tekton 的使用。 

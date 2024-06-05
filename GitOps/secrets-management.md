@@ -10,12 +10,13 @@ GitOps 的核心原则之一是**一切皆代码**，随后用 GitHub/GitLab 等
 
 :::center
   ![](../assets/2021-02-secrets-management.svg)<br/>
-  图 安全管理技术雷达图 [图片来源](https://radar.cncf.io/)
+  图 10-4 安全管理技术雷达图 [图片来源](https://radar.cncf.io/)
 :::
 
 从技术雷达看，开源的 Vault、Sealed Secrets、Sops 等产品，也有厂商提供的 AWS KMS、GCP Secrets Management 等产品。但不管采用哪种工具，背后的原理大都采用**非对称加密**[^1]的方式：
-- 加密是通过 public key 将敏感信息进行加密。
-- 解密通过 private key 将加密信息解密，并生成 kubernetes 能识别的 secret 资源，最终被应用程序所使用。
+- 加密是通过公钥将敏感信息进行加密。
+- 解密通过私钥将加密信息解密，并生成 kubernetes 能识别的 secret 资源，最终被应用程序所使用。
 
+只要保证私钥的安全，那么敏感信息就能保证不会被泄露。
 
 [^1]: 非对称加密原理可以回顾本书 2.5.1节《理解 HTTPS 流程》内容

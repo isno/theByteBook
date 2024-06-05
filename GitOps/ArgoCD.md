@@ -5,16 +5,16 @@
 Argo CD 是以 Kubernetes 作为基础设施，遵循声明式 GitOps 理念的持续交付工具，Argo CD 支持多种配置管理，包括 ksonnet/jsonnet、kustomize 和 Helm 等。它的配置和使用非常简单，并自带一个简单易用的可视化界面。
 :::
 
-Argo CD 本质上是一个 Kubernetes Operator，它设计了一系列 Kubernetes CRD 描述的自定义资源，并通过 Kubernetes 控制器（ argoCD-application-controller）持续监控应用当前的实际状态是否与 Git 仓库中声明的期望状态相匹配，如不匹配则自动同步修正。
+Argo CD 是一个专注于持续交付的工具，被部署在集群之后，它将持续监控应用当前的实际状态是否与 Git 仓库中声明的期望状态相匹配，如不匹配则自动同步修正。
 
 :::center
   ![](../assets/argocd_architecture.png)<br/>
-  图 Argo CD 如何工作 [图片来源](https://argo-cd.readthedocs.io/en/stable/)
+  图 10-10 Argo CD 如何工作 [图片来源](https://argo-cd.readthedocs.io/en/stable/)
 :::
 
 接下来，笔者通过在集群内安装 Argo CD 以及部署一个应用示例，以便读者了解 Argo CD 应用概况。
 
-## 安装 Argo CD
+## 10.5.1 安装 Argo CD
 
 先创建一个命名空间，然后通过 kubectl apply 安装 Argo CD 提供的 yaml 文件即可。
 
@@ -41,7 +41,7 @@ $ kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort"}}'
 $ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 ```
 
-## 部署应用
+## 10.5.2 部署应用
 
 部署应用之前，我们先了解 Argo CD 定义的 Application 资源，它通过下面两个关键的属性将目标 Kubernetes 集群中的 namespace 与 Git 仓库中声明的期望状态连接起来：
 
@@ -73,7 +73,7 @@ spec:
 
 :::center
   ![](../assets/argocd-demo.png)<br/>
-  图 Argo CD 应用部署示例
+  图 10-11 Argo CD 应用部署示例
 :::
 
 如此，后续无论是通过 CI 流水线触发更新 git 仓库中的编排文件，还是工程师直接修改，Argo CD 都会自动拉取最新的配置并应用到 Kubernetes 集群中。
