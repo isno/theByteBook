@@ -15,10 +15,10 @@ Proxyless 理念是服务间总是要选择一种协议进行通信，就必然�
 
 2021 年 Istio 官方博客发表了一篇基于 gRPC 实现 Proxyless 的文章[^1]，阐述了其工作原理以及如何在 Istio 中使用它。在这种模式中，服务网格核心的流控能力被集成在 gRPC 库中，不再使用代理进行数据面通信。但这种方案仍然需要一个 Agent 进行初始化并与控制平面交互，负责告知 gRPC 库如何连接到 istiod，如何获取证书，并作为 xDS 代理，代表应用与 istiod 进行连接和认证。
 
-<div  align="center">
-	<img src="../assets/proxyless.svg" width = "520"  align=center />
-	<p>图1-25 Proxyless 模式</p>
-</div>
+:::center
+  ![](../assets/proxyless.svg)<br/>
+ 图 8-18 Proxyless 模式
+:::
 
 相比通过进程外通信的 Sidecar 代理来说，Proxyless 模式具有性能、稳定性、资源消耗低等明显的优势，官方博客给出的数据来看，gRPC Proxyless 模式下的延迟情况接近基准测试，资源消耗也相对较低。
 
@@ -33,10 +33,10 @@ Proxyless 理念是服务间总是要选择一种协议进行通信，就必然�
 - ztunnel（Zero Trust Tunnel，零信任隧道）是 Ambient 新引入的组件，以 Daemonset 的方式部署在每个节点上，处于类似 CNI 网格底层 。ztunnel 为网格中的应用通信提供 mTLS、遥测、身份验证和 L4 授权功能，但不执行任何七层协议相关的处理。
 - 七层治理架构中新增了 waypoint 组件，为用户按需启用 L7 功能提供支持，以获得 Istio 的全部功能，例如限速、故障注入、负载均衡、熔断等。
 
-<div  align="center">
-	<img src="../assets/ambient-mesh-arch.png" width = "420"  align=center />
-	<p>图1-28 Ambient Mesh 模式</p>
-</div>
+:::center
+  ![](../assets/ambient-mesh-arch.png)<br/>
+ 图 8-19 Ambient Mesh 模式
+:::
 
 Ambient Mesh 可以被理解为一种无 Sidecar 模式，但笔者认为将其描述为“中心化代理模式”更为准确，这是因为这种模式侧重于通过共享和中心化的代理进行流量管理，以替代位于应用容器旁边的 Sidecar 代理。
 
@@ -44,30 +44,29 @@ Ambient Mesh 可以被理解为一种无 Sidecar 模式，但笔者认为将其�
 
 ## 8.5.3 Sidecarless 模式
 
-2022 年 Cilium 基于 eBPF 技术发布了具有服务网格能力的产品。
+2022 年 Cilium 基于 eBPF 技术发布了具有服务网格能力的产品。Cilium 的服务网格产品提供了两种模式：对于 L3/L4 层的能力直接由 eBPF 支持；L7 层能力由一个公共的代理负责，以 DaemonSet 方式部署，如图 8-20 所示。
 
-Cilium 的服务网格产品提供了两种模式，对于 L3/L4 层的能力直接由 eBPF 支持，L7 层能力由一个公共的代理负责，以 DaemonSet 方式部署，如图 1-26 所示。
-
-<div  align="center">
-	<img src="../assets/sidecarless.png" width = "520"  align=center />
-	<p>图1-26 Sidecarless 模式</p>
-</div>
+:::center
+  ![](../assets/sidecarless.png)<br/>
+ 图 8-20 Sidecarless 模式
+:::
 
 Cilium 认为，内核加上共享型代理的引入可以极大的减少代理的数量，从而降低资源消耗和维护成本，而在内核层面进行通信管理也提高了性能。
 
 基于 eBPF 的服务网格在设计思路上其实和 Proxyless 如出一辙，即找到一个非 Sidecar 的地方去实现流量控制能力，它们一个是基于通信协议类库，一个是基于内核的扩展性。eBPF 通过内核层面提供的可扩展能力，在流量经过内核时实现了控制、安全和观察的能力，从而构建出一种新形态的服务网格。
 
-<div  align="center">
-	<img src="../assets/service-mesh-kernel.jpg" width = "520"  align=center />
-	<p>图1-27 Sidecarless 在内核实现流量观察、控制能力</p>
-</div>
+:::center
+  ![](../assets/service-mesh-kernel.jpg)<br/>
+ 图 8-21 Sidecarless 在内核实现流量观察、控制能力
+:::
 
-说明了运行 Cilium Envoy filter（棕色）的单个节点范围的 Envoy 代理与运行 Istio Envoy filter（蓝色）的双边车 Envoy 模型的 HTTP 处理的典型延迟成本。黄色是没有代理且未执行 HTTP 处理的基线延迟。
+图 8-22 的基准测试，由于 Cilium 中使用无边车模式模式，本身少了一次代理，每一次代理基本会加大 400-500us 左右的延迟，对于延迟要求很高的系统是无法接受的。以及 eBPF 传递数据的 CTX Redirect / CTX Redirect Peer / CTX Redirect Neight 的能力 (eBPF 加速 packet 传递，bypass 内核网络协议栈，不会使用 iptables，加速网络，降低延时) 等。所以性能上 Cilium Service Mesh 是比默认没有任何加速方案的 Istio (基于 iptables 和内核网络栈的方案) 要好很多。
 
-<div  align="center">
-	<img src="../assets/cilium-istio-benchmark.webp" align=center />
-</div>
+:::center
+  ![](../assets/cilium-istio-benchmark.webp)<br/>
+ 图 8-22 使用 Cilium Sidecarless 模式及 Istio Sidecar 模式的基准测试 [图片来源](https://isovalent.com/blog/post/2022-05-03-servicemesh-security/)
+:::
 
-但同样，软件领域没有银弹，Sidecarless 也是取舍后的结果。eBPF 并不是万能钥匙，也存在内核版本要求、编写难度大、安全等方面的问题。
+但同样，软件领域没有银弹，Sidecarless 是取舍后的结果，eBPF 并不是万能钥匙，也存在内核版本要求、编写难度大、安全等方面的问题。
 
 [^1]: 参见 https://istio.io/latest/zh/blog/2021/proxyless-grpc/

@@ -33,7 +33,7 @@ DevOps 的核心目标是解决软件开发生命周期中的管理问题，我�
 
 <div  align="center">
 	<img src="../assets/agile-model.png" width = "480"  align=center />
-	<p>图1-29 敏捷开发模型</p>
+	<p>图 1-29 敏捷开发模型</p>
 </div>
 
 虽然敏捷开发提升了开发效率，但它的范围仅限于开发和测试阶段，并没有覆盖到部署端。
@@ -57,7 +57,6 @@ DevOps 运动始于 2007 年左右，当时技术社区对开发与运维之间�
 DevOps（Development 和 Operations 的合成词）是一种重视「软件开发人员（Dev）」和「IT 运维技术人员（Ops）」之间沟通合作的文化、运动或惯例。通过自动化「软件交付」和「架构变更」的流程，来使得构建、测试、发布软件能够更加地快捷、频繁和可靠。
 
 :::right
-
 —— from 维基百科
 :::
 
@@ -69,7 +68,7 @@ DevOps（Development 和 Operations 的合成词）是一种重视「软件开�
 
 <div  align="center">
 	<img src="../assets/devops-2.jpg" width = "320"  align=center />
-	<p>图1-31 Devops 打破开发和运维的对立</p>
+	<p>图 1-31 Devops 打破开发和运维的对立</p>
 </div>
 
 不过，话虽如此，要实现这一点却不容易，因为这并非只是一次升级，而是需要在原有的文化和流程上进行大刀阔斧的变革：
@@ -81,7 +80,7 @@ DevOps 的成功实践也离不开工具的支持，这其中就包括最重要�
 
 <div  align="center">
 	<img src="../assets/devops.jpeg" width = "480"  align=center />
-	<p>图1-32 DevOps 体系</p>
+	<p>图 1-32 DevOps 体系</p>
 </div>
 
-近年来，微服务架构理念、容器技术和云计算的发展，让 DevOps 的实施更加便捷。这也解释了为何虽然 DevOps 理念在十多年前就已提出，但直到近几年才开始得到企业的广泛关注和实践。
+近年来，微服务架构理念、容器技术和云计算的发展，让 DevOps 的实施更加便捷。这也解释了为何 DevOps 理念在十多年前就已提出，但直到近几年才开始得到企业的广泛关注和实践的原因。
