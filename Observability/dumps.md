@@ -1,4 +1,4 @@
-# 9.2.5 dumps
+# 9.3.5 dumps
 
 CNCF 可观测性白皮书中只提到了 core dump。不过 dumps 还应该包如 Heap dump（某时刻 Java 堆栈的快照）、Thread dump（某一时刻 Java 线程快照）等。
 

@@ -50,7 +50,7 @@ $ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.p
 
 通过如下 yaml 文件，我们了解 Argo CD 对 Application 的定义。
 
-```
+```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:

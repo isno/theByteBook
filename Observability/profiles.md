@@ -1,4 +1,4 @@
-# 9.2.4 Profiles
+# 9.3.4 Profiles
 
 熟悉 Go 语言的朋友一定了解 pprof，当我们需要对软件进行性能分析时，可以通过 pprof 的 CPU profiling 或者 Memory profiling 功能分析函数耗时以及内存占用情况。
 
