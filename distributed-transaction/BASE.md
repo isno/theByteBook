@@ -1,8 +1,8 @@
 # 5.3.1 可靠事件队列
 
-2008 年，eBay 的系统架构师 Dan Pritchett 在 ACM 发表了论文《Base: An Acid Alternative》[^1]，论文中 Dan Pritchett 基于实践总结出一种独立  ACID 之外，通过引入消息队列和幂等来达成一致性目的系统化技术手段，并提出了最终一致性的概念。
+2008 年，eBay 的系统架构师 Dan Pritchett 在 ACM 发表了论文《Base: An Acid Alternative》[^1]，文中作者基于实践总结出一种独立  ACID 之外，通过引入消息队列和幂等来达成一致性目的系统化技术手段，并提出了最终一致性的概念。
 
-从论文的名字中就可以看出最终一致性的概念与 ACID 强一致性对立。因为 ACID 在英文中有的「酸」的含义，这个模型明显刻意拼凑成 BASE（BASE 英文中有碱的含义）。有酸 vs 碱 这个计算机浑然天成的梗加成，Dan Pritchett 论文被广泛传播，BASE 理论和最终一致性也被大家熟悉。
+从论文的名字就可以看出最终一致性的概念与 ACID 强一致性对立。因为 ACID 在英文中有的「酸」的含义，这个模型明显刻意拼凑成 BASE（BASE 英文中有碱的含义）。有酸 vs 碱 这个计算机浑然天成的梗加成，Dan Pritchett 论文被广泛传播，BASE 理论和最终一致性也被大家熟悉。
 
 :::tip BASE
 BASE 分别是 Basically Available(基本可用)、Soft State（软状态）和 Eventually Consistent（最终一致性）三个短语的缩写。其核心思想即使无法做到强一致性，但每个应用都可以根据自身业务特点，采用适当的方式来使系统达到最终一致性

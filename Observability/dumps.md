@@ -4,7 +4,7 @@ CNCF 可观测性白皮书中只提到了 core dump。不过 dumps 还应该包�
 
 core dump 历史悠久，很早就出现在 Unix-like 系统中，在一个任何安装有《Linux man 手册》的 Linux 发行版上，都可以通过 man core 来查阅相关信息。
 
-```
+```bash
 $ man core
 ...
 A small number of signals which cause abnormal termination of a process
