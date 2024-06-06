@@ -284,7 +284,7 @@ export default defineUserConfig({
                     "/container/storage.md",
                     "/container/container-network.md",
                     {
-                        text: '7.7 资源模型与调度',
+                        text: '7.7 资源模型与编排调度',
                         collapsable: false,
                         sidebarDepth: 1,
                         link: '/container/Resource-scheduling.md',
