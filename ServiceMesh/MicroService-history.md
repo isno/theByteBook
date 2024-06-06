@@ -23,7 +23,6 @@ TCP/IP 协议出现之后，机器之间的网络通信不再是一个难题，�
 
 :::center
   ![](../assets/service-mesh-2.png)<br/>
-  
   图 8-2 微服务特有的通信语义又出现了
 :::
 
@@ -34,9 +33,12 @@ TCP/IP 协议出现之后，机器之间的网络通信不再是一个难题，�
 ## 8.2.3 第二代微服务
 
 为了避免每个服务都需要自己实现一套分布式系统的通信语义，一些面向微服务架构的开发框架出现了，例如 Twitter 的 Finagle、Facebook 的 Proxygen 以及 Spring Cloud 等等。
-<div  align="center">
-	<img src="../assets/service-mesh-3.png" width = "350"  align=center />
-</div>
+
+:::center
+  ![](../assets/service-mesh-3.png)<br/>
+  图 8-3 第二代微服务框架以 Lib 库的形式封装了分布式系统的通信语义
+:::
+
 
 这些框架实现了分布式系统需要的各种通用语义，例如负载均衡和服务发现等，在一定程度上屏蔽了这些通信细节，使得开发人员使用较少的框架代码就能开发出健壮的分布式系统，而无需关注底层细节。
 
@@ -44,11 +46,12 @@ TCP/IP 协议出现之后，机器之间的网络通信不再是一个难题，�
 
 第二代微服务模式看似完美，但开发人员很快又发现，它也存在一些本质问题。
 
-- **门槛高**：虽然框架本身屏蔽了通用功能的实现细节，但开发者却要花更多精力去掌握和管理复杂的框架本身。以 SpringCloud 为例，它的官网上有满满一页实现各类通信功能的技术组件，实际应用中，追踪和解决框架出现的问题绝非易事。
-<div  align="center">
-	<img src="../assets/SpringCloud.webp" width = "550"  align=center />
-	<p>SpringCloud 全家桶</p>
-</div>
+- **门槛高**：虽然框架本身屏蔽了通用功能的实现细节，但开发者却要花更多精力去掌握和管理复杂的框架本身。以 SpringCloud 为例，如图 8-5 所示，它的官网上有满满一页实现各类通信功能的技术组件，实际应用中，追踪和解决框架出现的问题绝非易事。
+
+:::center
+  ![](../assets/SpringCloud.webp)<br/>
+  图 8-5 SpringCloud 全家桶
+:::
 
 - **无法跨语言**：框架通常只支持一种或几种特定的语言，回过头来看文章最开始对微服务的定义：一个重要的特性就是和语言无关。那些使用框架不支持的语言编写的服务，则很难融入面向微服务的架构体系。因此，微服务架构所提倡的因地制宜的用多种语言实现不同模块，也就成了空谈。
 
@@ -62,9 +65,10 @@ TCP/IP 协议出现之后，机器之间的网络通信不再是一个难题，�
 
 回顾开篇提到的 TCP/IP 协议案例，我们思考是否服务间的通信也能像 TCP 协议栈那样：「人们基于 HTTP 协议开发复杂的应用，无需关心底层 TCP 如何控制包」。如果能把服务间通信剥离并下沉到微服务基础层，工程师也将不再浪费时间编写服务基础设施代码或者管理系统用到的软件库和框架，而是聚焦在业务逻辑处理上。
 
-<div  align="center">
-	<img src="../assets/service-mesh-4.png" width = "350"  align=center />
-</div>
+:::center
+  ![](../assets/service-mesh-4.png)<br/>
+  图 8-6 将服务间通信剥离并下沉到微服务基础层
+:::
 
 ## 8.2.6 代理模式的探索
 
@@ -76,9 +80,11 @@ TCP/IP 协议出现之后，机器之间的网络通信不再是一个难题，�
 
 受限 Proxy 的功能不足，在参考代理模式的基础上，市场上开始陆陆续续出现 Sidecar 模式的产品。例如 Airbnb 的 Nerve & Synapse，Netflix 的 Prana，这些产品的思路在 Proxy 中对齐原侵入式框架在客户端实现的各类功能，实现上也大量重用了原客户端代码、类库。
 
-<div  align="center">
-	<img src="../assets/servicemesh-sidecar.png" width = "350"  align=center />
-</div>
+:::center
+  ![](../assets/servicemesh-sidecar.png)<br/>
+  图 8-7 初代 Sidecar 模式的探索
+:::
+
 
 但是，此类 Sidecar 产品存在局限性：它们往往被设计为与特定的基础设施组件配合使用。例如 Airbnb 的 Nerve & Synapse 假设服务在 Zookeeper 中注册，而对于 Prana，应该使用 Netflix 自己的 Eureka 服务注册表，这就只能局限在原有的架构体系中，无法实现通用。
 
@@ -93,9 +99,10 @@ TCP/IP 协议出现之后，机器之间的网络通信不再是一个难题，�
 
 Linkerd 开创先河的不绑定任何基础架构或某类体系，实现了通用型，成为业界第一个服务网格项目。同期的服务网格代表产品还有 lyft 公司的 Envoy（Envoy 是 CNCF 内继 Kubernetes、Prometheus 第三个孵化成熟的项目）。
 
-<div  align="center">
-	<img src="../assets/linkerd-envoy.png" width = "450"  align=center />
-</div>
+:::center
+  ![](../assets/linkerd-envoy.png)<br/>
+  图 8-8 第一代服务网格产品
+:::
 
 ## 8.2.8 第二代服务网格
 
@@ -103,15 +110,17 @@ Linkerd 开创先河的不绑定任何基础架构或某类体系，实现了通
 
 典型的第二代服务网格产品以 Google、IBM、Lyft 联合开发的 Istio 为代表。
 
-<div  align="center">
-	<img src="../assets/6-b.png" width = "350"  align=center />
-</div>
+:::center
+  ![](../assets/6-b.png)<br/>
+  图 8-8 增加了 Control Plane 的第二代服务网格
+:::
 
 只看单机代理组件（下发浅蓝色的方块）和控制面板（头部深蓝色的方块）的服务网格全局部署视图如下，这也是服务网格如此形象命名的由来。
 
-<div  align="center">
-	<img src="../assets/mesh3.png" width = "350"  align=center />
-</div>
+:::center
+  ![](../assets/mesh3.png)<br/>
+  图 8-9 服务网格的形象示例
+:::
 
 至此，见证了 5 个时代的变迁，大家一定清楚了服务网格技术到底是什么，以及是如何一步步演化到今天这样一个形态。
 
@@ -123,7 +132,7 @@ Linkerd 开创先河的不绑定任何基础架构或某类体系，实现了通
 
 :::
 
-再来理解定义中的四个关键词：
+再来理解定义中的 4 个关键词：
 
 - **基础设施层+请求在这些拓扑中可靠穿梭**：这两个词加起来描述了服务网格的定位和功能，是否似曾相识？没错，你一定想到了 TCP。
 - **网络代理**：描述了服务网格的实现形态。
