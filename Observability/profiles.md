@@ -8,17 +8,17 @@ Profiles 数据一般表示成火焰图、堆栈图，内存分析图等形式�
 
 :::center
   ![](../assets/lua-cpu-flame-graph.webp)<br/>
-  Lua 级别的 CPU 火焰图
+  图 9-20 Lua 级别的 CPU 火焰图
 :::
 
 可观测中的 Profiles 数据由多种不同的 Profiler 组成，常见的有：
 
-- CPU Profilers （CPU 分析器）
-- Heap Profilers（堆分析器）
-- GPU Profilers （GPU 分析器）
-- Mutex Profilers （互斥锁分析器）
-- IO Profilers （IO 分析器）
-- Language-specific Profilers（特定于语言的分析器，例如 JVM Profiler）
+- CPU Profilers （CPU 分析器）。
+- Heap Profilers（堆分析器）。
+- GPU Profilers （GPU 分析器）。
+- Mutex Profilers （互斥锁分析器）。
+- IO Profilers （IO 分析器）。
+- Language-specific Profilers（特定于语言的分析器，例如 JVM Profiler）。
 
 传统上，这些 Profiler 并不适合在产生环境中运行（开销很大），不过由于采样分析变得越来越可行（只增加了很少的开销），这使得生产环境中添加 Profiler 观察某段时间内的全局 Profiles 数据成为可能。
 
