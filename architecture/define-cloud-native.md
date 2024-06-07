@@ -1,6 +1,6 @@
 # 1.3 云原生的定义
 
-即使在今天，当需要回答「什么是云原生？」这个问题时，还是会有些困难。
+即使在今天，当需要回答“什么是云原生？”这个问题时，还是会有些困难。
 
 过去几年间，云原生的定义一直在变化和发展演进，不同时期不同的公司对此的理解和诠释也不尽相同，因此往往会带来一些疑惑和误解。本节内容，我们看看云原生定义在不同时期的变化。
 
@@ -8,24 +8,24 @@
 
 2015 年，来自 Pivotal[^1] 公司的技术产品经理 Matt Stine，首次提出了云原生的概念，并结合这个概念包装了自己的新产品 Pivotal Web Service 和 Spring Cloud。 在 Matt Stine 所著的《迁移到云原生应用架构》的电子书中，他对云原生的概念进行了详细的阐述，并提出云原生应用架构应该具备的 5 个主要特征，如图 1-8 所示。
 
-<div  align="center">
-	<img src="../assets/pivotal-cloud-native.svg" width = "650"  align=center />
-	<p>图 1-8 Pivotal云原生定义</p>
-</div>
+:::center
+  ![](../assets/pivotal-cloud-native.svg)<br/>
+  图 1-8 Pivotal云原生定义
+:::
 
 2017 年 10 月，还是 Matt Stine，在接受 InfoQ 采访时，对云原生的定义做了小幅调整，将云原生架构定义为具有以下 6 个特质，如图 1-9 所示。
 
-<div  align="center">
-	<img src="../assets/pivotal-cloud-native-update.svg" width = "650"  align=center />
-	<p>图 1-9 Matt Stine 更新后的云原生定义</p>
-</div>
+:::center
+  ![](../assets/pivotal-cloud-native-update.svg)<br/>
+ 图 1-9 Matt Stine 更新后的云原生定义
+:::
 
 现在，在 Pivotal 最新的官方网站中[^2]，对云原生的介绍则是关注如图 1-10 所示的 4 个要点，这也是大家最熟悉的版本。
 
-<div  align="center">
-	<img src="../assets/cloud-native.png" width = "280"  align=center />
-	<p>图 1-10 Pivotal 云原生定义</p>
-</div>
+:::center
+  ![](../assets/cloud-native.png)<br/>
+ 图 1-10 Pivotal 云原生定义
+:::
 
 可见云原生的定义在 Pivotal 内部也是不断更迭的，很多概念被放弃或者抽象，并且有新的东西加入。
 
@@ -66,10 +66,10 @@ CNCF 是 Linux 基金会旗下的基金会，可以理解为一个非盈利组�
 
 服务网格的概念和微服务并列，这表明服务网格已经超越了其原初的角色 —— 仅作为一种实现微服务的新方法，已经发展为云原生的又一个关键领域。
 
-<div  align="center">
-	<img src="../assets/cncf-cloud-native.svg" width = "480"  align=center />
-	<p>图1-11 CNCF定义的云原生代表技术</p>
-</div>
+:::center
+  ![](../assets/cncf-cloud-native.svg)<br/>
+ 图1-11 CNCF定义的云原生代表技术
+:::
 
 ## 1.3.3 云原生定义之外
 

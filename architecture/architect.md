@@ -4,10 +4,10 @@
 
 总结来说，云原生实践中除掌握 Docker 和 Kubernetes，如图 1-34 所示，知晓以下几个领域尤佳。
 
-<div  align="center">
-	<img src="../assets/cloud.svg" width = "650"  align=center />
-	<p>图 1-34 云原生代表技术栈</p>
-</div>
+:::center
+  ![](../assets/cloud.svg)<br/>
+ 图 1-34 云原生代表技术栈
+:::
 
 1. 容器运行时：Docker、Containerd、CRI-O、Kata Containers。
 2. 镜像和仓库：Harbor、Dragonfly、Nydus。

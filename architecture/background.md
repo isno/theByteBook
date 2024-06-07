@@ -4,12 +4,12 @@
 
 Mark Andreessen 是风险投资公司 Andreessen-Horowitz 的联合创始人（如图 1-6 所示），该公司投资了 Facebook、Groupon、Skype、Twitter、Zynga、Foursquare 等公司。
 
-<div  align="center">
-	<img src="../assets/SoftwareEatingTheWorld.jpg" width = "550"  align=center />
-	<p>图1-6 《Software is Eating The World》 —— by Mark Andreessen, in 2011</p>
-</div>
+:::center
+  ![](../assets/SoftwareEatingTheWorld.jpg)<br/>
+ 图 1-6 《Software is Eating The World》 —— by Mark Andreessen, in 2011
+:::
 
-2011 年 8 月 20 日华尔街日报上，Mark Andreessen 发表了名为「Why Software Is Eating the World」的文章，内容主要阐述了软件如何影响各个行业，援引其中部分内容：
+2011 年 8 月 20 日华尔街日报上，Mark Andreessen 发表了名为“Why Software Is Eating the World”的文章，内容主要阐述了软件如何影响各个行业，援引其中部分内容：
 
 :::tip 《软件正在吞噬世界》内容节选
 
@@ -30,7 +30,7 @@ Mark Andreessen 是风险投资公司 Andreessen-Horowitz 的联合创始人（�
 
 ## 1.2.2 移动互联网在加剧变化
 
-还是那篇文章，Mark Andreessen 展望互联网规模时，写道「在接下来的 10 年里，我预计全球至少有 50 亿人拥有智能手机，每个人每天都可以随时随地使用手机充分利用互联网」。
+还是那篇文章，Mark Andreessen 展望互联网规模时，写道“在接下来的 10 年里，我预计全球至少有 50 亿人拥有智能手机，每个人每天都可以随时随地使用手机充分利用互联网”。
 
 现在，我们已经可以确认 Mark Andreessen 的预测很正确，移动互联网时代的用户规模已经开始向人口基数看齐，开始出现各类亿级 DAU 规模的移动应用。移动互联网如此巨大的用户规模会对软件开发有什么影响？援引 Netflix 的一页 PPT，如图 1-7 所示，这里按照规模和变更速度将软件企业划分为四个象限/四种类型：
 
@@ -39,14 +39,14 @@ Mark Andreessen 是风险投资公司 Andreessen-Horowitz 的联合创始人（�
 - 初创公司（Startups）：规模小、变化快，主要应对软件失败。
 - 网络规模的互联网企业（Web-Scale）：规模大、变化快，软硬件或者说所有东西都会出问题。
 
-<div  align="center">
-	<img src="../assets/ppt4.jpg" width = "550"  align=center />
-	<p>图1-7 Netflix 按照规模和变更速度对软件企业划分的总结</p>
-</div>
+:::center
+  ![](../assets/ppt4.jpg)<br/>
+ 图 1-7 Netflix 按照规模和变更速度对软件企业划分的总结
+:::
 
-在十年前乃至二十年前的**互联网时代**，大多数软件企业都位于图 1-7 左边的两个象限「规模或许有大有小，但是变更速度相对今天都不快」。当企业发展壮大时，体现的也更多是在规模上，变更速度并不会发生质的变化。
+在十年前乃至二十年前的**互联网时代**，大多数软件企业都位于图 1-7 左边的两个象限“规模或许有大有小，但是变更速度相对今天都不快”。当企业发展壮大时，体现的也更多是在规模上，变更速度并不会发生质的变化。
 
-而今天的**移动互联网时代**，则都位于图 1-7 右边的两个象限「无论规模是大是小，变更速度都要求非常快」。并且当企业逐步发展壮大，规模十倍百倍增长时，对变更速度的要求并不会降低，甚至会要求更快。
+而今天的**移动互联网时代**，则都位于图 1-7 右边的两个象限“无论规模是大是小，变更速度都要求非常快”。并且当企业逐步发展壮大，规模十倍百倍增长时，对变更速度的要求并不会降低，甚至会要求更快。
 
 在移动互联网时代，能够成长并发展起来的这些公司，它们的共同点是：
 
