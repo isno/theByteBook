@@ -12,19 +12,18 @@ TLS 1.3 协议放弃了安全性较低的加密功能的支持，并改进了 TL
 
 如图 2-17 所示，如果使用 TLS 1.2 需要 2-RTT 完成握手，然后才能发送请求。
 
-<div  align="center">
-	<img src="../assets/tls1.2.png" width = "350"  align=center />
-    <p>图2-17 TLS1.2 握手流程</p>
-</div>
-
+:::center
+  ![](../assets/tls1.2.png)<br/>
+ 图 2-17 TLS1.2 握手流程 [图片来源](https://www.wolfssl.com/tls-1-3-performance-part-2-full-handshake-2/)
+:::
 相比 TLS1.2 协议，TLS 1.3 协议的握手时间减半，如图 2-18 所示。这意味着访问一个网站，使用 TLS 1.3 协议，会降低将近 100ms 的延时。
 
-<div  align="center">
-	<img src="../assets/tls1.3.png" width = "350"  align=center />
-    <p>图2-18 TLS1.3 握手流程</p>
-</div>
+:::center
+  ![](../assets/tls1.3.png)<br/>
+ 图 2-18 TLS1.3 握手流程
+:::
 
-## 2.证书优化
+## 2. 证书优化
 
 SSL 层中的证书验证也是一个比较耗时的环节：服务器需要把自己的证书链全发给客户端，客户端接收后再逐一验证。证书环节我们关注两个方面优化：**证书传输优化** 、 **证书中非对称算法升级** 。
 
@@ -59,10 +58,10 @@ server {
 
 2. 检查服务端是否已开启 OCSP Stapling。
 
-```shell 
-openssl s_client -connect thebyte.com.cn:443 -servername thebyte.com.cn -status -tlsextdebug < /dev/null 2>&1 | grep "OCSP" 
+```bash 
+$ openssl s_client -connect thebyte.com.cn:443 -servername thebyte.com.cn -status -tlsextdebug < /dev/null 2>&1 | grep "OCSP" 
 ```
-若结果中存在「successful」关键字，则表示已开启 OCSP Stapling 服务。
+若结果中存在“successful”关键字，则表示已开启 OCSP Stapling 服务。
 ```plain
 OCSP response:
 OCSP Response Data:
@@ -82,10 +81,10 @@ OCSP Response Data:
 
 如图 2-19 所示，256 位 ECC Key 在安全性上等同于 3072 位 RSA Key，加上 ECC 运算速度更快，ECDHE 密钥交换 + ECDSA 数字签名无疑是最好的选择。同等安全条件下，ECC 算法所需的 Key 更短，所以 ECC 证书文件体积比 RSA 证书要小一些。
 
-<div  align="center">
-    <img src="../assets/ecc.png" width = "420"  align=center />
-    <p>图2-19 ECC vs RSA</p>
-</div>
+:::center
+  ![](../assets/ecc.png)<br/>
+ 图 2-19 ECC vs RSA
+:::
 
 在 Nginx 里可以用 ssl_ciphers、ssl_ecdh_curve 等指令配置服务器使用的密码套件和椭圆曲线，把优先使用的放在前面，配置示例：
 
@@ -99,20 +98,20 @@ ssl_session_cache shared:SSL:20m;
 ssl_session_timeout 15m;
 ssl_session_tickets off;
 ```
-
 配置完成之后，使用 https://myssl.com/ 服务测试证书配置，如图 2-20 所示。
 
-<div  align="center">
-    <img src="../assets/ssl-test.png" width = "420"  align=center />
-    <p>图2-20 使用 myssl.com 测试证书</p>
-</div>
+:::center
+  ![](../assets/ssl-test.png)<br/>
+ 图 2-20 使用 myssl.com 测试证书
+:::
 
 ## 3.SSL 优化效果
 
 SSL 层的优化手段除了软件层面还有一些硬件加速的方案，例如使用支持 AES-NI 特性的 CPU、专用 QAT 加速卡[^3]。如表 2-2，通过对 ECC、RSA、TLS1.2、TLS1.3 等不同维度的测试，以获取最佳的配置方案。
 
+:::center
 表 2-2 HTTPS 证书性能基准测试
-
+:::
 |场景|QPS|Time|单次发出请求数|
 |:--|:--|:--|:--|
 |RSA 证书 + TLS1.2| 316.20| 316.254ms|100|

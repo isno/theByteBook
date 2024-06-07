@@ -188,7 +188,7 @@ export default defineUserConfig({
             },
             
             {
-                text: '第四章：负载均衡技术概论',
+                text: '第四章：负载均衡技术',
                 link: '/balance/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
@@ -264,7 +264,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第七章：容器编排技术概论',
+                text: '第七章：容器编排技术',
                 link: '/container/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
@@ -300,7 +300,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第八章：服务网格技术概论',
+                text: '第八章：服务网格',
                 collapsable: false,
                 sidebarDepth: 1,
                 link: '/ServiceMesh/summary.md',

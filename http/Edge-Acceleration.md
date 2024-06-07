@@ -12,15 +12,16 @@
 2. 服务商会在源站周边选择一批候选边缘节点。
 3. 候选边缘节点对测试资源进行下载测试，多个候选边缘节点多路探索后，根据丢包率、RTT、hops 数等选择最佳的路由线路。
 
-<div  align="center">
-	<img src="../assets/dsa.png" width = "550"  align=center />
-	<p>图 2-30 动态加速网络服务释义</p>
-</div>
+:::center
+  ![](../assets/dsa.png)<br/>
+ 图 2-24 动态加速网络服务释义 [图片来源](https://www.cdnetworks.com/cn/web-performance/dynamic-web-acceleration/)
+:::
 
 根据我使用 Akamai 加速服务的抽样数据看，如表 2-4 所示，整体连接速度提升了 30% 右。
 
+:::center
 表 2-4 动态加速网络效果对比
-
+:::
 区域|直连|Akamai 加速|提升
 :---|:--:|:--:|:--
 Bangkok|0.58s|0.44s|31%
