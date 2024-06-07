@@ -12,19 +12,19 @@ DNS（Domain Name System，域名系统）是最重要的互联网基础设施�
 
 ## 2.3.1 域名解析的工作原理
 
-分析 DNS 工作原理之前，我们先了解域名的结构。如图 2-2 所示，域名是一种树状结构，最顶层的域名是根域名（注意是一个点「.」，它是 .root 的含义，不过现在常被隐藏掉），然后是顶级域名（top-level domain，简写 TLD），再是一级域名、二级域名、三级域名。
+分析 DNS 工作原理之前，我们先了解域名的结构。如图 2-2 所示，域名是一种树状结构，最顶层的域名是根域名（注意是一个点“.”，它是 .root 的含义，不过现在常被隐藏掉），然后是顶级域名（top-level domain，简写 TLD），再是一级域名、二级域名、三级域名。
 
-<div  align="center">
-	<img src="../assets/dns-tree.webp" width = "350"  align=center />
-	<p>图 2-2 DNS域名结构</p>
-</div>
+:::center
+  ![](../assets/dns-tree.webp)<br/>
+  图 2-2 DNS 域名树状结构
+:::
 
 继续看域名是如何进行解析，DNS 解析流程如图 2-3 所示。
 
-<div  align="center">
-	<img src="../assets/dns-example.png" width = "420"  align=center />
-	<p>图 2-3 DNS 解析流程</p>
-</div>
+:::center
+  ![](../assets/dns-example.png)<br/>
+  图 2-3 DNS 解析流程
+:::
 
 1. 用户向 Recursive resolver（ DNS 解析器，例如电信运营商的 114.114.114.114）发出解析 thebyte.con.cn 域名请求。
 2. Recursive resolver 判断是否存在解析缓存，如存在返回缓存结果。如无则就近向 Root nameserver（根域名服务器）请求所属 TLD nameserver。
@@ -43,8 +43,8 @@ DNS（Domain Name System，域名系统）是最重要的互联网基础设施�
 
 第一个介绍的是 nslookup 命令，该命令用于查询 DNS 的记录、域名解析是否正常等。
 
-nslookup 命令示例：
-```
+nslookup 命令示例。
+```bash
 $ nslookup thebyte.com.cn        
 Server:		8.8.8.8
 Address:	8.8.8.8#53
@@ -61,8 +61,8 @@ Address: 110.40.229.45
 
 nslookup 返回的结果比较简单，如果想获取更多的信息，可以尝试使用 dig 命令。
 
-dig命令示例：
-```
+dig命令示例。
+```bash
 $ dig thebyte.com.cn
 
 ; <<>> DiG 9.10.6 <<>> thebyte.com.cn
@@ -86,14 +86,13 @@ thebyte.com.cn.		599	IN	A	110.40.229.45
 ```
 
 返回信息说明：
-
 - 第一段 opcode 为 QUERY，表示执行查询操作，status 为 NOERROR，表示解析成功。
 - 第二段 QUESTION SECTION 部分显示了发起的 DNS 请求参数，A 表示我们默认查询 A 类型记录。
 - 第三段 ANSWER SECTION 部分为 DNS 查询结果，可以看到 thebyte.com.cn. 的解析结果为 110.40.229.45。
 - 最后一段为查询所用的 Recursive resolver、耗时等信息。
 
 Facebook 2021 年 10 月宕机故障中，使用 dig 排查各个公共 Recursive resolver，全部出现 SERVFAIL 错误，这说明是权威解析服务器出现了问题。
-```
+```bash
 ➜  ~ dig @1.1.1.1 facebook.com
 ;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 31322
 ;facebook.com.            IN    A
@@ -103,7 +102,7 @@ Facebook 2021 年 10 月宕机故障中，使用 dig 排查各个公共 Recursiv
 ..
 ```
 
-下一节，我们以 Facebook 为例，体会 Authoritative nameserver 出现故障时会是什么影响。
+下一节，我们以 Facebook 为例，感受 Authoritative nameserver 出现故障时会是什么影响。
 
 [^1]: 参见 https://www.akamai.com/blog/news/akamai-summarizes-service-disruption-resolved
 [^2]: 参见 https://en.wikipedia.org/wiki/2021_Facebook_outage

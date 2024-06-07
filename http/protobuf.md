@@ -3,9 +3,7 @@
 无论是微服务场景还是 Google 所开源的技术体系中，经常能看到 Protobuf 的身影。Protobuf 这个数据格式有何独特之处？以至于工程师们无论是高性能场景还是各类的标准/协议制定都默认地采用它。
 
 :::tip Protocol Buffers
-
 Protocol Buffers（简称 Protobuf 或者 pb）是 Google 公司开发的一种轻便高效的结构化数据存储格式，用来描述各种数据结构进行结构化数据串行化，或者说序列化。相比 XML 和 JSON，Protobuf 更小、更快、更简单，很适合做数据存储或 RPC 数据交换格式。
-
 :::
 
 ## 1. 为什么要有 Protobuf
@@ -102,9 +100,9 @@ Varint 确实是一种紧凑的表示数字的方法，因为从统计学的角�
 
 如图 2-10 所示，Protobuf 的 Message 是一系列键值对，Message 的序列化后只是使用字段号(field's number 和 wire_type) 作为 key。每个字段的名称和声明类型只能在解码端通过消息类型的定义（即 .proto 文件）来确定，如果没有数据结构描述 .proto 文件，则无法解释成正常的数据。这也是人们常说的 Protobuf 比 JSON、XML 安全的原因。
 
-<div  align="center">
-	<img src="../assets/protobuf_message.svg" width = "500"  align=center />
-	<p>图 2-10 Message 结构</p>
-</div> 
+:::center
+  ![](../assets/protobuf_message.svg)<br/>
+  图 2-10 Message 结构
+:::
 
-由于采用了 tag-value 的形式，所以 optional 类型的字段如果有，就存在这个 Message Buffer 中，如果没有，就不会在这里，这一点也算穷举脑力压缩 Message 的大小了。当消息编码时，键和值被连接成一个字节流，当消息被解码时，**解析器跳过它无法识别的字段**。这样，就可以将新字段添加到消息中，而不会破坏不知道它们的旧程序，继而实现向后兼容特性。
+由于采用了 tag-value 的形式，所以 optional 类型的字段如果有，就存在这个 Message Buffer 中，如果没有，就不会在这里，这一点也勉强算减小 Message 的大小了。当消息编码时，键和值被连接成一个字节流，当消息被解码时，**解析器跳过它无法识别的字段**。这样，就可以将新字段添加到消息中，而不会破坏不知道它们的旧程序，继而实现向后兼容特性。
