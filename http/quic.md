@@ -65,7 +65,7 @@ QUIC 为每个 Stream 设计和实现单独的流量控制，解决了影响整�
 
 :::center
   ![](../assets/quic-head-block.png)<br/>
- 图 2-29 QUIC 流
+ 图 2-29 QUIC Stream 设计减小了丢包的影响
 :::
 
 这样，通过全方位无死角的优化设计，保证了 QUIC 在当今网络环境下比 TCP 更安全、更快速的连接、更高的传输效率。

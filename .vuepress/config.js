@@ -217,7 +217,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: "第五章：一致性与分布式事务模型",
+                text: "第五章：数据一致性与分布式事务模型",
                 link: '/distributed-transaction/summary.md',
                 children: [
                     '/distributed-transaction/ACID.md',
