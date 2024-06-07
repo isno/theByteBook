@@ -56,8 +56,8 @@ Address: 110.40.229.45
 返回信息说明：
 
 - 第一行的 Server 为当前使用的 Recursive resolver。
-- Non-authoritative answer 因为 Recursive resolver 只是转发 Authoritative nameserver 的记录，所以为非权威应答。
-- Address 为解析结果，上面的解析可以看到是一个 A 记录 110.40.229.45。
+- Non-authoritative answer 因为 Recursive resolver 只是转发 Authoritative nameserver 的记录，所以该次解析为非权威应答。
+- Address 为解析结果，上面的解析结果是一个 IP 地址为 110.40.229.45 的 A 记录 。
 
 nslookup 返回的结果比较简单，如果想获取更多的信息，可以尝试使用 dig 命令。
 

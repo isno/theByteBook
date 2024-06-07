@@ -27,10 +27,8 @@ SSD 随机读 | 16,000 ns  ≈ 16 μs
 从美国发送到欧洲的数据包 | 150,000,000 ns ≈ 150 ms
 
 
-秒(s)、毫秒(ms)、微秒 (μs)、纳秒(ns)之间关系：
-$$
-1s = 10{^3}ms=10{^6}μs=10{^9}ns
-$$
+秒(s)、毫秒(ms)、微秒 (μs)、纳秒 (ns）之间关系：1s = 10<sup>3</sup>ms=10<sup>6</sup>μs=10<sup>9</sup>ns 
+
 
 
 [^1]: 参见 https://colin-scott.github.io/personal_website/research/interactive_latency.html
