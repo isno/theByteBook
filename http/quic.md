@@ -6,18 +6,18 @@ QUIC (Quick UDP Internet Connection，快速 UDP 网络连接) 是一种基于 U
 
 大部分人都会以为是 IETF[^1] 在推动替换 TCP 协议，实际上推动的先驱是 Google 公司。
 
-早在 2013 年，Google 在它的服务器（如 Google.com、youtube.com）和 Chrome 浏览器中启用了名为「快速 UDP 网络连接（QUIC）」的全新传输协议，该协议业内一般称 gQUIC。
+早在 2013 年，Google 在它的服务器（如 Google.com、youtube.com）和 Chrome 浏览器中启用了名为“快速 UDP 网络连接（QUIC）”的全新传输协议，该协议业内一般称 gQUIC。
 
 - 2015 年，Google 将 gQUIC 提交给 IETF，并在 IETF 的推动下对其进行规范化 ，早期标准化的草案（iQUIC）有 h3-27、h3-29 和 h3 v1。
 - 2018 年末，IETF 正式批准了 HTTP over QUIC 使用 HTTP/3 的版本号，将其确立为最新一代的互联网标准。
 - 2022 年 6月 6 日，历时 9 年，IETF 正式标准化基于 QUIC 协议的 HTTP/3 为 RFC9114。
 
-如图 2-32 所示，各个版本的 HTTP 协议对比，HTTP/3 最大的特点是使用 QUIC 协议，并在内部直接集成 TLS 协议。
+如图 2-26 所示，各个版本的 HTTP 协议对比，HTTP/3 最大的特点是使用 QUIC 协议，并在内部直接集成 TLS 协议。
 
-<div  align="center">
-	<img src="../assets/http-quic.png" width = "550"  align=center />
-	<p>图 2-32 HTTP协议对比</p>
-</div>
+:::center
+  ![](../assets/http-quic.png)<br/>
+ 图 2-26 各个 HTTP 协议对比
+:::
 
 ## 1.QUIC 出现的背景
 
@@ -35,38 +35,38 @@ QUIC 采用 UDP 作为其传输协议，与 TCP 相比没有丢包自动重传�
 
 下面列举 QUIC 的部分重要特性，这些特性是 QUIC 被寄予厚望的关键。
 
-### 支持连接迁移
+### 2.1 支持连接迁移
 
 当用户网络环境发生变化（在移动端这相当普遍，譬如 WIFI 切换到 4G 时），TCP 基于四元组的方式无法保持连接的存活。而 **QUIC 由于使用 Connection ID 标识连接**，当源地址发生改变时，连接不受环境变化影响，因此 QUIC 可以实现网络变化的无缝切换，从而保证连接存活和数据正常收发。
 
-<div  align="center">
-	<img src="../assets/quic-connection.png" width = "580"  align=center />
-	<p>图 2-33 QUIC 支持连接迁移</p>
-</div>
+:::center
+  ![](../assets/quic-connection.png)<br/>
+ 图 2-27 QUIC 支持连接迁移
+:::
 
-### 低时延连接
+### 2.2 低时延连接
 
 以一个 HTTPS 的请求为例，即使升级使用 TLS1.3 ，**初次连接也至少需要 2-RTT 才能开启数据传输**，对于 TCP Fastopen 等补丁方案，由于协议僵化等原因，难以在复杂网络中生效。而 QUIC 基于 UDP 无需 TCP 握手，**初次连接只需要 1- RTT 就能开启数据传输**。
 
-<div  align="center">
-	<img src="../assets/quic-handshake.png" width = "580"  align=center />
-	<p>图 2-34 QUIC 请求 RTT 示例</p>
-</div>
+:::center
+  ![](../assets/quic-handshake.png)<br/>
+ 图 2-28 QUIC 请求 RTT 示例
+:::
 
-### 可插拔拥塞控制
+### 2.3 可插拔拥塞控制
 
 笔者工作经历中曾试图推进升级 TCP 拥塞控制算法，过程相当艰难，原因就是要升级内核。使用 QUIC 就好办了，只要修改用户态的 QUIC 中的 SetSendAlgorithm 参数，不需要内核的任何改动。
 
-「构建在 UDP 之上」意味着可以不关心内核或者不用深入了解内核的开发，也可以灵活地调整可靠传输机制和拥塞控制算法等。**QUIC 协议栈运行在用户态，支持可插拔[^2]的 Cubic、BBR、PCC 等拥塞控制算法**，还可以根据具体场景定制私有拥塞控制算法。
+“构建在 UDP 之上”意味着可以不关心内核或者不用深入了解内核的开发，也可以灵活地调整可靠传输机制和拥塞控制算法等。**QUIC 协议栈运行在用户态，支持可插拔[^2]的 Cubic、BBR、PCC 等拥塞控制算法**，还可以根据具体场景定制私有拥塞控制算法。
 
-### 降低对丢包的敏感度
+### 2.4 降低对丢包的敏感度
 
-QUIC 为每个 Stream 设计和实现单独的流量控制，解决了影响整个连接的队头阻塞问题。单个连接上，QUIC 协议的每个 Stream 之间没有顺序依赖，这意味着如果 Stream2 丢失了一个 UDP 数据包，它只会影响 Stream2 的处理，不会阻塞 Stream1 和 Stream3 的数据传输。此外，还要提及 QUIC 实现的另外一个特性：「HPACK 标头压缩格式的变体 QPACK 」，通过压缩 Header 降低网络传输冗余数据量的方式缓解头部阻塞问题。
+QUIC 为每个 Stream 设计和实现单独的流量控制，解决了影响整个连接的队头阻塞问题。单个连接上，QUIC 协议的每个 Stream 之间没有顺序依赖，这意味着如果 Stream2 丢失了一个 UDP 数据包，它只会影响 Stream2 的处理，不会阻塞 Stream1 和 Stream3 的数据传输。此外，还要提及 QUIC 实现的另外一个特性：“HPACK 标头压缩格式的变体 QPACK ”，通过压缩 Header 降低网络传输冗余数据量的方式缓解头部阻塞问题。
 
-<div  align="center">
-	<img src="../assets/quic-head-block.png" width = "480"  align=center />
-	<p>图 2-35 QUIC 流</p>
-</div>
+:::center
+  ![](../assets/quic-head-block.png)<br/>
+ 图 2-29 QUIC 流
+:::
 
 这样，通过全方位无死角的优化设计，保证了 QUIC 在当今网络环境下比 TCP 更安全、更快速的连接、更高的传输效率。
 
