@@ -98,7 +98,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第二章：构建「足够快」的网络服务',
+                text: '第二章：构建“足够快”的网络服务',
                 link: "/http/summary.md",
                 collapsable: false,
                 sidebarDepth: 1,
@@ -300,7 +300,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第八章：服务网格概论',
+                text: '第八章：服务网格技术概论',
                 collapsable: false,
                 sidebarDepth: 1,
                 link: '/ServiceMesh/summary.md',
@@ -337,7 +337,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第十章：GitOps 的落地实践',
+                text: '第十章：GitOps 理念及落地实践',
                 link: '/GitOps/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
