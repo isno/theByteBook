@@ -13,9 +13,9 @@
 这一章，容我换一种方式解读云原生，从需求的背景、发展的历史开始，用朴素的话讨论互联网诞生的这几十年间出现的各类技术，思考这些技术试图解决的问题的方式去解读。思想先行，技术随后，让我们**从解决问题的角度出发，真正理解云原生技术的变革**。
 
 
-<div  align="center">
-	<img src="../assets/cloud-summary.png" width = "450"  align=center />
-	<p>图 1-0 本章内容导读</p>
-</div>
+:::center
+  ![](../assets/cloud-summary.png)<br/>
+  图 1-0 本章内容导读
+:::
 
 [^1]: Tobias Lütke 是 Shopify 的联合创始人兼首席执行官。他是 Ruby on Rails 框架核心团队的一员，并创建了 Active Merchant 等开源库。截至 2022 年，他是加拿大第 11 位富豪。
