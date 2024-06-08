@@ -1,6 +1,6 @@
-# 3.5.2 虚拟网卡 tun/tap 和 veth
+# 3.5.2 虚拟网卡 TUN/TAP 和 veth
 
-## tun/tap
+## 1. TUN/TAP
 
 目前主流的虚拟网卡有 tun/tap 和 veth 两种，时间上 tun/tap 出现的更早，Linux 内核 2.4.x 起就已支持。tun/tap 不是一个设备，而是两个相对独立的虚拟网络设备：
 - 其中 tap 模拟了以太网设备，操作的是数据帧，工作在 L2；
@@ -17,7 +17,7 @@ tun/tap 设备通常用作 overlay 网络传输，如图示例，应用程序通
 
 使用 tun/tap 设备传输数据需要经过两次协议栈，会有多次的封包解包，一定的性能损耗，这也是大家所说 Flannel UDP 模式性能较低的原因。
 
-## veth
+## 2. veth
 
 veth 是另一种主流的虚拟网卡方案，在 Linux Kernel 2.6 版本支持网络命名空间的同时，也提供了专门的虚拟 Veth（Virtual Ethernet，虚拟以太网）设备，用来让两个隔离的网络命名空间可以互相通信。
 

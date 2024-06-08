@@ -15,36 +15,35 @@ backlog 创建 TCP 连接时设置，用法如下。
 ```plain
 int listen(int sockfd, int backlog)
 ```
-
-<div  align="center">
-	<img src="../assets/TCP.svg" width = "550"  align=center />
-	<p>图 3-15 TCP 握手概览</p>
-</div>
+:::center
+  ![](../assets/TCP.svg)<br/>
+ 图 3-15 TCP 握手流程中队列的处理
+:::
 
 ## 2. TCP 连接保活
 
 TCP 建立连接后有个发送一个空 ACK 的探测行为来保持连接（keepalive），保活机制受以下参数影响：
 
-- net.ipv4.tcp_keepalive_time 最大闲置时间
-- net.ipv4.tcp_keepalive_intvl 发送探测包的时间间隔
-- net.ipv4.tcp_keepalive_probes 最大失败次数，超过此值后将通知应用层连接失效
+- net.ipv4.tcp_keepalive_time 最大闲置时间。
+- net.ipv4.tcp_keepalive_intvl 发送探测包的时间间隔。
+- net.ipv4.tcp_keepalive_probes 最大失败次数，超过此值后将通知应用层连接失效。
 
 大规模的集群内部，如果 keepalive_time 设置较短且发送较为频繁，会产生大量的空 ACK 报文，存在塞满 RingBuffer 造成 TCP 丢包甚至连接断开风险，可以适当调整 keepalive 范围减小空报文 burst 风险。
 
 ## 3. TCP 连接断开
 
-由于 TCP 双全工的特性，安全关闭一个连接需要四次挥手，如图 3-16 所示。但复杂的网络环境中存在很多异常情况，异常断开连接会导致产生「孤儿连」，这种连接既不能发送数据，也无法接收数据，累计过多，会消耗大量系统资源，资源不足时产生 Address already in use: connect 类似的错误。
+由于 TCP 双全工的特性，安全关闭一个连接需要四次挥手，如图 3-16 所示。但复杂的网络环境中存在很多异常情况，异常断开连接会导致产生“孤儿连”，这种连接既不能发送数据，也无法接收数据，累计过多，会消耗大量系统资源，资源不足时产生 Address already in use: connect 类似的错误。
 
-<div  align="center">
-	<img src="../assets/tcp_disconnect.svg" width = "550"  align=center />
-	<p>图 3-16 TCP 挥手概览</p>
-</div>
+:::center
+  ![](../assets/tcp_disconnect.svg)<br/>
+ 图 3-16 TCP 挥手概览
+:::
 
-「孤儿连」的问题和 TIME_WAIT 紧密相关。TIME_WAIT 是 TCP 挥手的最后一个状态，当收到被动方发来的 FIN 报文后，主动方回复 ACK，表示确认对方的发送通道已经关闭，继而进入 TIME_WAIT 状态，等待 2MSL 时间后关闭连接。如果发起连接一方的 TIME_WAIT 状态过多，会占满了所有端口资源，则会导致无法创建新连接。
+“孤儿连”的问题和 TIME_WAIT 紧密相关。TIME_WAIT 是 TCP 挥手的最后一个状态，当收到被动方发来的 FIN 报文后，主动方回复 ACK，表示确认对方的发送通道已经关闭，继而进入 TIME_WAIT 状态，等待 2MSL 时间后关闭连接。如果发起连接一方的 TIME_WAIT 状态过多，会占满了所有端口资源，则会导致无法创建新连接。
 
 可以尝试调整以下参数减小 TIME_WAIT 影响：
 
-- net.ipv4.tcp_max_tw_buckets，此数值定义系统在同一时间最多能有多少 TIME_WAIT 状态，当超过这个值时，系统会直接删掉这个 socket 而不会留下 TIME_WAIT 的状态
+- net.ipv4.tcp_max_tw_buckets，此数值定义系统在同一时间最多能有多少 TIME_WAIT 状态，当超过这个值时，系统会直接删掉这个 socket 而不会留下 TIME_WAIT 的状态。
 - net.ipv4.ip_local_port_range，TCP 建立连接时 client 会随机从该参数中定义的端口范围中选择一个作为源端口。可以调整该参数增大可选择的端口范围。
 
 TIME_WAIT 问题在反向代理节点中出现概率较高，例如 client 传来的每一个 request，Nginx 都会向 upstream server 创建一个新连接，如果请求过多， Nginx 节点会快速积累大量 TIME_WAIT 状态的 socket，直到没有可用的本地端口，Nginx 服务就会出现不可用。
@@ -74,11 +73,11 @@ net.ipv4.tcp_slow_start_after_idle = 0
 
 :::tip 最大努力交付
 
-计算机领域有一个很经典的两将军问题，两将军问题证实了：「对于不可靠信道，无数次确认都不能百分百达成可靠共识」。
+计算机领域有一个很经典的两将军问题，两将军问题证实了：“对于不可靠信道，无数次确认都不能百分百达成可靠共识”。
 
-解决两军问题的工程思路就是接受不确定性这个事实，但努力把不确定性控制到一个可以接受的程度。这种思路在计算机里领域被频繁使用，因此也有了专有的名称 —— 「最大努力交付（Best-Effort Delivery）」。
+解决两军问题的工程思路就是接受不确定性这个事实，但努力把不确定性控制到一个可以接受的程度。这种思路在计算机里领域被频繁使用，因此也有了专有的名称 —— “最大努力交付（Best-Effort Delivery）”。
 :::
 
-最大努力交付计算机工程最典型的体现就是 TCP 协议，TCP 需要三次握手来建立连接，也是为了降低不确定性。再看本节所有的调整，只不过是在「最大努力交付」的框内「不那么努力」一点。
+最大努力交付计算机工程最典型的体现就是 TCP 协议，TCP 需要三次握手来建立连接，也是为了降低不确定性。再看本节所有的调整，只不过是在“最大努力交付”的背景下“不那么努力”一点。
 
 [^1]: https://www.starduster.me/2020/03/02/linux-network-tuning-kernel-parameter/
