@@ -2,8 +2,9 @@
 
 本书各个篇章出现了较多的术语缩写，初次引用时会注明释义。但为了读者查阅方便，我按分类整理成以下表格，供读者参阅。
 
+:::center
 表 1 网络类
-
+:::
 |术语|名词全称|释义|
 |:--|:--|:--|
 | AS | Autonomous System | 网络自治系统 |
@@ -20,8 +21,9 @@
 | 南北流量 | NORTH-SOUTH traffic | 用户访问服务器的流量 |
 | 东西流量 | EAST-WEST traffic | 集群中服务与服务之间的流量 |
 
+:::center
 表 2 云技术类
-
+:::
 |术语|名词全称|释义|
 |:--|:--|:--|
 | IaaS | Infrastructure as a Service | 基础设施即服务 |
@@ -37,9 +39,9 @@
 | DevSecOps | Development + Security + Operations | 开发、安全和运维，应用安全 (AppSec) 领域术语 |
 | CI/CD|  Continuous Integration + Continuous Deployment | 持续集成 + 持续交付 |
 
-
+:::center
 表 3 Kubernetes 相关类
-
+:::
 |术语|名词全称|释义|
 |:--|:--|:--|
 | CNCF | Cloud Native Computing Foundation | 云原生计算基金会 |
@@ -49,8 +51,9 @@
 | CRD | Custom Resource Definition | 自定义资源的定义，用来扩展 Kubernetes 资源 |
 | Operator | CRD + AdmissionWebhook + Controller | 用来解决某个应用场景的 Kubernetes 扩展 |
 
+:::center
 表 4 业务类
-
+:::
 |术语|名词全称|释义|
 |:--|:--|:--|
 | QPS | Queries Per Second | 每秒请求数 |
