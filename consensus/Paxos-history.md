@@ -11,7 +11,11 @@ Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文�
 
 如果不事先说明，也许你根本不会认识到上面是一篇关于分布式的论文。为了说明这个算法以及演讲效果，Lamport 演讲中还扮演了几次《夺宝奇兵》中印第安纳·琼斯风格的考古学家。不幸的是 Paxos 论文中采用希腊民主议会的比喻明显失败了，Lamport 像写小说一样，把一个复杂的数学问题弄成了一篇带有考古色彩的历史小说，听众没有记住 Paxos 算法，仅仅记住了印第安纳·琼斯。
 
-1990 年，Lamport 将这篇论文提交给 TOCS ，根据 Lamport 自己的描述[^2]，TOCS 的三位审稿人看过 Lamport 的论文后认为「该论文虽然不怎么重要但还有些意思，但应该把所有 Paxos 相关的故事背景删掉」。Lamport 对这些缺乏幽默感的人颇为不爽，他不打算对论文做任何修改，最终论文的发表被搁置。
+1990 年，Lamport 将这篇论文提交给 TOCS ，根据 Lamport 自己的描述，TOCS 的三位审稿人看过 Lamport 的论文后认为「该论文虽然不怎么重要但还有些意思，但应该把所有 Paxos 相关的故事背景删掉」。Lamport 对这些缺乏幽默感的人颇为不爽，他不打算对论文做任何修改，最终论文的发表被搁置。
+
+:::tip <a/>
+本节《Paxos 的起源》部分内容来源于 lamport 的博客[^1]，笔者进行了修改使其更具故事性，有兴趣的读者可以阅读 lamport 的原文。
+:::
 
 虽然论文没有发表，但并不代表没有人关注这个算法，Bulter W.Lampson（1991 年图灵奖获得者）认识到这个算法的重要性，并在他的论文中《How to Build a Highly Availability System using Consensus》对 Paxos 进行了描述。此后，De Prisco、Lynch 和 Lampson 几人又联合在 TCS 发表了一篇论文《Revisiting the PAXOS algorithm》对 Paxos 算法进行了详细地描述和证明。经过 Lampson 等人的大力宣传，Paxos 算法逐渐被理论研究界的学者所重视。
 
@@ -25,16 +29,16 @@ Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文�
 —— TOCS 编辑 Keith Marzullo 的注解
 
 :::
-《The Part-Time Parliament》[^3] 最终在 1998 年公开发表。
+《The Part-Time Parliament》[^2] 最终在 1998 年公开发表。
 
-这篇论文发表之后，还是有很多人抱怨这篇论文看不懂，人们只记住了那个奇怪的故事，而不是 Paxos 算法，Lamport 走到哪都要被人抱怨一通。于是他忍无可忍，2001 年使用计算机领域的概念重新描述了一遍算法，并发表了论文 《Paxos Made Simple》[^4]。这是一篇很短的论文，摘要只有一句话 “The Paxos algorithm, when presented in plain English, is very simple.”！语气完全无法掩盖作者对 Paxos 的策略没有奏效的失望。
+这篇论文发表之后，还是有很多人抱怨这篇论文看不懂，人们只记住了那个奇怪的故事，而不是 Paxos 算法，Lamport 走到哪都要被人抱怨一通。于是他忍无可忍，2001 年使用计算机领域的概念重新描述了一遍算法，并发表了论文 《Paxos Made Simple》[^3]。这是一篇很短的论文，摘要只有一句话“The Paxos algorithm, when presented in plain English, is very simple.”！语气完全无法掩盖作者对 Paxos 的策略没有奏效的失望。
 
 :::center
   ![](../assets/paxos.png) <br/>
   图 6-2 Paxos 论文摘要
 :::
 
-然而，这篇论文还是非常难以理解，引用 Diego Ongaro 和 John Ousterhout 在设计 Raft 时发表的论文[^5]中对 Paxos 的描述：
+然而，这篇论文还是非常难以理解，引用 Diego Ongaro 和 John Ousterhout 在设计 Raft 时发表的论文[^4]中对 Paxos 的描述：
 
 :::tip Paxos 一点也不 simple
 
@@ -49,7 +53,7 @@ we were not able to understand the complete protocol until after reading several
 
 最终 Lamport 凭借他在分布式领域的贡献，于 2013 年获得图灵奖。
 
-[^2]: 参见 https://lamport.azurewebsites.net/pubs/pubs.html#lamport-paxos
-[^3]: 参见 https://lamport.azurewebsites.net/pubs/lamport-paxos.pdf
-[^4]: 参见 https://lamport.azurewebsites.net/pubs/paxos-simple.pdf
-[^5]: 参见 https://raft.github.io/raft.pdf USENIX ATC 2013 年 best paper
+[^1]: 参见 https://lamport.azurewebsites.net/pubs/pubs.html#lamport-paxos
+[^2]: 参见 https://lamport.azurewebsites.net/pubs/lamport-paxos.pdf
+[^3]: 参见 https://lamport.azurewebsites.net/pubs/paxos-simple.pdf
+[^4]: 参见 https://raft.github.io/raft.pdf USENIX ATC 2013 年 best paper
