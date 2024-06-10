@@ -1,8 +1,7 @@
 # 9.5 小结
 
 
-参考
-
+参考文档：
 - 《Gorilla：快速、可扩展的内存时间序列数据库》https://blog.acolyer.org/2016/05/03/gorilla-a-fast-scalable-in-memory-time-series-database/
 - https://github.com/open-telemetry/docs-cn/blob/main/OT.md
 

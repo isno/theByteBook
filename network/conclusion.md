@@ -4,8 +4,7 @@
 
 此外，本章也介绍了 XDP 以及 DPDK 这种跨内核处理网络数据包的方式，相信未来分布式机器训练、大数据处理等网络密集型场景，类似跨内核或者 RDMA 这类突破传统网络的优化模式也会越来越流行。
 
-本章参考内容：
-
+参考文档：
 - 《linux-network-performance-parameters
 》，https://github.com/leandromoreira/linux-network-performance-parameters
 - 《虚拟网络》，https://qiankunli.github.io/2015/04/24/virtual_network.html

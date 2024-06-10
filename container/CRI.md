@@ -1,4 +1,4 @@
-# 7.3.2 CRI 运行时规范
+# 7.4.2 CRI 运行时规范
 
 早期 Kubernetes 完全依赖且绑定 Docker，并没有过多考虑够日后使用其他容器引擎的可能性。当时 kubernetes 管理容器的方式通过内部的 DockerManager 直接调用 Docker API 来创建和管理容器。
 
