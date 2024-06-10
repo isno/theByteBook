@@ -1,10 +1,12 @@
 # 6.4 小结
 
-本质上 raft 是以领导者为中心，选举出的领导者以“一切以我为准”的方式，达成值的共识和实现各个节点的一致。
+Paxos 以及 Raft 算法属于故障容错（Crash Fault Tolerance，CFT）算法的范畴，这类算法解决的是分布式系统中存在故障，但不存在恶意节点下的分布式共识问题。
 
-在raft 算法中，副本数据是以日志的形式存在的，raft 算法规定日志必须是连续的，而 lamport 的 multi paxos 并不要求日志是连续的，而且在 raft 算法中，日志不仅是数据的载体，日志的完整性也影响着领导者选举的结果（日志完整性最高的节点优先当选）。
+如果把共识问题扩展到包含恶意节点的情况时，那便进入了最困难、最复杂的分布式故障场景 —— 拜占庭容错（Byzantine Fault Tolerance）领域。谈及此处，你大概率会联想到数字货币和 Web3 等区块链技术。没错，这些技术正是基于拜占庭容错算法（譬如 PBFT、PoW）达成共识，从而实现了去中心化网络中的安全性和一致性。限于篇幅以及笔者的精力，这部分内容就不再展开讨论，有兴趣的读者就自行探索吧。
 
 参考文档：
-- raft 动画 https://raft.github.io/raftscope/index.html
-- 《In Search of an Understandable Consensus Algorithm》https://raft.github.io/raft.pdf
-- 《Raft 分布式系统一致性协议探讨》https://zhuanlan.zhihu.com/p/510220698
+- raft 动画，https://raft.github.io/raftscope/index.html
+- 《In Search of an Understandable Consensus Algorithm》，https://raft.github.io/raft.pdf
+- 《Raft 分布式系统一致性协议探讨》，https://zhuanlan.zhihu.com/p/510220698
+- 《Implementing Replicated Logs
+with Paxos》，https://ongardie.net/static/raft/userstudy/paxos.pdf
