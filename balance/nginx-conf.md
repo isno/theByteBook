@@ -1,19 +1,17 @@
-# 4.4.1 Nginx 代理指南
+# 4.4.1 Nginx 代理配置指南
 
-有一个七层负载均衡的实现相信读者们已经非常熟悉，没错，它就是 Nginx。常见的网关 OpenResty、Kong 亦或者 APISIX，它们的核心都是 Nginx，而且它们的配置基本也延续 Nginx 的配置规范。
+七层负载均衡的典型实现相信读者们已经非常熟悉，没错，就是 Nginx。常见的网关 OpenResty、Kong 核心都是 Nginx，它们的配置也基本延续 Nginx 的配置规范。
 
-本节节选部分重要的参数配置进行说明，以便读者了解 Nginx 或以 Nginx 为核心的上层网关配置操作。
+本节，笔者选取部分代理相关的参数配置进行说明，以便读者了解 Nginx 或以 Nginx 为核心的网关配置操作。
 
-Nginx 的主配置文件是 nginx.conf，这个配置文件一共由三部分组成，分别为全局块、events 块和 http 块。http 块中又包含 http 全局块、多个 server 块。每个 server 块中可以包含 server 全局块和多个 location 块，在同一配置块中嵌套的配置块，各个之间不存在次序关系。
+Nginx 的主配置文件是 nginx.conf，这个配置文件一共由三部分组成，分别为全局块、events 块和 http 块。http 块中又包含 http 全局块、多个 server 块。每个 server 块中可以包含 server 全局块和多个 location 块，在同一配置块中嵌套的配置块，各个之间不存在次序关系，它们的关系如图 4-14所示。
 
 :::center
   ![](../assets/nginx-conf.png)<br/>
   图 4-14 Nginx 配置
 :::
 
-同一个指令放在不同层级的块中，其作用域也不同，一般情况下，高一级块中的指令可以作用于自身所在的块和此块包含的所有低层级块。如果某个指令在两个不同层级的块中同时出现，则采用「就近原则」，即以较低层级块中的配置为准。
-
-## 缓冲(buffer)/缓存(cache)
+## 1. 缓冲（Buffer）
 
 作为反向代理，缓冲主要是解决后端 Server 与用户网络不对等的情况，譬如 Nginx 到 Server 是 100KiB/s，用户到 Nginx 是 10Kib/s，这种情况下，如果没有启用 buffer，会导致 Nginx 使用较长的时间处理用户端与后端 Server 的连接，高并发下会出现大量的连接积压。
 
@@ -31,13 +29,12 @@ location / {
     proxy_pass http://localhost:8080;
 }
 ```
-## 缓存 Cache
+## 2. 缓存（Cache）
 
 启用缓存后，Nginx 将响应保存在磁盘中，返回给客户端的数据首先从缓存中获取，这样子相同的请求不用每次都发送给后端服务器，减少到后端请求的数量。
 
-启用缓存，需要在 http 上下文中使用 proxy_cache_path 指令，定义缓存的本地文件目录，名称和大小。
+启用缓存，需要在 http 上下文中使用 proxy_cache_path 指令，定义缓存的本地文件目录，名称和大小。缓存区可以被多个 server 共享，使用 proxy_cache 指定使用哪个缓存区。
 
-缓存区可以被多个 server 共享，使用 proxy_cache 指定使用哪个缓存区。
 ```plain
 http {
     proxy_cache_path /data/nginx/cache keys_zone=mycache:10m;
@@ -50,13 +47,13 @@ http {
 }
 ```
 
-缓存目录的文件名是 proxy_cache_key 的 MD5 值, proxy_cache_key 默认设置如下
+缓存目录的文件名是 proxy_cache_key 的 MD5 值, proxy_cache_key 默认设置如下。
 
 ```plain
 proxy_cache_key $scheme$proxy_host$uri$is_args$args;
 ```
 
-当然也可以自定义缓存 key
+当然也可以自定义缓存 key。
 ```plain
 proxy_cache_key "$host$request_uri$cookie_user";
 ```
@@ -66,7 +63,7 @@ proxy_cache_key "$host$request_uri$cookie_user";
 proxy_cache_min_uses 5;
 ```
 
-缓存设置的示例
+缓存设置的示例。
 
 ```plain
 http {
@@ -84,7 +81,7 @@ http {
 }
 ```
 
-## 七层负载均衡模式
+## 3. 七层负载均衡模式
 
 跨多个应用程序实例的负载平衡是一种常用技术，用于优化资源利用率、最大化吞吐量、减少延迟和确保容错配置，Nginx 支持 6 种负载均衡模式：
 
@@ -101,7 +98,7 @@ http {
 - 通过 fail_timeout‎‎ 来设置检查周期，默认为 10 秒；
 - 通过 max_fails‎ 来设置检查失败次数，默认为 1 次。‎
 
-配置案例如下所示：
+配置案例如下所示。
 ```plain
 upstream backend {
   server backend.thebyte.com.cn max_fails=3 fail_timeout=30s; 
