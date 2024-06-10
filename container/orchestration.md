@@ -1,6 +1,6 @@
 # 7.2 从 Container 到 Pod
 
-字面上“Container”这个词很难让人形象地理解其真正含义，Kubernetes 中的 “Pod”也是如此。仅看几句解释并不能理解这些概念，甚至还会引起误解，例如把容器比作轻量化虚拟机。
+字面上，“Container”这个词很难让人形象地理解其真正含义，Kubernetes 中的 “Pod”也是如此。仅凭几句解释并不能充分认识这些概念，甚至还会引起误解，譬如把容器比作轻量化虚拟机。
 
 :::tip 如果容器类似虚拟机
 那就应该有一种普适的方法把虚拟机里面的应用无缝地迁移到容器中，可是现实世界中并没有这种方法。
@@ -12,10 +12,7 @@
 
 1979年，Unix 系统引入了一个革命性的技术 —— chroot（chang root）。chroot 允许管理员将进程的根目录锁定在指定的位置，从而限制该进程访问的文件系统范围。
 
-:::tip <i/>
-chroot 的隔离能力对安全性至关重要，比如创建一个隔离环境，用来安全地运行和监控可疑的代码或者程序，因此 chroot 之后的环境也被形象地称为jail（监狱）。
-:::
-仅需几步，就能创建一个chroot环境。
+chroot 的隔离能力对安全性至关重要，比如创建一个隔离环境，用来安全地运行和监控可疑的代码或者程序，因此 chroot 之后的环境也被形象地称为jail（监狱）。仅需几步，就能创建一个chroot环境。
 
 ```bash
 $ mkdir -p new-root/{bin,lib64,root}
@@ -23,7 +20,6 @@ $ cp /bin/bash new-root/bin
 $ cp /lib64/{ld-linux-x86-64.so*,libc.so*,libdl.so.2,libreadline.so*,libtinfo.so*} new-root/lib64
 $ sudo chroot new-root
 ```
-
 这个 jail 用处不大，只有 bash 以及一些内置的函数，但也足以说明它的作用：运行在此 jail 下进程的文件系统与宿主机隔离了。
 
 ```shell
@@ -39,20 +35,20 @@ bash-4.2# pwd
 
 我们再运行一个 docker，看看两者之间的区别。
 
-```
+```bash
 $ docker run -t -i ubuntu:18.04 /bin/bash
 
 root@028f46a5b7db:/# cd bin
 root@028f46a5b7db:/bin# pwd
 /bin
 ```
-看起来跟 chroot 差不多，也是一个与宿主机隔离的文件系统环境，那这是否意味着 chroot 就是容器了呢？并不是，**chroot 只是改变了根目录，而非创建了真正的独立隔离、安全的环境**，chroot 后的进程通过几行代码就能从当前的 jail 中逃逸，而且文件系统、网络、设备等等都没有被隔离。
+看起来跟 chroot 差不多，也是一个与宿主机隔离的文件系统环境，那这是否意味着 chroot 就是容器了呢？并不是，**chroot 只是改变了根目录，而非创建了真正的独立隔离、安全的环境**，chroot 后的进程通过几行代码就能从当前的 jail 中逃逸，而且文件系统、网络、设备等等都没有被充分隔离。
 
 ## 7.2.2 资源全方位隔离
 
-chroot 最初的目的是为了实现文件的隔离，并非为了容器而设计。后来 Linux 吸收了Chroot的理念，先是在 2.4.19 引入了 Mount 命名空间，这样就可以隔离挂载文件系统。后来又想到进程间通信也需要隔离，就有了 IPC 命名空间。同时，容器还需要一个独立的主机名以便在网络中标识自己，有了网络，自然还要有独立的 IP、端口、路由等...。从 Linux 内核 2.6.19 起，又陆续添加了 UTS、IPC、PID、Network、User 等命名空间。
+chroot 最初的目的是为了实现文件的隔离，并非为了容器而设计。后来 Linux 吸收了Chroot的理念，先是在 2.4.19 引入了 Mount 命名空间，这样就可以隔离挂载文件系统。又想到进程间通信也需要隔离，就有了 IPC 命名空间。同时，容器还需要一个独立的主机名以便在网络中标识自己，有了网络，自然还要有独立的 IP、端口、路由等...。从 Linux 内核 2.6.19 起，陆陆续续添加了 UTS、IPC、PID、Network、User 等命名空间。
 
-至 Linux 内核 3.8 版本，Linux 已经完成容器所需的6项最基本资源隔离。
+至 Linux 内核 3.8 版本，Linux 已经完成容器所需的 6 项最基本资源隔离。
 
 :::center
 表 7-1 Linux 目前支持的八类名称空间
@@ -71,22 +67,26 @@ chroot 最初的目的是为了实现文件的隔离，并非为了容器而设�
 
 我们创建进程通常使用 fork()，fork 背后调用的是 clone()，clone 暴露的参数更多，它的函数定义如下。
 
-```
+```c
 int clone(int (*fn)(void *), void *child_stack,
          int flags, void *arg, ...
          /* pid_t *ptid, struct user_desc *tls, pid_t *ctid */ );
 ```
 
-如果要为创建的子进程设置各类资源隔离，使用 clone 并指定 flags 参数即可。如下代码所示，新创建的这个进程将会“看到”一个全新的系统环境。这个环境内，进程的 PID 为 1，只能看到各自 Mount 命名空间内挂载的目录和文件，只能访问到各自 Network 命名空间内的网络设备。
+如果要为创建的子进程设置各类资源隔离，使用 clone 并指定 flags 参数即可。
 
-```
+如下代码所示，新创建的这个进程将会“看到”一个全新的系统环境。这个环境内，进程的 PID 为 1，只能看到各自 Mount 命名空间内挂载的目录和文件，只能访问到各自 Network 命名空间内的网络设备。
+
+```c
 int flags = CLONE_NEWNS | CLONE_NEWPID | CLONE_NEWIPC | CLONE_NEWNET | CLONE_NEWUTS;
 int pid = clone(main_function, stack_size, flags | SIGCHLD, NULL); 
 ```
 
 ## 7.2.3 资源全方位限制
 
-进程的资源隔离已经完成，如果再对使用资源进行额度限制，那么就能对进程的运行环境实现一个进乎完美的隔离。这就要用 Linux 内核的第二项技术： Linux Control Cgroup —— 简称 cgroups。
+进程的资源隔离已经完成，如果再对使用资源进行额度限制，就能对进程的运行环境实现一个进乎完美的隔离。
+
+这就要用 Linux 内核的第二项技术： Linux Control Cgroup —— 简称 cgroups。
 
 :::tip cgroups（控制群组）
 
@@ -97,8 +97,11 @@ cgroups 是一种内核级别的资源管理机制，可以实现对 Linux 进�
 不过由于兼容性和稳定性原因，目前多数容器运行时默认使用的是 第一代 cgroups。
 :::
 
-通过 /sys/fs/cgroup 查看系统支持的被限制的资源种类。
+可以通过 /sys/fs/cgroup 查看系统支持的被限制的资源种类，cgroups 子系统如表 7-2 所示。
 
+:::center
+表 7-2 cgroups 控制群组子系统
+:::
 | 控制群组子系统 | 功能|
 |:--|:--|
 |blkio | 控制并监控 cgroup 中的任务对块设备(例如磁盘、USB 等) I/O 的存取 |
@@ -112,9 +115,11 @@ cgroups 是一种内核级别的资源管理机制，可以实现对 Linux 进�
 | net_prio | 可以为各个 cgroup 中的应用程序动态配置每个网络接口的流量优先级 |
 |perf_event | 允许使用 perf 工具对 crgoups 中的进程和线程监控|
 
-cgroups 的 API 通过内核文件系统操作接口（cgroupfs）暴露，用户态的程序可以通过操作这些文件实现资源管理。如下代码所示，创建控制组目录（$hostname），以及往各个子系统配置文件写入资源管理配置。最后则是将进程 PID 写入 tasks 文件里，然后配置生效。
+cgroups 的 API 通过内核文件系统操作接口（cgroupfs）暴露，用户态的程序可以通过操作这些文件实现资源管理。
 
-```
+如下代码所示，创建控制组目录（$hostname），以及往各个子系统配置文件写入资源管理配置，最后则是将进程 PID 写入 tasks 文件里，然后配置生效。
+
+```bash
 /sys/fs/cgroup/memory/$hostname/memory.limit_in_bytes=1GB // 容器进程及其子进程使用的总内存不超过 1GB
 /sys/fs/cgroup/cpu/$hostname/cpu.shares=256 // CPU 总 slice 是 1024，因此限制进程最多只能占用 1/4 CPU 时间
 
@@ -129,13 +134,15 @@ echo 3892 > /sys/fs/cgroup/cpu/$hostname/tasks
 
 登录到一台 Linux 机器，执行 pstree -g 命令展示当前系统中正在运行的进程树状结构。
 
-```
+```bash
 $ pstree -g
     |-rsyslogd(1089)-+-{in:imklog}(1089)
     |  |-{in:imuxsock) S 1(1089)
     | `-{rs:main Q:Reg}(1089)
 ```
-如上输出，展示了 Linux 系统中负责处理日志的 rsyslogd 程序的进程树结构。可见 rsyslogd 的主程序 main 以及它要用到的内核日志模块 imklog 等同属 1089 进程组，这些进程相互协作，共享 rsyslogd 程序的资源，共同完成 rsyslogd 程序的职责。对于操作系统而言，这种进程组也更方便管理，Linux 操作系统只需将信号（如 SIGKILL）发给一个进程组，该进程组中的所有进程就都会收到这个信号而终止运行。
+如上输出，展示了 Linux 系统中负责处理日志的 rsyslogd 程序的进程树结构。可见 rsyslogd 的主程序 main 以及它要用到的内核日志模块 imklog 等同属 1089 进程组，这些进程相互协作，共享 rsyslogd 程序的资源，共同完成 rsyslogd 程序的职责。
+
+对于操作系统而言，这种进程组也更方便管理，Linux 操作系统只需将信号（如 SIGKILL）发给一个进程组，该进程组中的所有进程就都会收到这个信号而终止运行。
 
 那么，现在思考一个问题，如果把上面的进程用容器改造跑起来，该如何设计？
 
@@ -155,14 +162,14 @@ $ pstree -g
 
 ## 7.2.5 超亲密容器组 Pod
 
-Kubernetes 中这个设计叫做 Pod，Pod 是一组紧密关联的容器集合，它们共享 IPC、Network、UTS 等名称空间，是 Kubernetes 调度的基本单位。
+Kubernetes 中这个设计叫做 Pod，Pod 是一组紧密关联的容器集合，它们共享 IPC、Network、UTS 等名称空间，是 Kubernetes 最基本单位。
 
 容器之间原本是被 Linux Namespace 和 cgroups 隔开的，Pod 第一个要解决的问题是怎么去打破这个隔离，让 Pod 内的容器可以像进程组一样天然的共享资源和数据。
 
 Kubernetes 中使用了一个特殊的容器（Infra Container）解决这个了问题。Infra Container 是整个 Pod 中第一个启动的容器，只有 300 KB 左右的 大小，它负责申请容器组的 UTS、IPC、网络等名称空间，Pod 内其他容器通过 setns（Linux 系统调用，把进程加入到某个名称空间中）方式共享 Infra Container 容器的命名空间，其次它还可作为 init 进程，用来管理子进程、回收资源等。
 
 :::tip 额外知识
-Infra Container 中的代码仅是注册 SIGTERM、SIGINT、SIGCHILD 等信号处理，启动之后执行一个永远循环的 pause（） 方法，所以也常被称为“pause 容器”。
+Infra Container 中的代码仅是注册 SIGTERM、SIGINT、SIGCHILD 等信号处理，启动之后执行一个永远循环的 pause() 方法，所以也常被称为“pause 容器”。
 默认情况下 infra 镜像的地址为 k8s.grc.io/pause.3.5，很多时候我们部署应用一直处于 Pending 状态 ，大部分原因就是这个镜像地址在国内无法访问造成。
 :::
 
@@ -171,7 +178,7 @@ Infra Container 中的代码仅是注册 SIGTERM、SIGINT、SIGCHILD 等信号�
   <p>图 Kubernetes 架构</p>
 </div>
 
-此时，同一 Pod 内的容器共享以下名称空间：
+通过 Infra Container，同一 Pod 内的容器共享以下名称空间：
 
 - **UTS 名称空间**：所有容器都有相同的主机名和域名。
 - **网络名称空间**：所有容器都共享一样的网卡、网络栈、IP 地址等。同一个 Pod 中不同容器占用的端口不能冲突（这也是 Kubernetes 中 endpoint 的由来）。
@@ -181,13 +188,12 @@ Infra Container 中的代码仅是注册 SIGTERM、SIGINT、SIGCHILD 等信号�
 不过 PID 名称空间和文件名称空间默认还是隔离的，这是因为容器之间也需要相互独立的文件系统以避免冲突。如果容器之间想要想要实现文件共享，Kubernetes 也提供了 Volume（Volume 的设计将在本章 7.5 节介绍）。
 
 PID 的隔离令每个容器都有独立的进程 ID 编号，如果要共享 PID 名称空间，需要设置 PodSpec 中的 ShareProcessNamespace 为 true，如下所示。
-```
+```yaml
 spec:
   shareProcessNamespace: true
 ```
 
 设置之后，Infra Container 中的进程将作为 PID 1 进程，其他容器的进程作为它的子进程存在，后续将由 Infra Container 来负责信号处理、子进程的资源回收等。
-
 
 ## 7.2.6 Pod 是调度的原子单位
 
@@ -210,14 +216,14 @@ Pod 承担的另外一个重要职责是 - 作为调度的原子单位。
 
 ## 7.2.7 容器的设计模式 Sidecar
 
-通过组合两个不同角色的容器，共享资源，统一调度编排，像这样的一个概念，在 Kubernetes 里面就是一个非常经典的容器设计模式，即 Sidecar（边车）模式。Sidecar 模式其实就是在 Pod 里面定义一些专门的容器，通过职责分离与容器的隔离特性，够降低容器的复杂度，使开发一个高内聚、低耦合的软件变的更加容易。
+通过组合两个不同角色的容器，共享资源，统一调度编排，像这样的一个概念，在 Kubernetes 里面就是一个非常经典的容器设计模式，即 Sidecar（边车）模式。
+
+Sidecar 模式其实就是在 Pod 里面定义一些专门的容器，通过职责分离与容器的隔离特性，够降低容器的复杂度，使开发一个高内聚、低耦合的软件变的更加容易。如上图的 Sidecar 容器通过提供额外的服务或功能（如日志记录、监控、安全性或数据同步）来增强或扩展主应用容器的功能。
 
 :::center
   ![](../assets/sidecar.svg)<br/>
   边车模型
 :::
-
-如上图的 Sidecar 容器通过提供额外的服务或功能（如日志记录、监控、安全性或数据同步）来增强或扩展主应用容器的功能。
 
 本书第 8 章，第 8.2 节，笔者将通过代理型的 Sidecar 进一步阐述这种设计模式。
 

@@ -1,6 +1,6 @@
 # 6.2.1 Paxos 起源
 
-Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文就是「兼职议会」，论文描述了一个虚构的古希腊岛屿考古发现故事。
+Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文就是“兼职议会”，论文描述了一个虚构的古希腊岛屿考古发现故事。
 
 :::tip The Part-Time Parliament
 
@@ -11,7 +11,7 @@ Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文�
 
 如果不事先说明，也许你根本不会认识到上面是一篇关于分布式的论文。为了说明这个算法以及演讲效果，Lamport 演讲中还扮演了几次《夺宝奇兵》中印第安纳·琼斯风格的考古学家。不幸的是 Paxos 论文中采用希腊民主议会的比喻明显失败了，Lamport 像写小说一样，把一个复杂的数学问题弄成了一篇带有考古色彩的历史小说，听众没有记住 Paxos 算法，仅仅记住了印第安纳·琼斯。
 
-1990 年，Lamport 将这篇论文提交给 TOCS ，根据 Lamport 自己的描述，TOCS 的三位审稿人看过 Lamport 的论文后认为「该论文虽然不怎么重要但还有些意思，但应该把所有 Paxos 相关的故事背景删掉」。Lamport 对这些缺乏幽默感的人颇为不爽，他不打算对论文做任何修改，最终论文的发表被搁置。
+1990 年，Lamport 将这篇论文提交给 TOCS ，根据 Lamport 自己的描述，TOCS 的三位审稿人看过 Lamport 的论文后认为“该论文虽然不怎么重要但还有些意思，但应该把所有 Paxos 相关的故事背景删掉”。Lamport 对这些缺乏幽默感的人颇为不爽，他不打算对论文做任何修改，最终论文的发表被搁置。
 
 :::tip <a/>
 本节《Paxos 的起源》部分内容来源于 lamport 的博客[^1]，笔者进行了修改使其更具故事性，有兴趣的读者可以阅读 lamport 的原文。
@@ -47,7 +47,7 @@ Unfortunately, Paxos has two significant drawbacks. The first drawback is that P
 we were not able to understand the complete protocol until after reading several simplified explanations and designing our own alternative protocol, a process that took almost a year.
 :::
 
-上面大致含义说「Paxos 真的太难懂了...」，连斯坦福的教授和博士都感觉难以理解，所以他们的论文取名《In Search of an Understandable Consensus Algorithm》，「寻找一种易懂的共识算法」意思是还在寻找中，根本不像 Lamport 说的那么简单。
+上面大致含义说“Paxos 真的太难懂了...”，连斯坦福的教授和博士都感觉难以理解，所以他们的论文取名《In Search of an Understandable Consensus Algorithm》，“寻找一种易懂的共识算法”意思是还在寻找中，根本不像 Lamport 说的那么简单。
 
 注意 Raft 这篇文章发表于 2013 年，而《Paxos Made Simple》是 2001年 发表的，也就是说 Paxos 已经被研究了十几年，直到 Google 的 Chubby 横空出世，使用 Paxos 解决了现实中的分布式共识的问题，并将其整理成正式的论文发表之后，得益于 Google 的行业影响力，辅以 Chubby 作者 Mike Burrows 那略显夸张但足够吸引眼球的评价推波助澜，Paxos 开始从理论界进入工业实践，并逐渐被大家熟知和认可。
 
