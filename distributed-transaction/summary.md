@@ -13,11 +13,10 @@
 
 **如果事务的影响只局限在本地，如何实现事务仅是个编码问题，但若涉及了多个服务，保证分布式系统下整体的原子性与一致性便成了架构设计问题**。2000 年以前，人们曾经希望 XA[^2] 的事务机制在分布式环境下也能良好的应用，但这个愿望被 CAP 定理粉碎，分布式事务的篇章我们从 ACID 与 CAP 的矛盾说起。
 
-<div  align="center">
-	<img src="../assets/distributed-transaction-summary.png" width = "550"  align=center />
-	<p>图 5-0 本章内容导图</p>
-</div>
-
+:::center
+  ![](../assets/distributed-transaction.png)
+  图 5-0 本章内容导图
+:::
 
 [^1]: 参见 https://nighthacks.com/jag/res/Fallacies.html
 [^2]: XA 是由 X/Open 组织提出的分布式事务的规范，大部分数据库支持的 XA 协议实现都是基于 2PC 的。

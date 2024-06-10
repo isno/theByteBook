@@ -228,10 +228,10 @@ export default defineUserConfig({
                         children: [
                             '/distributed-transaction/BASE.md',
                             '/distributed-transaction/TCC.md',
-                            '/distributed-transaction/Saga.md',
-                            '/distributed-transaction/idempotent.md',
+                            '/distributed-transaction/Saga.md'
                         ]
                     },
+                    '/distributed-transaction/idempotent.md',
                     '/distributed-transaction/conclusion.md'
                 ]
             },
@@ -300,7 +300,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第八章：服务网格',
+                text: '第八章：服务网格技术',
                 collapsable: false,
                 sidebarDepth: 1,
                 link: '/ServiceMesh/summary.md',
