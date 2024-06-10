@@ -1,9 +1,5 @@
 # 6.2.3 Multi Paxos
 
-:::tip 额外知识
-Multi-Paxos 算法是一种思想，而不是具体的算法。它通过执行多个Basic Paxos实例，实现一系列值的共识。
-:::
-
 lamport 在论文中对 Multi Paxos 的描述称之为 **Implementing a State Machine**，我们从理论转向现实问题，探讨分布式中的 State Machine。
 
 在分布式环境中，如果我们要让一个服务具有容错能力，那么最常用最直接的办法就是让一个服务的多个副本同时运行在不同的节点上。但是，当一个服务的多个副本都在运行的时候，我们如何保证它们的状态都是同步的呢，或者说，如果让客户端看起来无论请求发送到哪一个服务副本，最后都能得到相同的结果？实现这种同步方法就是所谓的**状态机复制**（State Machine Replication）。
@@ -16,7 +12,7 @@ lamport 在论文中对 Multi Paxos 的描述称之为 **Implementing a State Ma
 分布式系统为了实现多副本状态机（Replicated state machine），常常需要一个**多副本日志**（Replicated log）系统，如果日志的内容和顺序都相同，多个进程从同一状态开始，并且以相同的顺序获得相同的输入，那么这些进程将会生成相同的输出，并且结束在相同的状态。
 
 :::center
-  ![](../assets/Replicated-state-machine.webp)
+  ![](../assets/Replicated-state-machine.webp) <br/>
   图 6-13 多副本状态机
 :::
 
@@ -33,7 +29,7 @@ Replicated log 类似一个数组，因此我们需要知道当次请求是在�
 - S~1~ 继续尝试下一个日志项，直到给 jmp 找到一个可以达成共识的位置（日志项 4）。
 
 :::center
-  ![](../assets/multi_paxos.png)
+  ![](../assets/multi_paxos.png) <br/>
   图 6-14 当节点收到客户端的请求命令 jmp（提案）时情况
 :::
 
