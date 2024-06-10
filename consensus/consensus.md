@@ -22,7 +22,7 @@ Paxos、Raft、ZAB 等等属于 consensus 的理论/实现，明显使用“共�
 4. 服务端返回请求结果。
 
 :::center
-  ![](../assets/raft-state-machine.png)
+  ![](../assets/raft-state-machine.png) <br/>
   图 6-1 复制状态机工作过程 [图片来源](https://raft.github.io/raft.pdf)
 :::
 

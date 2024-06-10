@@ -9,16 +9,16 @@
 - **任期编号**：创建这个日志项的 Leader 任期编号。
 
 :::center
-  ![](../assets/raft-log.svg)
+  ![](../assets/raft-log.svg) <br/>
  图 6-17 日志项概念
 :::
 
-## 日志复制
+## 1. 日志复制
 
 Raft 是强 Leader 模型的算法，日志项只能由 Leader 复制给其他成员，这意味着日志复制是单向的，Leader 从来不会覆盖本地的日志项，即所有的日志项以 Leader 为准。
 
 :::center
-  ![](../assets/raft-log-commit.png)
+  ![](../assets/raft-log-commit.png) <br/>
  图 6-18 日志项复制过程
 :::
 
@@ -34,7 +34,7 @@ Raft 是强 Leader 模型的算法，日志项只能由 Leader 复制给其他�
 当 Leader 收到多数派的 follower 的成功响应后，Leader 将提交该日志项，并更新 committedIndex，同时在下一个心跳或者下一个日志协商的 AppendEntries 消息中携带 committedIndex。follower 无论收到哪一类消息，都会从中获取 committedIndex，因此在 Follower 的本地日志中，所有小于或者等于 committedIndex 的日志均可以执行提交操作。
 
 
-## 实现日志的一致性
+## 2. 实现日志的一致性
 
 实际上日志项的管理不只是简单地追加，当一个 Follower 新加入集群或者 Leader 刚晋升之时，Leader 并不知道要同步哪些日志给 Follower，同时旧的 Leader 转变为 Follower 时，也会携带一些上一任 term 中仅在本地被 committed 的日志项，而当前新的 Leader 并不存在这些日志项。
 
@@ -49,7 +49,7 @@ Raft 算法中，通过 Leader 强制 Follower 复制自己的日志项，来处
 - **prevLogTerm**：表示 Leader 当前需要复制的日志项，前面一个日志项的任期编号。例如，下图，如果领导者需要将索引值为 8 的日志项复制到 Follower ，那么 prevLogTerm 为 4
 
 :::center
-  ![](../assets/raft-log-fix.svg)
+  ![](../assets/raft-log-fix.svg) <br/>
  图 6-19 领导者处理不一致日志
 :::
 
@@ -61,7 +61,7 @@ Leader处理不一致的具体过程分析如下：
 4. Leader 收到 Follower 成功返回后，知道在索引值为 6 的位置之前的所有日志项，均与自己的相同。于是通过日志复制 RPC ，复制并覆盖索引值为 6 之后的日志项，以达到 Follower 的日志与 Leader 的日志一致。
 
 :::center
-  ![](../assets/raft-log-fix-action.svg)
+  ![](../assets/raft-log-fix-action.svg) <br/>
 图 6-20 Leader 处理不一致日志过程
 :::
 

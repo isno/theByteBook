@@ -13,7 +13,7 @@
 自然的，如果把配置当成 Raft 中的日志，成员动态变更的需求就变成了**配置日志一致性问题**。但成员变更存在一个特殊性：**集群成员的动态变更导致多数派的数量也随之变化**。如果处理方式不当，可能会导致两个多数派（变更前的多数派 C~old~（旧配置）和变更的多数派 C~new~（新配置））之间不存在相交的成员，这样就产生两个 Leader 在各自认为的“多数派”中工作的问题。
 
 :::center
-  ![](../assets/raft-ConfChange.png)
+  ![](../assets/raft-ConfChange.png) <br/>
   图 6-21 成员变更的某一时刻 C~old~ 和 C~new~ 中同时存在两个不相交的多数派
 :::
 
@@ -25,7 +25,7 @@ Diego Ongaro 在论文中提出了一种两阶段的成员变更方法：Joint C
 
 
 :::center
-  ![](../assets/raft-single-server.png)
+  ![](../assets/raft-single-server.png) <br/>
   图 6-22 穷举集群添加节点的情况
 :::
 
