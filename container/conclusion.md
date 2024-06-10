@@ -11,3 +11,4 @@
 - 《 500 行的 Linux 容器》，https://blog.lizzie.io/linux-containers-in-500-loc.html
 - 《Borg、Omega、K8s：Google 十年三代容器管理系统的设计与思考》，https://queue.acm.org/detail.cfm?id=2898444
 - 《How containers work: overlayfs》，https://jvns.ca/blog/2019/11/18/how-containers-work--overlayfs/
+-《Large-scale cluster management at Google with Borg》，https://research.google/pubs/large-scale-cluster-management-at-google-with-borg/
