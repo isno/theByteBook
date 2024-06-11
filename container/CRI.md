@@ -36,13 +36,9 @@ Google 推出 CRI-O 明显摆出了直接挖掉 Docker 根基意图，但此时 
 
 ## 3. Containerd
 
-Docker 并没有“坐以待毙”，与其将来被人分离或者抛弃不用，不如主动革新。Docker 推动自身的重构，并拆分出 Containerd，早期 Containerd单独开源，后来捐献给了 CNCF，目的希望与 Kubernetes 深度绑定在一起。
-
-Containerd 作为 CNCF 的托管项目，自然符合 CRI 标准的。但 Docker 出于自己诸多原因的考虑，它只是在 Docker Engine 里调用了 Containerd，外部的接口仍然保持不变，也就是说还不与 CRI 兼容。
-
-此时，Kubernetes 里就出现了两种调用链：
+Docker 并没有“坐以待毙”，与其将来被人分离或者抛弃不用，不如主动革新。Docker 推动自身的重构，并拆分出 Containerd，早期 Containerd 单独开源，并没有捐献给 CNCF，Docker 出于自身诸多原因的考虑，内部调用了 Containerd，外部的接口仍然保持不变。此时，Kubernetes 里就出现了两种调用链：
 1. CRI 接口调用 dockershim，然后 dockershim 调用 Docker，Docker 再走 Containerd 去操作容器。
-2. CRI 接口直接调用 Containerd 去操作容器。
+2. CRI 接口直接调用适配器 cri-containerd，cri-containerd 再去调用 Containerd 操作容器。
 
 :::center
   ![](../assets//k8s-runtime-v2.png)<br/>
