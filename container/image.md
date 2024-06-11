@@ -83,12 +83,18 @@ $ sudo mount -t overlay overlay \
   图 7-9 使用联合文件系统的 Docker 镜像结构 [图片来源](https://docs.docker.com/storage/storagedriver/overlayfs-driver/)
 :::
 
-最后，概览容器启动后的整个文件系统视图，静态的镜像层以及容器启动后创建的动态层。如此，不同容器之间可以复用镜像内的公共层，实现节省存储空间，以及缩短容器的启动时间。
+最后，通过图 7-9 概览启动后的 Docker 镜像，这个容器实际上由 6 个层构成：
+- 最下层的基础镜像 debian stretch；
+- 往上 3 层为 Dockerfile 通过指令 ADD、ENV、CMD 设置 JAVA SDK、环境变量等生成的只读层；
+- Init Layer 夹在只读层和可写层之间，主要存放可能会被修改的 /etc/hosts、/etc/resolv.conf 等文件，这些文件本来属于 debian 镜像，但容器启时，用户往往会写入一些指定的配置，所以 Docker 单独生成了这个层；
+- 最上面的利用 CoW（Copy-on-write，写时复制）技术创建的可写层（Read/Write Layer），容器内部的任何增、删、改都发生在这里，但可写层内的数据不具备持久性，当容器被销毁时，内部的数据会随着容器的消逝而消失。不过你也可以通过 docker commit 命令生成一个新的层堆叠到到 Docker 镜像中，而之前的只读层不会有任何变化。
 
 :::center
   ![](../assets/docker-file-system.png)<br/>
   图 7-9 容器镜像层概览
 :::
+
+最终，这 6 个层被联合挂载到 /var/lib/docker/aufs/mnt 目录中，表现为一个带有 JAVA SDK 的 debian 操作系统供容器使用。
 
 ## 7.3.2 构建足够小的镜像
 
