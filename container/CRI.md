@@ -2,23 +2,22 @@
 
 早期 Kubernetes 完全依赖且绑定 Docker，并没有过多考虑够日后使用其他容器引擎的可能性。当时 kubernetes 管理容器的方式通过内部的 DockerManager 直接调用 Docker API 来创建和管理容器。
 
-<div  align="center">
-	<img src="../assets/k8s-runtime-v1.svg" width = "600"  align=center />
-</div>
+:::center
+  ![](../assets/k8s-runtime-v1.svg)<br/>
+  图 7-15 Kubernetes 早期调用 Docker 的链路
+:::
 
-Docker 和 CoreOS 分裂之后，被 Google 投资的 CoreOS 推出了 rkt 运行时实现，Kubernetes 又实现了对 rkt 的支持，随着容器技术的蓬勃发展，越来越多运行时实现出现，如果还继续使用与 Docker 类似强绑定的方式，Kubernetes 的工作量将无比庞大。
 
-Kubernetes 要重新考虑对所有容器运行时的兼容适配问题了。
+Docker 和 CoreOS 分裂之后，被 Google 投资的 CoreOS 推出了 rkt 运行时实现，Kubernetes 又实现了对 rkt 的支持，随着容器技术的蓬勃发展，越来越多运行时实现出现，如果还继续使用与 Docker 类似强绑定的方式，Kubernetes 的工作量将无比庞大。Kubernetes 要重新考虑对所有容器运行时的兼容适配问题了。
 
 Kubernetes 从 1.5 版本开始，在遵循 OCI 基础上，将容器操作抽象为一个接口，该接口作为 Kubelet 与运行时实现对接的桥梁，Kubelet 通过发送接口请求对容器进行启动和管理，各个容器运行时只要实现这个接口就可以接入 Kubernetes，这便是 CRI（Container Runtime Interface，容器运行时接口）。
 
-CRI 实现上是一套通过 Protocol Buffer 定义的 API，如下图：
+CRI 实现上是一套通过 Protocol Buffer 定义的 API，从配图 7-16 可以看出：CRI 主要有 gRPC client、gRPC Server 和具体容器运行时实现三个组件。其中 Kubelet 作为 gRPC Client 调用 CRI 接口，CRI shim 作为 gRPC Server 来响应 CRI 请求，并负责将 CRI 请求内容转换为具体的运行时管理操作。
 
-<div  align="center">
-	<img src="../assets/cri-arc.png" width = "450"  align=center />
-</div>
-
-从上图可以看出：CRI 主要有 gRPC client、gRPC Server 和具体容器运行时实现三个组件。其中 Kubelet 作为 gRPC Client 调用 CRI 接口，CRI shim 作为 gRPC Server 来响应 CRI 请求，并负责将 CRI 请求内容转换为具体的运行时管理操作。
+:::center
+  ![](../assets//cri-arc.png)<br/>
+  图 7-16 CRI 是通过 gRPC 实现的 API
+:::
 
 因此，任何容器运行时想要在 Kubernetes 中运行，都需要实现一个基于 CRI 接口规范的 CRI shim（gRPC Server）。
 
@@ -26,25 +25,28 @@ CRI 实现上是一套通过 Protocol Buffer 定义的 API，如下图：
 
 2017 年，由 Google、RedHat、Intel、SUSE、IBM 联合发起的 CRI-O（Container Runtime Interface Orchestrator）项目发布了首个正式版本。从名字就可以看出，它非常纯粹, 就是兼容 CRI 和 OCI, 做一个 Kubernetes 专用的轻量运行时。
 
-<div  align="center">
-	<img src="../assets/k8s-cri-o.png" width = "440"  align=center />
-</div>
+:::center
+  ![](../assets//k8s-cri-o.png)<br/>
+  图 7-17  Kubernetes 专用的轻量运行时 CRI-O
+:::
 
-虽然 CRI-O 摆出了直接挖掉 Docker 根基手段，但此时 Docker 在容器引擎中的市场份额仍然占有绝对优势，对于普通用户来说，如果没有明确的收益，并没有什么动力要把 Docker 换成别的引擎。不过我们也能够想像此时 Docker 心中肯定充斥了难以言喻的危机感。
+Google 推出 CRI-O 明显摆出了直接挖掉 Docker 根基意图，但此时 Docker 在容器生态中的份额仍然占有绝对优势，对于普通用户来说，如果没有明确的收益，并没有什么动力要把 Docker 换成别的引擎。不过我们也能够想像此时 Docker 心中肯定充斥了难以言喻的危机感。
 
-## containerd
+## Containerd
 
-不过 Docker 也没有“坐以待毙”，与其将来被人分离或者抛弃不用，不如主动革新。Docker 推动自身的重构，并拆分出 Ccontainerd，早期 containerd 单独开源，后来捐献给了 CNCF，目的希望与 Kubernetes 深度绑定在一起。
+Docker 并没有“坐以待毙”，与其将来被人分离或者抛弃不用，不如主动革新。Docker 推动自身的重构，并拆分出 Containerd，早期 Containerd单独开源，后来捐献给了 CNCF，目的希望与 Kubernetes 深度绑定在一起。
 
-containerd 作为 CNCF 的托管项目，自然符合 CRI 标准的。但 Docker 出于自己诸多原因的考虑，它只是在 Docker Engine 里调用了 containerd，外部的接口仍然保持不变，也就是说还不与 CRI 兼容。
+Containerd 作为 CNCF 的托管项目，自然符合 CRI 标准的。但 Docker 出于自己诸多原因的考虑，它只是在 Docker Engine 里调用了 Containerd，外部的接口仍然保持不变，也就是说还不与 CRI 兼容。
 
 此时，Kubernetes 里就出现了两种调用链：
-1. CRI 接口调用 dockershim，然后 dockershim 调用 Docker，Docker 再走 containerd 去操作容器。
-2. CRI 接口直接调用 containerd 去操作容器。
+1. CRI 接口调用 dockershim，然后 dockershim 调用 Docker，Docker 再走 Containerd 去操作容器。
+2. CRI 接口直接调用 Containerd 去操作容器。
 
-<div  align="center">
-	<img src="../assets/k8s-runtime-v2.png" width = "500"  align=center />
-</div>
+
+:::center
+  ![](../assets//k8s-runtime-v2.png)<br/>
+  图 7-18  Kubernetes 中的两种调用链
+:::
 
 这个阶段 **Kubelet 的代码和 dockershim 都是放在一个 Repo**。这也就意味着 dockershim 是由 Kubernetes 进行组织开发和维护！由于 Docker 的版本发布 Kubernetes 无法控制和管理，所以 Docker 每次发布新的 Release，Kubernetes 都要集中精力去快速地更新维护 dockershim。
 

@@ -27,7 +27,7 @@ Linux 基金会出面调和，最终结果是 Linux 基金会于 2015 年 6 月�
 :::tip runc
 runc 是非常小的运行核，其目的在于提供一个干净简单的运行环境，他就是负责隔离 CPU、内存、网络等形成一个运行环境，可以看作一个小的操作系统。runc 的使用者都是一些 CaaS 服务商，个人开发者知晓的并不是太多。
 
-Docker 是从 1.11 支持 runc 的，想必 Docker 当时的心态也很复杂：一方面作为 OCI 成员必须支持 runc，但是另一方面他会担心 runc 对 Docker 的替代的威胁。
+Docker 是从 1.11 支持 runc 的，想必 Docker 当时的心态也很复杂：一方面作为 OCI 成员必须支持 runc，另一方面肯定也担心 runc 对 Docker 的替代威胁。
 :::
 
 经过如上的驱动演进之后，OCI 有了三个主要的规范标准：
@@ -46,20 +46,21 @@ Docker 投入巨大的精力进入容器编排领，发展并不顺利，一系�
 
 :::center
   ![](../assets/containerd-arch.png)<br/>
-  containerd 架构
+  图 7-13 Containerd 架构
 :::
 
-Docker 开源 Containerd 的举措可以解读为 Docker 对容器技术的回归，降低业界对 Docker 封闭的担心，同时也希望通过 Containerd 作为桥梁，让大家更多关注 Docker，抵消因为生态分裂对 Docker 带来的不利影响。
+Docker 开源 Containerd 的举措，笔者认为可解读为 Docker 对容器技术的回归，希望通过 Containerd 作为桥梁，让大家更多关注 Docker，降低业界对 Docker 封闭的担心，抵消因为生态分裂对 Docker 带来的不利影响。
 
 ## 3. Docker 现在的架构
 
 最终，经过一系列的改造、拆分之后，从 docker v1.11 版本开始，docker 就不是简单通过 Docker Daemon 来启动了，而是通过集成 containerd、containerd-shim、runc 等多个组件共同完成。
 
-Docker 架构流程图已如下所示。
+Docker 架构流程图已如图 7-14 所示。
 
-<div  align="center">
-	<img src="../assets/docker-arc.png" width = "550"  align=center />
-</div>
+:::center
+  ![](../assets/docker-arc.png)<br/>
+  图 7-14 Docker 重构之后的架构
+:::
 
 从 Docker 的拆分来看，容器运行时根据功能的不同分成了两类：
 - 只关注如 namespace、cgroups、镜像拆包等基础的容器运行时实现被称为**低层运行时（low-level container runtime）**， 目前应用最广泛的低层运行时是 runc；
