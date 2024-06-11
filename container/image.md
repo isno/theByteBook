@@ -14,7 +14,7 @@ Docker 镜像其实是一个“特殊的文件系统”，它提供容器运行�
 
 ## 7.3.1 镜像的原理
 
-Docker 镜像并不是野蛮地把所有的依赖文件封包，而是做了一个巧妙的创新：**Docker 基于 UnionFS（Union File System，联合文件系统）采用堆叠的方式，对 rootfs 进行分层设计**。
+Docker 镜像并不是粗暴地把所有的依赖文件封包，而是做了一个巧妙的创新：**基于 UnionFS（Union File System，联合文件系统）采用堆叠的方式，对 rootfs 进行分层设计**。
 
 :::tip UnionFS 是什么
 
