@@ -28,40 +28,42 @@ mount("/usr/share/nginx/html","rootfs/data", "none", MS_BIND, nulll)
 - **通过映射的方式挂载宿主机中的一个绝对路径，这就跟操作系统强相关**。这意味着 bind mount 的方式无法写在 dockerfile 中，不然镜像在其他操作系统有可能无法启动。其次，挂载后的目录明面上看不出和 Docker 的关系，操作系统内的其他进程有可能误写，存在安全隐患。
 - 容器被广泛使用后，**容器存储的需求绝对不是简单的映射关系就能搞定**，存储位置不限于宿主机（还有可能是网络存储）、存储的介质不限于磁盘（还可能是 tmpfs）、存储的类型也不仅仅是文件系统（还有可能是块设备或者对象存储）。如果是**网络存储没必要先挂载到操作系统，再挂载到容器某个目录，Docker 完全可以实现 iSCSI 协议、NFS 协议直接对接这些存储**。
 
-为此 Docker 提供全新的挂载类型 Volume（存储卷）：
+为此 Docker 从 1.7 版本起提供全新的挂载类型 Volume（存储卷）：
 - 它首先在宿主机开辟了一块属于 Docker 空间（Linux 中该目录是 /var/lib/docker/volumes/），这样就解决了 bind mount 映射宿主机绝对路径的问题；
-- 考虑存储的类型众多，仅靠 Docker 自己实现并不现实，为此 Docker 提出了 Volume Driver，借助社区力量丰富 Docker 的存储驱动种类。用户只要通过 docker plugin install 安装额外的第三方卷驱动，就能使用想要的网络存储或者各类云厂商提供的存储。
+- 考虑存储的类型众多，仅靠 Docker 自己实现并不现实，为此 Docker 1.10 版本中又增加了对 Volume Driver 的支持，借助社区力量丰富 Docker 的存储驱动种类。用户只要通过 docker plugin install 安装额外的第三方卷驱动，就能使用想要的网络存储或者各类云厂商提供的存储。
 
 ## 7.5.2 Kubernetes 的存储设计
 
 我们从 Docker 返回到 Kubernetes 中，同 Docker 类似的是：
-- Kubernetes 也抽象出了数据卷（Volume）来解决持久化存储；
+- Kubernetes 也抽象出了 Volume 来解决持久化存储；
 - 也开辟了属于 Kubernetes 的空间（该目录是 /var/lib/kubelet/pods/[pod uid]/volumes）；
 - 也设计了存储驱动（Volume Plugin）的概念用以支持出众多的存储类型。
 
-不同的是，作为一个工业级的容器编排系统，Kubernetes 支持的 Volume 的类型要比 Docker 多一丢丢。
+不同的是，作为一个工业级的容器编排系统，Kubernetes 支持的 Volume 的类型要比 Docker 复杂那么一点以及类型多出一丢丢。
 
 :::center
   ![](../assets/volume-list.png)<br/>
 :::
 
-乍一看，这么多的类型，难以下手。然而，总结起来其实主要有 3 种类型：
+乍一看，这么多 Volume 类型，着实难以下手。然而，总结起来就 3 类：
 
-- 普通的 Volume
-- 特殊的 Volume（譬如 Secret、Configmap，将 Kubernetes 集群的配置信息以 Volume 方式挂载到 Pod 中，并实现 POSIX 接口来访问这些对象中的数据）
-- 持久化的 Volume
+- 普通的 Volume。
+- 持久化的 Volume。
+- 特殊的 Volume（譬如 Secret、Configmap，将 Kubernetes 集群的配置信息以 Volume 方式挂载到 Pod 中，并实现 POSIX 接口来访问这些对象中的数据）。
 
 ## 7.5.1 普通的 Volume
 
-普通的 Volume 和 docker 的 Volume 非常相似，区别在于挂载在本地而非远端存储。
+普通的 Volume 和 docker 的 bind mount 本质一致。**设计普通 Volume 的目标并不是为了持久地保存数据，而是为同一个 Pod 中多个容器提供可共享的存储资源**。普通 Volume 的典型的如：
 
-如下图所示，Volume 是包在 Pod 内，生命周期与挂载它的 Pod 是一致的当 Pod 因某种原因被销毁时，Volume 也会随之删除。
+- EmptyDir，见的应用方式是一个 sidecar 容器通过 EmtpyDir 来读取另外一个容器的日志文件
+- 另外一种 HostPath，和 EmptyDir 的区别是 HostPath 的 Volume 可以被所有的 Pod 共享，使用 Loki 日志系统，第一步要 Pod 挂载相同的宿主机 HostPath Volume，这样才能读取到宿主机内所有 Pod 写入的日志。
+
+如下图所示，Volume 包在 Pod 内，生命周期与挂载它的 Pod 是一致的，当 Pod 因某种原因被销毁时，这类 Volume 也会随之删除。
 
 :::center
   ![](../assets/volume.svg)<br/>
 :::
 
-**设计普通 Volume 的目标并不是为了持久地保存数据，而是为同一个 Pod 中多个容器提供可共享的存储资源**。这类 Volume 的典型是 EmptyDir，常见的应用方式是一个 sidecar 容器通过 EmtpyDir 来读取另外一个容器的日志文件。另外一种 HostPath，和 EmptyDir 的区别是 HostPath 的 Volume 可以被所有的 Pod 共享 。我们使用 Loki 日志系统，第一步就是要 Pod 挂载相同的宿主机 hostPath Volume，这样才能读取到所有 Pod 写入的日志。
 
 ## 7.5.2 持久化的 Volume
 
@@ -69,7 +71,7 @@ mount("/usr/share/nginx/html","rootfs/data", "none", MS_BIND, nulll)
 
 PV 为 Kubernete 集群提供了一个使用使用远程存储的抽象，如下代码所示，声明了一个 PV 存储对象，并描述了存储能力、访问模式、存储类型、回收策略、网络存储类型等信息。
 
-```
+```yaml
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -96,7 +98,7 @@ PVC 和 PV 的设计，跟“面向对象”的思想一致：
 
 如下声明一个 PVC，与某个 PV 绑定后再被应用（Pod）消费。
 
-```
+```yaml
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -117,7 +119,7 @@ spec:
 
 当 PVC 匹配到 PV 之后，就可以在 Pod 中使用了。
 
-```
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -150,7 +152,7 @@ Dynamic Provisioning 核心在于 StorageClass 对象，这个对象的作用其
 
 如下示例，定义了一个名为 standard 的 StorageClass，存储提供者为 aws-ebs，其存储参数设置了一个 type ，值为 gp2，回收策略为 Retain。
 
-```
+```yaml
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
