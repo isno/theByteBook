@@ -11,7 +11,7 @@
 因此，同一台宿主机上所有的容器，都共享宿主机操作系统的内核。如果应用程序需要配置内核参数、加载内核模块、与内核进行交互，那么是有很大风险的，这也是容器相比虚拟机主要的缺陷之一。
 :::
 
-## 7.3.1 镜像的原理
+## 7.3.1 联合文件系统
 
 Docker 镜像并不是粗暴地把所有的依赖文件封包，而是做了一个巧妙的创新：**基于 UnionFS（Union File System，联合文件系统）采用堆叠的方式，对 rootfs 进行分层设计**。
 
@@ -74,6 +74,8 @@ $ sudo mount -t overlay overlay \
   - 如果删除“in_lower.txt”, lower 目录里内的 ”in_lower.txt” 文件不会有变化，但 upper 目录中会增加一个特殊文件表示“in_lower.txt”这个文件不能出现在 merged 里了，这就表示它已经被删除了。
 - 修改文件：如果修改“in_lower.txt”，会在 upper 目录中新建一个“in_lower.txt”文件，包含更新的内容，而在 lower 中的原来的实际文件“in_lower.txt”不会改变。
 
+## 7.3.2 Docker 镜像的分层设计
+
 下面是 Docker 官方的一张描述文件系统的图片，显示了联合文件系统在镜像层和容器层起到的作用。
 
 :::center
@@ -81,7 +83,7 @@ $ sudo mount -t overlay overlay \
   图 7-9 使用联合文件系统的 Docker 镜像结构 [图片来源](https://docs.docker.com/storage/storagedriver/overlayfs-driver/)
 :::
 
-最后，通过图 7-9 概览启动后的 Docker 镜像，这个容器实际上由 6 个层构成：
+通过图 7-9 概览启动后的 Docker 镜像，这个容器实际上由 6 个层构成：
 - 最下层的基础镜像 debian stretch；
 - 往上 3 层为 Dockerfile 通过指令 ADD、ENV、CMD 设置 JAVA SDK、环境变量等生成的只读层；
 - Init Layer 夹在只读层和可写层之间，主要存放可能会被修改的 /etc/hosts、/etc/resolv.conf 等文件，这些文件本来属于 debian 镜像，但容器启时，用户往往会写入一些指定的配置，所以 Docker 单独生成了这个层；
@@ -94,7 +96,7 @@ $ sudo mount -t overlay overlay \
 
 最终，这 6 个层被联合挂载到 /var/lib/docker/aufs/mnt 目录中，表现为一个带有 JAVA JDK 的 debian 操作系统供容器使用。
 
-## 7.3.2 构建足够小的镜像
+## 7.3.3 构建足够小的镜像
 
 构建镜像最有挑战性之一的就是使用镜像尽可能小，小的镜像不论在大规模集群部署、故障转移、存储成本方面都有巨大的优势。
 
@@ -129,7 +131,7 @@ REPOSITORY                TAG             IMAGE ID       CREATED          SIZE
 alpine                    nginx           ca338a969cf7   17 seconds ago   23.4MB
 ```
 
-## 7.3.3 镜像下载加速
+## 7.3.4 镜像下载加速
 
 镜像文件从远程仓库下载而来，那么镜像下载的效率会受带宽、镜像仓库瓶颈的影响，这也直接影响到容器的启动时间。
 
@@ -150,7 +152,7 @@ Dragonfly 提供了一种无侵入（不用修改容器、仓库等源码）的�
   图 7-10 Dragonfly 是怎么工作的
 :::
 
-## 7.3.4 镜像启动加速
+## 7.3.5 镜像启动加速
 
 容器镜像的大小会影响容器启动的时间，譬如 tensorflow 的镜像有 1.83 GB，冷启动这个镜像至少需要 3 分钟的时间。这么大的镜像启动慢、容器镜像中的文件也并不会被充分利用，《Making containers lazy with Docker and CernVM-FS》[^3]的论文中就提到一般镜像只有 6% 的内容会被实际用到。
 
