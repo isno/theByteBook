@@ -10,6 +10,8 @@
 
 Docker 和 CoreOS 分裂之后，被 Google 投资的 CoreOS 推出了 rkt 运行时实现，Kubernetes 又实现了对 rkt 的支持，随着容器技术的蓬勃发展，越来越多运行时实现出现，如果还继续使用与 Docker 类似强绑定的方式，Kubernetes 的工作量将无比庞大。Kubernetes 要重新考虑对所有容器运行时的兼容适配问题了。
 
+## 1. CRI 运行时接口
+
 Kubernetes 从 1.5 版本开始，在遵循 OCI 基础上，将容器操作抽象为一个接口，该接口作为 Kubelet 与运行时实现对接的桥梁，Kubelet 通过发送接口请求对容器进行启动和管理，各个容器运行时只要实现这个接口就可以接入 Kubernetes，这便是 CRI（Container Runtime Interface，容器运行时接口）。
 
 CRI 实现上是一套通过 Protocol Buffer 定义的 API，从配图 7-16 可以看出：CRI 主要有 gRPC client、gRPC Server 和具体容器运行时实现三个组件。其中 Kubelet 作为 gRPC Client 调用 CRI 接口，CRI shim 作为 gRPC Server 来响应 CRI 请求，并负责将 CRI 请求内容转换为具体的运行时管理操作。
@@ -21,7 +23,7 @@ CRI 实现上是一套通过 Protocol Buffer 定义的 API，从配图 7-16 可�
 
 因此，任何容器运行时想要在 Kubernetes 中运行，都需要实现一个基于 CRI 接口规范的 CRI shim（gRPC Server）。
 
-## CRI-O
+## 2. CRI-O
 
 2017 年，由 Google、RedHat、Intel、SUSE、IBM 联合发起的 CRI-O（Container Runtime Interface Orchestrator）项目发布了首个正式版本。从名字就可以看出，它非常纯粹, 就是兼容 CRI 和 OCI, 做一个 Kubernetes 专用的轻量运行时。
 
@@ -32,7 +34,7 @@ CRI 实现上是一套通过 Protocol Buffer 定义的 API，从配图 7-16 可�
 
 Google 推出 CRI-O 明显摆出了直接挖掉 Docker 根基意图，但此时 Docker 在容器生态中的份额仍然占有绝对优势，对于普通用户来说，如果没有明确的收益，并没有什么动力要把 Docker 换成别的引擎。不过我们也能够想像此时 Docker 心中肯定充斥了难以言喻的危机感。
 
-## Containerd
+## 3. Containerd
 
 Docker 并没有“坐以待毙”，与其将来被人分离或者抛弃不用，不如主动革新。Docker 推动自身的重构，并拆分出 Containerd，早期 Containerd单独开源，后来捐献给了 CNCF，目的希望与 Kubernetes 深度绑定在一起。
 
@@ -41,7 +43,6 @@ Containerd 作为 CNCF 的托管项目，自然符合 CRI 标准的。但 Docker
 此时，Kubernetes 里就出现了两种调用链：
 1. CRI 接口调用 dockershim，然后 dockershim 调用 Docker，Docker 再走 Containerd 去操作容器。
 2. CRI 接口直接调用 Containerd 去操作容器。
-
 
 :::center
   ![](../assets//k8s-runtime-v2.png)<br/>
@@ -68,7 +69,7 @@ Kubernetes 从 1.10 版本宣布开始支持 containerd 1.1，在调用链中已
 	<img src="../assets/k8s-runtime-v4.svg" width = "100%"  align=center />
 </div>
 
-## 安全容器运行时
+## 4. 安全容器运行时
 
 尽管容器有许多技术优势，然而传统以 runc 为代表基于共享内核技术进行的软隔离还是存在一定的风险性。如果某个恶意程序利用系统缺陷从容器中逃逸，就会对宿主机造成严重威胁，尤其是公有云环境，安全威胁很可能会波及到其他用户的数据和业务。
 
@@ -88,6 +89,8 @@ CRI 和 Kata Containers 的集成如下图所示：
 <div  align="center">
 	<img src="../assets/kata-container.png" width = "600"  align=center />
 </div>
+
+## 5. 容器运行时生态
 
 今天，如下图所示，符合 CRI 规范的容器运行时已达十几种，要使用哪一种容器运行时取决于你安装 Kubernetes 时宿主机上的容器运行时环境，但对于云计算厂商来说，如果没有特殊的需求（譬如因为安全性要求必须隔离内核）采用的容器运行时普遍都已是 containerd，毕竟运行性能以及稳定对它们来说就是核心生产力和竞争力。
 

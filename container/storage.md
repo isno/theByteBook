@@ -5,16 +5,17 @@
 容器是镜像的运行实例，在 7.3 节，我们详细分析过镜像的原理，作为不可变的基础设施，要求同一份镜像能复制出完全一致的镜像实例，这就意味着在容器内写入的任何数据是无法真正写入镜像内。
 :::
 
-那么容器系统怎么解决持久化存储呢？我们由浅入深，先从 Docker 看起。目前，Docker 支持 3 中挂载的方式：
+那么容器系统怎么解决持久化存储呢？我们由浅入深，先从 Docker 看起。
+
+目前，Docker 支持 3 中挂载的方式：
 
 :::center
   ![](../assets/types-of-mounts-volume.webp)<br/>
 :::
 
 Bind mount 是 Docker 最早支持的挂载类型，只要用过 Docker，肯定熟悉下面挂载方式。
-
-```
-docker run -v /usr/share/nginx/html:/data nginx:lastest
+``` bash
+$ docker run -v /usr/share/nginx/html:/data nginx:lastest
 ```
 上面的命令实际上就是下面的 MS_BIND 类型的 mount 系统调用。
 
