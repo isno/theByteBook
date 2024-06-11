@@ -6,34 +6,40 @@
 
 那么容器系统怎么解决持久化存储呢？我们由浅入深，先从 Docker 看起。
 
+## 7.5.1 Docker 的存储设计
+
 目前，Docker 支持 3 中挂载的方式：
 
 :::center
   ![](../assets/types-of-mounts-volume.webp)<br/>
 :::
 
-Bind mount 是 Docker 最早支持的挂载类型，只要用过 Docker，肯定熟悉下面挂载方式。
+bind mount 是 Docker 最早支持的挂载类型，只要用过 Docker，肯定熟悉下面挂载方式。
 ``` bash
 $ docker run -v /usr/share/nginx/html:/data nginx:lastest
 ```
 上面的命令实际上就是下面的 MS_BIND 类型的 mount 系统调用。
 
-```
+```c
 // 将宿主机中的 /usr/share/nginx/html 挂载到 rootfs 指定的挂载点 /data 上
 mount("/usr/share/nginx/html","rootfs/data", "none", MS_BIND, nulll)
 ```
+这种挂载的方式显然有明显的缺陷：
+- **通过映射的方式挂载宿主机中的一个绝对路径，这就跟操作系统强相关**。这意味着 bind mount 的方式无法写在 dockerfile 中，不然镜像在其他操作系统有可能无法启动。其次，挂载后的目录明面上看不出和 Docker 的关系，操作系统内的其他进程有可能误写，存在安全隐患。
+- 容器被广泛使用后，**容器存储的需求绝对不是简单的映射关系就能搞定**，存储位置不限于宿主机（还有可能是网络存储）、存储的介质不限于磁盘（还可能是 tmpfs）、存储的类型也不仅仅是文件系统（还有可能是块设备或者对象存储）。如果是**网络存储没必要先挂载到操作系统，再挂载到容器某个目录，Docker 完全可以实现 iSCSI 协议、NFS 协议直接对接这些存储**。
 
-这种挂载的方式显然有非常明显的缺陷：
-- **通过映射的方式挂载宿主机中的一个绝对路径，这就跟操作系统强相关**。这意味着 Bind mount 无法写在 dockerfile 中，不然镜像有可能无法启动。其次，宿主机中的目录虽然被挂载，但其他非 Docker 的进程也可以进行读写，存在安全隐患。
-- 容器被广泛使用后，**容器存储绝对不是简单的映射关系那么简单**，存储位置不限于宿主机（还有可能是网络存储）、存储的介质不限于磁盘（还可能是 tmpfs）、存储的类型也不仅仅是文件系统（还有可能是块设备或者对象存储），而且**存储也并不是都需要先挂载到操作系统，再挂载到容器某个目录，如果 Docker 想越过操作系统，就需要知道使用何种协议（譬如网络硬盘 iSCSI 协议、网络文件 NFS 协议）**。
+为此 Docker 提供全新的挂载类型 Volume（存储卷）：
+- 它首先在宿主机开辟了一块属于 Docker 空间（Linux 中该目录是 /var/lib/docker/volumes/），这样就解决了 bind mount 映射宿主机绝对路径的问题；
+- 考虑存储的类型众多，仅靠 Docker 自己实现并不现实，为此 Docker 提出了 Volume Driver，借助社区力量丰富 Docker 的存储驱动种类。用户只要通过 docker plugin install 安装额外的第三方卷驱动，就能使用想要的网络存储或者各类云厂商提供的存储。
 
-为此 Docker 提供全新的挂载类型 Volume：
-- 它首先在宿主机开辟了一块属于 Docker 空间（Linux 中该目录是 /var/lib/docker/volumes/），这样就解决了 Bind mount 映射宿主机绝对路径的问题；
-- 考虑存储的类型众多，仅靠 Docker 自己实现并不现实，为此 Docker 提出了 Volume Driver 的概念，借助社区力量丰富 Docker 的存储驱动种类。这样用户只要通过 docker plugin install 安装额外的第三方卷驱动，就能使用网络存储或者各类云厂商提供的存储。
+## 7.5.2 Kubernetes 的存储设计
 
-我们从 Docker 返回到 Kubernetes 中，同 Docker 类似，Kubernetes 也抽象出了数据卷（Volume）来解决持久化存储，也开辟了属于 Kubernetes 的空间（该目录是 /var/lib/kubelet/pods/[pod uid]/volumes）、也设计了存储驱动（Volume Plugin）的概念用以支持出众多的存储类型。
+我们从 Docker 返回到 Kubernetes 中，同 Docker 类似的是：
+- Kubernetes 也抽象出了数据卷（Volume）来解决持久化存储；
+- 也开辟了属于 Kubernetes 的空间（该目录是 /var/lib/kubelet/pods/[pod uid]/volumes）；
+- 也设计了存储驱动（Volume Plugin）的概念用以支持出众多的存储类型。
 
-不过作为一个工业级的容器编排系统，Kubernetes 支持的 Volume 的类型要比 Docker 多一丢丢。
+不同的是，作为一个工业级的容器编排系统，Kubernetes 支持的 Volume 的类型要比 Docker 多一丢丢。
 
 :::center
   ![](../assets/volume-list.png)<br/>
