@@ -8,17 +8,17 @@
 
 :::
 
-早期的容器生态圈内，还有一个不能忽视的角色 CoreOS，它定位于容器设计的操作系统。作为 Docker 的互补，CoreOS+Docker 曾经是容器部署的明星套餐。然而好景不长，与之前对 Docker 的期望是“一个简单的基础单元”不同，Docker 后来开始收购一些公司大张旗鼓地发展 Swarm，发力集群编排管理，与 CoreOS 的布局产生了直接竞争关系。
+早期的容器生态圈内，还有一个不能忽视的角色 CoreOS，它定位于容器设计的操作系统。作为 Docker 的互补，CoreOS+Docker 曾经是容器部署的明星套餐。然而好景不长，与之前对 Docker 的期望是“一个简单的基础单元”不同，Docker 后来开始收购一些公司大张旗鼓地发展 Swarm，发力集群编排管理，这就与 CoreOS 的布局产生了直接竞争关系。
 
-于是，2014 年底就有了 CoreOS 与 Docker 的分手事件，其导火索是 CoreOS 撇开 Docker，推出了与 Docker 对抗的开源容器引擎 Rocket（简称rkt），并联合一些知名的 IT 公司成立委员会试图主导容器技术的标准化。最终 CoreOS 在 2015 榜上 Google 公司，并联合推出基于 CoreOS + Rocket + Kubernetes 的商用容器平台 Tectonic。
+于是，2014 年底 CoreOS 撇开 Docker，推出了与 Docker 对抗的开源容器引擎 Rocket（简称rkt），并联合一些知名的 IT 公司成立委员会试图主导容器技术的标准化。CoreOS 还在 2015“榜上”Google 公司，联合推出基于 CoreOS + Rocket + Kubernetes 的商用容器平台 Tectonic。
 
 从此，容器江湖分为两大阵营，Google 派系和 Docker 派系。
 
 ## 1. OCI 
 
-容器技术的竞争不管最终鹿死谁手，但其中标准的分裂对所有牵涉其中的人没有任何好处，于是 Linux 基金会出面调和，最终结果是 Linux 基金会于 2015 年 6 月在  DockerCon 大会上宣布成立 OCI（Open Container Initiative，开放容器倡议）项目[^1]。
+容器技术的竞争不管最终鹿死谁手，但其中标准的分裂对所有牵涉其中的人没有任何好处。
 
-OCI 的成立最终结束了容器技术标准之争，Docker 公司也被迫放弃自己的独家控制权。作为回报，Docker 的容器格式被 OCI 采纳为新标准的基础，并且由 Docker 起草 OCI 草案规范的初稿。
+Linux 基金会出面调和，最终结果是 Linux 基金会于 2015 年 6 月在  DockerCon 大会上宣布成立 OCI（Open Container Initiative，开放容器倡议）项目[^1]。OCI 的成立最终结束了容器技术标准之争，Docker 公司也被迫放弃自己的独家控制权。作为回报，Docker 的容器格式被 OCI 采纳为新标准的基础，并且由 Docker 起草 OCI 草案规范的初稿。
 
 当然这个“标准起草者”也不是那么好当的，Docker 需要提交自己的容器引擎源码作为启动资源。
 
