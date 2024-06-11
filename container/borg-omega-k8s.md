@@ -2,7 +2,7 @@
 
 这几年业界对容器技术兴趣越来越大，但在 Google 内部十几年前就已经开始大规模容器实践了，这个过程中也先后设计了三套不同的容器管理系统。 这三代系统虽然出于不同目的设计，但每一代都受前一代的强烈影响。
 
-## 1. Borg
+## 7.1.1 Borg
 Borg 是 Google 内部第一代容器管理系统。它的架构如图 7-1 所示，非常典型的 Master（BorgMaster) + Agent（Borglet）架构。用户的操作请求提交给 Master，由 Master 负责记录下“某某实例运行在某某机器上”这类元信息，Agent 通过与 Master 通讯得知分配给自己的任务，然后在 Work 节点中执行任务等操作。
 
 :::center
@@ -30,7 +30,7 @@ Borg 通过不同类型 workload 的混部共享计算资源，**提升了资源
 
 随着 Google 内部的应用程序越来越多地被部署到 Borg 上，应用团队与基础架构团队开发了大量围绕 Borg 的管理工具和服务：资源需求量预测、自动扩缩容、服务发现和负载均衡、Quota 管理等等，并逐渐形成一个基于 Borg 的内部生态。
 
-## 2. Omega
+## 7.1.2 Omega
 
 驱动 Borg 生态发展的是 Google 内部的不同团队，从结果来看，Borg 生态是一堆异构、自发的工具和系统，而非一个有设计的体系。为了使 Borg 的生态系统更加符合软件工程规范，Google 在吸取 Borg 经验的基础上开发了 Omega 系统。
 
@@ -46,7 +46,7 @@ Omega 的开发并没有复用 Borg 的代码，但汲取了 Borg 的设计思�
   图 7-2 Borg 与 Omega 是 Google 最关键的基础设施 [图片来源](https://cs.brown.edu/~malte/pub/dissertations/phd-final.pdf)
 :::
 
-## 3. Kubernetes
+## 7.1.3 Kubernetes
 
 Google 开发的第三套容器管理系统叫 Kubernetes。开发这套系统的背景是：
 - 全球越来越多的开发者也开始对 Linux 容器感兴趣（Linux 容器是 Google 的家底，却被 Docker 搞偷袭）；
@@ -71,16 +71,14 @@ Google 开发的第三套容器管理系统叫 Kubernetes。开发这套系统�
 这些 API 是跨公有云/私有云和各家云厂商的，各云厂商会将 Kubernetes 结构和语义对接到它们各自的原生 API。提供一套跨厂商的标准结构和语义来声明核心基础设施（Pod、Service、Volume）是 Kubernetes 设计的关键，在此基础上，它又通过 CRD 将这个结构扩展到任何/所有基础设施资源。
 
 :::tip 什么是 CRD
-
 CRD（Custom Resource Define，自定义资源）是 Kubernetes（v1.7+）为提高可扩展性，让开发者去自定义资源的一种方式。CRD 资源可以动态注册到集群中，注册完毕后，用户可以通过 kubectl 来创建访问这个自定义的资源对象，类似于操作 Pod 一样。不过需要注意的是 CRD 仅仅是资源的定义而已，还需要编写 Controller 去监听 CRD 的各种事件来实现自定义的业务逻辑。
-
 :::
 
 有了 CRD，用户不仅能声明 Kubernetes API 预定义的计算、存储、网络服务，还能声明数据库、Task Runner、消息总线、数字证书等等任何云厂商能想到的东西！
 
 随着 Kubernetes 资源模型越来越广泛的传播，现在已经能够用一组 Kubernetes 资源来描述一整个软件定义计算环境。就像用 docker run 可以启动单个程序一样，用 kubectl apply -f 就能部署和运行一个分布式应用，而无需关心是在私有云还是公有云以及具体哪家云厂商上。
 
-## 4. 以应用为中心的转变
+## 7.1.4 以应用为中心的转变
 
 从最初的 Borg 到 kubernetes，**容器化技术的最大的益处早就超越了单纯的提高硬件资源使用率的范畴**；**更大的变化在于数据中心运营的范畴已经从以机器为中心迁移到了以应用为中心**。
 
