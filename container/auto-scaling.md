@@ -1,10 +1,10 @@
 # 7.7.3 资源动态调整
 
-应用的实际流量会不断变化，因此使用率也是不断变化的，为了应对应用流量的变化，我们应用能够自动调整应用的资源。譬如一个在线电子商城：
-- 在促销的时候访问量会增加，我们应该自动增加服务运算能力来应对；
+应用的实际流量会不断变化，因此使用率也是不断变化的，应该有一种自动调整应用的资源的策略，譬如一个在线电子商城：
+- 促销的时候访问量会增加，应该自动增加服务运算能力来应对；
 - 当促销结束后，又需要自动降低服务的运算能力防止浪费。
 
-运算能力的增减有两种方式：增减 Pod 的数量以及改变单个 Pod 的资源，这两种方式分别对应了 kubernetes 的 HPA 和 VPA 组件。
+运算能力的增减有两种方式：增减 Pod 的数量以及改变单个 Pod 的资源，这两种方式分别对应了 Kubernetes 的 HPA 和 VPA 组件。
 
 ## 1. 横向 Pod 自动扩展：Horizontal Pod AutoScaling
 
@@ -50,16 +50,14 @@ KEDA 由以下组件组成：
 
 - Scaler：连接到外部组件（例如 Prometheus、RabbitMQ) 并获取指标（例如待处理消息队列大小）
 - Metrics Adapter：将 Scaler 获取的指标转化成 HPA 可以使用的格式并传递给 HPA
-- Controller：负责创建和更新一个 HPA 对象，并负责扩缩到零
-- keda operator：负责创建维护 HPA 对象资源，同时激活和停止 HPA 伸缩。在无事件的时候将副本数降低为 0 (如果未设置 minReplicaCount 的话)
-- metrics server: 实现了 HPA 中 external metrics，根据事件源配置返回计算结果。
+- Controller：负责创建维护 HPA 对象资源，同时激活和停止 HPA 伸缩。在无事件的时候将副本数降低为 0 (如果未设置 minReplicaCount 的话)
 
 <div  align="center">
   <img src="../assets/keda-arch.png" width = "400"  align=center />
 </div>
 
 
-如下，一个 Kafka 伸缩实例。
+如下，一个 Kafka 伸缩实例。minReplicaCount 和 maxReplicaCount 分别定义了要伸缩的对象的最小和最大副本数量，minReplicaCount 可以为 0 即缩容到没有副本，比方说 Kafka 队列一直没有新消息就可以完全缩容，到有新消息进来的时候 keda 又会自动扩容。
 
 ```yaml
 apiVersion: keda.sh/v1alpha1
@@ -84,15 +82,14 @@ spec:
         lagThreshold: "100"
         offsetResetPolicy: latest
 ```
-minReplicaCount 和 maxReplicaCount 分别定义了要伸缩的对象的最小和最大副本数量，minReplicaCount 可以为 0 即缩容到没有副本，比方说 Kafka 队列一直没有新消息就可以完全缩容，到有新消息进来的时候 keda 又会自动扩容。
 
 ## 4. 集群动态扩展：Cluster AutoScaler
 
-随着业务的发展，应用会逐渐增多，每个应用使用的资源也会增加，总会出现集群资源不足的情况。为了动态地应对这一状况，我们还需要 CLuster Auto Scaler，能够根据整个集群的资源使用情况来增减节点。
+随着业务的发展，应用会逐渐增多，每个应用使用的资源也会增加，总会出现集群资源不足的情况。为了动态应对这一状况，还应该实现能够根据整个集群的资源使用情况增/减节点。
 
 Cluster AutoScaler 是一个自动扩展和收缩 Kubernetes 集群 Node 的扩展：
 - 当集群容量不足时，它会自动去 Cloud Provider（支持绝大部分的云服务商 GCE、GKE、Azure、AKS、AWS 等等）创建新的 Node；
-- 而在 Node 长时间（超过 10 分钟）资源利用率很低时（低于 50%）自动 Pod 会自动调度到其他 Node 上面，并删除节点以节省开支。
+- 当 Node 长时间资源利用率很低时（低于 50%），会自动把该节点 Pod 调度到其他 Node 上面，然后删除节点以节省开支。
 
 <div  align="center">
   <img src="../assets/Cluster-AutoScaler.png" width = "500"  align=center />
