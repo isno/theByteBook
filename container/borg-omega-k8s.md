@@ -52,16 +52,20 @@ Google 开发的第三套容器管理系统叫 Kubernetes。开发这套系统�
 - 全球越来越多的开发者也开始对 Linux 容器感兴趣（Linux 容器是 Google 的家底，却被 Docker 搞偷袭）；
 - Google 已经把公有云基础设施作为一门业务在卖，且在持续增长（Google 是云计算概念提出者，但起了大早赶了个晚集，云计算市场被 AWS 、阿里云等占尽了先机）。
 
-2013 年夏天，Google 的工程师们开始讨论借鉴 Borg 的经验进行容器编排系统的开发，并希望用 Google 十几年的技术积累影响错失的云计算市场格局。Kubernetes 项目获批后，Google 在 2014 年 6 月的 DockerCon 大会上正式宣布将其开源。
+2013 年夏天，Google 的工程师们开始讨论借鉴 Borg 的经验进行容器编排系统的开发，并希望用 Google 十几年的技术积累影响错失的云计算市场格局。
+
+Kubernetes 项目获批后，Google 在 2014 年 6 月的 DockerCon 大会上正式宣布将其开源。通过图 7-3 观察 Kubernetes 架构，能看出大量设计来源于 Borg/Omega 系统：分布式的彼此交互组件构成的 Master 架构；Pod（之 Borg Alloc）；工作节点中的 Kublet（之 Borglet）；etcd（之 Omega 集群状态存储 store）等等。
 
 :::center
   ![](../assets/k8s-arch.svg)<br/>
   图 7-3 Kubernetes 架构以及组件概览 [图片来源](https://link.medium.com/oWobLWzCQJb)
 :::
 
-如图 7-3 所示 Kubernetes 的架构，能看出其中大量概念来源于 Borg/Omega 系统：分布式的彼此交互组件构成的 Master 架构、Pod（之 Borg Alloc）、工作节点中的 Kublet（之 Borglet）、etcd（之 Omega 集群状态存储 store）等等。
 
-出于争夺云计算市场目的，Kubernetes 首要设计目标就是**在享受容器带来的资源利用率提升的同时，让部署和管理复杂分布式系统的基础设施标准化且简单**。为了进一步理解基础设施的标准化，来看 Kubernetes 从一开始就提供的东西：描述各种资源需求的标准 API：
+
+出于降低用户使用的门槛，实现 Google 从底层进军云计算市场意图，Kubernetes 首要设计目标是**在享受容器带来的资源利用率提升的同时，让部署和管理复杂分布式系统的基础设施标准化且简单**。
+
+为了进一步理解基础设施的标准化，来看 Kubernetes 从一开始就提供的东西，描述各种资源需求的标准 API：
 
 - 描述 Pod、Container 等计算需求的 API。
 - 描述 Service、Ingress 等虚拟网络功能的 API。
@@ -74,9 +78,9 @@ Google 开发的第三套容器管理系统叫 Kubernetes。开发这套系统�
 CRD（Custom Resource Define，自定义资源）是 Kubernetes（v1.7+）为提高可扩展性，让开发者去自定义资源的一种方式。CRD 资源可以动态注册到集群中，注册完毕后，用户可以通过 kubectl 来创建访问这个自定义的资源对象，类似于操作 Pod 一样。不过需要注意的是 CRD 仅仅是资源的定义而已，还需要编写 Controller 去监听 CRD 的各种事件来实现自定义的业务逻辑。
 :::
 
-有了 CRD，用户不仅能声明 Kubernetes API 预定义的计算、存储、网络服务，还能声明数据库、Task Runner、消息总线、数字证书等等任何云厂商能想到的东西！
+有了 CRD，用户不仅能声明 Kubernetes API 预定义的计算、存储、网络服务，还能声明数据库、Task Runner、消息总线、数字证书等等任何云厂商能想到的东西！随着 Kubernetes 资源模型越来越广泛的传播，现在已经能够用一组 Kubernetes 资源来描述一整个软件定义计算环境。
 
-随着 Kubernetes 资源模型越来越广泛的传播，现在已经能够用一组 Kubernetes 资源来描述一整个软件定义计算环境。就像用 docker run 可以启动单个程序一样，用 kubectl apply -f 就能部署和运行一个分布式应用，而无需关心是在私有云还是公有云以及具体哪家云厂商上。
+就像用 docker run 可以启动单个程序一样，现在用 kubectl apply -f 就能部署和运行一个分布式应用，而无需关心是在私有云还是公有云或者具体哪家云厂商上。
 
 ## 7.1.4 以应用为中心的转变
 
