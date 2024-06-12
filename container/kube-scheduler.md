@@ -32,11 +32,12 @@ Kubernetes 默认调度器 kube-scheduler 双循环架构如下所示。
 	- 不断地从调度队列里出队一个 Pod。然后调用 Predicates 算法对所有的 Node 进行“过滤”。
 	- “过滤”得到的一组可以运行这个 Pod 的 Node 列表。当然，Predicates 算法需要的 Node 信息，也都是 Scheduler Cache 里直接拿到的，这是调度器保证算法执行效率的主要手段之一。
 	- 接下来，调度器就会再调用 Priorities 算法为上述列表里的 Node 打分，分数从 0 到 10。得分最高的 Node，就会作为这次调度的结果。
-	- 调度算法执行完成后，调度器就需要将 Pod 对象的 nodeName 字段的值，修改为上述 Node 的名字，这个过程在 Kubernetes 里面被称作 Bind。为了不在关键调度路径里远程访问 API Server，Kubernetes 默认调度器在 Bind 阶段只会更新 Scheduler Cache 里的 Pod 和 Node 的信息。这种基于“乐观”假设的 API 对象更新方式，在 Kubernetes 里被称作 Assume。Assume 之后，调度器才会创建一个 Goroutine 来异步地向 API Server 发起更新 Pod 的请求，来真正完成 Bind 操作。
+	- 调度算法执行完成后，调度器就需要将 Pod 对象的 nodeName 字段的值，修改为上述 Node 的名字，这个过程在 Kubernetes 里面被称作 Bind。
+	- 为了不在关键调度路径里远程访问 API Server，Kubernetes 默认调度器在 Bind 阶段只会更新 Scheduler Cache 里的 Pod 和 Node 的信息。这种基于“乐观”假设的 API 对象更新方式，在 Kubernetes 里被称作 Assume。Assume 之后，调度器才会创建一个 Goroutine 异步地向 API Server 发起更新 Pod 的请求，完成真正 Bind 操作。
 
-Kubernetes 调度器的上述设计思想，也是在集群规模不断增长的演进过程中逐步实现的。尤其是 “Cache 化”，这个变化其实是最近几年 Kubernetes 调度器性能得以提升的一个关键演化。
+Kubernetes 调度器的上述设计思想，也是在集群规模不断增长的演进过程中逐步实现的。尤其是 “Cache 化”设计，是最近几年 Kubernetes 调度器性能提升的一个关键演化。
 
-## 2. 扩展调度插件
+## 2. 调度器可扩展设计
 
 “Pod 是原子的调度单位”这句话的含义是 kube-scheduler 以 Pod 为调度单元进行依次调度，并不考虑 Pod 之间的关联关系。
 
@@ -44,7 +45,9 @@ Kubernetes 调度器的上述设计思想，也是在集群规模不断增长的
 
 例如：JobA 需要 4 个 Pod 同时启动，才算正常运行。kube-scheduler 依次调度 3 个 Pod 并创建成功，到第 4 个 Pod 时，集群资源不足，则 JobA 的 3 个 Pod 处于空等的状态。但是它们已经占用了部分资源，如果第 4 个 Pod 不能及时启动的话，整个 JobA 无法成功运行，更糟糕的集群其他的资源刚好被 JobB 的 3 个 Pod 所占用，同时在等待 JobB 的第 4 个 Pod 创建，此时整个集群就出现了死锁。
 
-**解决以上问题的思想是将调度单元从 Pod 修改为 PodGroup，以组的形式进行调度，实现“Gang Scheduling”**。Kubernetes 从 v1.15 版本起，为 kube-scheduler 设计了可插拔的调度框架（Scheduling Framework）。有了 Scheduling Framework，在保持调度“核心”简单且可维护的同时，用户可以编写自己的调度插件注册到 Scheduling Framework 的扩展点来实现自己想要的调度逻辑。
+**解决以上问题的思想是将调度单元从 Pod 修改为 PodGroup，以组的形式进行调度，实现“Gang Scheduling”**。
+
+Kubernetes 从 v1.15 版本起，为 kube-scheduler 设计了可插拔的扩展机制 —— Scheduling Framework。有了 Scheduling Framework，在保持调度“核心”简单且可维护的同时，用户可以编写自己的调度插件注册到 Scheduling Framework 的扩展点来实现自己想要的调度逻辑。
 
 :::center
   ![](../assets/scheduling-framework-extensions.png)<br/>
