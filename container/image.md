@@ -22,14 +22,7 @@ UnionFS（联合文件系统）技术能够将不同的层整合成一个文件�
 UnionFS 有很多种实现，例如 OverlayFS、Btrfs 等。在 Linux 内核 3.18 版本中，OverlayFS 代码正式合入 Linux 内核的主分支。在这之后，OverlayFS 也就逐渐成为各个主流 Linux 发行版本里缺省使用的容器文件系统了。
 :::
 
-Stripe 工程师 Julia Evans 曾撰写过一篇文章《How containers work: overlayfs》[^1]，笔者引用文章中的漫画以及代码说明容器镜像是如何工作的，如下图所示，OverlayFS 工作原理概览。
-
-:::center
-  ![](../assets/overlay.jpeg)<br/>
-  图 7-7 OverlayFS 工作原理概览
-:::
-
-继续用代码演示 OverlayFS 的工作原理。
+用代码演示 OverlayFS 的工作原理。下面的代码中，最后一条指令使用 mount 命令挂载，-t 参数指定挂载后的文件系统类型为 overlay，并包含了 overlay 类型的参数 lowerdir（只读层）、upperdir（读写层）、merged（挂载后，最终呈现给用户视图）。
 
 ```bash
 #!/bin/bash
@@ -50,8 +43,6 @@ $ sudo mount -t overlay overlay \
  -o lowerdir=./lower,upperdir=./upper,workdir=./work \
  ./merged
 ```
-
-以上代码中，最后一条指令使用 mount 命令挂载，-t 参数指定挂载后的文件系统类型为 overlay，并包含了 overlay 类型的参数 lowerdir（只读层）、upperdir（读写层）、merged（挂载后，最终呈现给用户视图）。
 
 挂载后的文件系统视图如图 7-8 所示。
 
