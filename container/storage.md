@@ -91,9 +91,7 @@ spec:
 ```
 以上的 yaml 配置中声明了一个 PV 存储对象，并描述了存储能力（5Gi）、访问模式（ReadWriteOnce）、存储类型（nfs）、回收策略（Recycle）等信息。
 
-PV 描述了详细的存储信息，但对应用层的开发者却不太友好，应用层开发者只想知道我有多大的空间、I/O 是否满足要求，并不关心存储底层的配置。
-
-于是，kubernetes 就把存储服务再次进行抽象，把应用开发者关心的逻辑再抽象一层出来，这就是 PVC（Persistent Volume Claim，持久卷声明）。
+PV 描述了详细的存储信息，但对应用层的开发者却不太友好，应用层开发者只想知道我有多大的空间、I/O 是否满足要求，并不关心存储底层的配置。于是，Kubernetes 把存储服务再次进行抽象，把应用开发者关心的逻辑再抽象一层出来，这就是 PVC（Persistent Volume Claim，持久卷声明）。
 
 PVC 和 PV 的设计，跟“面向对象”的思想一致：
 - PVC 是持久化存储的“接口”，它提供了对某种持久化存储**使用描述**，描述存储类型、大小、访问模式等需求；
@@ -144,13 +142,15 @@ spec:
 
 ## 7.5.3 PV 的使用：从静态到动态
 
-Pod 使用存储的原则是：**先规划，后申请，再使用**，如果在系统中没有满足 PVC 要求的 PV，PVC 则一直处于 Pending 状态，直到系统里产生了一个合适的 PV，这期间 Pod 将无法正常启动。
+存储的资源是固定的，Pod 使用存储的原则是：**先规划，后申请，再使用**。
 
-如果是一个小规模的集群，可以预先创建多个 PV 等待 PVC 匹配即可。但一个大规模的 Kubernetes 集群里很可能有成千上万个 Pod，这肯定没办法靠人工的方式提前创建出成千上万个 PV。为此，Kubernetes 为我们提供了一套可以自动创建 PV 的机制 —— Dynamic Provisioning（前面通过人工管理 PV 的方式叫作 Static Provisioning）。
+如果在系统中没有满足 PVC 要求的 PV，PVC 则一直处于 Pending 状态，直到系统里产生了一个合适的 PV，这期间 Pod 将无法正常启动。
+
+如果是一个小规模的集群，可以预先创建多个 PV 等待 PVC 匹配即可。但一个大规模的 Kubernetes 集群里很可能有成千上万个 Pod，这肯定没办法靠人工的方式提前创建出成千上万个 PV。为此，Kubernetes 提供了一套可以自动创建 PV 的机制 —— Dynamic Provisioning（相对的，前面通过人工创建 PV 的方式叫作 Static Provisioning）。
 
 Dynamic Provisioning 核心在于 StorageClass 对象，它的作用其实就是创建 PV 的模板，StorageClass 的声明中有两类关键信息：
 - **PV 的属性**：譬如存储空间的大小、读写模式、回收策略等
-- **Provisioner 的信息**：即声明采用何种存储插件以及插件的参数信息，存储插件有两类：
+- **Provisioner 的属性**：即声明采用何种存储插件以及插件的参数信息，存储插件有两类：
   - 一种内置在 Kubernetes 源码中，这种类型的插件称为 In-Tree 类型，前缀一般为 "kubernetes.io"；
   - 另外一种根据 Kubernetes 提供的存储接口，由第三方的存储供应商实现，代码独立于 Kubernetes，这种类型的插件被称为 Out-of-Tree 类型。 
 
@@ -177,9 +177,7 @@ StorageClass 被创建之后，当 PVC 的需求来了，它就会自动的去�
 
 相信大部分读者对于如何使用 Volume 没什么疑问了，下面我们再了解真实的存储系统是如何接入到新创建的 Pod 中。
 
-在这之前，我们先预备一些前置知识。
-
-Kubernetes 的 Volume 继承了 Docker和操作系统的设计，并将新增或者卸载存储设备分解为以下三个操作：
+在这之前，我们先预备一些前置知识。Kubernetes 的 Volume 操作系统的设计，并将新增或者卸载存储设备分解为以下三个操作：
 
 - 首先，得 Provision（准备）哪种设备，Provision 类似给操作系统准备一块新的硬盘，这一步确定了接入存储设备的类型、容量等基本参数。它的逆向操作是 delete（移除）设备。
 - 然后，将准备好的存储附加（Attach）到系统中，Attach 可类比为将存储设备接入操作系统，此时尽管设备还不能使用，但你已经可以用操作系统的 fdisk -l 命令查看到设备，这一步确定存储设备的名称、驱动方式等面向系统侧的信息，它的逆向操作是 Detach（分离）设备。
@@ -191,7 +189,7 @@ Kubernetes 的 Volume 继承了 Docker和操作系统的设计，并将新增或
 
 Volume 的创建和管理在 Kubernetes 中主要由卷管理器 VolumeManager 和 AttachDetachController 和 PVController 三个组件负责，前面提到的 Provision、Delete、Attach、Detach、Mount、Unmount 则由 Volume Plugins 实现。
 
-理解基本的前置知识，再来看一个带有 PVC 的 Pod 挂载过程:
+如图 7-27 所示，一个带有 PVC 的 Pod 创建过程。
 
 :::center
   ![](../assets/k8s-volume.svg)<br/>
