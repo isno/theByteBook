@@ -72,16 +72,12 @@
     padding: 0;
   }
   .page-info {
-    display:flex;
+    display: flex;
     justify-content:  space-between;
     margin-top:30px;
     border-bottom: 1px solid #eaecef;
   }
-  .star {
-
-  }
   .last-updated {
-   
     text-align:right;
     font-size: .9em;
     margin-bottom: 10px;

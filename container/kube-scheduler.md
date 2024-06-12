@@ -2,7 +2,9 @@
 
 调度器主要的职责是为一个新创建出来的 Pod，寻找一个最合适的节点。
 
-在几十个节点的集群中，这肯定不是什么困难的事情，但如果是几千个节点或者更大规模的集群呢，Pod 创建/更新以及节点资源无时无刻不在变化，如果每次调度需要数千次远程访问获取这些信息，不仅会造成因为耗时过长（信息失效）造成调度失败，调度器密集的请求还会导致本身成为集群的性能瓶颈。
+在几十个节点的集群中，这肯定不是什么困难的事情，但如果是几千个节点或者更大规模的集群呢？
+
+Pod 创建/更新以及节点资源无时无刻不在变化，如果每次调度需要数千次远程访问获取这些信息，不仅会造成因为耗时过长（信息失效）造成调度失败，调度器密集的请求还会导致本身成为集群的性能瓶颈。
 
 :::tip <a/>
 为了充分利用硬件资源，通常会将各种类型(CPU 密集、IO 密集、批量处理、低延迟作业)的 workloads 运行在同一台机器上，这种方式减少了硬件上的投入，但也使调度问题更加复杂。
@@ -11,9 +13,9 @@
 
 :::right
 —— from Omega 论文
-
 :::
 
+## 1. kube-scheduler 双循环架构
 Google 在 Omega 的论文中提出了一种共享状态（Shared State）的双循环调度机制，用来解决大规模集群的调度效率问题，这种调度机制后来不仅应用在 Google 的 Omega 系统中，也同样被 Kubernetes 继承了下来。
 
 Kubernetes 默认调度器 kube-scheduler 双循环架构如下所示：
@@ -23,15 +25,19 @@ Kubernetes 默认调度器 kube-scheduler 双循环架构如下所示：
   图 7-1 kube-scheduler 双循环架构设计
 :::
 
-- 第一个控制循环称之为 Informer Path，它主要目的是启动一系列 Informer 监听（Watch）Etcd 中 Pod、Node、Service 等与调度相关的 API 对象的变化。譬如一个待调度 Pod（即：它的 nodeName 字段是空的）被创建出来之后，调度器就会通过 Pod Informer 的 Handler 将这个待调度 Pod 添加进调度队列。此外，Kubernetes 的默认调度器还要负责对调度器缓存（即 Shared State）进行更新，缓存的目的主要是对调度部分进行性能优化，将集群信息 cache 化，以便提升 Predicate 和 Priority 调度算法的执行效率。
+- 第一个控制循环称之为 Informer Path，它主要目的是：
+	- 启动一系列 Informer 监听（Watch）Etcd 中 Pod、Node、Service 等与调度相关的 API 对象的变化。譬如一个待调度 Pod 被创建后，调度器就会通过 Pod Informer 的 Handler 将这个待调度 Pod 添加进调度队列。
+	- Kubernetes 的默认调度器还要负责对调度器缓存（即 Shared State）进行更新，缓存的目的主要是对调度部分进行性能优化，将集群信息 cache 化，以便提升 Predicate 和 Priority 调度算法的执行效率。
 
-- 第二个控制循环，是调度器负责 Pod 调度的主循环，我们可以称之为 Scheduling Path。Scheduling Path 的主要逻辑就是不断地从调度队列里出队一个 Pod。然后调用 Predicates 算法对所有的 Node 进行“过滤”。这一步“过滤”得到的一组可以运行这个 Pod 的 Node 列表。当然，Predicates 算法需要的 Node 信息，也都是 Scheduler Cache 里直接拿到的，这是调度器保证算法执行效率的主要手段之一。接下来，调度器就会再调用 Priorities 算法为上述列表里的 Node 打分，分数从 0 到 10。得分最高的 Node，就会作为这次调度的结果。调度算法执行完成后，调度器就需要将 Pod 对象的 nodeName 字段的值，修改为上述 Node 的名字，这个过程在 Kubernetes 里面被称作 Bind。为了不在关键调度路径里远程访问 API Server，Kubernetes 默认调度器在 Bind 阶段只会更新 Scheduler Cache 里的 Pod 和 Node 的信息。这种基于“乐观”假设的 API 对象更新方式，在 Kubernetes 里被称作 Assume。Assume 之后，调度器才会创建一个 Goroutine 来异步地向 API Server 发起更新 Pod 的请求，来真正完成 Bind 操作。
-
-除了上述的“Cache 化”和“乐观绑定”，Kubernetes 默认调度器还有一个重要的设计，那就是“无锁化”。在 Scheduling Path 上，调度器会启动多个 Goroutine 以节点为粒度并发执行 Predicates 算法，从而提高这一阶段的执行效率。而与之类似的，Priorities 算法也会以 MapReduce 的方式并行计算然后再进行汇总。同时，在调度的关键路径上，调度器也避免设置任何全局的竞争资源，从而免去了使用锁进行同步带来的巨大的性能损耗。
+- 第二个控制循环，是调度器负责 Pod 调度的主循环，被称之为 Scheduling Path。Scheduling Path 主要逻辑是：
+	- 不断地从调度队列里出队一个 Pod。然后调用 Predicates 算法对所有的 Node 进行“过滤”。
+	- “过滤”得到的一组可以运行这个 Pod 的 Node 列表。当然，Predicates 算法需要的 Node 信息，也都是 Scheduler Cache 里直接拿到的，这是调度器保证算法执行效率的主要手段之一。
+	- 接下来，调度器就会再调用 Priorities 算法为上述列表里的 Node 打分，分数从 0 到 10。得分最高的 Node，就会作为这次调度的结果。
+	- 调度算法执行完成后，调度器就需要将 Pod 对象的 nodeName 字段的值，修改为上述 Node 的名字，这个过程在 Kubernetes 里面被称作 Bind。为了不在关键调度路径里远程访问 API Server，Kubernetes 默认调度器在 Bind 阶段只会更新 Scheduler Cache 里的 Pod 和 Node 的信息。这种基于“乐观”假设的 API 对象更新方式，在 Kubernetes 里被称作 Assume。Assume 之后，调度器才会创建一个 Goroutine 来异步地向 API Server 发起更新 Pod 的请求，来真正完成 Bind 操作。
 
 Kubernetes 调度器的上述设计思想，也是在集群规模不断增长的演进过程中逐步实现的。尤其是 “Cache 化”，这个变化其实是最近几年 Kubernetes 调度器性能得以提升的一个关键演化。
 
-## 扩展调度插件
+## 2. 扩展调度插件
 
 「Pod 是原子的调度单位」这句话的含义是 kube-scheduler 以 Pod 为调度单元进行依次调度，并不考虑 Pod 之间的关联关系。但是很多数据**计算类的离线作业具有组合调度的特点，要求所有的子任务都能够成功创建后，整个作业才能正常运行**，即所谓的 All_or_Nothing。
 

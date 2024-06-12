@@ -23,3 +23,18 @@ table {
   width: 100%;
   display: table;
 }
+
+@media print{
+  .navbar,
+  .sidebar,
+  .sidebar-mask,
+  .page-nav,
+  .page .page-meta,
+  .page-info {
+    display: none;
+  }
+  .page {
+    padding-left: inherit;
+  }
+
+}

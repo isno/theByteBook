@@ -6,7 +6,7 @@
 
 运算能力的增减有两种方式：增减 Pod 的数量以及改变单个 Pod 的资源，这两种方式分别对应了 kubernetes 的 HPA 和 VPA 组件。
 
-## 1.横向 Pod 自动扩展：Horizontal Pod AutoScaling
+## 1. 横向 Pod 自动扩展：Horizontal Pod AutoScaling
 
 横向 Pod 自动扩展的思路是这样的：kubernetes 会运行一个 controller，周期性地监听 pod 的资源使用情况：
 - 当高于设定的阈值时，会自动增加 pod 的数量；
@@ -61,7 +61,7 @@ KEDA 由以下组件组成：
 
 如下，一个 Kafka 伸缩实例。
 
-```
+```yaml
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:

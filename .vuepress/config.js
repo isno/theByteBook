@@ -3,6 +3,7 @@ import { defineUserConfig, defaultTheme } from 'vuepress';
 import { mdEnhancePlugin } from "vuepress-plugin-md-enhance";
 import { commentPlugin } from "vuepress-plugin-comment2";
 import { readingTimePlugin } from "vuepress-plugin-reading-time2";
+import { webpackBundler } from '@vuepress/bundler-webpack'
 
 import { containerPlugin } from '@vuepress/plugin-container'
 
@@ -25,6 +26,10 @@ export default defineUserConfig({
      `
  ]
     ],
+    /*bundler: webpackBundler({
+        postcss: {},
+        vue: {},
+      }),*/
     plugins: [
         mdEnhancePlugin({
           // 启用脚注
