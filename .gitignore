@@ -19,5 +19,5 @@ dist
 *.pdf
 .cache
 chrome
-.package.json
+
 .vuepress

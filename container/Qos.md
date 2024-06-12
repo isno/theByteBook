@@ -39,21 +39,21 @@ Pod 的 requests 和 limits 是如何对应到这三个 QoS 等级上，可以�
 
 理想的情况下资源完全够用，而且应用也都使用规范内的资源。
 
-但现实不会如你所愿，晚高峰、大促都会导致集群资源产生大的波动。**当资源不足时，保证整个集群可用的手段是驱逐那些不太重要的 Pod**。
+但现实不会如你所愿，晚高峰、大促都会导致集群资源产生大的波动。**当资源不足时（譬如可用内存 memory.available、宿主机磁盘空间 nodefs.available、镜像存储空间 imagefs.available），保证整个集群可用的手段是驱逐那些不太重要的 Pod**。
 
 ### 3.1 驱逐的方式
 
-为此，kubernetes 有两种驱逐策略：soft eviction（软驱除） 和 hard eviction（硬驱除）。设置两种驱逐方式是为了平衡节点稳定性和对 pod 的影响：
+为此，kubernetes 有两种驱逐策略：soft eviction（软驱逐） 和 hard eviction（硬驱逐）：
 - 软驱逐照顾到了 Pod 的优雅退出，减少驱逐对 Pod 的影响；
 - 而硬驱逐则照顾到节点的稳定性，防止资源的快速消耗导致节点不可用。
 
-软驱逐还需要**配置一个时间指定软驱逐条件持续多久才触发**，也就是说 kubelet 在发现资源使用率达到设定的阈值之后，并不会立即触发驱逐程序，而是继续观察一段时间，如果资源使用率高于阈值的情况持续一定时间，才开始驱逐。并且驱逐 Pod 的时候，会遵循 grace period（宽限期），等待 Pod 处理完清理逻辑。
+软驱逐还需要**配置一个时间指定软驱逐条件持续多久才触发**，因为系统有可能是突发性的内存增高，几十秒之后就会恢复。因此，软驱逐发现资源使用率达到设定阈值后，并不会立即触发驱逐程序，而是继续观察一段时间，如果资源使用率高于阈值的情况持续一定时间，才开始驱逐。
 
 和软驱逐相关的启动参数是：
 
 - --eviction-soft：软驱逐触发条件，比如 memory.available<1Gi
 - --eviction-sfot-grace-period：触发条件持续多久才开始驱逐，比如 memory.available=2m30s
-- --eviction-max-pod-grace-period：kill Pod 时等待 grace period 的时间，让 Pod 做一些清理工作，如果到时间还没有结束就做 kill
+- --eviction-max-pod-grace-period：当满足软驱逐阈值并终止 pod 时允许的最大宽限期值，该时间留给 Pod 做一些清理工作。
 
 硬驱逐更加直接干脆，**kubelet 发现节点达到配置的硬驱逐阈值后，立即开始驱逐程序，并且不会遵循 grace period**，会立即强制杀死 Pod。对应的配置参数只有一个 --evictio-hard。
 
@@ -68,11 +68,11 @@ Pod 的 requests 和 limits 是如何对应到这三个 QoS 等级上，可以�
 最后，kubelet 的驱逐配置示例如下。
 
 ```bash
-–eviction-soft=memory.available<80%,nodefs.available<2Gi \
-–eviction-soft-grace-period=memory.available=1m30s,nodefs.available=1m30s \
-–eviction-max-pod-grace-period=120 \
-–eviction-hard=memory.available<500Mi,nodefs.available<1Gi \
-–eviction-pressure-transition-period=30s \
+$ kubelet --eviction-soft=memory.available<80%,nodefs.available<2Gi \
+--eviction-soft-grace-period=memory.available=1m30s,nodefs.available=1m30s \
+--eviction-max-pod-grace-period=120 \
+--eviction-hard=memory.available<500Mi,nodefs.available<1Gi \
+--eviction-pressure-transition-period=30s \
 --eviction-minimum-reclaim="memory.available=0Mi,nodefs.available=500Mi,imagefs.available=2Gi"
 ```
 
