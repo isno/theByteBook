@@ -145,7 +145,7 @@ Dragonfly 提供了一种无侵入（不用修改容器、仓库等源码）的�
 
 ## 7.3.5 镜像启动加速
 
-容器镜像的大小会影响容器启动的时间，譬如 tensorflow 的镜像有 1.83 GB，冷启动这个镜像至少需要 3 分钟的时间。这么大的镜像启动慢、容器镜像中的文件也并不会被充分利用，《Making containers lazy with Docker and CernVM-FS》[^3]的论文中就提到一般镜像只有 6% 的内容会被实际用到。
+容器镜像的大小会影响容器启动的时间，譬如 tensorflow 的镜像有 1.83 GB，冷启动这个镜像至少需要 3 分钟的时间。这么大的镜像启动慢、容器镜像中的文件也并不会被充分利用，业内也研究证明一般镜像只有 6% 的内容会被实际用到[^1]。
 
 如果能实现按需加载，肯定能大幅降低容器启动时间，这便是 Nydus 出现的背景。
 
@@ -171,6 +171,4 @@ Nydus 主要优化了镜像中 Layer 数据层的数据结构，将容器镜像�
 
 如此，使用 P2P 的方式加速镜像下载，再结合 Nydus 容器启动延迟加载技术实现瞬时启动几百、几千 Pod 的能力，对于大规模集群或者对冷启动扩容延迟要求较高的场景（大促扩容、游戏服务器扩容、函数计算）来说，不仅能大幅降低容器启动时间，还能大量节省网络/存储开销。
 
-[^1]: 参见 https://jvns.ca/blog/2019/11/18/how-containers-work--overlayfs/
-[^2]: 参见 https://www.cyphar.com/blog/post/20190121-ociv2-images-i-tar
-[^3]: 参见 https://indico.cern.ch/event/567550/papers/2627182/files/6153-paper.pdf
+[^1]: 参见 https://indico.cern.ch/event/567550/papers/2627182/files/6153-paper.pdf
