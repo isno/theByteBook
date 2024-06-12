@@ -29,9 +29,9 @@ Stripe 工程师 Julia Evans 曾撰写过一篇文章《How containers work: ove
   图 7-7 OverlayFS 工作原理概览
 :::
 
-继续用代码补充 OverlayFS 的原理。
+继续用代码演示 OverlayFS 的工作原理。
 
-```
+```bash
 #!/bin/bash
 
 umount ./merged
@@ -51,7 +51,7 @@ $ sudo mount -t overlay overlay \
  ./merged
 ```
 
-以上代码中，最后一条指令使用 mount 命令挂载并指定文件系统类型为 overlay，其中的参数为 lowerdir（只读层）、upperdir（读写层）、merged（挂载后，最终呈现给用户视图）。
+以上代码中，最后一条指令使用 mount 命令挂载，-t 参数指定挂载后的文件系统类型为 overlay，并包含了 overlay 类型的参数 lowerdir（只读层）、upperdir（读写层）、merged（挂载后，最终呈现给用户视图）。
 
 挂载后的文件系统视图如图 7-8 所示。
 
@@ -68,11 +68,11 @@ $ sudo mount -t overlay overlay \
 
 写时复制的大致的流程如下：
 
-- 新建文件时：这个文件会出现在 upper 目录中。
+- 新建文件时：文件会出现在 upper 目录中。
 - 删除文件时：
   - 如果删除“in_upper.txt”，文件会在 upper 目录中消失。
-  - 如果删除“in_lower.txt”, lower 目录里内的 ”in_lower.txt” 文件不会有变化，但 upper 目录中会增加一个特殊文件表示“in_lower.txt”这个文件不能出现在 merged 里了，这就表示它已经被删除了。
-- 修改文件：如果修改“in_lower.txt”，会在 upper 目录中新建一个“in_lower.txt”文件，包含更新的内容，而在 lower 中的原来的实际文件“in_lower.txt”不会改变。
+  - 如果删除“in_lower.txt”, lower 目录里内的 ”in_lower.txt” 文件不会有变化，但 upper 目录中会增加一个特殊文件表示“in_lower.txt”这个文件不能出现在 merged 里了，通过这种方式表示它已经被删除了。
+- 修改文件：如果修改“in_lower.txt”，会在 upper 目录中新建一个“in_lower.txt”文件，包含更新后的内容，而 lower 中原来的实际文件“in_lower.txt”不会改变。
 
 ## 7.3.2 Docker 镜像的分层设计
 

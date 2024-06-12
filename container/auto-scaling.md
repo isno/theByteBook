@@ -6,7 +6,7 @@
 
 运算能力的增减有两种方式：增减 Pod 的数量以及改变单个 Pod 的资源，这两种方式分别对应了 kubernetes 的 HPA 和 VPA 组件。
 
-## Horizontal Pod AutoScaling（横向 Pod 自动扩展）
+## 1.横向 Pod 自动扩展：Horizontal Pod AutoScaling
 
 横向 Pod 自动扩展的思路是这样的：kubernetes 会运行一个 controller，周期性地监听 pod 的资源使用情况：
 - 当高于设定的阈值时，会自动增加 pod 的数量；
@@ -24,7 +24,7 @@
 目前官方的监控数据来源是 metrics server 项目，可以配置的资源 CPU、自定义的监控数据（比如 prometheus） 等。
 
 
-## Vertical Pod AutoScaling（垂直 Pod 自动扩展）
+## 2. 垂直 Pod 自动扩展：Vertical Pod AutoScaling
 
 和 HPA 的思路相似，只不过 VPA 调整的是单个 pod 的 request 值（包括 CPU 和 memory）。VPA 包括三个组件：
 
@@ -34,7 +34,7 @@
 
 可以看到，这三个组件的功能是互相补充的，共同实现了动态修改 Pod 请求资源的功能。
 
-## 基于事件驱动的 HPA 增强
+## 3. 基于事件驱动的 HPA 增强
 
 HPA 虽然能基于外部指标实现弹性伸缩，但缺点是仅与 Prometheus 指标关联。
 
@@ -86,7 +86,7 @@ spec:
 ```
 minReplicaCount 和 maxReplicaCount 分别定义了要伸缩的对象的最小和最大副本数量，minReplicaCount 可以为 0 即缩容到没有副本，比方说 Kafka 队列一直没有新消息就可以完全缩容，到有新消息进来的时候 keda 又会自动扩容。
 
-## Cluster AutoScaler
+## 4. 集群动态扩展：Cluster AutoScaler
 
 随着业务的发展，应用会逐渐增多，每个应用使用的资源也会增加，总会出现集群资源不足的情况。为了动态地应对这一状况，我们还需要 CLuster Auto Scaler，能够根据整个集群的资源使用情况来增减节点。
 
