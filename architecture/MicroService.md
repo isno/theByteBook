@@ -4,7 +4,7 @@
 
 直到 2014 年，由 Martin Fowler（《MicroServices》作者）、Adrian Cockcroft（Netflix 架构师）、Neal ford（《卓有成效的程序员》作者）等人持续介绍、完善、演进、实践之后，微服务才算是一种真正丰满、独立的架构风格。
 
-对于微服务的定义，我们援引 Netflix[^1] 云架构师 Adrian Cockcroft 的观点。
+对于微服务的定义，援引 Netflix[^1] 云架构师 Adrian Cockcroft 的观点。
 :::tip <i></i>
 A microservices architecture as a service‑oriented architecture composed of loosely coupled elements that have bounded contexts.
 :::
@@ -55,7 +55,7 @@ Adrian Cockcroft 的观点中有两个核心概念：
 ——  by《凤凰架构》作者 周志明
 :::
 
-在微服务架构中，有一些必须解决的问题，譬如注册发现、跟踪治理、负载均衡、传输通讯等。这些问题可以说只要是分布式架构的系统就无法完全避免。我们先不考虑 Apache Dubbo、SpringCloud 或者别的解决方案，换个思路来想一下：这些问题一定要由分布式系统自己来解决吗？
+在微服务架构中，有一些必须解决的问题，譬如注册发现、跟踪治理、负载均衡、传输通讯等。这些问题可以说只要是分布式架构的系统就无法完全避免。先不考虑 Apache Dubbo、SpringCloud 或者别的解决方案，换个思路想一下“这些问题一定要由分布式系统自己来解决吗？”。
 
 直接来看待这些问题与它们最常见的解决方法：
 
@@ -95,7 +95,7 @@ Adrian Cockcroft 的观点中有两个核心概念：
 
 Kubernetes 的崛起标志着微服务时代的新篇章，但它并未能完全解决所有的分布式问题。就功能的灵活性和强大性而言，Kubernetes 还比不上之前的 Spring Cloud 方案，原因在于某些问题位于应用系统与基础设施的交界处，而微观的服务管理并不能完全在基础设施层面得到解决。
 
-笔者举个例子，如图 1-21 所示，假设微服务 A 调用了微服务 B 的两个服务，即 B1 和 B2。若 B1 正常运行，而 B2 持续出现 500 错误，那么在达到一定阈值后，就应对 B2 进行熔断，以避免引发雪崩效应。如果仅在基础设施层面处理这个问题，那就会陷入两难境地：切断 A 到 B 的网络通路会影响到 B1 的正常运作，而不切断则会持续受到 B2 错误的影响。
+笔者举个例子，如图 1-21 所示，假设微服务 A 调用了微服务 B 的两个服务，即 B1 和 B2。若 B1 正常运行，而 B2 持续出现 500 错误，那么在达到一定阈值后，就应对 B2 进行熔断，以避免引发雪崩效应。如果仅在基础设施层面处理这个问题，那就会陷入两难境地“切断 A 到 B 的网络通路会影响到 B1 的正常运作，不切断则会持续受到 B2 错误的影响”。
 
 <div  align="center">
 	<img src="../assets/micro-service-2.png" width = "400"  align=center />

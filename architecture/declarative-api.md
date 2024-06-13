@@ -21,7 +21,7 @@ SQL 其实就是一种常见的声明式编程语言，它能够让开发者自�
 SELECT * FROM users WHERE gender = boy AND name LIKE 'xiaoming%';
 ```
 
-我们来看看相同设计的 yaml，如下代码示例，定义了一个名为 nginx-deployment 的 Deployment 资源，apiVersion 指定了使用的 API 版本，kind 指定了要创建的资源类型。metadata 中包含了资源的名称和其他元数据信息。spec 部分定义了 Deployment 的具体配置，包括副本数（replicas）、选择器（selector）和容器模板（template）。在 template 中，我们指定了容器的名称、镜像等配置信息。
+来看看相同设计的 yaml，如下代码示例，定义了一个名为 nginx-deployment 的 Deployment 资源，apiVersion 指定了使用的 API 版本，kind 指定了要创建的资源类型。metadata 中包含了资源的名称和其他元数据信息。spec 部分定义了 Deployment 的具体配置，包括副本数（replicas）、选择器（selector）和容器模板（template）。在 template 中，指定了容器的名称、镜像等配置信息。
 
 ```
 apiVersion: apps/v1

@@ -30,4 +30,4 @@ Paxos、Raft、ZAB 等等属于 consensus 的理论/实现，明显使用“共�
 
 
 [^1]: Mike Burrows 是 Google Chubby 的作者。
-[^2]: Lamport 在分布式系统理论方面有非常多的成就，比如 Lamport 时钟、拜占庭将军问题、Paxos 算法等等。除了计算机领域之外，其他领域的无数科研工作者也要成天和 Lamport 开发的一套软件打交道，目前科研行业应用最广泛的论文排版系统 --  LaTeX (名字中的 La 就是指 Lamport)
+[^2]: Lamport 在分布式系统理论方面有非常多的成就，比如 Lamport 时钟、拜占庭将军问题、Paxos 算法等等。除了计算机领域之外，其他领域的无数科研工作者也要成天和 Lamport 开发的一套软件打交道，目前科研行业应用最广泛的论文排版系统 —— LaTeX (名字中的 La 就是指 Lamport)
