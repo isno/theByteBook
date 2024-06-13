@@ -3,21 +3,155 @@
 这一节，我们走进容器网络通信，了解容器间通信的逻辑以及 Kubernetes 集群的网络模型设计。
 
 
-Kuberneters 网络模型的设计原则是：每一个 Pod 拥有一个独立的 IP，而且假定所有的 Pod 都在一个可以直接连通、扁平的网络空间内，所以不管他们是否运行在同一个 Node 中，都要求它们直接通过对方的IP 就可以进行访问。这样用户就不需要额外考虑如何建立 Pod 的连接，也不需要考虑容器端口映射到主机的问题。
+:::tip Flannel
+
+Flannel 是 CoreOS 开发的容器网络解决方案。它支持三种网络模型 UDP、VXLAN、host-gw。
+:::
+
+## 7.6.1 overlay 模式
+
+overlay 是虚拟的上层逻辑网络，其优点是不受底层网络限制，只要是三层网络互通，就能完成跨数据中心的网络互联，但弊端是数据封包、解包有一定的计算压力和网络延迟消耗。
+
+Flannel 的 UDP 以及 VXLAN 模式都属于 overlay 网络。
+
+:::tip 注意
+UDP 模式因为性能较差已经被弃用，但因为它的逻辑清晰简单，具有很好的教学价值，用来分析封包/解包、网络路由等跨主机通信过程十分合适。
+:::
+
+基于 Flannel 的 UDP 的跨主机通信基本逻辑如图所示。
+
+:::center
+  ![](../assets/Flannel-UDP.webp)<br/>
+  图 基于 Flannel UDP 模式的跨主机通信原理
+:::
+
+每个主机上，flannel 运行一个名为的守护进程 flanneld，它会在 Node 1 节点中创建如下路由规则：
+
+```bash
+admin@ip-172-20-33-102:~$ ip route
+default via 172.20.32.1 dev eth0
+100.96.0.0/16 dev flannel0  proto kernel  scope link  src 100.96.1.0
+100.96.1.0/24 dev docker0  proto kernel  scope link  src 100.96.1.1
+172.20.32.0/19 dev eth0  proto kernel  scope link  src 172.20.33.102
+```
+
+可以看到，Node1 中容器 container-1 的目的地（dst:100.96.2.3）跟第 1 条路由规则（100.96.0.0/16）精准匹配，因此，Linux 内核按照路由规则将这个 IP 数据包转发给 flannel0 设备。注意，flannel0 是由 flanneld:8252 创建的 TUN 设备。
+
+:::tip TUN 设备
+
+TUN 设备的原理请回顾本书 3.5.2 节，简单说 TUN 模拟了网络层设备，会将内核传递给它的 IP 报文再传送到与 TUN 设备关联的用户态程序。
+:::
+
+于是，TUN 设备 flannel0 将 IP 报文再传递给与它关联的应用程序 flanneld:8252。
+
+flanneld:8252 收到 dst:100.96.2.3 的 IP 报文，从图我们知道 100.96.2.3 是 Node2 中的容器 IP，但 flanneld:8252 怎么知道发送到哪呢？
+
+flanneld:8252 预先将容器子网与宿主机的对应关系保存在 etcd 中。
+
+```bash
+admin@ip-172-20-33-102:~$ etcdctl ls /coreos.com/network/subnets
+/coreos.com/network/subnets/100.96.1.0-24
+/coreos.com/network/subnets/100.96.2.0-24
+/coreos.com/network/subnets/100.96.3.0-24
+admin@ip-172-20-33-102:~$ etcdctl get /coreos.com/network/subnets/100.96.2.0-24
+{"PublicIP":"172.20.54.98"}
+```
+
+如上所示，flanneld:8252 查询 etcd 了解到 100.96.2.3 与第一条匹配，100.96.2.0-24 子网对应的宿主机 PublicIP 为 172.20.54.98，也就是 Node2 节点。
+
+现在，flanneld:8252 知道了目标宿主机地址，于是，它创建一个 UDP 数据包，以自己主机的 IP 作为源地址，Node2 的 IP 作为目标地址，并将原始的 IP 报文包装在 UDP 包内。
+
+当 UDP 数据包达到目标主机 Node2 后，内核协议栈将数据包发送给 flanneld，然后 flanneld 获取 UDP 数据包的 payload，也就是源容器生成的原始 IP 数据包。接下来，flanneld 将 IP 报文发送给与它关联的 TUN 设备，接下来内核协议栈负责处理这个 IP 报文，根据路由表匹配到第 3 条记录，也就是要发送到 docker0 网桥。
+
+```bash 
+admin@ip-172-20-54-98:~$ ip route
+default via 172.20.32.1 dev eth0
+100.96.0.0/16 dev flannel0  proto kernel  scope link  src 100.96.2.0
+100.96.2.0/24 dev docker0  proto kernel  scope link  src 100.96.2.1
+172.20.32.0/19 dev eth0  proto kernel  scope link  src 172.20.54.98
+```
+
+接下来流程就简单了，实际上就是 Linux Bridge 内部的通信，容器通过网络二层发送 ARP 广播，正确的虚拟网卡（Veth）就会相应这个 ARP 报文，然后建立起 MAC 地址表，这和物理局域网内的通信没有差别。
+
+现在，新版本的 flannel 已经弃用了 UDP 模式，**最大的原因是数据包在用户空间和内核空间来回复制，产生严重的性能问题**。
+
+如下图所示，从原始容器进程发送数据包，必须在用户空间和内核空间之间复制 3 次，这将大大增加网络开销。
 
 
-把 Pod 比作超亲密容器组，那么根据亲密关系的远近，也带来以下几个以距离进行分类的通信场景：
-
-- **本地通信**：就是 Pod 内部不同容器间的通信，同一个 Pod 内的容器共享同一个网络命名空间，所以它们之间通过 localhost，保证端口不冲突就能完成通信。
-
-- **同节点之间的通信**：Pod 通过 veth 设备全部关联在同一个名为 cni0 网桥中，实际上就是 Linux Bridge 内部的通信，容器通过网络二层发送 ARP 广播，正确的虚拟网卡（Veth）就会相应这个 ARP 报文，然后建立起 MAC 地址表，这和物理以太网之间通信没有差别。
-
-- **跨节点的通信**：不同 Node 之间通信必须达到两件：
-	- 对整个集群的 Pod-IP 分配进行规划，不能有冲突。
-	- 将 Node-IP 与 该 Node 上的 Pod-IP 关联起来，通过 Node-IP 再转发到 Pod-IP。
+:::center
+  ![](../assets/Flannel-UDP-TUN.webp)<br/>
+  图 TUN 设备在用户空间/内核空间来回复制
+:::
 
 
-## 两层通讯
+### 2. VXLAN 模式
+
+
+
+:::tip VXLAN
+
+VXLAN 的原理已在本书 3.5.4 详细介绍，就不再展开讨论了。
+
+VXLAN 的设计思想是，在现有三层网络之上覆盖一层虚拟的、由内核 VXLAN 模块负责维护的二层网络，连接在这个 VXLAN 二层网络中的 Pod，就可以实现像在局域网内一样通信。
+
+:::
+
+与 UDP 模式 不同的是 VXLAN 操作的是二层数据帧，且对封装解封全部在内核中完成，没有用户空间/内核空间来回转换的损失。
+
+发送端：在PodA中发起 ping 10.244.1.21 ，ICMP 报文经过 cni0 网桥后交由 flannel.1 设备处理。 flannel.1 设备是一个VXLAN类型的设备，负责VXLAN封包解包。 因此，在发送端，flannel.1 将原始L2报文封装成VXLAN UDP报文，然后从 eth0 发送。
+接收端：Node2收到UDP报文，发现是一个VXLAN类型报文，交由 flannel.1 进行解包。根据解包后得到的原始报文中的目的IP，将原始报文经由 cni0 网桥发送给PodB。
+
+
+当 Node 启动后加入 Flannel 网络后，Flanneld 会添加一条如下的路由规则。
+```
+[node1]# route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+10.224.0.0      0.0.0.0         255.255.255.0   U     0      0        0 cni0
+10.224.1.0      10.224.1.0      255.255.255.0   UG    0      0        0 flannel.1
+```
+上面这条路由的意思是，凡是发往 10.224.1.0/24 网段的 IP 报文，都需要经过 flannel.1 发出。并且下一跳的网关地址是 10.224.1.0。从图可以看出，10.224.1.0 正是 VETP 设备的 IP 地址。
+
+当数据包到达flannel.1时，需要对其进行二层封装，它首先得知道源 MAC 地址以及目地 MAC 地址，
+
+报文要从 flannel.1 虚拟网卡发出，因此源 MAC 地址为 flannel.1 的 MAC 地址
+
+node2 中的 fanneld 在启动时候，会把 ARP 自动添加到 Node 1 中, 通过命令查看 10.244.1.0 对应的 MAC 地址。
+```bash
+[root@Node1 ~]# ip n | grep flannel.1
+10.244.1.0 dev flannel.1 lladdr ba:74:f9:db:69:c1 PERMANENT # PERMANENT 表示永不过期
+```
+
+上面的记录为 IP 地址 10.244.1.0 对应的 MAC 地址是 ba:74:f9:db:69:c1。要注意的是，这里 ARP 表并不是通过ARP学习得到的，而是 flanneld 预先为每个节点设置好的，由 flanneld负责维护，没有过期时间。
+
+有了上面的信息， flannel.1 就可以构造出内层的2层以太网帧。
+
+:::center
+  ![](../assets/vxlan_header.png)<br/>
+  图 基于 Flannel UDP 模式的跨主机通信原理
+:::
+
+然后，Linux 内核会把这个数据帧封装几年一个 UDP 包发送出去。
+
+
+:::tip FDB表
+FDB表（Forwarding database）用于保存二层设备中MAC地址和端口的关联关系，就像交换机中的MAC地址表一样。在二层设备转发二层以太网帧时，根据FDB表项来找到对应的端口。例如cni0网桥上连接了很多veth pair网卡，当网桥要将以太网帧转发给Pod时，FDB表根据Pod网卡的MAC地址查询FDB表，就能找到其对应的veth网卡，从而实现联通。
+
+:::
+
+使用 bridge fdb show 查看FDB表.
+
+
+```
+[root@Node1 ~]# bridge fdb show | grep flannel.1
+ba:74:f9:db:69:c1 dev flannel.1 dst 192.168.50.3 self permanent
+```
+
+至此， flannel.1 已经得到了所有完成VXLAN封包所需的信息，最终通过 eth0 发送一个VXLAN UDP报文：
+
+## 7.6.3 三层路由模式
+
+## 7.6.4 underlay 模式
 
 underlay l2 网络就是2层（链路层）互通的底层网络，传统网络大多数属于这种类型。容器网络使用这种组网，常使用的技术就有 IPVLAN（L2 模式）和 MACVLAN。
 
@@ -31,7 +165,7 @@ Macvlan 是将 VM 或容器通过二层连接到物理网络的近乎理想的�
 - 许多 NIC 也会对该物理网卡上的 MAC 地址数量有限制，超过这个限制就会影响到系统的性能。
 
 
-## 网络插件生态
+## 7.6.5 网络插件生态
 
 Kubernetes 本身不实现集群内的网络模型，而是通过将其抽象出来提供了 CNI 接口由更专业的第三方提供商实现，如此，把网络变成外部可扩展的功能，需要接入什么样的网络，设计一个对应的网络插件即可。这样一来节省了开发资源可以集中精力到 Kubernetes 本身，二来可以利用开源社区的力量打造一整个丰富的生态。现如今，支持 CNI 的插件多达二十几种，如下图所示[^1]。
 
@@ -44,7 +178,7 @@ Kubernetes 本身不实现集群内的网络模型，而是通过将其抽象出
 
 
 
-- **Overlay 模式**：笔者在 VXLAN 篇已经介绍过 Overlay 网络通信的原理，这是一种虚拟的上层逻辑网络，其优点是不受底层网络限制，只要是三层网络互通，就能完成跨数据中心的网络互联，但弊端是数据封包、解包有一定的计算压力和网络延迟消耗。在一个网络受限的环境中（譬如不允许二层通信，只允许三层转发），那么就意味着只能使用 Overlay 模式网络插件。常见的 Overlay 模式网络插件有 Cilium（VXLAN 模式）、老牌的 Calico（IPIP 模式）以及 Flannel（VXLAN）等。
+- **Overlay 模式**：笔者在 VXLAN 篇已经介绍过 Overlay 网络通信的原理，这是一种在一个网络受限的环境中（譬如不允许二层通信，只允许三层转发），那么就意味着只能使用 Overlay 模式网络插件。常见的 Overlay 模式网络插件有 Cilium（VXLAN 模式）、老牌的 Calico（IPIP 模式）以及 Flannel（VXLAN）等。
 
 - **三层路由**，主要是借助 BGP/hostgw 等三层路由协议完成路由传递。这种方案优势是传输率较高，不需要封包、解包，缺点是 BGP 等协议在很多数据中心并不支持，且设置也很麻烦。常见的路由方案网络插件有 Calico（BGP 模式）、Cilium（BGP 模式）。
 
