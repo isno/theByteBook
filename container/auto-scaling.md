@@ -23,7 +23,6 @@
 
 目前官方的监控数据来源是 metrics server 项目，可以配置的资源 CPU、自定义的监控数据（比如 prometheus） 等。
 
-
 ## 2. 垂直 Pod 自动扩展：Vertical Pod AutoScaling
 
 和 HPA 的思路相似，只不过 VPA 调整的是单个 pod 的 request 值（包括 CPU 和 memory）。VPA 包括三个组件：

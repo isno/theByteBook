@@ -61,7 +61,7 @@ Pod 的 requests 和 limits 是如何对应到这三个 QoS 等级上，可以�
 
 当 kubelet 驱逐一部分 Pod 后，那么很可能过一段时间资源使用率又会达到阈值，从而再次出发驱逐，如此循环往复...。
 
-为了处理这种问题，我们可以通过配置：
+为了处理这种问题，可以通过配置：
 - --eviction-minimum-reclaim，该参数决定每次驱逐至少清理出来多少资源才会停止。
 - --eviction-pressure-transition-period，该参数决定 kubelet 多久才上报节点的状态，如果上报状态周期比较短，频繁更改节点状态也会导致驱逐波动。
 

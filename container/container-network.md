@@ -14,7 +14,7 @@ overlay 是虚拟的上层逻辑网络，其优点是不受底层网络限制，
 
 Flannel 的 UDP 以及 VXLAN 模式都属于 overlay 网络。
 
-## 1. UDP 模式
+### 1. UDP 模式
 :::tip 注意
 UDP 模式因为性能较差已经被弃用，但因为它的逻辑清晰简单，具有很好的教学价值，用来分析封包/解包、网络路由等跨主机通信过程十分合适。
 :::
@@ -72,22 +72,22 @@ default via 172.20.32.1 dev eth0
 172.20.32.0/19 dev eth0  proto kernel  scope link  src 172.20.54.98
 ```
 
-接下来流程就简单了，实际上就是 Linux Bridge 内部的通信，容器通过网络二层发送 ARP 广播，正确的虚拟网卡（Veth）就会相应这个 ARP 报文，然后建立起 MAC 地址表，这和物理局域网内的通信没有差别。
+接下来流程就简单了，实际就是 Linux Bridge 内部的通信。
 
-现在，新版本的 flannel 已经弃用了 UDP 模式，**最大的原因是数据包在用户空间和内核空间来回复制，产生严重的性能问题**。
+容器通过网络二层发送 ARP 广播，正确的虚拟网卡（Veth）响应这个 ARP 报文，然后建立起 MAC 地址表，这和物理局域网内的通信没有差别。
 
-如下图所示，从原始容器进程发送数据包，必须在用户空间和内核空间之间复制 3 次，这将大大增加网络开销。
+最后，从上面的通信过程中，你能发现 UDP 模式有什么问题呢？
 
+如下图所示，从原始容器进程发送数据包，因为使用了 TUN 设备，必须在用户空间和内核空间之间复制 3 次，产生严重的性能问题。
 
 :::center
   ![](../assets/Flannel-UDP-TUN.webp)<br/>
   图 TUN 设备在用户空间/内核空间来回复制
 :::
 
+现在，新版本的 flannel 已经弃用了 UDP 模式，推荐使用下面要介绍的 VXLAN 模式。
 
 ### 2. VXLAN 模式
-
-
 
 :::tip VXLAN
 
@@ -128,7 +128,10 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 
 有了上面的信息，flannel.1 就可以构造出内层的 2 层以太网帧了。
 
-然后，Linux 内核会把这个数据帧封装进一个 UDP 包发送出去。
+接着，VXLAN 模块继续进行 UDP 封装，要进行 UDP 封装，就要知道四元组信息：源IP、源端口、目的IP、目的端口。
+- 首先是目的端口，Linux 内核中默认为 VXLAN 分配的 UDP 监听端口为 8472
+- 源端口是根据封装的内部数据帧做一个哈希值得到
+- 接下来是目的IP
 
 :::tip FDB 表
 FDB表（Forwarding database）用于保存二层设备中 MAC 地址和端口的关联关系，就像交换机中的 MAC 地址表一样。在二层设备转发二层以太网帧时，根据FDB表项来找到对应的端口。例如 cni0 网桥上连接了很多 veth pair 网卡，当网桥要将以太网帧转发给 Pod 时，FDB 表根据 Pod 网卡的 MAC 地址查询 FDB 表，就能找到其对应的 veth 网卡，从而实现联通。
@@ -140,7 +143,19 @@ FDB表（Forwarding database）用于保存二层设备中 MAC 地址和端口�
 ba:74:f9:db:69:c1 dev flannel.1 dst 192.168.50.3 self permanent
 ```
 
-至此，flannel.1 已经得到了所有完成 VXLAN 封包所需的信息，最终通过 eth0 发送一个 VXLAN UDP 报文。
+至此，flannel.1 已经得到了所有完成 VXLAN 封包所需的信息，最终通过 eth0 发送一个 VXLAN UDP 报文，后面的过程和本机的UDP程序发包没什么区别。
+
+当数据包到达Peng03的8472端口后（实际上就是VXLAN模块），VXLAN模块就会比较这个VXLAN Header中的VNI和本机的VTEP（VXLAN Tunnel End Point，就是flannel.1）的VNI是否一致，然后比较Inner Ethernet Header中的目的MAC地址与本机的flannel.1是否一致，都一致后，则去掉数据包的VXLAN Header和Inner Ethernet Header，然后把数据包从flannel.1网卡进行发送。
+
+然后，在 Node2 节中上会有如下的路由（由 flanneld 维护），根据路由判断要把数据包发送到 cni0 网卡上。
+
+```bash
+[root@peng03 ~]# route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+...
+172.26.1.0      0.0.0.0         255.255.255.0   U     0      0        0 cni0
+```
 
 ## 7.6.3 三层路由模式
 
