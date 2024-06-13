@@ -112,42 +112,34 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 ```
 上面这条路由的意思是，凡是发往 10.224.1.0/24 网段的 IP 报文，都需要经过 flannel.1 发出。并且下一跳的网关地址是 10.224.1.0。从图可以看出，10.224.1.0 正是 VETP 设备的 IP 地址。
 
-当数据包到达flannel.1时，需要对其进行二层封装，它首先得知道源 MAC 地址以及目地 MAC 地址，
+当数据包到达 flannel.1 时，需要对其进行二层封装，它首先得知道源 MAC 地址以及目地 MAC 地址。
 
-报文要从 flannel.1 虚拟网卡发出，因此源 MAC 地址为 flannel.1 的 MAC 地址
+因为数据包从 flannel.1 虚拟网卡发出，因此源 MAC 地址为 flannel.1 的 MAC 地址。那目的地 MAC 地址，也就是 Node2 的 flannel.1 怎么获取的。
 
-node2 中的 fanneld 在启动时候，会把 ARP 自动添加到 Node 1 中, 通过命令查看 10.244.1.0 对应的 MAC 地址。
+实际上这个地址已经由 fanneld 自动添加到 Node1 的路由表了，通过命令查看 10.244.1.0 对应的 MAC 地址。
 ```bash
 [root@Node1 ~]# ip n | grep flannel.1
 10.244.1.0 dev flannel.1 lladdr ba:74:f9:db:69:c1 PERMANENT # PERMANENT 表示永不过期
 ```
+上面的记录为 IP 地址 10.244.1.0 对应的 MAC 地址是 ba:74:f9:db:69:c1。
 
-上面的记录为 IP 地址 10.244.1.0 对应的 MAC 地址是 ba:74:f9:db:69:c1。要注意的是，这里 ARP 表并不是通过ARP学习得到的，而是 flanneld 预先为每个节点设置好的，由 flanneld负责维护，没有过期时间。
+要注意的是，这里 ARP 表并不是通过 ARP 学习得到的，而是 flanneld 预先为每个节点设置好的，由 flanneld 负责维护，没有过期时间。
 
-有了上面的信息， flannel.1 就可以构造出内层的2层以太网帧。
+有了上面的信息，flannel.1 就可以构造出内层的 2 层以太网帧了。
 
-:::center
-  ![](../assets/vxlan_header.png)<br/>
-  图 基于 Flannel UDP 模式的跨主机通信原理
+然后，Linux 内核会把这个数据帧封装进一个 UDP 包发送出去。
+
+:::tip FDB 表
+FDB表（Forwarding database）用于保存二层设备中 MAC 地址和端口的关联关系，就像交换机中的 MAC 地址表一样。在二层设备转发二层以太网帧时，根据FDB表项来找到对应的端口。例如 cni0 网桥上连接了很多 veth pair 网卡，当网桥要将以太网帧转发给 Pod 时，FDB 表根据 Pod 网卡的 MAC 地址查询 FDB 表，就能找到其对应的 veth 网卡，从而实现联通。
 :::
 
-然后，Linux 内核会把这个数据帧封装几年一个 UDP 包发送出去。
-
-
-:::tip FDB表
-FDB表（Forwarding database）用于保存二层设备中MAC地址和端口的关联关系，就像交换机中的MAC地址表一样。在二层设备转发二层以太网帧时，根据FDB表项来找到对应的端口。例如cni0网桥上连接了很多veth pair网卡，当网桥要将以太网帧转发给Pod时，FDB表根据Pod网卡的MAC地址查询FDB表，就能找到其对应的veth网卡，从而实现联通。
-
-:::
-
-使用 bridge fdb show 查看FDB表.
-
-
-```
+使用 bridge fdb show 查看 FDB 表。
+```bash
 [root@Node1 ~]# bridge fdb show | grep flannel.1
 ba:74:f9:db:69:c1 dev flannel.1 dst 192.168.50.3 self permanent
 ```
 
-至此， flannel.1 已经得到了所有完成VXLAN封包所需的信息，最终通过 eth0 发送一个VXLAN UDP报文：
+至此，flannel.1 已经得到了所有完成 VXLAN 封包所需的信息，最终通过 eth0 发送一个 VXLAN UDP 报文。
 
 ## 7.6.3 三层路由模式
 
