@@ -22,7 +22,7 @@ Argo CD 是以 Kubernetes 作为基础设施，遵循声明式 GitOps 理念的�
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 ```
-安装之后，可以使用自带的 WebUI 进行交互操作，也可以额外安装 CLI ，出于演示的目的，我们这里使用自带 WebUI 进行交互。
+安装之后，可以使用自带的 WebUI 进行交互操作，也可以额外安装 CLI ，出于演示的目的，这里使用自带 WebUI 进行交互。
 
 默认情况下，Argo CD 的 WebUI 服务在集群内部并没有暴露出来，可以通过 LoadBalancer 或者 NodePort 类型的 Service、Ingress、Kubectl 端口转发等方式将 Argo CD 服务发布到 Kubernetes 集群外部。
 
@@ -48,7 +48,7 @@ $ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.p
 - **Source**：指的是 Git 仓库中 Kubernetes 资源配置清单所在的位置，可以是原生的 Kubernetes 配置清单，也可以是 Helm Chart 或者 Kustomize 部署清单。
 - **Destination**：通过 Server 指定 Kubernetes 集群以及相关的 namespace，这样 Argo CD 就知道将应用部署到 Kubernetes 集群中的哪个位置。
 
-通过如下 yaml 文件，我们了解 Argo CD 对 Application 的定义。
+通过如下 yaml 文件，了解 Argo CD 对 Application 资源的定义。
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -69,7 +69,7 @@ spec:
 
 除了 Application 资源，Argo CD 也定义了 Project 资源，用来对 Application 分组，设置更细粒度的访问权限控制，实现多租户环境。
 
-创建 Application 之后，应用状态为初始 OutOfSync 状态，此时也尚未创建任何 Kubernetes 资源，我们在控制台点击 “SYNC” 按钮进行同步部署，部署之后的状态如下图所示。
+创建 Application 之后，应用状态为初始 OutOfSync 状态，此时也尚未创建任何 Kubernetes 资源，在控制台点击 “SYNC” 按钮进行同步部署，部署之后的状态如下图所示。
 
 :::center
   ![](../assets/argocd-demo.png)<br/>

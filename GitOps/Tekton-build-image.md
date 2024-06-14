@@ -1,6 +1,10 @@
 # 10.4.4 构建镜像以及创建 Pipeline
 
-Tekton 的任务是在 Pod 只执行，如果在再使用 docker build 的方式编译镜像，就不合适了，我们使用 Kaniko 实现完全在容器内构建镜像。 
+Tekton 的任务是在 Pod 只执行，如果在再使用 docker build 的方式编译镜像，就不合适了：
+- 现在容器运行时大部分是 Containerd，不太可能再为构建镜像安装 Docker。
+- 就算容器运行时是 Docker，Pod 内也得用特权模式访问 docker.sock ，因此产生安全问题。
+
+那么，是否有一种能脱离 Docker，实现完全在容器内构建镜像的方式？当然有，这就是 Kaniko。
 
 :::tip Kaniko 是什么
 
