@@ -30,16 +30,12 @@ iptables 包括了“tables（表）”、“chain（链）”和“rules（规�
 
 iptables 规则允许数据包跳转到其他链继续处理，同时 iptables 也支持创建自定义链，不过自定义链没有注册到 Netfilter hook，自定义链只能通过从另一个规则跳转到它。
 
-:::center
-  ![](../assets/custom-chain.png)<br/>
-  图 3-7 iptables 自定义链
-:::
-
 自定义链可以看作是对调用它的链的扩展，自定义链结束的时候，可以返回 Netfilter hook，也可以再继续跳转到其他自定义链，这种设计使 iptables 具有强大的分支功能，管理员可以组织更大更复杂的网络规则。
 
-Kubernetes 以及服务网格 Istio 中大量使用了自定义链对数据进行加工处理，Kubernetes 中 kube-proxy 组件的 iptables 模式就是利用自定义链模块化地实现了 Service 功能。
+Kubernetes 中 kube-proxy 组件的 iptables 模式就是利用自定义链模块化地实现了 Service 功能。
 
 通过如下命令，可以查看到 kube-proxy 创建的自定义链。
+
 ```bash
 $ iptables -S -t nat
 -A PREROUTING -m -comment --comment "kubernetes service portals" -j KUBE-SERVICES
@@ -47,18 +43,12 @@ $ iptables -S -t nat
 -A POSTROUTING -m -comment --comment "kubernetes postrouting rules " -j KUBE-POSTROUTING
 ```
 
-kube-proxy 自定义链关系如图 3-8 所示。
+如图 3-7 所示，KUBE-SERVICE 作为整个反向代理的入口链，KUBE-SVC-XXX 为具体某一服务的入口链，KUBE-SERVICE 链会根据具体的服务 IP 跳转至具体的 KUBE-SVC-XXX 链，然后 KUBE-SVC-XXX 链再根据一定的负载均衡算法跳转至 Endpoint（某一个具体的 Pod 地址和端口）。
 
 :::center
-  ![](../assets/k8s-chain.png)<br/>
-  图 3-8 kube-porxy 自定义链
+  ![](../assets/custom-chain.png)<br/>
+  图 3-7 kube-proxy 中的 iptables 自定义链
 :::
-
-- KUBE-SERVICE 作为整个反向代理的入口链。
-- KUBE-SVC-XXX 为具体某一服务的入口链。
-- KUBE-SEP-XXX 链代表某一个具体的 Pod 地址和端口，即 Endpoint。
-
-KUBE-SERVICE 链会根据具体的服务 IP 跳转至具体的 KUBE-SVC-XXX 链，然后 KUBE-SVC-XXX 链再根据一定的负载均衡算法跳转至 Endpoint 链。
 
 ## 3. iptables 性能问题
 
