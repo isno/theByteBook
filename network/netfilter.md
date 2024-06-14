@@ -47,7 +47,7 @@ $ iptables -S -t nat
 
 :::center
   ![](../assets/custom-chain.png)<br/>
-  图 3-7 kube-proxy 中的 iptables 自定义链
+  图 3-7 kube-proxy 通过 iptables 自定义链实现 Service 功能
 :::
 
 ## 3. iptables 性能问题

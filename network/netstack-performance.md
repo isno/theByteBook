@@ -1,6 +1,6 @@
 # 3.4.2 内核协议栈优化
 
-一个传输少量数据的 TCP 连接生命周期中，握手、挥手阶段会占用了 70% 的资源消耗。数据中心的一些网络密集型服务（譬如网关、代理服务等），调整默认保守的内核参数是提升服务处理能力的有效手段之一。
+一个传输少量数据的 TCP 连接生命周期中，握手、挥手阶段会占用了 70% 的资源消耗。调整保守的内核协议栈相关的参数是提升网络效率的有效手段之一。
 
 本节内容，笔者将介绍内核协议栈中 TCP 握手流程中队列、挥手 TIME_WAIT、Keepalive 保活原理及参数设置。
 
@@ -12,7 +12,7 @@
 2. Accept Queue（全连接队列）是 socket 上等待应用程序 accept 的最大队列长度，取值为 min(backlog，net.core.somaxconn)。
 
 backlog 创建 TCP 连接时设置，用法如下。
-```plain
+```c
 int listen(int sockfd, int backlog)
 ```
 :::center
@@ -52,7 +52,7 @@ TIME_WAIT 问题在反向代理节点中出现概率较高，例如 client 传�
 
 笔者部分内核参数配置[^1]，以供读者参考。但注意使用场景不同和机器配置不同，相关的配置起到的作用也不尽相同，生产环境中的参数配置，得在知晓原理基础上，根据实际情况进行调整。
 
-```plain
+```bash
 net.ipv4.tcp_tw_reuse = 1 // 是否复用 TIME_WAIT socket
 net.ipv4.ip_local_port_range = 1024 65535 // 端口范围
 net.ipv4.tcp_rmem = 16384 262144 8388608 // TCP 收包缓冲
