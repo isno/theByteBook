@@ -51,15 +51,15 @@ chroot 最初的目的是为了实现文件的隔离，并非为了容器而设�
 至 Linux 内核 3.8 版本，Linux 已经完成容器所需的 6 项最基本资源隔离。
 
 :::center
-表 7-1 Linux 目前支持的八类名称空间
+表 7-1 Linux 目前支持的八类命名空间
 :::
 
-| 名称空间 | 隔离内容 | 内核版本|
+| 命名空间 | 隔离内容 | 内核版本|
 |:--|:--|:--|
 | Mount| 隔离文件系统挂载点 | 2.4.19 |
 | IPC| 隔离进程间通信，使进程拥有独立消息队列、共享内存和信号量 | 2.6.19|
 | UTS| 隔离主机的 Hostname、Domain names，这样容器就可以拥有独立的主机名和域名，在网络中可以被视作一个独立的节点。 | 2.6.19 |
-| PID| 隔离进程号，对进程 PID 重新编码，不同的名称空间下的进程可以有相同的 PID | 2.6.24 |
+| PID| 隔离进程号，对进程 PID 重新编码，不同命名空间下的进程可以有相同的 PID | 2.6.24 |
 | Network| 隔离网络资源，包括网络设备、协议栈（IPv4、IPv6）、IP 路由表、iptables、套接字（socket）等 | 2.6.29 |
 | User| 隔离用户和用户组 | 3.8 |
 | Cgroup| 使进程拥有一个独立的 cgroup 控制组 | 4.6 |
@@ -162,11 +162,11 @@ $ pstree -g
 
 ## 7.2.5 超亲密容器组 Pod
 
-Kubernetes 中这个设计叫做 Pod，Pod 是一组紧密关联的容器集合，它们共享 IPC、Network、UTS 等名称空间，是 Kubernetes 最基本单位。
+Kubernetes 中这个设计叫做 Pod，Pod 是一组紧密关联的容器集合，它们共享 IPC、Network、UTS 等命名空间，是 Kubernetes 最基本单位。
 
 容器之间原本是被 Linux Namespace 和 cgroups 隔开的，Pod 第一个要解决的问题是怎么去打破这个隔离，让 Pod 内的容器可以像进程组一样天然的共享资源和数据。
 
-Kubernetes 中使用了一个特殊的容器（Infra Container）解决这个了问题。Infra Container 是整个 Pod 中第一个启动的容器，只有 300 KB 左右的 大小，它负责申请容器组的 UTS、IPC、网络等名称空间，Pod 内其他容器通过 setns（Linux 系统调用，把进程加入到某个名称空间中）方式共享 Infra Container 容器的命名空间，其次它还可作为 init 进程，用来管理子进程、回收资源等。
+Kubernetes 中使用了一个特殊的容器（Infra Container）解决这个了问题。Infra Container 是整个 Pod 中第一个启动的容器，只有 300 KB 左右的 大小，它负责申请容器组的 UTS、IPC、网络等命名空间，Pod 内其他容器通过 setns（Linux 系统调用，把进程加入到某个命名空间中）方式共享 Infra Container 容器的命名空间，其次它还可作为 init 进程，用来管理子进程、回收资源等。
 
 :::tip 额外知识
 Infra Container 中的代码仅是注册 SIGTERM、SIGINT、SIGCHILD 等信号处理，启动之后执行一个永远循环的 pause() 方法，所以也常被称为“pause 容器”。
@@ -178,16 +178,16 @@ Infra Container 中的代码仅是注册 SIGTERM、SIGINT、SIGCHILD 等信号�
   图 7-4 Pod 内的容器通过 Infra Container 共享网络命名空间
 :::
 
-通过 Infra Container，同一 Pod 内的容器共享以下名称空间：
+通过 Infra Container，同一 Pod 内的容器共享以下命名空间：
 
-- **UTS 名称空间**：所有容器都有相同的主机名和域名。
-- **网络名称空间**：所有容器都共享一样的网卡、网络栈、IP 地址等。同一个 Pod 中不同容器占用的端口不能冲突（这也是 Kubernetes 中 endpoint 的由来）。
-- **IPC 名称空间**：所有容器都可以通过信号量或者 POSIX 共享内存等方式通信。
-- **时间名称空间**：所有容器都共享相同的系统时间。
+- **UTS 命名空间**：所有容器都有相同的主机名和域名。
+- **网络命名空间**：所有容器都共享一样的网卡、网络栈、IP 地址等。同一个 Pod 中不同容器占用的端口不能冲突（这也是 Kubernetes 中 endpoint 的由来）。
+- **IPC 命名空间**：所有容器都可以通过信号量或者 POSIX 共享内存等方式通信。
+- **时间命名空间**：所有容器都共享相同的系统时间。
 
-不过 PID 名称空间和文件名称空间默认还是隔离的，这是因为容器之间也需要相互独立的文件系统以避免冲突。如果容器之间想要想要实现文件共享，Kubernetes 也提供了 Volume 支持（Volume 的概念将在本章 7.5 节介绍）。
+不过 PID 命名空间和文件命名空间默认还是隔离的，这是因为容器之间也需要相互独立的文件系统以避免冲突。如果容器之间想要想要实现文件共享，Kubernetes 也提供了 Volume 支持（Volume 的概念将在本章 7.5 节介绍）。
 
-PID 的隔离令每个容器都有独立的进程 ID 编号，如果要共享 PID 名称空间，需要设置 PodSpec 中的 ShareProcessNamespace 为 true，如下所示。
+PID 的隔离令每个容器都有独立的进程 ID 编号，如果要共享 PID 命名空间，需要设置 PodSpec 中的 ShareProcessNamespace 为 true，如下所示。
 ```yaml
 spec:
   shareProcessNamespace: true

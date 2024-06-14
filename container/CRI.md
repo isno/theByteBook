@@ -1,6 +1,8 @@
 # 7.4.2 CRI 运行时规范
 
-早期 Kubernetes 完全依赖且绑定 Docker，并没有过多考虑够日后使用其他容器引擎的可能性。当时 kubernetes 管理容器的方式通过内部的 DockerManager 直接调用 Docker API 来创建和管理容器。
+早期 Kubernetes 完全依赖且绑定 Docker，并没有过多考虑够日后使用其他容器引擎的可能性。
+
+当时 kubernetes 管理容器的方式通过内部的 DockerManager 直接调用 Docker API 来创建和管理容器。
 
 :::center
   ![](../assets/k8s-runtime-v1.svg)<br/>
@@ -19,9 +21,11 @@ Kubernetes 要重新考虑对所有容器运行时的兼容适配问题了。
 
 Kubernetes 从 1.5 版本开始，在遵循 OCI 基础上，将容器操作抽象为一个接口，该接口作为 Kubelet 与运行时实现对接的桥梁，Kubelet 通过发送接口请求对容器进行启动和管理，各个容器运行时只要实现这个接口就可以接入 Kubernetes，这便是 CRI（Container Runtime Interface，容器运行时接口）。
 
-CRI 实现上是一套通过 Protocol Buffer 定义的 API，从配图 7-16 可以看出 CRI 组成主要有 gRPC client、gRPC Server 和具体容器运行时实现三个组件。
+CRI 实现上是一套通过 Protocol Buffer 定义的 API，从配图 7-16 可以看出 CRI 组成主要有 gRPC client、gRPC Server 和具体容器运行时实现三个组件。其中：
+- Kubelet 作为 gRPC Client 调用 CRI 接口；
+- CRI shim 作为 gRPC Server 来响应 CRI 请求，并负责将 CRI 请求内容转换为具体的运行时管理操作。
 
-其中 Kubelet 作为 gRPC Client 调用 CRI 接口，CRI shim 作为 gRPC Server 来响应 CRI 请求，并负责将 CRI 请求内容转换为具体的运行时管理操作。因此，任何容器运行时想要在 Kubernetes 中运行，都需要实现一个基于 CRI 接口规范的 CRI shim（gRPC Server）。
+因此，任何容器运行时想要在 Kubernetes 中运行，都需要实现一个基于 CRI 接口规范的 CRI shim（gRPC Server）。
 
 :::center
   ![](../assets//cri-arc.png)<br/>
@@ -30,7 +34,7 @@ CRI 实现上是一套通过 Protocol Buffer 定义的 API，从配图 7-16 可�
 
 ## 2. Kubernetes 专用容器运行时 CRI-O
 
-2017 年，由 Google、RedHat、Intel、SUSE、IBM 联合发起的 CRI-O（Container Runtime Interface Orchestrator）项目发布了首个正式版本。从名字就可以看出，它非常纯粹, 就是兼容 CRI 和 OCI, 做一个 Kubernetes 专用的轻量运行时。
+2017 年，由 Google、RedHat、Intel、SUSE、IBM 联合发起的 CRI-O（Container Runtime Interface Orchestrator）项目发布了首个正式版本。从名字就可以看出，它非常纯粹，目标就是兼容 CRI 和 OCI, 做一个 Kubernetes 专用的轻量运行时。
 
 :::center
   ![](../assets//k8s-cri-o.png)<br/>
@@ -41,13 +45,13 @@ Google 推出 CRI-O 明显摆出了直接挖掉 Docker 根基的意图，但此�
 
 ## 3. Containerd 与 CRI 的关系演进
 
-Docker 并没有“坐以待毙”，与其将来被人分离或者抛弃不用，不如主动革新。
+Docker 并没有“坐以待毙”，开始主动革新。
 
-回顾上文关于 Docker 演进的介绍，Docker 从 1.1 版本起推动自身的重构，并拆分出 Containerd。早期 Containerd 单独开源，并没有捐献给 CNCF，Docker 也出于诸多原因的考虑，外部的接口仍然保持不变。
+回顾上文关于 Docker 演进的介绍，Docker 从 1.1 版本起推动自身的重构，并拆分出 Containerd。早期 Containerd 单独开源，并没有捐献给 CNCF，Docker 也出于诸多原因的考虑，对外部开放的接口仍然保持不变。
 
 此时，Kubernetes 里就出现下面两种调用链：
-1. CRI 接口调用 dockershim，然后 dockershim 调用 Docker，Docker 再走 Containerd 去操作容器。
-2. CRI 接口直接调用适配器 cri-containerd，cri-containerd 再去调用 Containerd 操作容器。
+1. CRI 接口调用适配器 dockershim，然后 dockershim 调用 Docker，Docker 再调用 Containerd 操作容器。
+2. CRI 接口调用适配器 cri-containerd，cri-containerd 再去调用 Containerd 操作容器（最开始 Containerd 还会去适配其他的容器编排系统（譬如 Swarm），所以并没有直接实现 CRI。）。
 
 :::center
   ![](../assets//k8s-runtime-v2.png)<br/>
@@ -58,7 +62,7 @@ Docker 并没有“坐以待毙”，与其将来被人分离或者抛弃不用�
 
 同时 Docker 仅作为容器运行时也过于庞大，Kubernetes 弃用 dockershim 有了足够的理由和动力。
 
-Kubernetes v1.24 版本正式删除 dockershim，本质是废弃了内置的 dockershim 功能转而直接对接 Containerd。从上图可以看出在 Containerd 1.0 中，对 CRI 的适配是通过一个单独的 CRI-Containerd 进程来完成的，这是因为最开始 containerd 还会去适配其他的系统（比如 Swarm），所以没有直接实现 CRI。
+**Kubernetes v1.24 版本正式删除 dockershim，本质是废弃了内置的 dockershim 功能转而直接对接 Containerd**。
 
 2018 年，Docker 将 Containerd 捐献给 CNCF，并在 CNCF 的精心孵化下发布了 1.1 版，1.1 版与 1.0 版的最大区别是此时它已完美地支持了 CRI 标准，这意味着原本用作 CRI 适配器的 CRI-Containerd 从此不再需要。
 
@@ -69,9 +73,11 @@ Kubernetes v1.24 版本正式删除 dockershim，本质是废弃了内置的 doc
 
 Kubernetes 从 1.10 版本宣布开始支持 Containerd 1.1，调用链中已经能够完全抹去 Docker Engine 的存在。
 
-此时，再观察 Kubernetes 到容器运行时的调用链，你会发现调用步骤会比通过 DockerShim、Docker Engine 与 Containerd 交互的步骤要减少两步，用户只要愿意抛弃掉 Docker 情怀，容器编排上可至少省略一次调用，获得性能上的收益。
+此时，再观察 Kubernetes 到容器运行时的调用链，你会发现调用步骤会比通过 DockerShim、Docker Engine 与 Containerd 交互的步骤要减少两步：
+- 用户只要愿意抛弃掉 Docker 情怀，容器编排上可至少省略一次调用，获得性能上的收益；
+- 从 Kubernetes 角度看，选择 Containerd 作为运行时的组件，调用链更短、更稳定、占用节点资源也更少。
 
-从 Kubernetes 角度看，选择 Containerd 作为运行时的组件，调用链更短、更稳定、占用节点资源也更少。根据 Kubernetes 官方给出的测试数据，Containerd1.1 对比 Docker 18.03：Pod 的启动延迟降低了大约 20%；CPU 使用率降低了 68%；内存使用率降低了 12%，这是一个相当大的性能改善。
+根据 Kubernetes 官方给出的 Containerd1.1 对比 Docker 18.03 测试数据，Pod 的启动延迟降低了大约 20%；CPU 使用率降低了 68%；内存使用率降低了 12%，这是一个相当大的性能改善。
 
 :::center
   ![](../assets/k8s-runtime-v4.svg)<br/>
