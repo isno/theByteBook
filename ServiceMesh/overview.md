@@ -8,22 +8,20 @@
 
 Istio 最大的创新在于它为服务网格带来前所未有的控制力：
 
-- 以 Linkerd 代表的第一代服务网格用 Sidercar 方式控制服务间所有的流量。
+- 以 Linkerd 代表的第一代服务网格用 Sidercar 方式控制服务间所有的流量；
 - 以 Istio 为代表的第二代服务网格增加控制面板，控制系统中所有的 Sidecar。
 
 至此，Istio 便控制了系统中所有请求的发送，也即控制了所有的流量。
 
-对于一个仅提供服务与服务之间连接通信的基础设施来说，Istio 的架构算不上简单（但足够超前），各个组件如图 8-10 所示。
-
-
-:::center
-  ![](../assets/service-mesh-arc.svg)<br/>
-  图 8-10 Istio 架构
-:::
-
+对于一个初衷提供服务与服务之间连接通信的基础设施来说，Istio 的架构算不上简单，它的各个组件如图 8-10 所示：
 - **Pilot**：从上（如 Kubernetes）获取服务信息，完成服务发现，往下（Proxy）下发流量管理以及路由规则等 xDS 配置，驱动数据面按照规则实现流量管控（A/B测试、灰度发布）、弹性（超时、重试、熔断）、调试（故障注入、流量镜像）等功能。
 - **Citadel**：充当证书颁发机构（CA），负责身份认证和证书管理，可提供服务间和终端用户的身份认证，实现数据平面内安全的 mTLS 通信。
 - **Galley**：负责将其他 Istio 组件和底层平台（Kubernetes）进行解耦，负责配置获取、处理和分发组件。
+
+:::center
+  ![](../assets/service-mesh-arc.svg)<br/>
+  图 8-10 Istio 架构及各个组件
+:::
 
 ## 8.3.2 Linkerd 2.0 出击
 
@@ -31,11 +29,13 @@ Istio 被争相追捧的同时，作为服务网格概念的创造者 William Mo
 
 Buoyant 第二代服务网格产品别出心裁的使用 Rust 构建数据平面 linkerd2-proxy ，再使用 Go 开发了控制平面 Conduit。产品最初以 Conduit 命名，在 Conduit 加入 CNCF 后不久，宣布与原有的 Linkerd 项目合并，被重新命名为Linkerd 2[^1]，
 
-Linkerd2 的架构如图 8-12 所示，增加了控制平面，但整体简单。控制层面组件只有 destination（类似 Pilot）、identity（类似 Citadel）和 proxy injector（代理注入器）。数据平面中 linkerd-init 设置 iptables 规则拦截 Pod 中的 TCP 连接，Linkerd-proxy 实现对所有的流量管控（负载均衡、熔断..）。
+Linkerd2 的架构如图 8-12 所示，增加了控制平面，但整体简单：
+- 控制层面组件只有 destination（类似 Pilot）、identity（类似 Citadel）和 proxy injector（代理注入器）。
+- 数据平面中 linkerd-init 设置 iptables 规则拦截 Pod 中的 TCP 连接，Linkerd-proxy 实现对所有的流量管控（负载均衡、熔断..）。
 
 :::center
   ![](../assets/linkerd-control-plane.png)<br/>
-  图 8-11 Linkerd2 架构
+  图 8-11 Linkerd2 架构及各个组件
 :::
 
 ## 8.3.3 其他参与者

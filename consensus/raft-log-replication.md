@@ -27,7 +27,7 @@ Raft 是强 Leader 模型的算法，日志项只能由 Leader 复制给其他�
 3. Follower 将请求的日志项追加到自己的本地日志中，并将执行结果发送给 Leader
 4. 当 Leader 收到大多数的 Follower 的成功回复后，这个 entry 就会被认为达到提交（committed）状态，Leader 将这个 entry 应用到状态机中，并回复客户端此次请求成功。
 
-此时读者应该产生一个疑问，上面的过程笔者只提到了 Leader 的日志项提交，那 Follower 什么时候提交日志项呢？ 答案是 Leader 发送心跳或者下一次日志协商的 AppendEntries 消息来通知 Follower 提交（committed）日志项。这种做法可以**使协商优化成一个阶段，降低处理客户端请求一半的延迟**。
+此时，细心的读者是否产生一个疑问“上面的过程笔者只提到了 Leader 的日志项提交，那 Follower 什么时候提交日志项呢？”答案是 Leader 发送心跳或者下一次日志协商的 AppendEntries 消息来通知 Follower 提交（committed）日志项。这种做法可以**使协商优化成一个阶段，降低处理客户端请求一半的延迟**。
 
 为此 Raft 引入了 committedIndex 变量，committedIndex 代表已经达成日志共识的索引，也是应用到状态机的最大日志索引值。根据日志复制的过程，第一轮的 AppendEntries 只会持久化日志项，并不会执行提交操作，只有 Leader 才知道该日志项是否复制到多数派，是否可以提交。 
 
@@ -36,14 +36,18 @@ Raft 是强 Leader 模型的算法，日志项只能由 Leader 复制给其他�
 
 ## 2. 实现日志的一致性
 
-实际上日志项的管理不只是简单地追加，当一个 Follower 新加入集群或者 Leader 刚晋升之时，Leader 并不知道要同步哪些日志给 Follower，同时旧的 Leader 转变为 Follower 时，也会携带一些上一任 term 中仅在本地被 committed 的日志项，而当前新的 Leader 并不存在这些日志项。
+实际上日志项的管理不只是简单追加。
+
+当一个 Follower 新加入集群或者 Leader 刚晋升之时，Leader 并不知道要同步哪些日志给 Follower，同时旧的 Leader 转变为 Follower 时，也会携带一些上一任 term 中仅在本地被 committed 的日志项，而当前新的 Leader 并不存在这些日志项。
 
 Raft 算法中，通过 Leader 强制 Follower 复制自己的日志项，来处理不一致的日志。具体包括两个步骤：
 
 1. Leader 通过日志复制 RPC 的一致性检查，找到 Follower 与自己相同日志项的最大索引值。即在该索引值之前的日志，Leader 和 Follower 是一致的，之后的日志就不一致了；
 2. Leader 强制将 Follower 该索引值之后的所有日志项删除，并将 Leader 该索引值之后的所有日志项同步至 Follower，以实现日志的一致。
 
-因此，处理 Leader 与 Follower 日志不一致的关键是找出上述的最大索引值。Raft 引入两个变量，来方便找出这一最大索引值：
+因此，处理 Leader 与 Follower 日志不一致的关键是找出上述的最大索引值。
+
+Raft 引入两个变量，来方便找出这一最大索引值：
 
 - **prevLogIndex**：表示 Leader 当前需要复制的日志项，前面那一个日志项的索引值。例如，下图，如果领导者需要将索引值为 8 的日志项复制到 Follower，那么 prevLogIndex 为 7
 - **prevLogTerm**：表示 Leader 当前需要复制的日志项，前面一个日志项的任期编号。例如，下图，如果领导者需要将索引值为 8 的日志项复制到 Follower ，那么 prevLogTerm 为 4
@@ -53,7 +57,7 @@ Raft 算法中，通过 Leader 强制 Follower 复制自己的日志项，来处
  图 6-19 领导者处理不一致日志
 :::
 
-Leader处理不一致的具体过程分析如下：
+Leader 处理不一致的具体过程分析如下：
 
 1. Leader 通过日志复制 RPC 消息，发送当前自己最新日志项给 Follower，该消息的 prevLogIndex 为 7，prevLogTerm 为 4。
 2. 由于 Follower 在其日志中，无法找到索引值为 7，任期编号为 4 的日志项，即 Follower 的日志和 Leader 的不一致，故 Follower 会拒绝接收新的日志项，返回失败。

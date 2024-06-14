@@ -2,12 +2,7 @@
 
 这一节，我们走进容器网络通信，了解容器间通信的逻辑以及 Kubernetes 集群的网络模型设计。
 
-绝大部分分析跨主机网络的都选择 Flannel，这是因为 Flannel 它的组件能和本书前面铺垫的各类虚拟设备产品关联，它的设计也足够简单，
-
-:::tip Flannel
-
-Flannel 是 CoreOS 开发的容器网络解决方案。它支持三种网络模型 UDP、VXLAN、host-gw。
-:::
+绝大部分分析跨主机网络的都选择 Flannel，Flannel 是 CoreOS 开发的容器网络解决方案，它支持的 VXLAN、host-gw，它的设计足够简单，分别对应了跨主机通信的 overlay模式及三层路由模式，介绍它的通信流程也能本书前面铺垫的各类虚拟设备产品呼应关联。
 
 ## 7.6.1 overlay 模式
 
@@ -100,9 +95,8 @@ VXLAN 的设计思想是，在现有三层网络之上覆盖一层虚拟的、�
 
 与 UDP 模式 不同的是 VXLAN 操作的是二层数据帧，且对封装解封全部在内核中完成，没有用户空间/内核空间来回转换的损失。
 
-发送端：在PodA中发起 ping 10.244.1.21 ，ICMP 报文经过 cni0 网桥后交由 flannel.1 设备处理。 flannel.1 设备是一个VXLAN类型的设备，负责VXLAN封包解包。 因此，在发送端，flannel.1 将原始L2报文封装成VXLAN UDP报文，然后从 eth0 发送。
-接收端：Node2收到UDP报文，发现是一个VXLAN类型报文，交由 flannel.1 进行解包。根据解包后得到的原始报文中的目的IP，将原始报文经由 cni0 网桥发送给PodB。
-
+- 发送端：在PodA中发起 ping 10.244.1.21 ，ICMP 报文经过 cni0 网桥后交由 flannel.1 设备处理。 flannel.1 设备是一个VXLAN类型的设备，负责VXLAN封包解包。 因此，在发送端，flannel.1 将原始L2报文封装成VXLAN UDP报文，然后从 eth0 发送。
+- 接收端：Node2收到UDP报文，发现是一个VXLAN类型报文，交由 flannel.1 进行解包。根据解包后得到的原始报文中的目的IP，将原始报文经由 cni0 网桥发送给PodB。
 
 当 Node 启动后加入 Flannel 网络后，Flanneld 会添加一条如下的路由规则。
 ```
@@ -168,7 +162,13 @@ underlay 模式就是 2 层互通的底层网络，传统网络大多数属于�
 
 underlay 模式的跨主机通信，能最大限度的利用硬件的能力，往往有着**最优先的性能表现**，但也由于它直接依赖硬件和底层网络环境限制，必须根据软硬件情况部署，没有 overlay 那样开箱即用的灵活性。
 
-## 7.6.5 网络插件生态
+## 7.6.5
+
+最朴素的判断是：Underlay 网络性能优于 Overlay 网络。
+
+Overlay 网络利用隧道技术，将数据包封装到 UDP 中进行传输。因为涉及数据包的封装和解封，存在额外的 CPU 和网络开销
+
+## 7.6.6 网络插件生态
 
 Kubernetes 本身不实现集群内的网络模型，而是将其抽象出来提供了 CNI 接口由更专业的第三方提供商实现。把网络变成外部可扩展的功能，需要接入什么样的网络，设计一个对应的网络插件即可。这样一来节省了开发资源可以集中精力到 Kubernetes 本身，二来可以利用开源社区的力量打造一整个丰富的生态。
 
@@ -176,14 +176,14 @@ Kubernetes 本身不实现集群内的网络模型，而是将其抽象出来提
 
 <div  align="center">
 	<img src="../assets/cni-plugin.png" width = "500"  align=center />
-	<p>CNI 网络插件 </p>
+	<p>CNI 网络插件 [图片来源](https://landscape.cncf.io/guide#runtime--cloud-native-network)</p>
 </div>
 
-上述几十种网络插件笔者不可能逐一解释，但如果按功能的丰富度而言，受到广泛关注的无疑是 Calico 和 Cilium 这两款网络解决方案：
-- Cilium 的特点是基于 eBPF 构建，将网络、安全和可观察性逻辑直接编程到内核，对工作负载透明，并实现更高的性能。
-- Calico 的特点是采用纯三层网络模型，使用 BGP（边界网关协议）实现容器之间的路由，适用于大规模部署，并且需要高可靠性容器网络的场景。
+上述几十种网络插件笔者不可能逐一解释，就简单介绍受到广泛关注的 Calico 和 Cilium 这两款网络解决方案：
+- Cilium 的特点功能丰富，容器间通信只是它的子功能之一，是基于 eBPF 构建，将网络、安全和可观察性逻辑直接编程到内核，对工作负载透明，并实现更高的性能。
+- Calico 的特点是使用 BGP（边界网关协议）实现容器之间纯三层的路由通信，使用三层路由的方式，网络拓扑简单直观，便于运维排查和解决问题。但由于三层模式是直接在宿主机上进行路由寻址，因此不能用于多租户（宿主机路由存在 CIDR 网络冲突的可性能）。
 
-对于这款网络插件性能表现方面，引用 cilium 官方的测试数据[^2]，了解它们之间的性能占用表现（运行 32 个并行的 netperf 进程，按 TCP-CRR 的策略测试 cilium 与 Calico 的每秒请求数以及资源占用情况）。
+引用 cilium 官方的测试数据[^1]，了解这两款网络插件性能表现方面（运行 32 个并行的 netperf 进程，按 TCP-CRR 的策略测试 cilium 与 Calico 的每秒请求数以及资源占用情况）。
 
 :::tip TCP-CRR
 表示在一次 TCP 链接中只进行一组Request/Response 通信即断开
@@ -203,5 +203,4 @@ Kubernetes 本身不实现集群内的网络模型，而是将其抽象出来提
 最后，考虑对于容器编排系统来说，网络并非孤立的功能模块，还要能提供各类的网络访问策略能力支持，譬如 Kubernetes 的 Network Policy 这种用于描述 Pod 之间访问这类 ACL 策略以及加密通信，这些明显不属于 CNI 范畴，因此并不是每个 CNI 插件都会支持这些额外的功能。
 
 
-[^1]: 参见 https://landscape.cncf.io/guide#runtime--cloud-native-network
-[^2]: 参见 https://cilium.io/blog/2021/05/11/cni-benchmark/
+[^1]: 参见 https://cilium.io/blog/2021/05/11/cni-benchmark/

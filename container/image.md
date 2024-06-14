@@ -16,13 +16,12 @@
 Docker 镜像并不是粗暴地把所有的依赖文件封包，而是做了一个巧妙的创新：**基于 UnionFS（Union File System，联合文件系统）采用堆叠的方式，对 rootfs 进行分层设计**。
 
 :::tip UnionFS 是什么
-
 UnionFS 技术能够将不同的层整合成一个文件系统，为这些层提供了一个统一视角，这样就隐藏了多层的存在，在用户的角度看来，只存在一个文件系统。
-
-UnionFS 有很多种实现，例如 OverlayFS、Btrfs 等。在 Linux 内核 3.18 版本中，OverlayFS 代码正式合入 Linux 内核的主分支。在这之后，OverlayFS 也就逐渐成为各个主流 Linux 发行版本里缺省使用的容器文件系统了。
 :::
 
-用代码演示 OverlayFS 的工作原理。下面的代码中，最后一条指令使用 mount 命令挂载，-t 参数指定挂载后的文件系统类型为 overlay，并包含了 overlay 类型的参数 lowerdir（只读层）、upperdir（读写层）、merged（挂载后，最终呈现给用户视图）。
+UnionFS 有很多种实现，譬如 OverlayFS、Btrfs 等。在 Linux 内核 3.18 版本中，OverlayFS 代码正式合入 Linux 内核的主分支。在这之后，OverlayFS 也就逐渐成为各个主流 Linux 发行版本里缺省使用的容器文件系统了。
+
+下面，用代码演示 OverlayFS 的工作原理。代码中最后一条指令使用 mount 命令挂载，-t 参数指定挂载后的文件系统类型为 overlay，并包含了 overlay 类型的参数 lowerdir（只读层）、upperdir（读写层）、merged（挂载后，最终呈现给用户视图）。
 
 ```bash
 #!/bin/bash
@@ -78,7 +77,7 @@ $ sudo mount -t overlay overlay \
 - 最下层的基础镜像 debian stretch；
 - 往上 3 层为 Dockerfile 通过指令 ADD、ENV、CMD 设置 JAVA SDK、环境变量等生成的只读层；
 - Init Layer 夹在只读层和可写层之间，主要存放可能会被修改的 /etc/hosts、/etc/resolv.conf 等文件，这些文件本来属于 debian 镜像，但容器启时，用户往往会写入一些指定的配置，所以 Docker 单独生成了这个层；
-- 最上面的利用 CoW技术创建的可写层（Read/Write Layer），容器内部的任何增、删、改都发生在这里，但该层的数据不具备持久性，当容器被销毁时，写入的数据也随之消失。不过你也可以通过 docker commit 命令生成一个新的层堆叠到成一个新的 Docker 镜像，而之前的只读层不会有任何变化。
+- 最上面的利用 CoW 技术创建的可写层（Read/Write Layer），容器内部的任何增、删、改都发生在这里，但该层的数据不具备持久性，当容器被销毁时，写入的数据也随之消失。不过你也可以通过 docker commit 命令生成一个新的层堆叠到成一个新的 Docker 镜像，而之前的只读层不会有任何变化。
 
 :::center
   ![](../assets/docker-file-system.png)<br/>
