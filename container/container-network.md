@@ -1,25 +1,30 @@
 # 7.6 跨主机通信模型
 
-这一节，我们走进容器网络通信，了解容器间通信的逻辑以及 Kubernetes 集群的网络模型设计。
+如果你有旺盛的好奇心，相信这个问题 “整个容器集群间到底是怎么通信的？”应该反复萦绕在你心头。
 
-绝大部分分析跨主机网络的文章都选择 Flannel，这是因为 Flannel 设计足够简单，介绍它的通信流程本书前面铺垫的各类虚拟设备产品呼应关联。它支持的 VXLAN、host-gw 模式也分别对应了跨主机通信的 overlay 模式及三层路由模式，
+要理解容器间通信，一定要从 Flannel 项目入手，Flannel 是 CoreOS 推出的容器网络解决方案，它的设计逻辑很简单，支持的两种 VXLAN、host-gw 通信模式，也分别对应了跨主机容器方案中 overlay 和三层路由主流方式。
 
 ## 7.6.1 overlay 模式
 
 :::tip 回顾本书 3.5.4 节的内容
 
-overlay 网络是通过封装技术将数据包封装在另一个数据包中，从而在现有网络（underlay 网络）之上创建一个逻辑网络。overlay 网络在虚拟化环境中非常有用，它可以连接分布在不同物理位置的虚拟机、容器、节点等，使它们在一个局域网内一样通信。
+VXLAN 本质上是一种隧道封装技术，属于典型的 overlay 网络，它使用 TCP/IP 协议栈的惯用手法“封装/解封装技术”，将 L2 的以太网帧（Ethernet frames）封装成 L4 的 UDP 数据报，然后在 L3 的网络中传输，效果就像 L2 的以太网帧在一个广播域中传输一样，
 :::
 
-不用想，近看看名字就知道 Flannel VXLAN 模式属于典型的 overlay 网络。
+Linux 内核 3.12 版本起已经对 VXLAN 技术支持完备，VXLAN 模块为通信的终端（不同宿主机中的容器）搭建了一个单独的通信通道，也就是隧道。容器间之间的通信，必须通过隧道的两个端点（Vetp）对数据封包/解包，这样，通信的两方（容器）就认为它们是在二层网络通信，但实际上还是靠宿主机的三层网络实现。
+
+Flannel 基于 VXLAN 技术的 overlay 网络通信流程可以总结为图。
 
 :::center
   ![](../assets/fannel-vxlan.svg) <br/>
 :::
 
-先解释图中几个虚拟设备：cni0 是一个 Linux bridge；容器与 cni0 之间通过 Veth 连接，flannel.1 充当 VXLAN 模式下的 VETP 设备。
+从上图可以看到，容器通过 Veth 桥接到名为 cni0 的 Linux bridge，flannel.1 充当 VXLAN 网络模式下的 VETP 设备，它有 MAC 地址也有 IP 地址。中间的数据二层网络帧由两层构成，内层以太网帧（Inner Ethernet Header）属于 VXLAN 逻辑网络，外层以太网帧属于宿主机网络（Out Ethernet Header
+）。
 
-当 Node 启动后加入 Flannel 网络后，Flanneld 会在宿主机中添加如下的路由规则。
+现在，我们看看当 Node1 中的 Container-1 与 Node2 中的 Container-2 通信时，flannel.1 是如何封包/解包，封包/解包数据又如何而来。
+
+首先，当 Node1 启动后加入 Flannel 网络后，Flanneld 会在宿主机中添加如下的路由规则。
 ```
 [node1]# route -n
 Kernel IP routing table
@@ -31,7 +36,7 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 - 凡是发往 10.224.0.0/24 网段的 IP 报文，都需要经过接口 cni0 发出。
 - 凡是发往 10.224.1.0/24 网段的 IP 报文，都需要经过接口 flannel.1 发出。并且下一跳的网关地址是 10.224.1.0。
 
-当 Node1 中的 Container-1 与 Node2 中的 Container-2 通信时，根据上面的路由规则，交由 flannel.1 接口处理，flannel.1 的职责是作为 VXLAN 网络的 VETH 端点负责封包/解包。
+根据上面的路由规则，Container-1 的发出的数据包要交由 flannel.1 接口处理。
 
 当数据包到达 flannel.1 时，flannel.1 需要构造出 VXLAN 内层以太网帧。flannel.1 得知道：源 MAC 地址，目地 MAC 地址。
 
@@ -48,33 +53,34 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 这里 ARP 表并不是通过 ARP 学习得到的，而是 flanneld 预先为每个节点设置好的，由 flanneld 负责维护，没有过期时间。
 :::
 
-接着，flannel.1 接续构造外层 VXLAN UDP 报文。flannel.1 得知道四元组信息：源IP、源端口、目的IP、目的端口。
+现在，已经封装好的二层数据帧属于 VXLAN 这个逻辑网络，里面的 MAC 地址对于宿主机网络没有意义。所以，接下来 Linux 内核还要把这个二层数据帧，进一步封装成宿主机网络中的一个普通二层数据帧。这样内层数据帧作为它的 payload ，通过宿主机 eth0 网卡传输。
 
-:::tip <a/>
-**VTEP 是 VXLAN 隧道的起点或终点**，这意思是 VXLAN UDP 报文的目的 IP 地址即为对端 VTEP 的 IP 地址。目的端口，Linux 内核中默认为 VXLAN 分配的 UDP 监听端口为 8472。
-:::
+为了实现“搭便车”的机制，Linux 内核会在内层数据帧前面塞一个特殊的 VXLAN Header，表示“乘客”，实际是内部 VXLAN 模块使用的数据。
 
-那 flannel.1 如何知道目的 IP 地址呢？这得通过 FDB 表知道。
+VXLAN header 里面有个重要的标志 VNI，这是 Vetp 设备判断是否属于自己要处理的依据。flannel 网络方案中所有节点中的 flannel1 的 VNI 默认为 1，这也是为什么 flannel 叫 flannel.1 的原因。
 
-:::tip FDB 表
-FDB表（Forwarding database）用于保存二层设备中 MAC 地址和端口的关联关系，就像交换机中的 MAC 地址表一样。在二层设备转发二层以太网帧时，根据 FDB 表项来找到对应的端口。例如 cni0 网桥上连接了很多 veth pair 网卡，当网桥要将以太网帧转发给 Pod 时，FDB 表根据 Pod 网卡的 MAC 地址查询 FDB 表，就能找到其对应的 veth 网卡，从而实现联通。
-:::
+
+接着，Linux 内核接续构造外层 VXLAN UDP 报文，要进行 UDP 封装，就要知道四元组信息：源IP、源端口、目的IP、目的端口。
+- Linux 内核中默认为 VXLAN 分配的 UDP 监听端口为 8472
+- 目的 IP 则通过 FDB 转发表获得，fdb 表中的数据由 fannel 提前预置。
 
 使用 bridge fdb show 查看 FDB 表。
+
 ```bash
 [root@Node1 ~]# bridge fdb show | grep flannel.1
 ba:74:f9:db:69:c1 dev flannel.1 dst 192.168.50.3 self permanent
 ```
-它记录着，目的 MAC 地址为 92:8d:c4:85:16:ad 的数据帧封装后，应该发往哪个目的IP。根据上面的记录可以看出，UDP的目的IP应该为192.168.2.103。
+FDB 记录着目的 MAC 地址为 92:8d:c4:85:16:ad 的数据帧封装后，应该发往哪个目的IP。根据上面的记录可以看出，UDP 的目的 IP 应该为 192.168.2.103，也就是 Node2 宿主机 IP。
 
-至此，flannel.1 已经得到了所有完成 VXLAN 封包所需的信息，然后调用 UDP 协议的发包函数进行发包，后面的过程和本机的UDP程序发包没什么区别了。
+至此，Linux 内核已经得到了所有完成 VXLAN 封包所需的信息，然后调用 UDP 协议的发包函数进行发包。
 
+后面的过程和本机的 UDP 程序发包没什么区别了：Linux 内核对 UDP 包封装为宿主机的二层网络数据帧，然后到达 Node2。
 
-当数据包到达 Node2 的 8472 端口后（实际上就是 VXLAN 模块）：
-- VXLAN 模块就会比较 VXLAN Header 中的 VNI 和本机的 VTEP 的 VNI 是否一致（所有节点的 flannel1 的VNI都为1，这也是为什么 flannel 叫 flannel.1 的原因）。
-- 再比较内层数据帧中的目的 MAC 地址与本机的 flannel.1 MAC 地址是否一致
+继续，再看看 Node2 是如何处理这个数据包的，当数据包到达 Node2 的 8472 端口后：
+- VXLAN 模块比较 VXLAN Header 中的 VNI 和本机的 VXLAN 网络的的 VNI 是否一致。
+- 再比较内层数据帧中的目的 MAC 地址与本机的 flannel.1 MAC 地址是否一致。
 
-都一致后，则去掉数据包的 VXLAN Header 和 Inner Ethernet Header，然后把数据包通过 flannel.1 接口发送。
+两个判断匹配后，则去掉数据包的 VXLAN Header 和 Inner Ethernet Header，得到最初 container-1 发出的目的地为 100.96.2.3 的 IP 报文。
 
 然后，在 Node2 节中上会有如下的路由（由 flanneld 维护），
 
@@ -83,12 +89,54 @@ ba:74:f9:db:69:c1 dev flannel.1 dst 192.168.50.3 self permanent
 Kernel IP routing table
 Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 ...
-172.26.1.0      0.0.0.0         255.255.255.0   U     0      0        0 cni0
+100.96.2.0      0.0.0.0         255.255.255.0   U     0      0        0 cni0
 ```
-上面的，规则 172.26.1.0/24 网段的数据包通过 cni0 网卡发送出去。
 
+上面的路由规则中，目的地属于 100.96.2.0 /24 网段的数据包通过 cni0 网卡发送出去。后面，就是我们在本书第三章《Linux 网络虚拟化》的内容了。
 
 ## 7.6.3 三层路由模式
+
+Fannel 的 host-gw 模式逻辑更简单，它直接利用宿主机的路由实现容器间的通信。
+
+假设，现在 Node1 中的 container-1 要访问 Node2 中的 container-2。当设置 Flannel 使用 host-gw 模式之后，flanneld 会在宿主机上创建这样一条路由规则。
+
+```bash
+$ ip route
+100.96.2.0/24 via 10.244.1.0 dev eth0
+```
+这条路由的意思是，凡是目的地属于 100.96.2.0/24 IP 包，应该通过本机 eth0 设备（dev th0）发出，并且它的下一跳地址是 10.244.1.0 （via 10.244.1.0 ）。
+
+:::tip next hop
+所谓下一跳，就是 IP 数据包发送时，需要经过某个路由设备的中转，那下一跳的地址就是这个路由的 IP 地址。你在个人电脑中配置网关地址 192.168.0.1，意思就是本机发出去的所有 IP 包，都要经过 192.168.0.1 中转。
+:::
+
+知道了下一跳地址，接下来 IP 包，被封装为二层数据帧到达，顺利到达下一跳地址，也就是 Node2 上。
+
+Node2 拿到 IP 包后，查看本机的路由规则。
+```bash
+$ ip route
+10.244.0.0/24 dev cni0 proto kernel scope link src 10.244.0.1
+```
+看到目的 IP 属于 10.244.1.3/24 网段，根据路由表匹配到第二条路由规则，进入 cni0 网桥，接下来就是 Linux bridge 的通信逻辑了。
+
+由此可见，host-gw 模式其实就是将每个容器子网（譬如 100.96.2.0/24）下一跳设置成了该子网对应的宿主机的 IP 地址，由宿主机充当容器间通信的“路由网关”，这也是 “host-gw” 名字的由来。
+
+由于没有封包/解包的额外消耗，也不再需要 flannel.1 虚机网卡，这种通过宿主机路由的方式性能肯定要好于前面介绍的 overlay 模式，不过由于 host-gw 会干预宿主机的路由规则，在公有云环境下一般会限制使用。
+
+
+除了对路由信息的维护外，Calico 与 flannel 的另外一个不同之处是不会设置任何虚拟网桥设备。
+
+:::center
+  ![](../assets/calico-bgp.svg) <br/>
+:::
+
+从上图可以看到，Calico 并没有创建 Linux bridge，而是把每个 Veth 设备的另一端放置在宿主机中（名字以 cali 为前缀）。
+
+```bash
+$ ip route
+10.223.2.3 dev cali2u3d scope link
+```
+这条路由的规则是，发往 10.223.2.3 的数据包，应该进入 cali2u3d 设备。
 
 ## 7.6.4 underlay 模式
 
