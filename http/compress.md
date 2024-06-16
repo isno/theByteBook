@@ -38,7 +38,7 @@ Brotli 内部有一个预定义的字典，该字典包含超过 13000 个常用
 
 如下为 Nginx 中的 Brotli 配置示例。
 
-```plain
+```nginx
 http {
 	brotli on; // 开启 brotli 压缩
     brotli_comp_level 6;  // 设置压缩等级
