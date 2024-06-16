@@ -1,9 +1,8 @@
 # 9.3.1 聚合度量
 
-思考接口请求数、请求延迟、节点的负载以及内存占用等类似的数据有什么特点呢？可量化（都是纯数字的）、具有时间属性且可聚合。对可度量的数据（Metrics）收集聚合、分析（判断度量指标是否超过风险阈值），然后再处理（触发报警事件）。
+接口请求数、请求延迟、节点的负载以及内存占用等类似的数据有什么特点呢？可度量（都是纯数字的）、具有时间属性且可聚合。对可度量的数据（Metrics）收集聚合、分析（判断度量指标是否超过风险阈值），然后再处理（触发报警事件）。这一些列的流程，不正是监控系统的主要工作么？
 
-这一些列的流程，不正是监控系统的主要工作么？提到监控系统，那一定聊聊 Prometheus，Prometheus 是云原生时代最流行的监控系统。
-
+提到监控系统，那一定聊聊 Prometheus，Prometheus 是云原生时代最流行的监控系统。
 :::tip 额外知识
 Google 的 Borg 系统孕育出了 Kubernetes，Prometheus 的前身 —— Google 内部的监控系统 Brogmon 则由前 Google工程师在 Soundcloud 以开源软件的形式继承下来。
 :::
@@ -17,32 +16,16 @@ Google 的 Borg 系统孕育出了 Kubernetes，Prometheus 的前身 —— Goog
 
 总结对 metrics 的处理以及分析 Prometheus 架构，所有监控系统总体上要解决的问题其实就 3 个：
 
-1. 监控指标用什么形式表示（确定指标的数据模型）。
-2. 怎么收集和存储指标。
+1. 怎么收集和存储指标。
+2. 指标用什么形式展示
 3. 怎么利用指标生成报表。
 
-## 1. 数据模型
-
-Prometheus 的数据模型，简而言之就是一个时序类型的 Metric 数据，它主要由四个部分组成：metric 名称、labels、时间戳和数值。
-```
-<metric_name>{<label_name1>="<label_value1>", <label_name2>="<label_value2>", ...} <value> [<timestamp>]
-prometheus_http_requests_total{status="200", method="GET"} 12345 1618324800000
-```
-指标名称表示被监控样本的含义，譬如 http_request_total 表示当前系统接收到的 HTTP 请求总量，标签反应当前样本的特征维度，通过这些维度 Prometheus 对样本数据进行过滤，聚合等，数值表示度量的实际值，时间戳为数据收集的时间。
-
-以 Prometheus 为例，它支持四种不同指标表示类型：
-
-- **Counter（计数器）**: Counter 类型的指标其工作方式和计数器一样，初始为 0，只增不减（除非系统发生重置）。常见的监控指标，如 http_requests_total，node_cpu 都是 Counter 类型的监控指标。
-- **Gauge（仪表盘）**：与 Counter 不同，Gauge 类型的指标侧重于反应系统的当前状态。因此这类指标的样本数据可增可减。常见指标如：node_memory_MemFree（主机当前空闲的内容大小）、node_memory_MemAvailable（可用内存大小）都是Gauge类型的监控指标。
-- **Histogram（直方图）**：观测采样统计分类数据，观测数据放入有数值上界的桶中，并记录各桶中数据的个数。典型的应用有延时在 `0~50ms` 的请求数，500ms 以上慢查询数，大 Key 数等。
-- **Summary（摘要）**：聚合统计的多变量，跟 Histogram 有点像，但更有聚合总数的概念。典型应用有成功率、总体时延、总带宽量等。
-
-## 2. 收集指标
+## 1. 收集指标
 
 不同监控系统收集 Metrics 数据基本就两种方式：
 
-- 通过 push 到中心 Collector 方式采集（譬如各种 Agent 采集器，Telegraf 等）；
-- 又或者是中心 Collector 通过 pull 的方式主动获取。
+- 被监控的目标主动 push 到中心 Collector 方式采集（譬如各种 Agent 采集器，Telegraf 等）；
+- 中心 Collector 通过 pull 的方式从被监控的目标中主动获取。
 
 如图 9-5 所示，Prometheus 主动从监控源拉取暴露的 HTTP 服务地址（通常是/metrics）拉取监控样本数据。
 
@@ -51,11 +34,12 @@ prometheus_http_requests_total{status="200", method="GET"} 12345 1618324800000
   图 9-5 Prometheus 通过 Exporter 的实例 target 中主动拉取监控数据
 :::
 
+
 :::tip Exporter
 Exporter 一个相对开放的概念，可以是一个独立运行的程序独立于监控目标以外，也可以是直接内置在监控目标中，只要能够向 Prometheus 提供标准格式的监控样本数据即可。
 :::
 
-Prometheus 相比 zabbix 这类只监控机器的传统监控系统，最大的特点是对 Metrics 全方位的覆盖：
+Prometheus 相比 zabbix 这类只监控机器的传统监控系统，最大的特点是可对 Metrics 全方位的覆盖收集：
 
 - **宿主机监控数据**：Node Exporter 以 DaemonSet 的方式运行在宿主机，收集节点的负载、CPU、内存、磁盘以及网络这样的常规机器的数据。
 - **Kubernetes 本身的运行情况**：Kubernetes 的 API Server、Kubelet 等组件内部通过暴露 /metrics 接口，向 Prometheus 提供各个 Controller 工作队列、请求 QPS 等 Kubernetes 本身工作的情况。
@@ -80,11 +64,26 @@ Prometheus 相比 zabbix 这类只监控机器的传统监控系统，最大的�
  | 监控系统 |  Collectd Exporter、Graphite Exporter、InfluxDB Exporter、Nagios Exporter、SNMP Exporter 等 |
  | 其它 | Blockbox Exporter、JIRA Exporter、Jenkins Exporter、Confluence Exporter 等|
 
+
 ## 3. 存储指标
 
-如果 Metrics 数据的主要作用是监控，那么你要考虑这类数据有没有长期存储的必要？
+存储本来是一种司空见惯的操作，但如果是指标类型的数据，你可能需要换个思路来解决存储的问题。
 
-默认情况下，Prometheus 将数据存储在内置的 TSDB（时序数据库）中，并设定了默认的存储时限。这个数据库的设计初衷是为了实现监控数据的高性能查询，而非分布式处理，如果本地磁盘或节点出现故障，存储将无法扩展和迁移。
+举个例子，假设你负责一个小型的集群，大概只有 10 个节点，集群中运行了由 30 个服务组成的微服务系统，每个节点要采集 CPU、内存、磁盘以及网络，每个服务要采集业务相关、中间件相关指标。这些累加在一起算 20 个指标，如果按 1 秒的频率采集，那么一天的数据规模是：
+
+```
+10（节点）* 30（服务）* 20 (指标) * (86400/5) （秒） = 103,680,000
+```
+
+可见，这样规模的数据肯定不能用常规的思路/普通的数据库存储。再回顾，度量的指标数据有什么特征？纯数字，具有时间属性。这类的数据肯定也没有关系嵌套、不用考虑主键/外键、不用考虑事务处理。这类数据的重点应该是关注海量存储/规模化处理的优化问题。
+
+实际上，业界早就已经针对这类数据需求，发展出了专门优化的数据库类型 —— 时序数据库（TSDB）。
+
+:::tip 时序数据库
+TSDB 具备秒级写入百万级时序数据的性能，提供高压缩比低成本存储、预降采样、插值、多维聚合计算、可视化查询结果等功能，解决由设备采集点数量巨大、数据采集频率高造成的存储成本高、写入和查询分析效率低的问题。
+:::
+
+默认情况下，Prometheus 将数据存储内置的本地 TSDB 中，并设定了默认的存储时限（15天）。这种设计的理念基于“指标数据通常反映短期内的系统行为假设，而非长期/可靠分布式存储”。
 
 当然 Prometheus 也考虑了长期存储的场景，你可以通过 Prometheus 的远端存储扩展（Remote Read/Write API）将数据存储到任意第三方存储上。目前，社区已经涌现出大量适用于长期时序数据存储的解决方案，如 Thanos、VictoriaMetrics、SignalFx、InfluxDB 和 Graphite 等。
 
@@ -95,15 +94,31 @@ Prometheus 相比 zabbix 这类只监控机器的传统监控系统，最大的�
   图 9-6 长期存储方案对比
 :::
 
-## 4. 生成报表
+## 3. 指标的格式
 
-在仪表可视化领域，如果 Grafana Dashboard 称第二，应该没有敢窜出来称第一的。
+Prometheus 底层存储并没有对指标做类型区分，都是以时间序列进行存储。但为了方便用户使用和理解不同指标之间的差异，Prometheus 定义了四种不同的指标类型：
+
+- **Counter（计数器）**: Counter 类型的指标其工作方式和计数器一样，初始为 0，只增不减（除非系统发生重置）。常见的监控指标，如 http_requests_total，node_cpu 都是 Counter 类型的监控指标。
+- **Gauge（仪表盘）**：与 Counter 不同，Gauge 类型的指标侧重于反应系统的当前状态。因此这类指标的样本数据可增可减。常见指标如：node_memory_MemFree（主机当前空闲的内容大小）、node_memory_MemAvailable（可用内存大小）都是Gauge类型的监控指标。
+- **Histogram（直方图）**：观测采样统计分类数据，观测数据放入有数值上界的桶中，并记录各桶中数据的个数。典型的应用有延时在 `0~50ms` 的请求数，500ms 以上慢查询数，大 Key 数等。
+- **Summary（摘要）**：聚合统计的多变量，跟 Histogram 有点像，但更有聚合总数的概念。典型应用有成功率、总体时延、总带宽量等。
+
+:::center
+  ![](../assets/four-metrics-type.png)<br/>
+  图 9-5 Prometheus 定义的四种不同的指标类型
+:::
+
+## 4. 指标仪表盘
+
+在可观测数据展示方面，Grafana Dashboard 基本已经成为事实的标准。
 
 Grafana Labs 公司成立之前，Grafana Dashboard 就已经在各个开源社区有不小的名气和用户积累。依靠社区的用户基础，Grafana Labs 也快速地将产品渗透至各个企业，各类大场面也时不时会见到 Grafana 的身影[^1]：
 - 2016年，在猎鹰9号火箭首次发射期间，Grafana 出现在 SpaceX 控制中心的屏幕上；
 - 几周后，微软发布一段宣传视频，展示了他们的水下数据中心，同样出现了 Grafana 的身影。
 
-Grafana 的 slogan 是“Dashboard anything. Observe everything.” ，Prometheus 定义了功能强大的 promQL，可以满足各种复杂的查询场景。而 Grafana 提供了对 PromQL 的完整支持。两者结合的结果是：只要你能想到的数据就能转成任何你想要的图表。
+Grafana 的 slogan 是“Dashboard anything. Observe everything.” ，Prometheus 提供了名为 PromQL 的数据查询语言，这是一套完全由 Prometheus 定制的数据查询 DSL，能对时序数据进行高效的过滤、聚合和计算，已被广泛用在数据查询、可视化、报警处理等日常使用中。
+
+Grafana 提供了对 PromQL 的完整支持，两者结合的结果是“只要你能想到的数据就能转成任何你想要的图表”。
 
 :::center
   ![](../assets/grafana-dashboard-english.png)<br/>
