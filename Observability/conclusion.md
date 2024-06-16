@@ -4,7 +4,7 @@
 
 首先是指标，Prometheus 作为云原生时代的指标数据标准已经形成共识。链路标准也随着 OpenTelemetry 的推行逐渐占据主流。在日志领域，虽然因数据结构化程度低，难以形成数据标准，但采集存储分析侧涌现出 Fluent、loki 等开源新秀。另一方面，Grafana 作为可观测数据展示标准也基本明朗。
 
-最后，CNCF 孵化的 OpenTelemetry ，实现理想状态下 Logs、Trace、Metrics 三种数据协议标准/采集大一统，方便了可观测性平台的构建。但真正落地，形成适合自己的、可扩展的、低成本的可观测平台，并发挥出可观测的真正价值，还是要懂数据、懂技术、懂产品，任然任重道远。
+最后，CNCF 孵化的 OpenTelemetry ，实现 Logs、Trace、Metrics 三种数据协议底层标准定义、采集大一统，方便了可观测性平台的构建。但真正落地，形成适合自己的、可扩展的、低成本的可观测平台，并发挥观测数据的真正价值，依然困难，依然任重道远。
 
 参考文档：
 - 《Gorilla：快速、可扩展的内存时间序列数据库》https://blog.acolyer.org/2016/05/03/gorilla-a-fast-scalable-in-memory-time-series-database/

@@ -47,15 +47,16 @@ Kubernetes 调度器的上述设计思想，也是在集群规模不断增长的
 
 **解决以上问题的思想是将调度单元从 Pod 修改为 PodGroup，以组的形式进行调度，实现“Gang Scheduling”**。
 
-Kubernetes 从 v1.15 版本起，为 kube-scheduler 设计了可插拔的扩展机制 —— Scheduling Framework。有了 Scheduling Framework，在保持调度“核心”简单且可维护的同时，用户可以编写自己的调度插件注册到 Scheduling Framework 的扩展点来实现自己想要的调度逻辑。
-
+Kubernetes 从 v1.15 版本起，为 kube-scheduler 设计了可插拔的扩展机制 —— Scheduling Framework。
 :::center
   ![](../assets/scheduling-framework-extensions.png)<br/>
    Pod 的调度上下文以及调度框架公开的扩展点
 :::
 
+有了 Scheduling Framework，在保持调度“核心”简单且可维护的同时，用户可以编写自己的调度插件注册到 Scheduling Framework 的扩展点来实现自己想要的调度逻辑。
+
 最开始是社区催化 kube-batch，能够将一个训练任务的多个 Pod 当做一个整体进行调度，只有当任务所有 Pod 的资源都满足，才会将容器在节点上启动；kube-batch 还提供了 Queue 的机制（其实就是多租户），不同队列之间可以设置优先级，优先级高的队列中的任务会优先得到调度。
 
-但仅有调度器还不足以支持相应的批量计算作业，作为一个批量计算系统还需要其它很多组件的支持，例如 作业管理，数据管理，资源规划等等。后续社区中又陆续出现 Volcano、Koordinator 等一些以 Kubernetes 为基础的通用的计算系统/平台。
+但仅有调度器还不足以支持相应的批量计算作业，作为一个批量计算系统还需要其它很多组件的支持，例如 作业管理，数据管理，资源规划等等。
 
-这些平台虽然功能上有些差异，但总体而言核心依靠最基本的 Gang Scheduling，提供主流架构的 CPU、GPU 在内的异构设备混合调度能力，再补些 MPI 等辅助功能。
+后续社区中又陆续出现 Volcano、Koordinator 项目，这些项目虽然功能上有些差异，但总体而言核心依靠基本的 Gang Scheduling，提供主流架构的 CPU、GPU 在内的异构设备混合调度能力，再补齐 MPI 等辅助功能，最终构造出以 Kubernetes 为基础的通用的计算系统/平台。
