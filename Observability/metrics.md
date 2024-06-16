@@ -1,8 +1,8 @@
 # 9.3.1 聚合度量
 
-接口请求数、请求延迟、节点的负载以及内存占用等类似的指标数据有什么特点呢？可度量（都是纯数字的）、具有时间属性且可聚合。对可度量的指标数据进行收集/存储、分析（判断度量指标是否超过风险阈值），然后再处理（触发报警事件）。这一些列的处理流程，不正是监控系统的主要工作么？
+度量的主要工作包含对指标数据进行收集、存储、再处理（展示/触发预警）。这一些列的处理流程，也正是所有监控系统的主要工作。
 
-提到监控系统，那一定聊聊 Prometheus，Prometheus 是云原生时代最流行的监控系统。
+提到监控系统，避不开 Prometheus，Prometheus 是云原生时代最流行的监控系统。
 :::tip 额外知识
 Google 的 Borg 系统孕育出了 Kubernetes，Prometheus 的前身 —— Google 内部的监控系统 Brogmon 则由前 Google工程师在 Soundcloud 以开源软件的形式继承下来。
 :::
@@ -125,7 +125,7 @@ Grafana 提供了对 PromQL 的完整支持，两者结合的结果是“只要�
 
 :::center
   ![](../assets/grafana-dashboard-english.png)<br/>
-  图 9-7 通过 PromQL 查询数据，Grafana 监控仪表盘
+  图 9-7 通过 PromQL 查询数据，Grafana 展示数据
 :::
 
 在预警方面，Prometheus 只负责数据的采集和生成预警信息。预警的专门处理由 Alertmanager 负责。
