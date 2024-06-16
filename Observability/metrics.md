@@ -2,17 +2,17 @@
 
 思考接口请求数、请求延迟、节点的负载以及内存占用等类似的数据有什么特点呢？可量化（都是纯数字的）、具有时间属性且可聚合。对可度量的数据（Metrics）收集聚合、分析（判断度量指标是否超过风险阈值），然后再处理（触发报警事件）。
 
-这不是就监控系统的主要工作么！
+这一些列的流程，不正是监控系统的主要工作么？提到监控系统，那一定聊聊 Prometheus，Prometheus 是云原生时代最流行的监控系统。
 
-提到监控系统，那一定聊聊 Prometheus，Prometheus 是云原生时代最流行的监控系统。如图 9-4 所示的 Prometheus 架构，它通过不同的子功能实现埋点采集、爬取和传输、存储、计算、展示等，再通过搭积木的方式，组合出一个以应用为中心，功能强大的监控告警系统。
+:::tip 额外知识
+Google 的 Borg 系统孕育出了 Kubernetes，Prometheus 的前身 —— Google 内部的监控系统 Brogmon 则由前 Google工程师在 Soundcloud 以开源软件的形式继承下来。
+:::
+
+如图 9-4 所示的 Prometheus 架构，它通过不同的子功能实现埋点采集、爬取和传输、存储、计算、展示等，再通过搭积木的方式，组合出一个以应用为中心，功能强大的监控告警系统。
 
 :::center
   ![](../assets/prometheus-arch.png)<br/>
   图 9-4 Prometheus 的架构设计
-:::
-
-:::tip 额外知识
-Google 的 Borg 系统孕育出了 Kubernetes，Prometheus 的前身 —— Google 内部的监控系统 Brogmon 则由前 Google工程师在 Soundcloud 以开源软件的形式继承下来。
 :::
 
 总结对 metrics 的处理以及分析 Prometheus 架构，所有监控系统总体上要解决的问题其实就 3 个：
@@ -60,6 +60,7 @@ Prometheus 相比 zabbix 这类只监控机器的传统监控系统，最大的�
 - **宿主机监控数据**：Node Exporter 以 DaemonSet 的方式运行在宿主机，收集节点的负载、CPU、内存、磁盘以及网络这样的常规机器的数据。
 - **Kubernetes 本身的运行情况**：Kubernetes 的 API Server、Kubelet 等组件内部通过暴露 /metrics 接口，向 Prometheus 提供各个 Controller 工作队列、请求 QPS 等 Kubernetes 本身工作的情况。
 - **Kubernetes Workload 相关的监控**：kuelet 内置的 cAdvisor 服务把 Metrics 信息细化到每一个容器的 CPU、文件系统、内存、网络等资源使用情况。
+- **业务的监控**：用户在应用内实现 Exporter，自定义出各式各样的 Metrics。
 
 除了上述监控范围，Prometheus 的社区也涌现出大量各种用途的 Exporter，如表 9-1 所示，涵盖了从基础设施、中间件以及网络等各个方面，让 Prometheus 的监控范围涵盖用户关心的所有目标。
 
