@@ -1,5 +1,6 @@
 # 9.5 小结
 
+从 Google Dapper 论文发布，随机市场，最终谷歌和微软联手发布 OpenTelemetry 项目，实现 Metrics、Tracing、Logging 的融合及大一统 ，未来必将 APM 的数据采集终极解决方案。
 
 参考文档：
 - 《Gorilla：快速、可扩展的内存时间序列数据库》https://blog.acolyer.org/2016/05/03/gorilla-a-fast-scalable-in-memory-time-series-database/
