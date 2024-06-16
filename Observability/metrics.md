@@ -1,6 +1,6 @@
 # 9.3.1 聚合度量
 
-接口请求数、请求延迟、节点的负载以及内存占用等类似的数据有什么特点呢？可度量（都是纯数字的）、具有时间属性且可聚合。对可度量的数据（Metrics）收集聚合、分析（判断度量指标是否超过风险阈值），然后再处理（触发报警事件）。这一些列的流程，不正是监控系统的主要工作么？
+接口请求数、请求延迟、节点的负载以及内存占用等类似的指标数据有什么特点呢？可度量（都是纯数字的）、具有时间属性且可聚合。对可度量的指标数据进行收集/存储、分析（判断度量指标是否超过风险阈值），然后再处理（触发报警事件）。这一些列的处理流程，不正是监控系统的主要工作么？
 
 提到监控系统，那一定聊聊 Prometheus，Prometheus 是云原生时代最流行的监控系统。
 :::tip 额外知识
@@ -14,7 +14,7 @@ Google 的 Borg 系统孕育出了 Kubernetes，Prometheus 的前身 —— Goog
   图 9-4 Prometheus 的架构设计
 :::
 
-总结对 metrics 的处理以及分析 Prometheus 架构，所有监控系统总体上要解决的问题其实就 3 个：
+总结对指标的处理以及分析 Prometheus 架构，所有监控系统总体上要解决的问题其实就 3 个：
 
 - 怎么收集指标（定义指标的类型/将定义后的指标类型告诉服务端）。
 - 指标收集后怎么存储。
@@ -34,8 +34,8 @@ Google 的 Borg 系统孕育出了 Kubernetes，Prometheus 的前身 —— Goog
   图 9-5 Prometheus 定义的四种不同的指标类型
 :::
 
-如下，一个 Counter 类型的 HTTP 请求指标样本数据。
-```
+如下，一个 Counter 类型的 HTTP 指标数据样本。
+```bash
 $ curl http://127.0.0.1:8080/metrics | grep http_request_total
 # HELP http_request_total The total number of processed http requests
 # TYPE http_request_total counter // 指标类型 类型为 Counter
