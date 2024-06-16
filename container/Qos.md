@@ -67,7 +67,7 @@ Kubernetes 有 2 种驱逐策略，soft eviction（软驱逐）和 hard eviction
 - --eviction-minimum-reclaim，该参数决定每次驱逐至少清理出来多少资源才会停止。
 - --eviction-pressure-transition-period，该参数决定 kubelet 多久才上报节点的状态，如果上报状态周期比较短，频繁更改节点状态也会导致驱逐波动。
 
-最后，kubelet 的驱逐配置示例如下。
+最后，kubelet 与驱逐相关的配置示例如下。
 
 ```bash
 $ kubelet --eviction-soft=memory.available<80%,nodefs.available<2Gi \
