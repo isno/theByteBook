@@ -66,4 +66,5 @@
 | P90 | percentile 90  | 数据聚合统计方式，用来衡量业务指标 |
 | QA | Quality Assurance | 品质保证|
 | SLA | Service Level Agreement | 服务等级协议，用于向客户承诺提供的服务等级 | 
+| APM | Application Performance Monitoring | 应用程序性能监控|
 

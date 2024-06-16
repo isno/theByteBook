@@ -1,6 +1,10 @@
 # 9.5 小结
 
-从 Google Dapper 论文发布，随机市场，最终谷歌和微软联手发布 OpenTelemetry 项目，实现 Metrics、Tracing、Logging 的融合及大一统 ，未来必将 APM 的数据采集终极解决方案。
+在可以预见的未来，相信可观测领域将形成一定意义的标准化。
+
+首先是指标，Prometheus 作为云原生时代的指标数据标准已经形成共识。链路标准也随着 OpenTelemetry 的推行逐渐占据主流。在日志领域，虽然因数据结构化程度低，难以形成数据标准，但采集存储分析侧涌现出 Fluent、loki 等开源新秀。另一方面，Grafana 作为可观测数据展示标准也基本明朗。
+
+最后，以期 OpenTelemetry 实现理想状态下 Logs、Trace、Metrics 三种数据协议标准大一统，使用一个 Agent 完成所有可观测性数据的采集和传输，再通过可扩展的存储，叠加上时间信息的关联，构建出新一代的可观测基础设施，并发挥出真正的观测价值。
 
 参考文档：
 - 《Gorilla：快速、可扩展的内存时间序列数据库》https://blog.acolyer.org/2016/05/03/gorilla-a-fast-scalable-in-memory-time-series-database/
