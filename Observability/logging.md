@@ -57,40 +57,44 @@ Loki 的另外一个特点是对以 Kubernetes 为基座的系统十分友好。
   图 9-12 在 Grafana 中通过 LogQL 查询展示不同的图表
 :::
 
-总体而言，Loki 和 Elastic 都是优秀的日志解决方案，具体如何选择取决于具体场景：
-- Loki 相对轻量，具有较高的可扩展性和简化的存储架构，若是数据的处理不那么复杂，且有时序属性，如应用程序日志和基础设施指标，并且应用使用 kubernetes Pod 形式部署，则选择 Loki 比较合适。
-- Elastic 则相对重量，需要复杂的存储架构和较高的硬件要求，部署和管理也比较复杂，适合更大的数据集和更复杂的数据处理需求。
+最后，Loki 和 Elastic 都是优秀的日志解决方案，具体如何选择取决于具体场景：
+- Loki 相对轻量，具有较高的可扩展性和简化的存储架构，若是数据的处理不那么复杂，且有时序属性，如应用程序日志和基础设施指标，并且以 Kubernetes 为底座的 系统选择 Loki 更合适。
+- Elastic 相对重量，需要复杂的存储架构和较高的硬件要求，部署和管理也比较复杂，适合更大的数据集和更复杂的数据处理需求。
 
 ## 3. 凶猛彪悍的 ClickHouse
 
-一个流行的观点认为：如果你想要查询变得更快，最简单且有效的方法就是减少数据扫描范围和数据传输的大小。通常的按行存储的数据库中，数据是按照如下顺序存储的。换句话说，一行内的所有数据都彼此依次存储。像这样的行式数据库包括 MySQL、Postgres、MS SQL-Server 等。
+一个流行的观点认为“如果你想要查询变得更快，最简单且有效的方法就是减少数据扫描范围和数据传输的大小”。
+
+通常数据库中的数据是按照如下组织存储。换句话说，一行内的所有数据都彼此依次存储，像这样的行式数据库包括 MySQL、Postgres、MS SQL-Server 等。
 
 :::center
   ![](../assets/row-database.png)<br/>
   图 9-13 行式数据库
 :::
 
-而面向列的数据库管理系统中，数据是这样存储的。压缩的本质是按照**一定步长对数据进行匹配扫描，当发现重复部分的时候就进行编码转换**。数据中的重复项越多，则压缩率越高。同一列字段的数据，因为拥有相同的数据类型和现实语义，重复项可能性自然更高。
+与行式相对的是列式数据库，它们的数据是这样存储组织的。
 
 :::center
   ![](../assets/column-database.png)<br/>
   图 9-14 列式存储
 :::
 
-列式数据库的佼佼者当属由 Yandex（一家俄罗斯搜索引擎公司）开源的用于 MPP (Massively Parallel Processing，大规模并行处理)架构的列式存储分析型数据库 ClickHouse。
+压缩的本质是按照**一定步长对数据进行匹配扫描，当发现重复部分的时候就进行编码转换**。数据中的重复项越多，则压缩率越高。列式数据库中同一列字段的数据，因为拥有相同的数据类型和现实语义，重复项可能性自然更高。
 
-:::tip 来自官方的介绍
-ClickHouse® is an open-source **column-oriented** database management system that allows generating analytical data reports in **real-time**.
-:::
-
-近几年来，也经常能在国内各个技术公众号看到关于 ClickHouse 的实践，图 9-15 来源技术文章《B站基于Clickhouse的下一代日志体系建设实践》，内容中的实践结论表明，B 站使用 ClickHouse 降低了 60%+ 的存储成本[^2]
+近几年来，也经常能在国内各个技术公众号看到关于列式数据库的实践分享，图 9-15 中的数据来源技术文章《B站基于Clickhouse的下一代日志体系建设实践》，文章中的数据表明：B 站使用 ClickHouse 降低了 60%+ 的存储成本[^2]
 
 :::center
   ![](../assets/es-vs-clickhouse.png)<br/>
   图 9-15 同一份日志在 Elasticsearch、ClickHouse 和 ClickHouse(zstd) 中的容量对比
 :::
 
-ClickHouse 的另外一个特点是极致的向量化查询性能，从它的跑分结果来看（图 9-16），ClickHouse 比 Vertia（一款商业的 MPP 分析软件）快约 5 倍，、比 Hive 快 279 倍、比 My SQL 快 801 倍。ClickHouse 的查询速度当之无愧阐述“**real-time**”二字含义。
+上面提到的 ClickHouse，是 Yandex（一家俄罗斯搜索引擎公司）开源的用于 MPP (Massively Parallel Processing，大规模并行处理)架构的列式存储分析型数据库。
+
+:::tip 来自官方的介绍
+ClickHouse® is an open-source **column-oriented** database management system that allows generating analytical data reports in **real-time**.
+:::
+
+ClickHouse 另外一个特点是极致的向量化查询性能，从它的跑分结果来看（图 9-16），ClickHouse 比 Vertia（一款商业的 MPP 分析软件）快约 5 倍、比 Hive 快 279 倍、比 MySQL 快 801 倍。ClickHouse 的查询速度当之无愧阐述“**real-time**”二字含义。
 
 :::center
   ![](../assets/ClickHouse-benchmark.jpeg)<br/>
