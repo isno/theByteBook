@@ -1,6 +1,6 @@
 # 7.5 容器持久化存储设计
 
-:::tip 容器内部的存储
+:::tip <a/>
 镜像作为不可变的基础设施，要求同一份镜像能复制出完全一致的镜像实例，这就意味着在容器内写入的任何数据是无法真正写入镜像内。
 :::
 
@@ -8,7 +8,7 @@
 
 ## 7.5.1 Docker 的存储设计
 
-目前，Docker 支持 3 中挂载方式：bind mount、volume、tmpfs mount。
+Docker 通过挂载宿主机目录到 Docker 内部的方式，实现持久化存储。目前，Docker 支持 3 中挂载方式：bind mount、volume、tmpfs mount。
 
 :::center
   ![](../assets/types-of-mounts-volume.webp)<br/>
@@ -27,27 +27,29 @@ mount("/usr/share/nginx/html","rootfs/data", "none", MS_BIND, nulll)
 ```
 这种挂载的方式显然有明显的缺陷：
 - **通过映射的方式挂载宿主机中的一个绝对路径，这就跟操作系统强相关**。这意味着 bind mount 的方式无法写在 dockerfile 中，不然镜像在其他环境可能无法启动。其次，宿主机中被挂载的目录明面上看不出和 Docker 的关系，操作系统内其他进程有可能误写，存在安全隐患。
-- 容器被广泛使用后，**容器存储的需求绝对不是简单的映射关系就能搞定**，存储位置不限于宿主机（有可能是网络存储）、存储的介质不限于磁盘（可能是 tmpfs）、存储的类型也不仅仅是文件系统（还有可能是块设备或者对象存储）。如果是**网络存储没必要先挂载到操作系统，再挂载到容器某个目录，Docker 完全可以实现类似 iSCSI 协议、NFS 协议直接对接这些存储**。
+- 容器被广泛使用后，**容器存储的需求绝对不是简单的映射关系就能搞定**，存储位置不限于宿主机（有可能是网络存储）、存储的介质不限于磁盘（可能是 tmpfs）、存储的类型也不仅仅是文件系统（还有可能是块设备或者对象存储）。如果是**网络存储完全没必要先挂载到操作系统，再挂载到容器某个目录，Docker 完全可以实现类似 iSCSI 协议、NFS 协议越过操作系统，对接这些网络存储**。
 
 为此，Docker 从 1.7 版本起提供全新的挂载类型 Volume（存储卷）：
 - 它首先在宿主机开辟了一块属于 Docker 空间（Linux 中该目录是 /var/lib/docker/volumes/），这样就解决了 bind mount 映射宿主机绝对路径的问题；
-- 考虑存储的类型众多，仅靠 Docker 自己实现并不现实，为此 Docker 1.10 版本中又增加了对 Volume Driver 的支持，借助社区力量丰富 Docker 的存储驱动种类。用户只要通过 docker plugin install 安装额外的第三方卷驱动，就能使用想要的网络存储或者各类云厂商提供的存储。
+- 考虑存储的类型众多，仅靠 Docker 自己实现并不现实，Docker 1.10 版本中又增加了对 Volume Driver 的支持，借助社区力量丰富 Docker 的存储驱动种类。
+
+经过一系列的设计，用户只要通过 docker plugin install 安装额外的第三方卷驱动，就能使用想要的网络存储或者各类云厂商提供的存储。
 
 ## 7.5.2 Kubernetes 的存储设计
 
 我们从 Docker 返回到 Kubernetes 中，同 Docker 类似的是：
 - Kubernetes 也抽象出了 Volume 来解决持久化存储；
 - 也开辟了属于 Kubernetes 的空间（该目录是 /var/lib/kubelet/pods/[pod uid]/volumes）；
-- 也设计了存储驱动（Volume Plugin）的概念用以支持出众多的存储类型。
+- 也设计了存储驱动（Volume Plugin）扩展支持出众多的存储类型。
 
-不同的是，作为一个工业级的容器编排系统，Kubernetes 支持的 Volume 的类型要比 Docker 复杂那么一点以及类型多出一丢丢。
+不同的是，作为一个工业级的容器编排系统，Kubernetes Volume 的实现要比 Docker 复杂那么一点以及类型多出一丢丢。
 
 :::center
   ![](../assets/volume-list.png)<br/>
    图 7-25 Kubernetes 中的 Volume 分类
 :::
 
-乍一看，这么多 Volume 类型，着实难以下手。然而，总结起来就 3 类：
+乍一看，这么多 Volume 类型难以下手。然而，总结起来就 3 类：
 
 - 普通的 Volume。
 - 持久化的 Volume。
@@ -58,7 +60,7 @@ mount("/usr/share/nginx/html","rootfs/data", "none", MS_BIND, nulll)
 **设计普通 Volume 的目标并不是为了持久地保存数据，而是为同一个 Pod 中多个容器提供可共享的存储资源**。普通 Volume 代表有：
 
 - EmptyDir，常见的应用方式一个 sidecar 容器通过 EmtpyDir 来读取另外一个容器的日志文件。
-- 另外一种是 HostPath，和 EmptyDir 的区别是 HostPath 的 Volume 可以被所有的 Pod 共享。使用 Loki 日志系统，第一步要 Pod 挂载相同的宿主机 HostPath Volume，这样才能读取到宿主机内所有 Pod 写入的日志。
+- 另外一种是 HostPath，和 EmptyDir 的区别是 HostPath 的 Volume 可以被宿主机内所有的 Pod 共享。使用 Loki 日志系统，第一步要 Pod 挂载相同的宿主机 HostPath Volume，这样才能读取到宿主机内所有 Pod 写入的日志。
 
 如图 7-26 所示，EmptyDir 类型的 Volume 被包含在 Pod 内，生命周期与挂载它的 Pod 是一致的，当 Pod 因某种原因被销毁时，这类 Volume 也会随之删除。
 
