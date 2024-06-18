@@ -1,15 +1,15 @@
 # 9.3.3 Dapper 与链路追踪
 
-Uber 从公开过他们的微服务架构，里面大约有 2,200 个服务，引用内容中的配图，感受扑面而来的复杂。
+Uber 公开过他们的微服务架构，里面大约有 2,200 个服务，引用内容中的配图，感受扑面而来的复杂。
 
 :::center
   ![](../assets/uber-microservice.png)<br/>
   图 9-17 Uber 使用 Jaeger 生成的追踪链路拓扑 [图片来源](https://www.uber.com/en-IN/blog/microservice-architecture/)
 :::
 
-分布式链路追踪所要做的事情就是解决复杂系统问题排查困难的情况，**它的核心是通过请求粒度的轨迹追踪与数据透传，以实现这种规模下服务之间链路调用的确定性关联**。
+如何在这种及其复杂的分布式系统中确认哪个服务出现问题、哪条链路存在性能瓶颈？问题的破局是使用“分布式链路追踪”。
 
-分布式链路追踪诞生的标志性事件就是 Google Dapper 论文的发表。2010年4月，Benjamin H. Sigelman 等人在 Google Technical Report 上发表了《Dapper, a Large-Scale Distributed Systems Tracing Infrastructure》[^1]论文，文中详细阐述了 Google 内部分布式链路追踪系统 Dapper 的设计理念，还提出了成为后续链路追踪系统设计共识的两个术语 Trace（追踪）和 Span（跨度）。
+分布式链路追踪诞生的标志性事件是 Google Dapper 论文的发表。2010年4月，Benjamin H. Sigelman 等人在 Google Technical Report 上发表了《Dapper, a Large-Scale Distributed Systems Tracing Infrastructure》[^1]论文，文中详细阐述了 Google 内部分布式链路追踪系统 Dapper 的设计理念，还提出了成为后续链路追踪系统设计共识的两个术语 Trace（追踪）和 Span（跨度）。
 
 ## 1. Trace 和 Span
 
