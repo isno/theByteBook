@@ -227,7 +227,8 @@ spec:
 
 ## 7.2.6 Pod 是 Kubernetes 的基本单位
 
-Pod 是 Kubernetes 的基本单位，意思是 Kubernetes 其他大多数组件都是围绕着 Pod 进行支撑和扩展 Pod 功能。
+解决了容器的协作问题，围绕容器和 Pod 不断向实际应用的场景扩展，最终绘制出如图 7-4 所示的围绕 Pod 的 Kubernetes 核心功能全景图。
+
 
 - Deployment 是对 Pod 的服务化封装，一个 Deployment 可以包含一个或多个 Pod 实例，系统自动为 Deployment 的多个 Pod 分发请求。
 - StatefulSet 用来管理有状态应用。StatefulSet 为它们的每个 Pod 维护了一个有粘性的 ID。这些 Pod 是基于相同的规约来创建的， 但是不能相互替换：无论怎么调度，每个 Pod 都有一个永久不变的 ID。
@@ -238,7 +239,7 @@ Pod 是 Kubernetes 的基本单位，意思是 Kubernetes 其他大多数组件�
 - ...
 :::center
   ![](../assets/pod.svg)<br/>
-  图 7-4 Pod 是 Kubernetes 的基本单位
+  图 7-4 Kubernetes 核心功能全景图
 :::
 
 ## 7.2.7 Pod 是调度的原子单位
