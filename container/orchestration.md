@@ -177,7 +177,7 @@ Kubernetes 中这个设计叫做 Pod，Pod 是一组紧密关联的容器集合�
 
 Kubernetes 使用了一个特殊的容器（Infra Container）解决这个了问题。
 
-Infra Container 是整个 Pod 中第一个启动的容器，只有 300 KB 左右的 大小，它负责申请容器组的 UTS、IPC、网络等命名空间，Pod 内其他容器通过 setns（Linux 系统调用，把进程加入到某个命名空间中）方式共享 Infra Container 容器的命名空间，其次它还可作为 init 进程，用来管理子进程、回收资源等。
+Infra Container 是整个 Pod 中第一个启动的容器，只有 300 KB 左右大小，它负责申请容器组的 UTS、IPC、网络等命名空间，Pod 内其他容器通过 setns（Linux 系统调用，把进程加入到某个命名空间中）方式共享 Infra Container 容器的命名空间，其次它还可作为 init 进程，用来管理子进程、回收资源等。
 
 :::tip 额外知识
 Infra Container 中的代码仅是注册 SIGTERM、SIGINT、SIGCHILD 等信号处理，启动之后执行一个永远循环的 pause() 方法，所以也常被称为“pause 容器”。
@@ -230,7 +230,9 @@ Pod 承担的另外一个重要职责是 —— 作为调度的原子单位。
 
 通过组合两个不同角色的容器，共享资源，统一调度编排，在 Kubernetes 里面就是一个非常经典的容器设计模式 —— 即 Sidecar（边车）模式。
 
-Sidecar 模式其实就是在 Pod 里面定义一些专门的容器，通过职责分离与容器的隔离特性，降低容器的复杂度。通过图 7-5 所示的 Sidecar 容器（如日志记录、监控、安全性或数据同步 Sidecar 容器），能看到 Sidecar 模式通过增强或扩展主应用容器的功能，使开发一个高内聚、低耦合的软件变的更加容易。
+Sidecar 模式其实就是在 Pod 里面定义一些专门的容器，通过职责分离与容器的隔离特性，降低容器的复杂度。
+
+通过图 7-5 所示的 Sidecar 容器（如日志记录、监控、安全性或数据同步 Sidecar 容器），能看到 Sidecar 模式通过增强或扩展主应用容器的功能，使开发一个高内聚、低耦合的软件变的更加容易。
 
 :::center
   ![](../assets/sidecar.svg)<br/>
