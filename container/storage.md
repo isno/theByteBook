@@ -71,7 +71,7 @@ mount("/usr/share/nginx/html","rootfs/data", "none", MS_BIND, nulll)
   图 7-26 EmptyDir 类型的 Volume 不具备持久性
 :::
 
-## 7.5.2 持久化的 Volume
+## 7.5.4 持久化的 Volume
 
 因为 Pod 随时可能被调度到另外一台节点，如果想要数据持久化，只能借助网络存储。这就是引入 PV（PersistentVolume，持久卷）的原因。
 
@@ -141,7 +141,7 @@ spec:
 ```
 此时 NFS 的远端存储就挂载了到 Pod 中 nginx 容器的 /data 目录下。
 
-## 7.5.3 PV 的使用：从静态到动态
+## 7.5.5 PV 的使用：从静态到动态
 
 如果在系统中没有满足 PVC 要求的 PV，PVC 则一直处于 Pending 状态，直到系统里产生了一个合适的 PV，这期间 Pod 将无法正常启动。
 
@@ -174,7 +174,7 @@ volumeBindingMode: Immediate
 
 StorageClass 被创建之后，当 PVC 的需求来了，它就会自动的去创建 PV，供 Pod 使用。
 
-## 7.5.4 Kuberneters 的存储系统设计
+## 7.5.6 Kuberneters 的存储系统设计
 
 相信大部分读者对于如何使用 Volume 没什么疑问了，下面我们再了解存储系统是如何接入、以及如何与 Pod 关联的。
 
@@ -208,7 +208,7 @@ Volume 的创建和管理在 Kubernetes 中主要由卷管理器 VolumeManager �
 
 上面流程的每个步骤，对应了 CSI（Container Storage Interface，容器存储接口）提供的标准接口，云存储厂商只需要按标准接口实现自己的云存储插件，即可与 Kubernetes 底层编排系统无缝衔接起来，提供多样化的云存储、备份、快照（snapshot）等能力。
 
-## 7.5.5 存储的类型
+## 7.5.7 存储的类型
 
 得益 Kubernetes 的开放性设计，通过图 7-28 感受支持 CSI 的存储生态，基本上包含了市面上所有的存储供应商。
 
