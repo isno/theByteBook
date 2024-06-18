@@ -56,7 +56,7 @@ KEDA 由以下组件组成：
 </div>
 
 
-如下，一个 Kafka 伸缩实例。minReplicaCount 和 maxReplicaCount 分别定义了要伸缩的对象的最小和最大副本数量，minReplicaCount 可以为 0 即缩容到没有副本，比方说 Kafka 队列一直没有新消息就可以完全缩容，到有新消息进来的时候 keda 又会自动扩容。
+如下，一个 Kafka 伸缩配置。minReplicaCount 和 maxReplicaCount 分别定义了要伸缩的对象的最小和最大副本数量，minReplicaCount 可以为 0 即缩容到没有副本，比方说 Kafka 队列一直没有新消息就可以完全缩容，有新消息进来的时候 keda 又会自动扩容。
 
 ```yaml
 apiVersion: keda.sh/v1alpha1
@@ -70,7 +70,7 @@ spec:
     kind: Deployment
     name: brm-index-basic
   pollingInterval: 10
-  minReplicaCount: 1
+  minReplicaCount: 0
   maxReplicaCount: 20
   triggers:
     - type: kafka
