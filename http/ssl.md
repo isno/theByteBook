@@ -121,7 +121,9 @@ SSL 层的优化手段除了软件层面还有一些硬件加速的方案，例�
 |ECC 证书 + TLS1.2| 639.39| 203.319ms|100|
 |ECC 证书 + TLS1.3| 627.39| 159.390ms|100|
 
-从 SSL 加速的结果上看，使用 ECC 证书较 RSA 证书性能提升很多，即使 RSA 使用了 QAT 加速比起 ECC 还是存在差距。另外 QAT 方案的硬件成本、维护成本较高，综合考虑建议使用 TLS1.3 + ECC 证书方式。
+从 SSL 加速的结果上看，使用 ECC 证书较 RSA 证书性能提升很多，即使 RSA 使用了 QAT 加速比起 ECC 还是存在差距，QAT 方案也存在硬件成本、维护成本较高问题。
+
+所以，最优的选择是使用 TLS1.3 + ECC 证书方式。
 
 [^1]: 参见 https://datatracker.ietf.org/doc/html/rfc6960
 [^2]: 参见 https://datatracker.ietf.org/doc/html/rfc6066#section-8
