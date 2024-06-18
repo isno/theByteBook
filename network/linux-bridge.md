@@ -2,7 +2,7 @@
 
 物理网络中，如果需要连接多个主机，我们会使用网桥（也可以理解为交换机）设备组成一个小型局域网。Linux 网络虚拟化系统中，也提供了网桥虚拟实现 —— Linux Bridge。
 
-Linux Bridge 是 Linux 内核 2.2 版本开始提供的二层转发工具，由 brctl 命令创建和管理。Linux Bridge 创建以后，就能够接入任何位于二层的网络设备，无论是真实的物理设备（eth0），还是虚拟的设备（Veth 或者 TAP），都能接入到 Linux Bridge 中。
+Linux Bridge 是 Linux 内核 2.2 版本开始提供的二层转发工具，由 brctl 命令创建和管理。Linux Bridge 创建以后，就能够接入任何位于二层的网络设备，无论是真实的物理设备（eth0），还是虚拟的设备（Veth 或者 TAP），都能桥接到 Linux Bridge 中。
 
 :::center
   ![](../assets/linux-bridge.svg)<br/>
