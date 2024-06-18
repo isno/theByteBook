@@ -1,33 +1,27 @@
 # 7.4.1 Docker 的演变
 
-笔者曾提及云原生早期阶段，将 Docker 作为容器技术代表实至名归。这句话还有一层背后的含义：
+早期的容器生态圈内，还有一个不能忽视的角色 CoreOS[^1]，CoreOS 是一款为容器而生的轻量级 Linux 发行版。
 
-:::tip <a/>
+作为 Docker 的互补，CoreOS+Docker 曾经是容器部署的明星套餐。好景不长，Docker 后来收购一些公司大张旗鼓地发展 Swarm，发力集群编排管理领域，这就与 CoreOS 的布局产生了直接竞争关系。
 
-容器技术被传颂并深入人心，是因为 Docker；但是，其实技术积累由来已久，早期的容器技术是 Google、IBM 等公司贡献出来的，Pivotal 也发展了 Warden 容器技术，这些公司都专注于在各自的常规业务中，并没有重点投入容器技术；而 Docker 很好地将容器技术单独形成项目产品推向社区。
+于是，2014 年底 CoreOS 撇开 Docker，推出了与 Docker 对抗的开源容器引擎 Rocket（简称rkt），并联合一些知名的 IT 公司成立委员会试图主导容器技术的标准化。
 
-:::
-
-早期的容器生态圈内，还有一个不能忽视的角色 CoreOS[^1]，它定位于容器设计的操作系统。作为 Docker 的互补，CoreOS+Docker 曾经是容器部署的明星套餐。好景不长，Docker 后来收购一些公司大张旗鼓地发展 Swarm，发力集群编排管理领域，这就与 CoreOS 的布局产生了直接竞争关系。
-
-于是，2014 年底 CoreOS 撇开 Docker，推出了与 Docker 对抗的开源容器引擎 Rocket（简称rkt），并联合一些知名的 IT 公司成立委员会试图主导容器技术的标准化。CoreOS 还在 2015“榜上”Google 公司，并联合推出 CoreOS + Rocket + Kubernetes 的商用容器平台 Tectonic。
-
-从此，容器江湖分为两大阵营，Google 派系和 Docker 派系。
+CoreOS 还在 2015 被 Google 公司投资，后来它们联合推出 CoreOS + Rocket + Kubernetes 的商用容器平台 Tectonic。从此，容器江湖分为两大阵营，Google 派系和 Docker 派系。
 
 ## 1. OCI 
 
 容器技术的竞争不管最终鹿死谁手，其中标准的分裂对所有牵涉其中的人没有任何好处。
 
-于是，Linux 基金会出面调和，最终结果是 Linux 基金会于 2015 年 6 月在 DockerCon 大会上宣布成立 OCI（Open Container Initiative，开放容器倡议）项目[^2]。OCI 的成立最终结束了容器技术标准之争，Docker 公司也被迫放弃自己的独家控制权。
+于是，Linux 基金会出面调和，最终结果是 Linux 基金会于 2015 年 6 月在 DockerCon 大会上宣布成立 OCI（Open Container Initiative，开放容器倡议）项目[^2]。
 
-作为回报，Docker 的容器格式被 OCI 采纳为新标准的基础，并且由 Docker 起草 OCI 草案规范的初稿。当然这个“标准起草者”也不是那么好当的，Docker 需要提交自己的容器引擎源码作为启动资源。
+OCI 的成立最终结束了容器技术标准之争，Docker 公司也被迫放弃自己的独家控制权。作为回报，Docker 的容器格式被 OCI 采纳为新标准的基础，并且由 Docker 起草 OCI 草案规范的初稿。
+
+当然这个“标准起草者”也不是那么好当的，Docker 需要提交自己的容器引擎源码作为启动资源。
 
 首先是 Docker 最初使用的容器引擎 libcontainer，这是 Docker 在容器运行时方面的核心组件之一 ，用于实现容器的创建、管理和运行。Docker 将 libcontainer 捐赠给了OCI，成为 runtime-spec 的基础。在 OCI 的基础上，后来为了更好地推进容器运行时的标准化和互操作性，OCI runtime-spec 项目与 OCI 的其他相关项目合并，形成了 OCI Runtime Bundle 规范，并将容器运行时的核心组件命名为"runc"。
 
 :::tip runc
 runc 是非常小的运行核，其目的在于提供一个干净简单的运行环境，他就是负责隔离 CPU、内存、网络等形成一个运行环境，可以看作一个小的操作系统。runc 的使用者都是一些 CaaS 服务商，个人开发者知晓的并不是太多。
-
-Docker 是从 1.11 支持 runc 的，想必 Docker 当时的心态也很复杂：一方面作为 OCI 成员必须支持 runc，另一方面肯定也担心 runc 对 Docker 的替代威胁。
 :::
 
 经过如上的驱动演进之后，OCI 有了三个主要的规范标准：
@@ -44,7 +38,9 @@ Docker 投入巨大的精力进入容器编排领，发展并不顺利，一系�
 
 迫于现状，Docker 又回归到自己擅长的老本行中，将视线从编排界收回到容器技术。
 
-在 2017 年 12 月，Docker 开源了 Containerd，它是为 runc 提供接口并进行镜像的管理。非常有意思的是 Docker 没有把 Containerd 贡献给 Apache/Linux 之类的基金会，或是直接贡献给 runc，而是单独开源，这其实也不失为一种对 runc 的堤防措施，让大家在使用 runc 同时也不忘记 Docker。
+在 2017 年 12 月，Docker 开源了 Containerd，它是为 runc 提供接口并进行镜像的管理。
+
+如图 7-13 所示，containerd 的架构主要分为三个部分：生态系统（Ecosystem）、平台（Platform）和客户端（Client）。每个部分在整个系统中扮演着不同的角色，协同工作以提供全面的容器管理功能。
 
 :::center
   ![](../assets/containerd-arch.png)<br/>

@@ -138,7 +138,7 @@ Dragonfly 提供了一种无侵入（不用修改容器、仓库等源码）的�
 
 :::center
   ![](../assets/dragonfly.png)<br/>
-  图 7-10 Dragonfly 是怎么工作的
+  图 7-10 Dragonfly 是怎么工作的 [图片来源](https://d7y.io/zh/docs/)
 :::
 
 ## 7.3.5 镜像启动加速
@@ -155,7 +155,7 @@ Nydus 主要优化了镜像中 Layer 数据层的数据结构，将容器镜像�
 
 :::center
   ![](../assets/nydus.png)<br/>
-  图 7-11 Nydus 是怎么工作的
+  图 7-11 Nydus 是怎么工作的 [图片来源](https://d7y.io/zh/blog/2022/06/06/evolution-of-nydus/)
 :::
 
 由于使用了按需加载镜像数据，容器的启动时间明显缩短。从官网给到的数据中，Nydus 能够把常见镜像的启动时间，从数分钟缩短到数秒钟。

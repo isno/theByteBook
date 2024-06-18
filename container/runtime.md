@@ -4,4 +4,4 @@ Docker 大概也没想到，在孕育 Docker 的母公司倒闭的 8 年之后�
 
 本节，我们把握这两者关系的变化，从中理解容器运行时规范以及 Kubernetes CRI 容器运行时接口的演变。
 
-[^1]: 孕育 Docker 的公司最初叫 DotCloud，后来在 2013 年更改为 Docker Inc。2014 年 8 月，Docker Inc 将用于 PaaS 业务服务的 DotCloud 软件出售给德国柏林的 PaaS 服务厂商 CloudControl，自以，DotCloud 正式的和 Docker 分道扬镳。
+[^1]: 孕育 Docker 的公司最初叫 dotCloud，后来更改为 Docker Inc。Docker 为了更好的专注于容器研究，2014 年 8 月，Docker Inc 将 PaaS 业务 dotCloud 出售给德国一家 PaaS 服务厂商 CloudControl。2016 年 2 月，dotCloud 的母公司 cloudControl 宣布破产。
