@@ -8,7 +8,7 @@
 
 :::
 
-早期的容器生态圈内，还有一个不能忽视的角色 CoreOS，它定位于容器设计的操作系统。作为 Docker 的互补，CoreOS+Docker 曾经是容器部署的明星套餐。好景不长，Docker 后来收购一些公司大张旗鼓地发展 Swarm，发力集群编排管理领域，这就与 CoreOS 的布局产生了直接竞争关系。
+早期的容器生态圈内，还有一个不能忽视的角色 CoreOS[^1]，它定位于容器设计的操作系统。作为 Docker 的互补，CoreOS+Docker 曾经是容器部署的明星套餐。好景不长，Docker 后来收购一些公司大张旗鼓地发展 Swarm，发力集群编排管理领域，这就与 CoreOS 的布局产生了直接竞争关系。
 
 于是，2014 年底 CoreOS 撇开 Docker，推出了与 Docker 对抗的开源容器引擎 Rocket（简称rkt），并联合一些知名的 IT 公司成立委员会试图主导容器技术的标准化。CoreOS 还在 2015“榜上”Google 公司，并联合推出 CoreOS + Rocket + Kubernetes 的商用容器平台 Tectonic。
 
@@ -18,7 +18,7 @@
 
 容器技术的竞争不管最终鹿死谁手，其中标准的分裂对所有牵涉其中的人没有任何好处。
 
-于是，Linux 基金会出面调和，最终结果是 Linux 基金会于 2015 年 6 月在 DockerCon 大会上宣布成立 OCI（Open Container Initiative，开放容器倡议）项目[^1]。OCI 的成立最终结束了容器技术标准之争，Docker 公司也被迫放弃自己的独家控制权。
+于是，Linux 基金会出面调和，最终结果是 Linux 基金会于 2015 年 6 月在 DockerCon 大会上宣布成立 OCI（Open Container Initiative，开放容器倡议）项目[^2]。OCI 的成立最终结束了容器技术标准之争，Docker 公司也被迫放弃自己的独家控制权。
 
 作为回报，Docker 的容器格式被 OCI 采纳为新标准的基础，并且由 Docker 起草 OCI 草案规范的初稿。当然这个“标准起草者”也不是那么好当的，Docker 需要提交自己的容器引擎源码作为启动资源。
 
@@ -69,4 +69,5 @@ Docker 架构流程图已如图 7-14 所示。
 
 这两类运行时按照各自的分工，共同协作完成容器整个生命周期的管理工作。
 
-[^1]: 该项目最初的名字叫 OCP（Open Container Project），不过因为 OCP 容易和 Open Compute Project 混淆，后来在 OSCON 会议上宣布更名为开放容器计划（Open Container Initiative）。
+[^1]: CoreOS 是一款产品也是一个公司的名称，后来产品改名 Container Linux。除了 Container Linux，CoreOS 还开发了 Etcd、Flannel、CNI 这些影响深远的项目。2018 年 1 月 30 号，CoreOS 被 RedHat 以 2.5 亿美的价格收购（当时 CoreOS 的员工才 130 人）。
+[^2]: 该项目最初的名字叫 OCP（Open Container Project），不过因为 OCP 容易和 Open Compute Project 混淆，后来在 OSCON 会议上宣布更名为开放容器计划（Open Container Initiative）。
