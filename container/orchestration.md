@@ -73,7 +73,7 @@ chroot 最初的目的是为了实现文件的隔离，并非为了容器而设�
 | Time| 隔离系统时间 | 5.6 |
 
 
-我们创建子进程通常使用 fork()，fork 背后调用的是 clone()，clone 暴露的参数更多，如果要为创建的子进程设置各类资源隔离，使用 clone 并指定 flags 参数即可。
+我们创建子进程通常使用 fork()，fork 背后调用的是 clone()，如果要为创建的子进程设置各类资源隔离，使用 clone 并指定 flags 参数即可。
 
 ```c
 int clone(int (*fn)(void *), void *child_stack,
@@ -103,9 +103,26 @@ cgroups 是一种内核级别的资源管理机制，可以实现对 Linux 进�
 不过由于兼容性和稳定性原因，目前多数容器运行时默认使用的是第一代 cgroups。
 :::
 
-可以在 Linux 系统通过 ` ll /sys/fs/cgroup `命令查看系统支持的被限制的资源种类。
 
-cgroups 子系统如表 7-2 所示。
+Linux 系统执行 ` ll /sys/fs/cgroup `，可以看到有很多 blkio、cpu 这样的目录。这也叫子系统，子系统显示了当前机器可被 cgroups 限制的资源种类。
+
+```bash
+$ ll /sys/fs/cgroup
+总用量 0
+drwxr-xr-x 2 root root  0 2月  17 2023 blkio
+lrwxrwxrwx 1 root root 11 2月  17 2023 cpu -> cpu,cpuacct
+lrwxrwxrwx 1 root root 11 2月  17 2023 cpuacct -> cpu,cpuacct
+...
+```
+在对应的子系统内，创建目录，比如。
+
+```bash
+$ mkdir /sys/fs/cgroup/memory/test
+$ ls /sys/fs/cgroup/memory/test
+cgroup.clone_children               memory.memsw.failcnt
+cgroup.event_control                memory.memsw.limit_in_bytes
+```
+这样的目录被称为”控制群组“，控制群组创建后会自动生成一系列资源限制文件。目前，Linux 系统一般支持如下控制群组。
 
 :::center
 表 7-2 cgroups 控制群组子系统
@@ -124,9 +141,9 @@ cgroups 子系统如表 7-2 所示。
 |perf_event | 允许使用 perf 工具对 crgoups 中的进程和线程监控|
 
 
-cgroups 的 API 通过内核文件系统操作接口（cgroupfs）暴露，用户态程序可以通过操作这些文件实现资源管理。
+控制群组内的资源限制往文件内写入资源管理配置，最后则是将进程 PID 写入 tasks 文件里，然后配置生效。
 
-如下代码所示，创建控制组目录（$hostname），以及往各个子系统配置文件写入资源管理配置，最后则是将进程 PID 写入 tasks 文件里，然后配置生效。3892 这个进程内存被限制在 1 GB、只允许使用 1/4 CPU 时间。 
+如下所示，3892 这个进程内存被限制在 1 GB、只允许使用 1/4 CPU 时间。 
 
 ```bash
 /sys/fs/cgroup/memory/$hostname/memory.limit_in_bytes=1GB // 容器进程及其子进程使用的总内存不超过 1GB
@@ -188,24 +205,43 @@ Infra Container 中的代码仅是注册 SIGTERM、SIGINT、SIGCHILD 等信号�
   图 7-4 Pod 内的容器通过 Infra Container 共享网络命名空间
 :::
 
-通过 Infra Container，同一 Pod 内的容器共享以下命名空间：
+通过 Infra Container，同一 Pod 内的容器共享 UTS、Network、IPC、Time 命名空间。
 
-- **UTS 命名空间**：所有容器都有相同的主机名和域名。
-- **网络命名空间**：所有容器都共享一样的网卡、网络栈、IP 地址等。同一个 Pod 中不同容器占用的端口不能冲突（这也是 Kubernetes 中 endpoint 的由来）。
-- **IPC 命名空间**：所有容器都可以通过信号量或者 POSIX 共享内存等方式通信。
-- **时间命名空间**：所有容器都共享相同的系统时间。
+注意，PID 命名空间和文件命名空间默认还是隔离的，这是因为：
+- 容器之间也需要相互独立的文件系统以避免冲突。如果容器之间想要想要实现文件共享，Kubernetes 也提供了 Volume 支持（Volume 的概念将在本章 7.5 节介绍）。
+- PID 隔离是因为如果某些容器进程不再具备 PID=1，容器可能会拒绝启动（例如使用 systemd 的容器）。
 
-不过 PID 命名空间和文件命名空间默认还是隔离的，这是因为容器之间也需要相互独立的文件系统以避免冲突。如果容器之间想要想要实现文件共享，Kubernetes 也提供了 Volume 支持（Volume 的概念将在本章 7.5 节介绍）。
+如果要共享 PID 命名空间，需要设置 PodSpec 中的 ShareProcessNamespace 为 true，如下 yaml 所示。
 
-PID 的隔离令每个容器都有独立的进程 ID 编号，如果要共享 PID 命名空间，需要设置 PodSpec 中的 ShareProcessNamespace 为 true，如下所示。
 ```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
 spec:
   shareProcessNamespace: true
+  ...
 ```
 
-设置之后，Infra Container 中的进程将作为 PID 1 进程，其他容器的进程作为它的子进程存在，后续将由 Infra Container 来负责信号处理、子进程的资源回收等。
+设置之后，Infra Container 将作为 PID 1 进程，由 Infra Container 负责信号处理、子进程的资源回收等。
 
-## 7.2.6 Pod 是调度的原子单位
+## 7.2.6 Pod 是 Kubernetes 的基本单位
+
+Pod 是 Kubernetes 的基本单位，意思是 Kubernetes 其他大多数组件都是围绕着 Pod 进行支撑和扩展 Pod 功能。
+
+- Deployment 是对 Pod 的服务化封装，一个 Deployment 可以包含一个或多个 Pod 实例，系统自动为 Deployment 的多个 Pod 分发请求。
+- StatefulSet 用来管理有状态应用。StatefulSet 为它们的每个 Pod 维护了一个有粘性的 ID。这些 Pod 是基于相同的规约来创建的， 但是不能相互替换：无论怎么调度，每个 Pod 都有一个永久不变的 ID。
+- Service 用来解决 Pod 访问问题，Service 有一个固定IP地址，Service 将访问流量转发给 Pod，而且 Service 可以给这些 Pod 做负载均衡。
+- Ingress，Service 是基于四层 TCP 和 UDP 协议转发的，Ingress 可以基于七层的 HTTP 和 HTTPS 协议转发，可以通过域名和路径做到更细粒度的划分。
+- DaemonSet，它在集群的每个节点上运行一个 Pod，且保证只有一个 Pod。这非常适合一些系统层面的应用，例如日志收集、资源监控等。
+- Job 用来控制批处理型任务的对象。
+- ...
+:::center
+  ![](../assets/pod.svg)<br/>
+  图 7-4 Pod 是 Kubernetes 的基本单位
+:::
+
+## 7.2.7 Pod 是调度的原子单位
 
 Pod 承担的另外一个重要职责是 —— 作为调度的原子单位。
 
@@ -226,7 +262,7 @@ Pod 承担的另外一个重要职责是 —— 作为调度的原子单位。
 
 复杂的协同调度设计在 Kubernetes 中直接消失了。
 
-## 7.2.7 容器的设计模式 Sidecar
+## 7.2.8 容器的设计模式 Sidecar
 
 通过组合两个不同角色的容器，共享资源，统一调度编排，在 Kubernetes 里面就是一个非常经典的容器设计模式 —— 即 Sidecar（边车）模式。
 
