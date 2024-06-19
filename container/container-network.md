@@ -181,16 +181,7 @@ $ ls /opt/cni/bin/
 bandwidth  bridge  dhcp  firewall  flannel calico-ipam cilium...
 ```
 
-当需要设置容器网络时，由容器运行时负责执行 CNI 插件，并通过 CNI 插件的标准输入（stdin）来传递配置文件信息，通过标准输出（stdout）接收插件的执行结果。
-
-使用 Flannel CNI 插件的流程如下所示。
-
-
-:::center
-  ![](../assets/CNI.png) <br/>
-  图 7-31 CNI 的工作流程
-:::
-
+当需要设置容器网络时，由容器运行时负责执行 CNI 插件，并通过 CNI 插件的标准输入（stdin）来传递配置文件信息，通过标准输出（stdout）接收 CIN 插件的执行结果。
 
 如此，需要接入什么样的网络，设计一个对应的网络插件即可。这样一来节省了开发资源可以集中精力到 Kubernetes 本身，二来可以利用开源社区的力量打造一整个丰富的生态。
 
