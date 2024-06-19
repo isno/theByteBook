@@ -227,16 +227,12 @@ spec:
 
 ## 7.2.6 Pod 是 Kubernetes 的基本单位
 
-解决了容器的协作问题，围绕容器和 Pod 不断向实际应用的场景扩展，最终绘制出如图 7-4 所示的围绕 Pod 的 Kubernetes 核心功能全景图。
+解决了容器的协作问题，围绕容器和 Pod 不断向实际应用的场景扩展。
 
+Pod 要运行多个副本，于是有了 Deployment。有了多个副本之后，要有一个唯一的入口访问，因为有多个副本，还要解决负载均衡，于是就有了 Service。Service 是基于四层 TCP 和 UDP 协议转发，还要支持更上一层的应用层协议 (HTTP/HTTPS）转发，还希望通过域名/路径做到更细粒度的划分，于是就有了 ingress。
 
-- Deployment 是对 Pod 的服务化封装，一个 Deployment 可以包含一个或多个 Pod 实例，系统自动为 Deployment 的多个 Pod 分发请求。
-- StatefulSet 用来管理有状态应用。StatefulSet 为它们的每个 Pod 维护了一个有粘性的 ID。这些 Pod 是基于相同的规约来创建的， 但是不能相互替换：无论怎么调度，每个 Pod 都有一个永久不变的 ID。
-- Service 用来解决 Pod 访问问题，Service 有一个固定IP地址，Service 将访问流量转发给 Pod，而且 Service 可以给这些 Pod 做负载均衡。
-- Ingress，Service 是基于四层 TCP 和 UDP 协议转发的，Ingress 可以基于七层的 HTTP 和 HTTPS 协议转发，可以通过域名和路径做到更细粒度的划分。
-- DaemonSet，它在集群的每个节点上运行一个 Pod，且保证只有一个 Pod。这非常适合一些系统层面的应用，例如日志收集、资源监控等。
-- Job 用来控制批处理型任务的对象。
-- ...
+围绕 Pod，最终绘制出如图 7-4 所示 Kubernetes 核心功能全景图。
+
 :::center
   ![](../assets/pod.svg)<br/>
   图 7-4 Kubernetes 核心功能全景图
