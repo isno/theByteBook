@@ -28,7 +28,7 @@ Flannel 基于 VXLAN 技术容器间通信逻辑，总结为图 7-29。
 
 现在，我们看看当 Node1 中的 Container-1 与 Node2 中的 Container-2 通信时，Flannel 是如何封包/解包，封包/解包数据又如何而来。
 
-首先，当 Node1 启动后加入 Flannel 网络后，flanneld 会在 Node1 中添加如下路由规则。
+首先，当 Flannel 启动后，会以 DaemonSet 运行名为 flanneld 的程序，flanneld 主要为容器分配子网，同步节点之间的网络信息等。当节点 Node1 接入 Flannel 网络后，flanneld 会在 Node1 中添加如下路由规则。
 ```bash
 [node1]# route -n
 Kernel IP routing table
@@ -51,7 +51,7 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 [root@Node1 ~]# ip n | grep flannel.1
 10.244.1.0 dev flannel.1 lladdr ba:74:f9:db:69:c1 PERMANENT # PERMANENT 表示永不过期
 ```
-上面记录的意思是，IP 地址 10.244.1.0（Node2 flannel.1 设备的 IP）对应的 MAC 地址是 ba:74:f9:db:69:c1。
+上面记录的意思是，IP 地址 10.244.1.0（Node2 flannel.1 的 IP）对应的 MAC 地址是 ba:74:f9:db:69:c1。
 
 :::tip 注意
 这里 ARP 表并不是通过 ARP 学习得到的，而是 flanneld 预先为每个节点设置好的，由 flanneld 负责维护，没有过期时间。
@@ -165,9 +165,9 @@ Underlay 就是 2 层互通的底层网络，传统网络大多数属于这种�
 由于没有 Linux Bridge 以及封装/解包的负担。因此，Underlay 模式能最大限度的利用硬件的能力，有着**最优先的性能表现**，但也由于它直接依赖硬件和底层网络环境限制，必须根据软硬件情况部署，没有 Overlay 那样开箱即用的灵活性。
 
 
-## 7.6.4 CNI 规范以及生态
+## 7.6.4 CNI 插件以及生态
 
-容器网络配置是一个很复杂的过程，Kubernetes 本身不实现集群内的网络模型，而是通过 CNI 接口把网络变成外部可扩展的功能。
+容器网络配置是一个很复杂的过程，Kubernetes 本身并不实现集群内的网络模型，而是通过 CNI 接口把网络变成外部可扩展的功能。
 
 :::tip CNI 接口
  CNI 接口最初由 CoreOS 为 rkt 容器创建，现在已经成为容器网络事实标准，大部分容器平台（Kubernetes、Mesos）都采用 CNI 标准。
@@ -181,7 +181,7 @@ $ ls /opt/cni/bin/
 bandwidth  bridge  dhcp  firewall  flannel calico-ipam cilium...
 ```
 
-当需要设置容器网络时，由容器运行时负责执行 CNI 插件，并通过 CNI 插件的标准输入（stdin）来传递配置文件信息，通过标准输出（stdout）接收 CIN 插件的执行结果。
+当需要设置容器网络时，由容器运行时根据 CNI 的配置规范（【譬如设置 VXLAN 网络，设置各个节点子网范围等）通过标准输入（stdin）向 CNI 插件传递网络配置信息，CNI 插件配置完网络后，再通过标准输出（stdout）向容器运行时返回执行结果。
 
 如此，需要接入什么样的网络，设计一个对应的网络插件即可。这样一来节省了开发资源可以集中精力到 Kubernetes 本身，二来可以利用开源社区的力量打造一整个丰富的生态。
 
@@ -192,10 +192,9 @@ bandwidth  bridge  dhcp  firewall  flannel calico-ipam cilium...
   图 7-32 CNI 网络插件 [图片来源](https://landscape.cncf.io/guide#runtime--cloud-native-network)
 :::
 
-
 上述几十种网络插件笔者不可能逐一解释，但就实现的容器通信模式而言，总结就上面三种：Overlay 网络、三层路由模式、Underlay 模式。
 
-最后，考虑对于容器编排系统来说，网络并非孤立的功能模块，还要能提供各类的网络访问策略能力支持，譬如 Kubernetes 的 Network Policy 这种用于描述 Pod 之间访问这类 ACL 策略以及加密通信，还有对网络流量数据进行分析监控的功能。
+最后，考虑对于容器编排系统来说，网络也并非孤立的功能模块，最好还要能提供各类的网络访问策略能力支持，譬如 Kubernetes 的 Network Policy 这种用于描述 Pod 之间访问这类 ACL 策略以及加密通信，还有对网络流量数据进行分析监控的功能。
 
 这些明显不属于 CNI 范畴，因此并不是每个 CNI 插件都会支持这些额外的功能。
 
