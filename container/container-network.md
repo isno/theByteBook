@@ -165,39 +165,47 @@ Underlay 就是 2 层互通的底层网络，传统网络大多数属于这种�
 由于没有 Linux Bridge 以及封装/解包的负担。因此，Underlay 模式能最大限度的利用硬件的能力，有着**最优先的性能表现**，但也由于它直接依赖硬件和底层网络环境限制，必须根据软硬件情况部署，没有 Overlay 那样开箱即用的灵活性。
 
 
-## 7.6.4 网络插件生态
+## 7.6.4 CNI 规范以及生态
 
-Kubernetes 本身不实现集群内的网络模型，而是将其抽象出来提供了 CNI 接口由更专业的第三方提供商实现。把网络变成外部可扩展的功能，需要接入什么样的网络，设计一个对应的网络插件即可。这样一来节省了开发资源可以集中精力到 Kubernetes 本身，二来可以利用开源社区的力量打造一整个丰富的生态。
+容器网络配置是一个很复杂的过程，Kubernetes 本身不实现集群内的网络模型，而是通过 CNI 接口把网络变成外部可扩展的功能。
 
-现如今，支持 CNI 的插件多达二十几种，如下图所示[^1]。
-
-<div  align="center">
-	<img src="../assets/cni-plugin.png" width = "500"  align=center />
-	<p>CNI 网络插件 [图片来源](https://landscape.cncf.io/guide#runtime--cloud-native-network)</p>
-</div>
-
-上述几十种网络插件笔者不可能逐一解释，就简单介绍受到广泛关注的 Calico 和 Cilium 这两款网络解决方案：
-- Cilium 的特点功能丰富，容器间通信只是它的子功能之一，是基于 eBPF 构建，将网络、安全和可观察性逻辑直接编程到内核，对工作负载透明，并实现更高的性能。
-- Calico 的特点是使用 BGP（边界网关协议）实现容器之间纯三层的路由通信，使用三层路由的方式，网络拓扑简单直观，便于运维排查和解决问题。但由于三层模式是直接在宿主机上进行路由寻址，因此不能用于多租户（宿主机路由存在 CIDR 网络冲突的可性能）。
-
-引用 cilium 官方的测试数据[^1]，了解这两款网络插件性能表现方面（运行 32 个并行的 netperf 进程，按 TCP-CRR 的策略测试 cilium 与 Calico 的每秒请求数以及资源占用情况）。
-
-:::tip TCP-CRR
-表示在一次 TCP 链接中只进行一组Request/Response 通信即断开
+:::tip CNI 接口
+ CNI 接口最初由 CoreOS 为 rkt 容器创建，现在已经成为容器网络事实标准，大部分容器平台（Kubernetes、Mesos）都采用 CNI 标准。
+ 注意 CNI 的接口并不是指 gRPC 这样的接口，而是指对可执行程序的调用（exec），这些可执行的程序称为 CNI 插件。
 :::
 
-<div  align="center">
-	<img src="../assets/bench_tcp_crr_32_processes.png" width = "500" align=center />
-	<p>性能表现</p>
-</div>
-<div  align="center">
-	<img src="../assets/bench_tcp_crr_32_processes_cpu.png" width = "500"  align=center />
-	<p>资源占用表现</p>
-</div>
+以 Kubernetes 为例，Kubernetes 节点默认的 CNI 插件路径为 /opt/cni/bin，在 Kubernetes 节点上查看该目录，看到可供使用的 CNI 插件。
 
-从结果上看，综合吞出量、延迟表现或者资源占用的表现 Cilium 无疑非常出色。
+```bash
+$ ls /opt/cni/bin/
+bandwidth  bridge  dhcp  firewall  flannel calico-ipam cilium...
+```
 
-最后，考虑对于容器编排系统来说，网络并非孤立的功能模块，还要能提供各类的网络访问策略能力支持，譬如 Kubernetes 的 Network Policy 这种用于描述 Pod 之间访问这类 ACL 策略以及加密通信，这些明显不属于 CNI 范畴，因此并不是每个 CNI 插件都会支持这些额外的功能。
+当需要设置容器网络时，由容器运行时负责执行 CNI 插件，并通过 CNI 插件的标准输入（stdin）来传递配置文件信息，通过标准输出（stdout）接收插件的执行结果。
+
+使用 Flannel CNI 插件的流程如下所示。
 
 
-[^1]: 参见 https://cilium.io/blog/2021/05/11/cni-benchmark/
+:::center
+  ![](../assets/CNI.png) <br/>
+  图 7-31 CNI 的工作流程
+:::
+
+
+如此，需要接入什么样的网络，设计一个对应的网络插件即可。这样一来节省了开发资源可以集中精力到 Kubernetes 本身，二来可以利用开源社区的力量打造一整个丰富的生态。
+
+现如今，支持 CNI 的插件多达二十几种，如下图所示。
+
+:::center
+  ![](../assets/cni-plugin.png) <br/>
+  图 7-32 CNI 网络插件 [图片来源](https://landscape.cncf.io/guide#runtime--cloud-native-network)
+:::
+
+
+上述几十种网络插件笔者不可能逐一解释，但就实现的容器通信模式而言，总结就上面三种：Overlay 网络、三层路由模式、Underlay 模式。
+
+最后，考虑对于容器编排系统来说，网络并非孤立的功能模块，还要能提供各类的网络访问策略能力支持，譬如 Kubernetes 的 Network Policy 这种用于描述 Pod 之间访问这类 ACL 策略以及加密通信，还有对网络流量数据进行分析监控的功能。
+
+这些明显不属于 CNI 范畴，因此并不是每个 CNI 插件都会支持这些额外的功能。
+
+

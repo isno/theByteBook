@@ -188,7 +188,7 @@ StorageClass 被创建之后，当 PVC 的需求来了，它就会自动的去�
 如果 Pod 中使用的是 EmptyDir、HostPath 这类普通 Volume，并不会经历附着/分离的操作，它们只会被挂载/卸载到某一个 Pod 中。
 :::
 
-Volume 的创建和管理在 Kubernetes 中主要由卷管理器 VolumeManager 、AttachDetachController 和 PVController 三个组件负责，前面提到的 Provision、Delete、Attach、Detach、Mount、Unmount 由具体的 Volume Plugin 实现。
+Volume 的创建和管理在 Kubernetes 中主要由卷管理器 VolumeManager 、AttachDetachController 和 PVController 三个组件负责，前面提到的 Provision、Delete、Attach、Detach、Mount、Unmount 由具体的 VolumePlugin（第三方存储插件）实现。
 
 如图 7-27 所示，一个带有 PVC 的 Pod 创建过程。
 
