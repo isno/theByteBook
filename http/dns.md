@@ -2,7 +2,7 @@
 
 :::tip 额外知识
 
-你猜世界上规模最大、交互最频繁且最没存在感的分布式系统是什么？
+你猜世界上规模最大、交互最频繁的分布式系统是什么？
 :::
 DNS（Domain Name System，域名系统）是最重要的互联网基础设施系统，没有之一。2021 年期间互联网发生了几起影响颇大的服务宕机故障均与 DNS 系统有关：
 - 7月22日 Aakamai Edge DNS 故障，造成 PlayStation Network、HBO、UPS、Airbnb、Salesforce 等众多知名网站宕机[^1]；
