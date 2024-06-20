@@ -12,19 +12,38 @@
 ```
 注意 Mebibyte 和 Megabyte 的区分，123 Mi = `123*1024*1024 B` 、123 M = `1*1000*1000 B`，显然使用带小 i 的更准确。
 
-## 2. 支持异构资源
+## 2. 扩展资源
 
 当容器运行需要一些特殊资源，Kubernetes 就无能为力了。
 
-为了支持异构计算和高性能网络，Kubernetes 提供了 Device Plugin 与各类高性能硬件集成，设备厂商只需要实现相应的 API 接口，无需修改 Kubelet 主干代码，就可以实现如 RoCE 网卡、GPU、NPU、FPGA 等各种设备的扩展。
-
-安装好驱动的前提下，两个步骤就可以使用 GPU 资源。
-
-1. 安装 NVIDIA 设备插件来识别和管理 GPU 资源。
 ```bash
-$ kubectl create -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/v0.9.0/nvidia-device-plugin.yml
+PATCH /api/v1/nodes/<your-node-name>/status HTTP/1.1
+Accept: application/json
+Content-Type: application/json-patch+json
+Host: k8s-master:8080
+
+[
+  {
+    "op": "add",
+    "path": "/status/capacity/example.com~1dongle",
+    "value": "4"
+  }
+]
 ```
-2. 创建一个需要一个 NVIDIA GPU 的 Pod。
+
+输出展示了刚才扩展的 dongle 资源：
+
+```bash
+$ kubectl describe node <your-node-name>
+...
+Capacity:
+  cpu: 2
+  memory: 2049008Ki
+  example.com/dongle: 4
+...
+```
+
+接下来就可以在 Pod 中使用扩展资源了。
 
 ```yaml
 apiVersion: v1
@@ -40,16 +59,12 @@ spec:
           nvidia.com/gpu: 1
 ```
 
-Device Plugin 的工作原理如下图所示，就是需要实现 ListAndWatch 和 Allocate 两个接口的 grpc server，其中：
+Kubernetes 在 1.8 版本中引入了 Device Plugin 机制，支持以插件化的方式将第三方的设备接入到 kubernetes 体系中，类似 CPU、MEM 方式进行调度、使用。例如 GPU 设备，设备厂商只需要开发一个配套的 Device Plugin 组件，并且以 DaemonSet 的方式将其运行在集群当中，Kubelet 通过 gRPC 接口与 Device Plugin 组件交互，实现设备发现、状态更新、资源上报等。
 
-- ListAndWatch: Kubelet 会调用该 API 做设备发现和状态更新（比如设备变得不健康）；
-- Allocate: 当 Kubelet 创建要使用该设备的容器时，Kubelet 会调用该 API 执行设备相应的操作并且通知 Kubelet 初始化容器所需的 device、volume 和环境变量的配置。
+最后，应用通过 resource request、limit 显示声明使用即可，如同 CPU、MEM 一样。
 
-:::center
-  ![](../assets/device-plugin.png)<br/>
-:::
 
-Device Plugin 能实现一些异构资源基本支持，但面临复杂的场景还是有点能力不足。譬如大模型训练场依赖高性能网络，而高性能网络的节点间通信需要用到 RDMA 协议和支持 RDMA 协议的网络设备，而这些设备又和 GPU 在节点上的系统拓扑层面是紧密协作的，这就要求在分配 GPU 和 RDMA 时需要感知硬件拓扑，尽可能就近分配这种设备。
+就像存储资源，存储有读写方式、存储空间大小、回收策略等等，而这些异构资源 GPU、FPGA、ASIC、智能网卡设备等，也肯定不能仅用一个增减的数字代表。而且这些设备在系统拓扑层面是紧密协作的，这就要求在分配扩展资源时，还需要感知硬件拓扑，尽可能就近分配这种设备。
 
 Kubernetes 从 v1.26 开始引入 DRA（Dynamic Resource Allocation，动态资源分配）机制，用于解决现有 Device Plugin 机制的不足。相比于现有的 Device Plugin ，DRA 更加开放和自主，能够满足一些复杂的使用场景。
 

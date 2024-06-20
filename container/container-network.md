@@ -44,7 +44,7 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 
 当数据包到达 flannel.1 时，flannel.1 需要构造出 VXLAN 内层以太网帧。flannel.1 得知道：源 MAC 地址，目地 MAC 地址。
 
-源 MAC 地址很简单，因为数据包是从 flannel.1 虚拟网卡发出，因此源 MAC 地址为 flannel.1 的 MAC 地址。那的地 MAC 地址呢？也就是 Node2 中 flannel.1 设备的 MAC 地址怎么获取？
+源 MAC 地址很简单，因为数据包是从 flannel.1 设备发出，因此源 MAC 地址为 flannel.1 的 MAC 地址。那的地 MAC 地址呢？也就是 Node2 中 flannel.1 设备的 MAC 地址怎么获取？
 
 实际上，这个地址也已经由 fanneld 自动添加到 Node1 ARP 表中了，在 Node1 中通过命令查看 。
 ```bash

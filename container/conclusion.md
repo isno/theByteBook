@@ -2,6 +2,9 @@
 
 
 本章参考内容： 
+
+- Kubernetes 官方文档， https://kubernetes.io/zh-cn/docs/
+- 张磊,《深入剖析 Kubernetes》
 - 《Kubernetes 存储架构及插件使用》https://www.alibabacloud.com/blog/596307
 - 《k8s 基于 cgroup 的资源限额》，https://arthurchiao.art/blog/k8s-cgroup-zh
 - 《容器镜像格式二十年的螺旋进化之路》，https://linux.cn/article-12442-1.html
@@ -10,4 +13,3 @@
 - 《Borg、Omega、K8s：Google 十年三代容器管理系统的设计与思考》，https://queue.acm.org/detail.cfm?id=2898444
 - 《How containers work: overlayfs》，https://jvns.ca/blog/2019/11/18/how-containers-work--overlayfs/
 -《Large-scale cluster management at Google with Borg》，https://research.google/pubs/large-scale-cluster-management-at-google-with-borg/
-- 张磊《深入剖析 Kubernetes》
