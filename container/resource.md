@@ -12,9 +12,11 @@
 ```
 注意 Mebibyte 和 Megabyte 的区分，123 Mi = `123*1024*1024 B` 、123 M = `1*1000*1000 B`，显然使用带小 i 的更准确。
 
-## 2. 扩展资源
+## 2. Extended Resource 与 Device Plugin 
 
-当容器运行需要一些特殊资源，Kubernetes 就无能为力了。
+Kubernetes 在 Pod 中并没有专门为 GPU 设置一个专门的资源类型，而是使用了一个特殊字段（Extended Resource），来负责传递 GPU 资源。
+
+为了能让调度器知道这个扩展资源在每台节点的可用量信息，节点本身就要通过 APIServer 汇报自身的资源情况。如下所示，通过发送 PATCH 请求，为节点增加自定义的资源类型。
 
 ```bash
 PATCH /api/v1/nodes/<your-node-name>/status HTTP/1.1
@@ -25,13 +27,13 @@ Host: k8s-master:8080
 [
   {
     "op": "add",
-    "path": "/status/capacity/example.com~1dongle",
+    "path": "/status/capacity/nvidia.com~1gpu",
     "value": "4"
   }
 ]
 ```
 
-输出展示了刚才扩展的 dongle 资源：
+输出展示了刚才扩展的 nvidia.com/gpu 资源：
 
 ```bash
 $ kubectl describe node <your-node-name>
@@ -39,11 +41,11 @@ $ kubectl describe node <your-node-name>
 Capacity:
   cpu: 2
   memory: 2049008Ki
-  example.com/dongle: 4
+  nvidia.com/gpu: 4
 ...
 ```
 
-接下来就可以在 Pod 中使用扩展资源了。
+接下来就可以在 Pod 中使用扩展资源了，比如下面这个例子。
 
 ```yaml
 apiVersion: v1
@@ -59,17 +61,23 @@ spec:
           nvidia.com/gpu: 1
 ```
 
-Kubernetes 在 1.8 版本中引入了 Device Plugin 机制，支持以插件化的方式将第三方的设备接入到 kubernetes 体系中，类似 CPU、MEM 方式进行调度、使用。例如 GPU 设备，设备厂商只需要开发一个配套的 Device Plugin 组件，并且以 DaemonSet 的方式将其运行在集群当中，Kubelet 通过 gRPC 接口与 Device Plugin 组件交互，实现设备发现、状态更新、资源上报等。
+可以看到，上面 Pod resources 中，GPU 的资源名称为 nvidia.com/gpu。也就是说这个 Pod 声明了要使用 nvidia 类型的 GPU。容器启动的时候，再通过挂载宿主机的 GPU 驱动，就能直接使用 GPU 资源了。
 
-最后，应用通过 resource request、limit 显示声明使用即可，如同 CPU、MEM 一样。
+在 Kubernetes 支持的 GPU 方案中，你并不需要去操作上述 Extended Resource 的逻辑，Kubernetes 中，所有的硬件加速设备的管理都通过 Device Plugin 插件来支持，也包括对该硬件的 Extended Resource 进行汇报的逻辑。
 
-就像存储资源，存储有读写方式、存储空间大小、回收策略等等，而这些异构资源 GPU、FPGA、ASIC、智能网卡设备等，也肯定不能仅用一个增减的数字代表。而且这些设备在系统拓扑层面是紧密协作的，这就要求在分配扩展资源时，还需要感知硬件拓扑，尽可能就近分配这种设备。
+各个硬件设备商开发的 Device Plugin 插件以 DaemonSet 方式运行在集群当中，Kubelet 通过 gRPC 接口与 Device Plugin 插件交互，实现设备发现、状态更新、资源上报等。
+
+最后，Pod 通过 resource request、limit 显示声明使用即可，如同 CPU、MEM 一样。
+
+:::tip 问题
+
+你注意到 Device Plugin 的问题了么？
+
+Pod 只能过"nvidia.com/gpu:2" 这种简单的“计数形式”，来申请 2 块 GPU，但是关于 2 块卡分别是什么型号、是否拓扑最优、是否共享/独享等等内容，都没有能力进行选择。
 
 在这些特殊场景的催化下，Nvidia、Intel 等头部厂商联合推出了 DRA（Dynamic Resource Allocation，动态资源分配）机制，用于解决现有 Device Plugin 的不足。
 
-DRA 借鉴了 StoreClass 的设计，更加开放和自主，
-
-现在，NVIDIA、Intel 这些设备厂商也基于 DRA 开放了自己下一代 Device Plugin，以期满足更复杂的业务场景。
+:::
 
 ## 3. 节点资源分配控制
 
