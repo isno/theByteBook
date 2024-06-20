@@ -26,7 +26,7 @@ conntrack 是 connection track（连接跟踪）的缩写，顾名思义，这�
 
 每个通过 conntrack 的数据包，内核都为其生成一个 conntrack 条目用以跟踪此连接，对于后续通过的数据包，内核会判断若此数据包属于一个已有的连接，则更新所对应的 conntrack 条目的状态(譬如更新为 ESTABLISHED 状态)，否则内核会为它新建一个 conntrack 条目。
 
-所有的 conntrack 条目都存放在一张表里，称为连接跟踪表（conntrack table）。连接跟踪表存放于系统内存中，可用 cat /proc/net/nf_conntrack 命令查看当前跟踪的所有 conntrack 条目，conntrack 维护的所有信息都包含在条目中，通过它就可以知道某个连接处于什么状态。
+所有的 conntrack 条目都存放在一张表里，称为连接跟踪表（conntrack table）。**注意，conntrack table 如果满了，会丢包**。连接跟踪表存放于系统内存中，可用 cat /proc/net/nf_conntrack 命令查看当前跟踪的 conntrack 条目，conntrack 维护的所有信息都包含在条目中，通过它就可以知道某个连接处于什么状态。
 
 如下一条状态为 ESTABLISHED 的 TCP 连接。
 ```bash
