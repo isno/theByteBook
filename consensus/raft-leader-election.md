@@ -2,15 +2,14 @@
 
 Raft 算法中，节点有三种角色，并且可以互相转换：
 
-1. **Leader（领导者）**：接收 client（客户端）的所有请求，Raft 算法中所有的操作以 Leader 为准。Leader 平常的工作包括 3 个部分：处理写请求、管理日志复制、不断发送心跳信息通知其他节点”我是 Leader，我还活者，你们现在不要发起新的选举“。
-2. **Follower（跟随者）**：相当于普通群众，被动接收和处理来自 Leader 的消息。当 Leader 心跳超时时，就主动站出来，推荐自己当选 Candidate
-3. **Candidate（候选人）**：用于选举出一个新的 Leader。Candidate 向其他节点发送投票（RequestVote RPC）消息，通知其他节点来投票，如果赢得大多数选票，就升级为 Leader。
+- **Leader（领导者）**：接收 client（客户端）的所有请求，Raft 算法中所有的操作以 Leader 为准。Leader 平常的工作包括 3 个部分：处理写请求、管理日志复制、不断发送心跳信息通知其他节点”我是 Leader，我还活者，你们现在不要发起新的选举“。
+- **Follower（跟随者）**：相当于普通群众，被动接收和处理来自 Leader 的消息。当 Leader 心跳超时时，就主动站出来，推荐自己当选 Candidate
+- **Candidate（候选人）**：用于选举出一个新的 Leader。Candidate 向其他节点发送投票（RequestVote RPC）消息，通知其他节点来投票，如果赢得大多数选票，就升级为 Leader。
 
 Raft 算法中，节点之间采用 RPC 进行通信，下面 2 种 RPC 是 Raft 基础功能的必要实现：
 
-1. **RequestVote RPC（请求投票 RPC）**：Candidate 在选举期间发起，用于通知其他节点拉取投票。
-2. **AppendEntries RPC（日志复制 RPC）**：由 Leader 发起，用于复制日志和提供心跳消息。
-
+- **RequestVote RPC（请求投票 RPC）**：Candidate 在选举期间发起，用于通知其他节点拉取投票。
+- **AppendEntries RPC（日志复制 RPC）**：由 Leader 发起，用于复制日志和提供心跳消息。
 
 :::tip term
 
