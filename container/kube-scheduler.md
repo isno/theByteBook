@@ -36,7 +36,6 @@ Scheduling Path 主要逻辑是不断地从调度队列里出队一个 Pod。然
 
 调度算法执行完成后，调度器就需要将 Pod 对象的 nodeName 字段的值，修改为上述 Node 的名字，这个过程在 Kubernetes 里面被称作 Bind。为了不在关键调度路径里远程访问 API Server，Kubernetes 默认调度器在 Bind 阶段只会更新 Scheduler Cache 里的 Pod 和 Node 的信息。这种基于“乐观”假设的 API 对象更新方式，在 Kubernetes 里被称作 Assume。Assume 之后，调度器才会创建一个 Goroutine 异步地向 API Server 发起更新 Pod 的请求，完成真正 Bind 操作。
 
-Kubernetes 调度器的上述设计思想，也是在集群规模不断增长的演进过程中逐步实现的。尤其是 “Cache 化”设计，是最近几年 Kubernetes 调度器性能提升的一个关键演化。
 
 ## 2. 调度器可扩展设计
 
@@ -59,8 +58,6 @@ Kubernetes 从 v1.15 版本起，为 kube-scheduler 设计了可插拔的扩展�
 
 有了 Scheduling Framework，在保持调度“核心”简单且可维护的同时，用户可以编写自己的调度插件注册到 Scheduling Framework 的扩展点来实现自己想要的调度逻辑。
 
-比如，你可以扩展调度队列的实现，控制每个调度的时机，然后 Predicates 选择满足某一组 Pod 资源的节点，实现多个 Pod 被统一调度。
-
-但仅有调度器还不足以支持相应的批量计算作业，作为一个批量计算系统还需要其它很多组件的支持，例如作业管理，数据管理，资源规划等等。
+比如，你可以扩展调度队列的实现，控制每个调度的时机，然后 Predicates 选择满足某一组 Pod 资源的节点，实现多个 Pod 被作为一个整体调度。
 
 社区中陆续出现 Volcano、Koordinator 项目，这些项目虽然功能上有些差异，但总体而言核心依靠基本的 Gang Scheduling，提供主流架构的 CPU、GPU 在内的异构设备混合调度能力，再补齐 MPI 等辅助功能，最终构造出以 Kubernetes 为基础的通用的计算系统/平台。
