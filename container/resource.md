@@ -63,10 +63,11 @@ Kubernetes 在 1.8 版本中引入了 Device Plugin 机制，支持以插件化�
 
 最后，应用通过 resource request、limit 显示声明使用即可，如同 CPU、MEM 一样。
 
-
 就像存储资源，存储有读写方式、存储空间大小、回收策略等等，而这些异构资源 GPU、FPGA、ASIC、智能网卡设备等，也肯定不能仅用一个增减的数字代表。而且这些设备在系统拓扑层面是紧密协作的，这就要求在分配扩展资源时，还需要感知硬件拓扑，尽可能就近分配这种设备。
 
-Kubernetes 从 v1.26 开始引入 DRA（Dynamic Resource Allocation，动态资源分配）机制，用于解决现有 Device Plugin 机制的不足。相比于现有的 Device Plugin ，DRA 更加开放和自主，能够满足一些复杂的使用场景。
+在这些特殊场景的催化下，Nvidia、Intel 等头部厂商联合推出了 DRA（Dynamic Resource Allocation，动态资源分配）机制，用于解决现有 Device Plugin 的不足。
+
+DRA 借鉴了 StoreClass 的设计，更加开放和自主，相比于现有的 Device Plugin ，能够满足一些复杂的使用场景。
 
 ## 3. 节点资源分配控制
 
