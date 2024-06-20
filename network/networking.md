@@ -1,6 +1,8 @@
 # 3.2 Linux 系统收包流程
 
-一个请求从客户端经过 DNS、HTTP、拥塞控制。。。，终于到达目的地网卡（eth0）。这一节，笔者根据图 3-1 所示的 Linux ingress 架构，概述数据包在 Linux 内核中是被如何处理的。
+客户端发起请求，先通过 DNS 获得目的地 IP，然后封装成 HTTP 协议，数据包经过路由，还有拥塞控制，最终到达目的地网卡（eth0），并进入 Linux 内核。
+
+这一节，笔者根据图 3-1 所示的 Linux ingress 架构，概述数据包在 Linux 内核中是被如何处理的。
 
 <div  align="center">
 	<img src="../assets/networking.svg" width="650"  align=center />
