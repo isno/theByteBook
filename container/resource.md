@@ -67,7 +67,9 @@ Kubernetes 在 1.8 版本中引入了 Device Plugin 机制，支持以插件化�
 
 在这些特殊场景的催化下，Nvidia、Intel 等头部厂商联合推出了 DRA（Dynamic Resource Allocation，动态资源分配）机制，用于解决现有 Device Plugin 的不足。
 
-DRA 借鉴了 StoreClass 的设计，更加开放和自主，相比于现有的 Device Plugin ，能够满足一些复杂的使用场景。
+DRA 借鉴了 StoreClass 的设计，更加开放和自主，
+
+现在，NVIDIA、Intel 这些设备厂商也基于 DRA 开放了自己下一代 Device Plugin，以期满足更复杂的业务场景。
 
 ## 3. 节点资源分配控制
 
