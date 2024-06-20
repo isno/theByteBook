@@ -24,7 +24,7 @@ Netfilter 实际上就是一个数据包过滤器框架，Netfilter 在网络包
 - LOCAL_OUT：本机产生的准备发送的包，在进入协议栈后立即触发此 hook。
 - POST_ROUTING：本机产生的准备发送的包或者转发的包，在经过路由判断之后，将触发此 hook。
 
-**其它内核模块(例如 iptables、IPVS 等)可以向这些 hook 点注册钩子函数。当有数据包经过时，就会自动触发内核模块注册在这里的钩子函数，这样程序代码就能够通过钩子函数来干预 Linux 的网络通信**，进而实现对数据包过滤、修改、SNAT/DNAT 等各类功能。
+**其它内核模块(例如 iptables、IPVS 等)可以向这些 hook 点注册钩子函数。当有数据包经过时，就会自动触发内核模块注册在这里的钩子函数，这样程序代码就能够通过钩子函数来干预 Linux 的网络通信**，实现对数据包过滤、修改、SNAT/DNAT 等各类功能。
 
 :::tip 额外知识
 
@@ -38,7 +38,7 @@ Hook 设计模式在其他软件系统中也随处可见，譬如 eBPF、Git、K
   图 3-3 Kubernetes 服务的本质
 :::
 
-如图 3-4 Kubernetes 网络模型说明示例，当一个 Pod 跨 Node 进行通信时，数据包从 Pod 网络 Veth 接口发送到 cni0 虚拟网桥，进入主机协议栈之后，首先会经过 PREROUTING hook，调用相关的链做 DNAT，经过 DNAT 处理后，数据包目的地址变成另外一个 Pod 地址，再继续转发至 eth0，发给正确的集群节点。
+如图 3-4 Kubernetes 网络模型说明示例，当一个 Pod 跨 Node 进行通信时，数据包从 Pod 的 veth-pair 接口发送到 cni0 虚拟网桥，进入主机协议栈之后，首先经过 PREROUTING hook，调用相关的链做 DNAT，经过 DNAT 处理后，数据包目的地址变成另外一个 Pod 地址，再继续转发至 eth0，发给正确的集群节点。
 
 :::center
   ![](../assets/netfilter-k8s.svg)<br/>

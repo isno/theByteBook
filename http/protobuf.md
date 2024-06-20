@@ -1,6 +1,6 @@
 # 2.4.2 使用 Protocol Buffers 序列化数据
 
-无论是微服务场景还是 Google 所开源的技术体系中，经常能看到 Protobuf 的身影。Protobuf 这个数据格式有何独特之处？以至于工程师们无论是高性能场景还是各类的标准/协议制定都默认选择它。
+微服务或者 Google 开源的技术体系中，经常能看到 Protobuf 的身影。Protobuf 数据格式有什么独特之处？以至于工程师们无论是高性能场景还是各类的标准/协议制定都默认选择它。
 
 :::tip Protocol Buffers
 Protocol Buffers（简称 Protobuf 或者 pb）是 Google 公司开发的一种轻便高效的结构化数据存储格式，用来描述各种数据结构进行结构化数据串行化，或者说序列化。相比 XML 和 JSON，Protobuf 更小、更快、更简单，很适合做数据存储或 RPC 数据交换格式。
