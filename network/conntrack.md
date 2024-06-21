@@ -60,7 +60,7 @@ conntrack 是许多高级网络应用的基础，譬如经常使用的 NAT（Net
 首先 Kubernetes 的 Service 本质是个反向代理，Pod 访问 Service 时会进行 DNAT，将原本访问 ClusterIP:Port 的数据包 NAT 成 Service 的某个 Endpoint (PodIP:Port)，然后内核将连接信息插入 conntrack 表以记录连接，目的端回包的时候内核从 conntrack 表匹配连接并反向 NAT，这样原路返回形成一个完整的连接链路。
 
 
-但如果，Pod 和 DNAT 之后的 Endpoint (PodIP:Port) 在同一个宿主机中，问题就来了。如图所示。
+但如果，发起请求的 Pod 和 Service 的 Endpoint (处理请求的 Pod） 在同一个宿主机中，问题就来了。如图所示。
 
 - Pod 访问 Service，目的 IP 是 Cluster IP，不是网桥内的地址，走三层转发，会被 DNAT 成 PodIP:Port。
 - 目的 Pod 回包时发现目的 IP 在同一网桥上，就直接走二层转发了，没有调用 conntrack，导致回包时没有原路返回
