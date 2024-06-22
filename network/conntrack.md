@@ -68,7 +68,7 @@ NAT 操作的数据依赖连接跟踪表，如果没有连接跟踪表，NAT 功
 
 :::center
   ![](../assets/bridge-call-iptables.svg)<br/>
-  图 请求经过 conntrack，返回没有经过 conntrack，通信失败。
+  图 3-13 请求经过 conntrack，返回没有经过 conntrack，通信失败。
 :::
 
 设置 bridge-nf-call-iptables 这个内核参数 (设置为 1)，表示 bridge 设备在二层转发时也去调用 iptables 配置的三层规则 (包含 conntrack)，所以开启这个参数就能够解决上述 Service 同节点通信问题。

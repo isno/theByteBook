@@ -24,13 +24,13 @@ DPDK（Data Plane Development Kit，数据平面开发套件）为 Intel 处理�
  图 3-17 DPDK 与传统内核网络对比
 :::
 
-很多企业如 Facebook 的 Katran、美团的 MGW、爱奇艺的 DPVS 等使用 DPDK 或 eBPF 技术进行跨内核，直接全部在用户态进行数据包的处理，正是基于此，得以实现单机千万并发的性能指标。
+如 Facebook 的 Katran、美团的 MGW、爱奇艺的 DPVS 等使用 DPDK 或 eBPF 技术进行跨内核，直接全部在用户态进行数据包的处理，正是基于此，得以实现单机千万并发的性能指标。
 
-如图 3-18 所示的 L4 负载均衡基准测试，DPVS 与 LVS 在 PPS 转发上的指标对比，dvps 性能提升约 300%。
+如图 3-18 所示的 L4 负载均衡基准测试，DPVS 与 LVS 在 PPS 转发上的指标对比，DPVS 性能提升约 300%。
 
 :::center
   ![](../assets/dpvs-performance.png)<br/>
- 图 3-18 dpvs 性能指标对比 [图片来源](https://github.com/iqiyi/dpvs)
+ 图 3-18 DPVS 与 LVS 的 PPS 性能指标对比 [图片来源](https://github.com/iqiyi/dpvs)
 :::
 
 对于海量用户规模的互联网应用来说，动辄需要部署数千、甚至数万台服务器，**如果能将单机性能提升十倍甚至百倍，无论是从硬件投入还是运营成本上来看都能带来非常可观的成本削减**，这样的技术变革带来的潜在效益非常诱人。
