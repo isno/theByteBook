@@ -24,25 +24,23 @@ Netfilter 实际上就是一个数据包过滤器框架，Netfilter 在网络包
 - LOCAL_OUT：本机产生的准备发送的包，在进入协议栈后立即触发此 hook。
 - POST_ROUTING：本机产生的准备发送的包或者转发的包，在经过路由判断之后，将触发此 hook。
 
-**其它内核模块(例如 iptables、IPVS 等)可以向这些 hook 点注册钩子函数。当有数据包经过时，就会自动触发内核模块注册在这里的钩子函数，这样程序代码就能够通过钩子函数来干预 Linux 的网络通信**，实现对数据包过滤、修改、SNAT/DNAT 等各类功能。
+**其它内核模块（譬如 iptables、IPVS 等）可以向这些 hook 点注册钩子函数。当有数据包经过时，就会自动触发注册在这里的钩子函数，这样程序代码就能够通过钩子函数干预 Linux 的网络通信**，实现对数据包过滤、修改、SNAT/DNAT 等各种功能。
 
 :::tip 额外知识
 
-Hook 设计模式在其他软件系统中也随处可见，譬如 eBPF、Git、Kubernetes 等等，Kubernetes 在编排调度、网络、资源定义等等多个方面设计中通过暴露接口的方式，允许用户根据自己的需求插入自定义代码或逻辑来扩展 Kubernetes 的功能。 
+Hook 设计模式在其他软件系统中随处可见，譬如 eBPF、Git、Kubernetes 等等，Kubernetes 在编排调度、网络、资源定义等通过暴露接口的方式，允许用户根据自己的需求插入自定义代码或逻辑来扩展 Kubernetes 的功能。 
 :::
 
-如图 3-3 所示，Kubernetes 集群服务的本质其实就是负载均衡或反向代理。实现反向代理，归根结底就是做 DNAT，即把发送给集群服务的 IP 地址和端口的数据包，修改成具体容器组的 IP 地址和端口。
 
-:::center
-  ![](../assets/k8s-service.svg)<br/>
-  图 3-3 Kubernetes 服务的本质
-:::
+如图 3-4 Kubernetes 网络模型说明，当一个 Pod 跨 Node 进行通信时经过了哪些“管道”。
 
-如图 3-4 Kubernetes 网络模型说明示例，当一个 Pod 跨 Node 进行通信时，数据包从 Pod 的 veth-pair 接口发送到 cni0 虚拟网桥，进入主机协议栈之后，首先经过 PREROUTING hook，调用相关的链做 DNAT，经过 DNAT 处理后，数据包目的地址变成另外一个 Pod 地址，再继续转发至 eth0，发给正确的集群节点。
+首先，数据包从 Pod 的 veth-pair 接口发送到 cni0 虚拟网桥，cni 网桥把数据包送到主机协议栈，经过 PREROUTING hook，调用相关的链做 DNAT，经过 DNAT 处理后，数据包目的地址变成另外一个 Pod 地址。
+
+因为开启了 ip_forword，Linux 具有了路由功能，内核协议栈判断目的地不属于本机，经过 FORWARD、POST_ROUTING 到达 eth0，最后通过主机网络发送到其他节点。
 
 :::center
   ![](../assets/netfilter-k8s.svg)<br/>
-  图 3-4 kubernetes 网络模型
+  图 3-4 Pod 发起请求另外一个节点，经过 Linux bridge、PREROUTING、FORWARD、POSTROUTING 
 :::
 
-对 Linux 内核网络框架基本了解之后，我们继续看看 Netfilter 的上层应用 iptables。
+对 Linux 内核网络框架基本了解之后，我们继续了解 Netfilter 的上层应用 iptables。

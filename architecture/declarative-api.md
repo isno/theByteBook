@@ -17,13 +17,15 @@ SQL 其实就是一种常见的声明式编程语言，它能够让开发者自�
 
 如下代码所示，使用 SQL 语言获取数据，要比自行编写处理过程去获取数据容易的多。
 
-```plain
+```sql
 SELECT * FROM users WHERE gender = boy AND name LIKE 'xiaoming%';
 ```
 
-来看看相同设计的 yaml，如下代码示例，定义了一个名为 nginx-deployment 的 Deployment 资源，apiVersion 指定了使用的 API 版本，kind 指定了要创建的资源类型。metadata 中包含了资源的名称和其他元数据信息。spec 部分定义了 Deployment 的具体配置，包括副本数（replicas）、选择器（selector）和容器模板（template）。在 template 中，指定了容器的名称、镜像等配置信息。
+接下来看看 Kubernetes 中的 yaml 。
 
-```
+下面的代码中定义了一个名为 nginx-deployment 的 Deployment 资源，spec 部分定义了 Deployment 的具体配置，如运行后的副本数（replicas=3）。
+
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -46,8 +48,9 @@ spec:
         ports:
         - containerPort: 80
 ```
+该 yaml 文件提交给 Kubernetes 之后，Kubernetes 会创建具有三个副本的 nginx 服务实例，并将持续保证我们所期望的状态。
 
-以上 yaml 文件提交给 Kubernetes 之后，Kubernetes 会创建具有三个副本的 nginx 服务实例，并将持续保证我们所期望的状态。通过编写 yaml 文件来定义 Kubernetes 资源、服务的拓扑结构和状态，只需要表达我们的需求和意图，资源如何创建、服务如何关联，这些全部交由 Kubernetes 实现。
+通过编写 yaml 文件来定义 Kubernetes 资源、服务的拓扑结构和状态，只需要表达我们的需求和意图，资源如何创建、服务如何关联，这些全部交由 Kubernetes 实现。
 
 只描述想要什么，中间过程、细节不需关系，让工程师们通过站在更高层面写代码，更多的专注于 what，而这正是我们开发软件真正的目标。
 

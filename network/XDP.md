@@ -1,6 +1,6 @@
 # 3.3.3 快速数据路径 XDP
 
-通过本章开篇介绍的 Linux ingress 架构，相信读者已经了解到“**高并发下网络协议栈的冗长流程是最主要的性能负担，也就是说内核才是高并发的瓶颈所在**”。既然内核是瓶颈所在，那很明显解决方案就是想办法绕过内核。
+通过本章开篇介绍的 Linux ingress 架构，相信读者已经了解“**高并发下网络协议栈的冗长流程是最主要的性能负担，内核是网络密集型任务的瓶颈所在**”。
 
 2010 年，由 Intel 领导的 DPDK 实现了一个基于内核旁路（Kernel bypass）思想的高性能网络应用开发解决方案，并逐渐成为了独树一帜的成熟技术体系。但是 DPDK 也基于内核旁路这一前提，天然就无法与内核技术生态很好的结合。
 
@@ -23,14 +23,14 @@ XDP 本质上是 Linux 内核网络模块中的一个 BPF Hook，能够动态挂
 
 ## 2. XDP 应用示例
 
-前面讲过的 conntrack 实际上只是其 Netfilter 在 Linux 内核中的连接跟踪实现。换句话说，只要具备了 hook 能力，能拦截到进出主机的每个数据包，就完全可以摆脱 Netfilter，实现另外一套连接跟踪。
+前面讲过的 conntrack 是 Netfilter 在 Linux 内核中的连接跟踪实现。换句话说，只要具备了 hook 能力，能拦截到进出主机的每个数据包，就完全可以摆脱 Netfilter，实现另外一套连接跟踪。
 
 云原生网络方案 Cilium 在 1.7.4+ 版本就实现了这样一套独立的连接跟踪和 NAT 机制，其基本原理是：
 
 - 基于 BPF hook 实现数据包的拦截功能（等价于 netfilter 的 hook 机制）。
 - 在 BPF hook 的基础上，实现一套全新的 conntrack 和 NAT。
 
-因此使用 Cilium 方案的 Kubernetes 网络模型，即便在 Node 节点卸载 Netfilter，也不会影响 Cilium 对 Kubernetes ClusterIP、NodePort、ExternalIPs 和 LoadBalancer 等功能的支持。
+因此使用 Cilium 解决 Kubernetes 容器间通信时，即便在 Node 节点卸载 Netfilter，也不会影响 Cilium 对 Kubernetes ClusterIP、NodePort、ExternalIPs 和 LoadBalancer 等功能的支持。
 
 :::center
   ![](../assets/cilium.svg)<br/>
