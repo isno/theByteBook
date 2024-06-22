@@ -365,7 +365,19 @@ export default defineUserConfig({
                     '/GitOps/ArgoCD.md',
                     '/GitOps/conclusion.md',
                 ]
-            }
+            }/*
+            ,{
+                text: '第十一章：构建大模型计算平台',
+                collapsable: false,
+                sidebarDepth: 1,
+                link: '/AI/summary.md',
+                children: [
+                    '/AI/background.md',
+                    '/AI/RDMA.md',
+                    '/AI/Storage.md',
+                    '/AI/GPU.md'
+                ]
+            },*/
         ]
     })
 });
