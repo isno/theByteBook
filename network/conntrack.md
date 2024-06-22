@@ -37,7 +37,7 @@ $ cat /proc/net/nf_conntrack
 ipv4     2 tcp      6 88 ESTABLISHED src=10.0.12.12 dst=10.0.12.14 sport=48318 dport=27017 src=10.0.12.14 dst=10.0.12.12 sport=27017 dport=48318 [ASSURED] mark=0 zone=0 use=2
 ```
 
-## 2. conntrack 应用示例 
+## 3. conntrack 是 NAT 的基础 
 
 conntrack 是许多高级网络应用的基础，如经常使用的 NAT（Network Address Translation，网络地址转换）、iptables 的状态匹配等等。
 
@@ -53,12 +53,13 @@ NAT 操作的数据依赖连接跟踪表，如果没有连接跟踪表，NAT 功
   图 3-12 DNAT 与 SNAT 工作原理
 :::
 
-部署 Kubernetes 时有一条配置 `net.bridge.bridge-nf-call-iptables = 1`，很多同学不明其意，笔者结合 conntrack 说明这个配置的作用。
+## 4. conntrack 对 Kubernetes 的影响
 
-首先 Kubernetes 的 Service 本质是个反向代理，Pod 访问 Service 时会进行 DNAT，将原本访问 ClusterIP:Port 的数据包 NAT 成 Service 的某个 Endpoint (PodIP:Port)，然后内核将连接信息插入 conntrack 表以记录连接，目的端回包的时候内核从 conntrack 表匹配连接并反向 NAT，这样原路返回形成一个完整的连接链路。
+部署 Kubernetes 时有一条配置 `net.bridge.bridge-nf-call-iptables = 1`，很多同学不明其意，我结合 conntrack 的原理说明这个配置的作用。
 
+首先 Kubernetes 的 Service 本质是个反向代理，Pod 访问 Service 时会进行 DNAT，将原本访问 ClusterIP:Port 的数据包 NAT 成 Service 的某个 Endpoint (PodIP:Port)，然后内核将连接信息插入 conntrack 表以记录连接，目的端回包的时候内核从 conntrack 表匹配连接并反向 NAT，这样形成一个有来有回的连接链路。
 
-但如果发起请求的 Pod 和 Service 的 Endpoint (处理请求的 Pod） 在同一个宿主机中，问题就来了。如图所示。
+但如果发起请求的 Pod 和 Service 的 Endpoint (处理请求的 Pod） 在同一个主机中，问题就来了：
 
 - Pod 访问 Service，目的 IP 是 Cluster IP，不是网桥内的地址，走三层转发，会被 DNAT 成 PodIP:Port。
 - 目的 Pod 回包时发现目的 IP 在同一网桥上，就直接走二层转发了，没有调用 conntrack，导致回包时没有原路返回。
