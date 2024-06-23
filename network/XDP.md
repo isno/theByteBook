@@ -21,6 +21,62 @@ XDP 本质上是 Linux 内核网络模块中的一个 BPF Hook，能够动态挂
  图 3-13 XDP 处理数据包的过程
 :::
 
+XDP 在业界最出名的一个应用场景就是 Facebook 基于 XDP 实现高效的防 DDoS 攻击，其本质上就是实现尽可能早地实现“丢包”，而不去消耗系统资源创建完整的网络栈链路。
+
+那么，我们第一个 XDP 程序就来模拟防 DDoS 最重要的操作，丢弃所有的数据包。编写下面的代码，确保你的内核不低于 4.15，且已安装好相应的编译工具。
+
+```c
+#include <linux/bpf.h>
+/*
+ * Comments from Linux Kernel:
+ * Helper macro to place programs, maps, license in
+ * different sections in elf_bpf file. Section names
+ * are interpreted by elf_bpf loader.
+ * End of comments
+ * You can either use the helper header file below
+ * so that you don't need to define it yourself:
+ * #include <bpf/bpf_helpers.h> 
+ */
+#define SEC(NAME) __attribute__((section(NAME), used))
+SEC("xdp")
+int xdp_drop_the_world(struct xdp_md *ctx) {
+    // drop everything
+  // 意思是无论什么网络数据包，都drop丢弃掉
+    return XDP_DROP;
+}
+char _license[] SEC("license") = "GPL";
+```
+
+接下来就是编译工作了，利用 clang 命令行工具配合后端编译器 LLVM 来进行操作。
+
+```bash
+$ clang -O2 -target bpf -c xdp-drop-world.c -o xdp-drop-world.o
+```
+
+加载 XDP 程序要用到 ip 这个命令行工具，它能帮助我们将程序加载到内核的 XDP Hook 上。
+
+```bash
+[root@Node1 ~]# link set dev [device name] xdp obj xdp-drop-world.o
+[root@Node2 ~]# ping 192.168.1.3
+PING 192.168.1.3 (192.168.1.3): 56 data bytes
+Request timeout for icmp_seq 0
+Request timeout for icmp_seq 1
+Request timeout for icmp_seq 2
+```
+
+上面的命令中，[device name] 是本机某个网卡设备的名称。将 XDP 程序加载到内核后，从外部 ping 名为[device name] 网卡的 IP，你将看到完全 ping 不通。
+
+接下来，将 XDP 程序从网卡卸载，你会看到 ping 又正常了。
+
+```bash
+[root@Node1 ~]# link set dev [device name] xdp off
+[root@Node2 ~]# ping 192.168.1.3
+PING 192.168.1.3 (192.168.1.3): 56 data bytes
+64 bytes from 192.168.1.3: icmp_seq=0 ttl=53 time=42.608 ms
+64 bytes from 192.168.1.3: icmp_seq=1 ttl=53 time=43.902 ms
+64 bytes from 192.168.1.3: icmp_seq=2 ttl=53 time=42.829 ms
+```
+
 ## 2. XDP 应用示例
 
 前面讲过的 conntrack 是 Netfilter 在 Linux 内核中的连接跟踪实现。换句话说，只要具备了 hook 能力，能拦截到进出主机的每个数据包，就完全可以摆脱 Netfilter，实现另外一套连接跟踪。
