@@ -94,7 +94,7 @@ Pod 只能过"nvidia.com/gpu:2" 这种简单的“计数形式”，来申请 2 
 
 :::center
   ![](../assets/k8s-resource.svg)<br/>
-  图 7-1 Node 资源逻辑分配图
+  图 7-33 Node 资源逻辑分配图
 :::
 
 Node Allocatable Resource（节点的可用资源 ）= Node Capacity - Kube Reserved - System Reserved - Eviction-Threshold。

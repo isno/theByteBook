@@ -16,7 +16,7 @@
 
 :::center
   ![](../assets/HPA.svg)<br/>
-  图 7-1 Node 资源逻辑分配图
+  图 7-34 Node 资源逻辑分配图
 :::
 
 上面这句话隐藏了一个重要的信息：HPA 只能和 RC、deployment、RS 这些可以动态修改 replicas 的对象一起使用，而无法用于单个 Pod、Daemonset（因为它控制的 Pod 数量不能随便修改）等对象。
@@ -51,10 +51,10 @@ KEDA 由以下组件组成：
 - Metrics Adapter：将 Scaler 获取的指标转化成 HPA 可以使用的格式并传递给 HPA
 - Controller：负责创建维护 HPA 对象资源，同时激活和停止 HPA 伸缩。在无事件的时候将副本数降低为 0 (如果未设置 minReplicaCount 的话)
 
-<div  align="center">
-  <img src="../assets/keda-arch.png" width = "400"  align=center />
-</div>
-
+:::center
+  ![](../assets/keda-arch.png)<br/>
+  图 7-35 KADA 架构图
+:::
 
 如下，一个 Kafka 伸缩配置。minReplicaCount 和 maxReplicaCount 分别定义了要伸缩的对象的最小和最大副本数量，minReplicaCount 可以为 0 即缩容到没有副本，比方说 Kafka 队列一直没有新消息就可以完全缩容，有新消息进来的时候 keda 又会自动扩容。
 
@@ -90,9 +90,11 @@ Cluster AutoScaler 是一个自动扩展和收缩 Kubernetes 集群 Node 的扩�
 - 当集群容量不足时，它会自动去 Cloud Provider（支持绝大部分的云服务商 GCE、GKE、Azure、AKS、AWS 等等）创建新的 Node；
 - 当 Node 长时间资源利用率很低时（低于 50%），会自动把该节点 Pod 调度到其他 Node 上面，然后删除节点以节省开支。
 
-<div  align="center">
-  <img src="../assets/Cluster-AutoScaler.png" width = "500"  align=center />
-</div>
+
+:::center
+  ![](../assets/Cluster-AutoScaler.png)<br/>
+  图 7-36 Cluster AutoScaler 伸缩原理
+:::
 
 Cluster Autoscaler 虽然是 Kubernetes 官方标准，但是由于他深度依赖公有云厂商，因此具体使用方法，功能以及限制以公有云厂商具体实现为准。
 

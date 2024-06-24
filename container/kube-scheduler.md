@@ -21,7 +21,7 @@ Kubernetes 默认调度器（kube-scheduler）双循环架构如下所示。
 
 :::center
   ![](../assets/kube-scheduler.png)<br/>
-  图 7-1 kube-scheduler 双循环架构设计
+  图 7-37 kube-scheduler 双循环架构设计
 :::
 
 第一个控制循环称之为 Informer Path，它主要目的是启动一系列 Informer 监听（Watch）Etcd 中 Pod、Node、Service 等与调度相关的 API 对象的变化。譬如一个待调度 Pod 被创建后，调度器就会通过 Pod Informer 的 Handler 将这个待调度 Pod 添加进调度队列。
@@ -53,11 +53,9 @@ Kubernetes 从 v1.15 版本起，为 kube-scheduler 设计了可插拔的扩展�
 
 :::center
   ![](../assets/scheduling-framework-extensions.png)<br/>
-   Pod 的调度上下文以及调度框架公开的扩展点
+   图 7-38 Pod 的调度上下文以及调度框架公开的扩展点
 :::
 
 有了 Scheduling Framework，在保持调度“核心”简单且可维护的同时，用户可以编写自己的调度插件注册到 Scheduling Framework 的扩展点来实现自己想要的调度逻辑。
 
 比如，你可以扩展调度队列的实现，控制每个调度的时机，然后 Predicates 选择满足某一组 Pod 资源的节点，实现多个 Pod 被作为一个整体调度。
-
-社区中陆续出现 Volcano、Koordinator 项目，这些项目虽然功能上有些差异，但总体而言核心依靠基本的 Gang Scheduling，提供主流架构的 CPU、GPU 在内的异构设备混合调度能力，再补齐 MPI 等辅助功能，最终构造出以 Kubernetes 为基础的通用的计算系统/平台。

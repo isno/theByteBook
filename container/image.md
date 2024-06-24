@@ -45,11 +45,11 @@ $ sudo mount -t overlay overlay \
  ./merged
 ```
 
-挂载后的文件系统视图，如图 7-8 所示。
+挂载后的文件系统视图，如图 7-7 所示。
 
 :::center
   ![](../assets/overfs.jpeg)<br/>
-  图 7-8 OverlayFS 挂载后的文件系统视图
+  图 7-7 OverlayFS 挂载后的文件系统视图
 :::
 
 当在挂载后的 merged 目录里内进行增删改操作时，OverlayFS 驱动会执行 CoW（Copy-On-Write，写时复制）策略。CoW 大致的原理，用如下操作流程说明：
@@ -60,11 +60,11 @@ $ sudo mount -t overlay overlay \
   - 如果删除“in_lower.txt”, lower 目录里内的 ”in_lower.txt” 文件不会有变化，但 upper 目录中会增加一个特殊文件表示“in_lower.txt”这个文件不能出现在 merged 里了，表示它已经被删除了。
 - 修改文件：如果修改“in_lower.txt”，会在 upper 目录中新建一个“in_lower.txt”文件，包含更新后的内容，而 lower 中原来的文件“in_lower.txt”不会改变。
 
-图 7-9 是 Docker 官方的一张描述镜像文件系统的图片，它的结构显示了联合文件系统在镜像层和容器层起到的作用。
+图 7-8 是 Docker 官方的一张描述镜像文件系统的图片，它的结构显示了联合文件系统在镜像层和容器层起到的作用。
 
 :::center
   ![](../assets/overlay_constructs.webp)<br/>
-  图 7-9 使用联合文件系统的 Docker 镜像结构 [图片来源](https://docs.docker.com/storage/storagedriver/overlayfs-driver/)
+  图 7-8 使用联合文件系统的 Docker 镜像结构 [图片来源](https://docs.docker.com/storage/storagedriver/overlayfs-driver/)
 :::
 
 ## 7.3.2 Docker 镜像的分层设计
