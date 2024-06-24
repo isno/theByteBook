@@ -58,4 +58,4 @@ Kubernetes 从 v1.15 版本起，为 kube-scheduler 设计了可插拔的扩展�
 
 有了 Scheduling Framework，在保持调度“核心”简单且可维护的同时，用户可以编写自己的调度插件注册到 Scheduling Framework 的扩展点来实现自己想要的调度逻辑。
 
-比如，你可以扩展调度队列的实现，控制每个调度的时机，然后 Predicates 选择满足某一组 Pod 资源的节点，实现多个 Pod 被作为一个整体调度。
+譬如你可以扩展调度队列的实现，控制每个调度的时机，在 Predicates 阶段选择满足某一组 Pod 资源的节点，实现多个 Pod 被作为一个整体调度。
