@@ -3,13 +3,13 @@ import { defineUserConfig, defaultTheme } from 'vuepress';
 import { mdEnhancePlugin } from "vuepress-plugin-md-enhance";
 import { commentPlugin } from "vuepress-plugin-comment2";
 import { readingTimePlugin } from "vuepress-plugin-reading-time2";
-import { webpackBundler } from '@vuepress/bundler-webpack'
+// import { webpackBundler } from '@vuepress/bundler-webpack'
 
 import { containerPlugin } from '@vuepress/plugin-container'
 
 export default defineUserConfig({
     lang: 'zh-CN',
-    title: '深入架构原理与实践',
+    title: '深入超高可用架构原理与实践',
     description: '构建大规模高可用的分布式系统',
     head: [
         ['link', { rel: "shortcut icon", href: "/assets/favicon.ico" }],
@@ -26,10 +26,10 @@ export default defineUserConfig({
      `
  ]
     ],
-    bundler: webpackBundler({
+    /*bundler: webpackBundler({
         postcss: {},
         vue: {},
-      }),
+      }),*/
     plugins: [
         mdEnhancePlugin({
           // 启用脚注
