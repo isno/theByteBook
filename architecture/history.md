@@ -68,7 +68,7 @@ Intel 创始人之一 Gordon Earle Moore 曾提出非常有名的摩尔定律，
 **容器技术可以说是过去十年间对软件开发行业改变最大的技术**。
 
 虽然容器技术早已出现，但 Docker 创新性地提出了镜像的概念，实现了一种新型的应用打包、分发和运行机制，这些机制使开发人员能够在几秒钟内进行应用程序的部署和扩展，无需担心任何基础架构的问题。
-:::tip Docker 
+:::tip Docker 的特点
 
 Docker 的宣传口号是“Build,Ship and Run Any App,Anywhere”。
 
