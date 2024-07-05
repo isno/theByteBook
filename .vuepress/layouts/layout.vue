@@ -1,7 +1,7 @@
 <template>
   <ParentLayout>
     <template #page-content-bottom>
-       <!--<<div class="page-info">
+       <div class="page-info">
 
         <div class="star">
           <github-button  data-icon="octicon-star" href="https://github.com/isno/thebytebook">Star 关注</github-button>
@@ -15,7 +15,7 @@
       <CommentService :darkmode="isDarkMode" class="layout-comment" />
       div class="qrcode">
          <img src="../../assets/qrcode-v2.png" width = "160"  align=center />
-      </div>-->
+      </div>
     </template>
   </ParentLayout>
 </template>

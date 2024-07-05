@@ -69,9 +69,9 @@ OCI 的成立结束了容器技术标准之争，Docker 公司被迫放弃容器
 
 经过一系列的演进发展之后，OCI 有了三个主要的标准：
 
-- **runtime-spec**（容器运行时标准）：定义了运行一个容器，如何管理容器的状态和生命周期，如何使用操作系统的底层特性（namespace、cgroups、pivot_root 等）。
-- **image-spec**（容器镜像标准）：定义了镜像的格式，配置（包括应用程序的参数、依赖的元数据格式、环境信息等），简单来说就是对镜像文件格式的描述。
-- **distribution-spec**（镜像分发标准）：定义了镜像上传和下载的网络交互过程的规范。
+- **OCI Runtime Spec**（容器运行时标准）：定义了运行一个容器，如何管理容器的状态和生命周期，如何使用操作系统的底层特性（namespace、cgroups、pivot_root 等）。
+- **OCI Image Spec**（容器镜像标准）：定义了镜像的格式，配置（包括应用程序的参数、依赖的元数据格式、环境信息等），简单来说就是对镜像文件格式的描述。
+- **OCI Distribution Spec**（镜像分发标准）：定义了镜像上传和下载的网络交互过程的规范。
 
 而前面的 libcontainer，经过改造、标准化之后，成为 OCI 规范标准的第一个轻量运行时实现“runc”。
 
@@ -82,14 +82,14 @@ runc 是非常小的运行核，其目的在于提供一个干净简单的运行
 
 OCI 项目启动后，为了符合 OCI 标准，Docker 也推动自身的架构向前演进。
 
-Docker 把与内部责管理容器执行、分发、监控、网络、构建、日志等功能的模块重构为 containerd 项目 。2016 年，将 containerd 捐献给了 CNCF 管理。
-
-现在，containerd 已经成为最流行的容器运行时，如图 7-13 所示，containerd 的架构主要分为三个部分：生态系统（Ecosystem）、平台（Platform）和客户端（Client）。每个部分在整个系统中扮演着不同的角色，协同工作以提供全面的容器管理功能。
+Docker 把与内部责管理容器执行、分发、监控、网络、构建、日志等功能的模块重构为 containerd 项目 。如图 7-13 所示，containerd 的架构主要分为三个部分：生态系统（Ecosystem）、平台（Platform）和客户端（Client），每个部分在整个系统中扮演着不同的角色，协同工作以提供全面的容器管理功能。
 
 :::center
   ![](../assets/containerd-arch.png)<br/>
   图 7-13 Containerd 架构 [图片来源](https://containerd.io/)
 :::
+
+2016 年，Docker 将 containerd 捐献给了 CNCF 管理，现在，containerd 已经成为最流行的容器运行时。
 
 如图 1-15 所示，改造后的 Docker 就不再是一个简单的守护进程那么简单了，而是通过集成 containerd、containerd-shim、runc 等多个组件共同完成。
 
