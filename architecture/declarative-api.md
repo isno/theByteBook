@@ -8,14 +8,11 @@
 1. 过程式设计：命令“机器”如何去做事情（how），这样不管你想要的是什么（what），它都会按照你的命令实现；
 2. 声明式设计：告诉“机器”你想要的是什么（what），让机器想出如何去做（how）。
 
-:::center
-  ![](../assets/declarative.svg)<br/>
- 图 1-26 命令式设计与声明式设计对比
-:::
+作为天选打工人的我们，是否听过这句话 ”我不管你怎么做（how），我只要结果（what）”？累活让别人干，我享受结果，这就是声明式设计的精髓。
 
 SQL 其实就是一种常见的声明式编程语言，它能够让开发者自己去指定想要的数据是什么，或者说，告诉数据库想要的结果是什么，数据库会帮我们设计获取这个结果集的执行路径，并返回结果集。
 
-如下代码所示，使用 SQL 语言获取数据，要比自行编写处理过程去获取数据容易的多。
+如下代码所示，使用 SQL 语言获取数据，声明“我想要性别为男，名字包含 xiaoming 的数据”，SQL 直接返回我们想要的结果，这远比自行编写处理过程去获取数据容易的多。
 
 ```sql
 SELECT * FROM users WHERE gender = boy AND name LIKE 'xiaoming%';
@@ -23,7 +20,7 @@ SELECT * FROM users WHERE gender = boy AND name LIKE 'xiaoming%';
 
 接下来看看 Kubernetes 中的 yaml 。
 
-下面的代码中定义了一个名为 nginx-deployment 的 Deployment 资源，spec 部分定义了 Deployment 的具体配置，如运行后的副本数（replicas=3）。
+下面的 yaml 文件中定义了一个名为 nginx-deployment 的 Deployment 资源，spec 部分定义了部署的具体配置，如运行后的副本数（replicas=3）。该 yaml 文件提交给 Kubernetes 之后，Kubernetes 会创建具有三个副本的 nginx 服务实例，并将持续保证我们所期望的状态。
 
 ```yaml
 apiVersion: apps/v1
@@ -48,11 +45,10 @@ spec:
         ports:
         - containerPort: 80
 ```
-该 yaml 文件提交给 Kubernetes 之后，Kubernetes 会创建具有三个副本的 nginx 服务实例，并将持续保证我们所期望的状态。
 
-通过编写 yaml 文件来定义 Kubernetes 资源、服务的拓扑结构和状态，只需要表达我们的需求和意图，资源如何创建、服务如何关联，这些全部交由 Kubernetes 实现。
+通过编写 yaml 文件来定义 Kubernetes 资源、服务的拓扑结构和状态，只需要表达我们的需求和意图，资源如何创建、服务如何关联，至于怎么实现，我们完全不需要关心，这些全部交由 Kubernetes 实现。
 
-只描述想要什么，中间过程、细节不需关系，让工程师们通过站在更高层面写代码，更多的专注于 what，而这正是我们开发软件真正的目标。
+只描述想要什么，中间过程、细节不需关心，让工程师们通过站在更高层面写代码，更多的专注于 what，而这正是我们开发软件真正的目标。
 
 
 

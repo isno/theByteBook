@@ -12,7 +12,7 @@ DNS（Domain Name System，域名系统）是最重要的互联网基础设施�
 
 ## 2.3.1 域名解析的工作原理
 
-分析 DNS 工作原理之前，我们先了解域名的结构。如图 2-2 所示，域名是一种树状结构，最顶层的域名是根域名（注意是一个点“.”，它是 .root 的含义，不过现在常被隐藏掉），然后是顶级域名（top-level domain，简写 TLD），再是一级域名、二级域名、三级域名。
+分析 DNS 工作原理之前，我们先了解域名的结构。如图 2-2 所示，域名是一种树状结构，最顶层的域名是根域名（注意是一个点“.”，它是 .root 的含义，例如本书域名完整结构应该是 thebyte.com.cn.root ，不过现在常被隐藏掉），然后是顶级域名（top-level domain，简写 TLD，例如 .com、.com.cn），再是一级域名（例如 .thebyte）、二级域名（www.thebyte）、三级域名。
 
 :::center
   ![](../assets/dns-tree.webp)<br/>
@@ -102,7 +102,7 @@ Facebook 2021 年 10 月宕机故障中，使用 dig 排查各个公共 Recursiv
 ..
 ```
 
-下一节，我们以 Facebook 为例，感受 Authoritative nameserver 出现故障时会是什么影响。
+下一节，我们以 Facebook 2021年出现的宕机事件为例，说明 DNS 的重要性以及出现故障时会是什么影响。
 
 [^1]: 参见 https://www.akamai.com/blog/news/akamai-summarizes-service-disruption-resolved
 [^2]: 参见 https://en.wikipedia.org/wiki/2021_Facebook_outage

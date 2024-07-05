@@ -1,12 +1,12 @@
 # 2.2 HTTPS 请求阶段分析
 
-着手优化之前，我们得先清楚一个 HTTPS 请求有哪些环节以及其中耗时如何计算。
+着手优化之前，我们得先清楚一个 HTTPS 请求有哪些阶段，以及各个阶段耗时如何计算。
 
 ## 2.2.1 请求阶段分析
 
 一个完整、无任何缓存、未复用连接的 HTTPS 请求需要经过以下 5 个阶段：**DNS 域名解析、TCP 握手、SSL 握手、服务器处理、内容传输**。
 
-如图 2-1 请求阶段分析所示，这些阶段共需要 5 个 RTT[^2] = 1 RTT（域名解析）+ 1 RTT（TCP 握手）+ 2 RTT（SSL 握手）+ 1 RTT（HTTP 内容请求传输）。
+如图 2-1 请求阶段分析所示，这些阶段共需要 4 个 RTT[^2] = 1 RTT（DNS Lookup，域名解析）+ 1 RTT（TCP Handshark，TCP 握手）+ 2 RTT（SSL Handshark，SSL 握手）+ 1 RTT（Data Transfer，HTTP 内容请求传输）。
 
 :::center
   ![](../assets/http-process.png)<br/>
