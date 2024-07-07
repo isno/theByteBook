@@ -1,8 +1,10 @@
 # 2.5.2 SSL 层优化实践
 
-HTTPS 建立连接的过程中，TLS 握手阶段最长可以花费 2-RTT，除去握手延迟外，SSL 层还有其他的一些隐形消耗，不做任何优化措施情况下，网络耗时和加解密耗时影响会让 HTTPS 连接效率比 HTTP 慢上几百毫秒。弱网环境下，延迟问题会更加明显。
+你是否还记得本章“图 2-1 HTTPS（使用 TLS1.2 协议）请求阶段分析”？HTTPS 建立连接的过程中，TLS 握手阶段最长可以花费 2-RTT。除去握手产生的延迟外，SSL 层还有其他的一些隐形消耗。
 
-2.5.1 节中，已介绍 SSL 层的原理，从中总结 SSL 层优化有两个主要的方向：**协议升级、证书优化**。
+不做任何优化措施情况下，网络耗时和加解密耗时影响会让 HTTPS 连接效率比 HTTP 慢上几百毫秒，弱网环境下，HTTPS 延迟问题会更加明显。
+
+2.5.1 节中，已介绍 SSL 层的原理，从中总结 SSL 层优化有两个主要的方向：**协议升级（降低 RTT）、证书优化（减小计算消耗）**。
 
 ## 1. 协议升级
 
@@ -16,7 +18,7 @@ TLS 1.3 协议放弃了安全性较低的加密功能的支持，并改进了 TL
   ![](../assets/tls1.2.png)<br/>
  图 2-17 TLS1.2 握手流程 [图片来源](https://www.wolfssl.com/tls-1-3-performance-part-2-full-handshake-2/)
 :::
-相比 TLS1.2 协议，TLS 1.3 协议的握手时间减半，如图 2-18 所示。这意味着访问一个网站，使用 TLS 1.3 协议，会降低将近 100ms 的延时。
+相比 TLS1.2 协议，TLS 1.3 协议的握手时间减半，如图 2-18 所示。这意味着访问一个网站，使用 TLS 1.3 协议，至少会降低一个 RTT 的延迟时间。
 
 :::center
   ![](../assets/tls1.3.png)<br/>
@@ -25,17 +27,13 @@ TLS 1.3 协议放弃了安全性较低的加密功能的支持，并改进了 TL
 
 ## 2. 证书优化
 
-SSL 层中的证书验证也是一个比较耗时的环节：服务器需要把自己的证书链全发给客户端，客户端接收后再逐一验证。证书环节我们关注两个方面优化：**证书传输优化** 、 **证书中非对称算法升级** 。
+SSL 层中的证书验证也是一个比较耗时的环节：服务器需要把自己的证书链全发给客户端，客户端接收后再逐一验证。证书环节我们关注两个方面优化：**证书校验** 、 **证书中非对称算法升级** 。
 
-### 2.1 证书传输优化
+### 2.1 证书校验优化
 
-客户端在验证证书过程中，需要判断当前证书状态是否被撤销/过期等，需要再去访问 CA 下载 CRL 或者 OCSP 数据，这又会产生 DNS 查询、建立连接、收发数据等一系列网络通信，增加多个 RTT。
+客户端在验证证书过程中，需要判断当前证书状态是否被撤销/过期等，需要再去访问 CA 下载 CRL（Certificate Revocation List，证书撤销列表）[^1]或者 OCSP（Online Certificate Status Protocol，在线证书状态协议）数据[^2]，这又会产生 DNS 查询、建立连接、收发数据等一系列网络通信，增加多个 RTT。
 
-:::tip
-- CRL（Certificate Revocation List）证书撤销列表，是由 CA 机构维护的一个列表，列表中包含已经被吊销的证书序列号和吊销时间。
-- OCSP（Online Certificate Status Protocol）在线证书状态协议，是一种改进的证书状态确认方法，用于减轻证书吊销检查的负载和提高数据传输的私密性，相比于 CRL ，OCSP提供了实时验证证书状态的能力。[^1]
-- OCSP Stapling 是 OCSP 的改进方案，将原本需要客户端实时发起的 OCSP 请求转嫁给服务端，服务端通过预先访问 CA 获取 OCSP 响应，然后在握手时随着证书一起发给客户端，免去了客户端连接 CA 服务器查询的环节，解决了 OCSP 的隐私和性能问题。[^2]
-:::
+改进的方式是在服务端开启 OCSP Stapling，OCSP Stapling 原本需要客户端实时发起的 OCSP 请求转嫁给服务端，服务端通过预先访问 CA 获取 OCSP 响应，然后在握手时随着证书一起发给客户端，免去了客户端连接 CA 服务器查询的环节，解决了 OCSP 的隐私和性能问题。
 
 1. 在 Nginx 中配置 OCSP Stapling 服务。
 ```nginx configuration
@@ -69,28 +67,25 @@ OCSP Response Data:
     Response Type: Basic OCSP Response
 ```
 
-### 2.2 证书算法优化
+### 2.2 证书中非对称算法升级
 
-目前 SSL 密钥交换 + 签名有三种主流的方式：
+HTTPS 常用的密钥交换算法有两种，分别是 RSA 和 ECDHE 算法。使用 ECDHE 算法的证书一般被称之为 ECC 证书，相应的 RSA 算法的证书就是 RSA 证书。
 
-1. RSA 密钥交换（无需签名）。
-2. ECDHE 密钥交换、RSA 签名。
-3. ECDHE 密钥交换、ECDSA 签名。
+ECC 证书在 2019 年之前的缺点就是兼容性问题，古代的 XP 和 Android2.3 不支持这种加密方式。不过 2019 年 Nginx 发布了 1.11.0 版本，开始提供了对 RSA/ECC 双证书的支持，它可以在 TLS 握手的时候根据客户端支持的加密方法选择对应的证书，以向下兼容古代客户端。
 
-内置 ECDSA 公钥的证书一般被称之为 ECC 证书，内置 RSA 公钥的证书就是 RSA 证书，相比 RSA，ECC 证书具有安全性高，处理速度更快的优点，尤其适合在移动设备上使用。ECC 证书在 2019 年之前的缺点就是兼容性问题，古代的 XP 和 Android2.3 不支持这种加密方式。不过 2019 年 Nginx 发布了 1.11.0 版本，开始提供了对 RSA/ECC 双证书的支持，它可以在 TLS 握手的时候根据客户端支持的加密方法选择对应的证书，以向下兼容古代客户端。
-
-如图 2-19 所示，256 位 ECC Key 在安全性上等同于 3072 位 RSA Key，加上 ECC 运算速度更快，ECDHE 密钥交换 + ECDSA 数字签名无疑是最好的选择。同等安全条件下，ECC 算法所需的 Key 更短，所以 ECC 证书文件体积比 RSA 证书要小一些。
+如图 2-19 所示，256 位 ECC Key 在安全性上等同于 3072 位 RSA Key，加上 ECC 运算速度更快，ECC 算法所需的 Key 更短，ECC 证书文件体积比 RSA 证书要小一些。所以，相比 RSA，ECC 证书具有更高的安全性高以及处理速度更快的优点，尤其适合在移动设备上使用。
 
 :::center
   ![](../assets/ecc.png)<br/>
  图 2-19 ECC vs RSA
 :::
 
-在 Nginx 里可以用 ssl_ciphers、ssl_ecdh_curve 等指令配置服务器使用的密码套件和椭圆曲线，把优先使用的放在前面，配置示例：
+
+在 Nginx 里可以用 ssl_ciphers、ssl_ecdh_curve 等指令配置服务器使用的密码套件和协议，把优先使用的放在前面，配置示例：
 
 ```plain
 ssl_dyn_rec_enable on;
-ssl_protocols TLSv1.2 TLSv1.3;
+ssl_protocols TLSv1.3 TLSv1.2; // 优先使用 TLSv1.3 协议
 ssl_ecdh_curve X25519:P-256;
 ssl_ciphers EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+ECDSA+AES128:EECDH+aRSA+AES128:RSA+AES128:EECDH+ECDSA+AES256:EECDH+aRSA+AES256:RSA+AES256:EECDH+ECDSA+3DES:EECDH+aRSA+3DES:RSA+3DES:!MD5;
 ssl_prefer_server_ciphers on;
@@ -121,10 +116,10 @@ SSL 层的优化手段除了软件层面还有一些硬件加速的方案，例�
 |ECC 证书 + TLS1.2| 639.39| 203.319ms|100|
 |ECC 证书 + TLS1.3| 627.39| 159.390ms|100|
 
-从 SSL 加速的结果上看，使用 ECC 证书较 RSA 证书性能提升很多，即使 RSA 使用了 QAT 加速比起 ECC 还是存在差距，QAT 方案也存在硬件成本、维护成本较高问题。
+从 SSL 加速的结果上看，使用 ECC 证书明显比 RSA 证书性能提升很多，即使 RSA 使用了 QAT 加速比起 ECC 还是存在差距，QAT 方案也存在硬件成本、维护成本较高问题。
 
 所以，最优的选择是使用 TLS1.3 + ECC 证书方式。
 
-[^1]: 参见 https://datatracker.ietf.org/doc/html/rfc6960
-[^2]: 参见 https://datatracker.ietf.org/doc/html/rfc6066#section-8
+[^1]: CRL（Certificate Revocation List）证书撤销列表，是由 CA 机构维护的一个列表，列表中包含已经被吊销的证书序列号和吊销时间
+[^2]: OCSP（Online Certificate Status Protocol）在线证书状态协议，是一种改进的证书状态确认方法，用于减轻证书吊销检查的负载和提高数据传输的私密性，相比于 CRL ，OCSP提供了实时验证证书状态的能力。
 [^3]: 英特尔® Quick Assist Technology（简称 QAT）是 Intel 公司推出的一种专用硬件加速技术，可以用来提高 Web 服务器中计算密集的公钥加密以及数据压缩解压的吞吐率以及降低 CPU 负载。
