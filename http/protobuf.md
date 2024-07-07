@@ -67,7 +67,7 @@ System.out.println(person.getAge());
 System.out.println(person.getName());
 ```
 
-如上述所示，便完成了使用 Protobuf 描述数据、传输数据。
+如上述所示，便完成了使用 Protobuf 描述数据、传输数据。开发过程中，如果要增加新的结构，只要保证 Message 结构体中的原来序号不变（例如 string name = 1; 中的 1），就不会影响历史版本。
 
 ## 3. Protobuf 的 Varint 编码
 
