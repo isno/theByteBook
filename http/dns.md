@@ -14,14 +14,14 @@ DNS（Domain Name System，域名系统）是最重要的互联网基础设施�
 
 分析 DNS 工作原理之前，我们先了解域名的组成结构。
 
-如图 2-2 所示，域名是一种树状结构，最顶层的域名是根域名（注意是一个点“.”，它是 .root 的含义，例如本书域名完整结构应该是 thebyte.com.cn.root ，不过现在“.root”已经默认被隐藏），然后是顶级域名（top-level domain，简写 TLD，例如 .com、com.cn），再是二级域名（例如 thebyte.com.cn），三级域名（例如 www.thebyte.com.cn）。
+如图 2-2 所示，域名是一种树状结构，最顶层的域名是根域名（注意是一个点“.”，它是 .root 的含义，不过现在“.root”已经默认被隐藏），然后是顶级域名（top-level domain，简写 TLD，例如 .com、com.cn），再是二级域名（例如 thebyte.com.cn），三级域名（例如 www.thebyte.com.cn）。
 
 :::center
   ![](../assets/dns-tree.webp)<br/>
   图 2-2 DNS 域名树状结构
 :::
 
-继续看域名是如何进行解析，域名的解析流程如图 2-3 所示。
+域名的解析过程，其实就是从域名树的根部到顶部，不断递归查询的过程，整个流程如图 2-3 所示。
 
 :::center
   ![](../assets/dns-example.png)<br/>
@@ -29,12 +29,12 @@ DNS（Domain Name System，域名系统）是最重要的互联网基础设施�
 :::
 
 1. 用户向“DNS 解析器”（Recursive resolver，例如电信运营商的 114.114.114.114）发出解析 thebyte.con.cn 域名请求。
-2. “DNS 解析器”判断是否存在解析缓存，存在直接返回缓存的结果。如不存在缓存，则向就近的“根域名服务器”（Root nameserver）查询域名所属“TLD 域名服务器”（TLD nameserver，它维护着顶级域名的信息）。
-3. 获取 com.cn. 的“TLD 域名服务器”后，向该地址查询 [thebyte].com.cn. 的“权威域名服务器”（Authoritative nameserver，它维护域名的解析记录）。
+2. “DNS 解析器”判断是否存在解析缓存，存在直接返回缓存的结果。如不存在缓存，则向就近的“根域名服务器”（Root nameserver）查询域名所属“TLD 域名服务器”（TLD nameserver）（TLD 域名服务器维护着域名托管、权威域名服务器等信息）。值得一提的是，互联网有些文章说“根域名服务器”只有 13 台，实际上“根域名服务器”的数量远不止 13 台，截止 2024 年 7 月，全世界共有 1,845 台根域名服务器[^3]。
+3. 获取 com.cn. 的“TLD 域名服务器”后，向该地址查询 thebyte.com.cn. 的“权威域名服务器”（Authoritative nameserver，它维护域名的解析记录）。
 4. 得到“权威域名服务器”地址后，向该服务查询域名的解析记录，最后获得域名对应的 IP 地址，整个解析过程结束。 
 
 回顾整个流程，有 2 个步骤容易发生问题：
-- “DNS 解析器”是客户端与 DNS 域名服务器的中间人，容易出现解析污染或者“DNS 解析器”宕机，这种情况会导致**域名解析局部不可用**；
+- “DNS 解析器”是客户端与“权威域名服务器”的中间人，容易出现解析污染或者“DNS 解析器”宕机，这种情况会导致**域名解析局部不可用**；
 - “权威域名服务器”出现故障，这种情况会导致**域名解析全局不可用**，但出现故障的概率极低。
 
 下面我们继续看看如果 DNS 解析出现故障了该如何排查。
@@ -55,15 +55,18 @@ Address: 110.40.229.45
 ```
 上述的返回信息说明：
 
-- 第一行的 Server 为当前使用的“DNS 解析器”。
+- 第一行的 Server 为当前使用的“DNS 解析器”，上面的结果显示是 Google 的 8.8.8.8 服务器。
 - Non-authoritative answer 意思是因为“DNS 解析器”只是转发“权威域名服务器”的记录，所以该次解析为非权威应答。
 - Address 为解析结果，上面的解析结果是一个 IP 地址为 110.40.229.45 的 A 记录 。
 
-nslookup 返回的结果比较简单，从中可以看出解析是否被污染、DNS 解析器是否有问题。
+nslookup 返回的结果比较简单，但从中可以看出解析是否被污染、DNS 解析器是否有问题。
 
-如果想获取更多域名解析相关的信息，可以尝试使用 dig 命令。dig命令示例：
+如果想获取更多域名解析相关的信息，可以尝试使用 dig 命令，dig 可以指定使用哪个“DNS 解析器”。
+
+dig 命令示例，使用 8.8.8.8 查询 thebyte.com.cn 的解析记录。
+
 ```bash
-$ dig thebyte.com.cn
+$ dig@8.8.8.8 thebyte.com.cn
 
 ; <<>> DiG 9.10.6 <<>> thebyte.com.cn
 ;; global options: +cmd
@@ -105,5 +108,7 @@ Facebook 2021 年 10 月发生了一起重大的宕机故障，当时使用 dig 
 
 下一节，我们以 Facebook 2021 年出现的宕机事件为例，说明 DNS 系统出现故障时会是什么影响。
 
+
 [^1]: 参见 https://www.akamai.com/blog/news/akamai-summarizes-service-disruption-resolved
 [^2]: 参见 https://en.wikipedia.org/wiki/2021_Facebook_outage
+[^3]: 根域名服务器的信息请参见 https://root-servers.org/
