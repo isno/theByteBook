@@ -60,7 +60,12 @@
     position: fixed;
     bottom: 60px;
     right: 20px;
-    
+  }
+
+  @media screen and (max-width: 1024px) {
+      .qrcode {
+        display: none;
+      }
   }
   .qrcode img {
     border-radius: 6px;
