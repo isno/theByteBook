@@ -33,7 +33,7 @@ ServiceMesh 之所以称为服务网格，是因为每台节点同时运行着�
   图 1-24 Istio 架构
 :::
 
-- 数据平面（Data plane）通常采用轻量级的网络代理（例如 Envoy）作为 Sidecar，网络代理负责协调和控制服务之间的通信和流量处理。
+- 数据平面（Data plane）通常采用轻量级的网络代理（例如 Envoy）作为 Sidecar，网络代理负责协调和控制服务之间的通信和流量处理，解决微服务之间服务熔断、负载均衡、安全通讯等问题。
 - 控制平面（Control plane）中包含多个组件，它们负责配置和管理 Sidecar ，并提供服务发现（Discovery）、配置管理（Configuration）、安全控制（Certificates）等功能。
 
 
@@ -48,11 +48,12 @@ ServiceMesh 之所以称为服务网格，是因为每台节点同时运行着�
 
 相信你已经清楚服务网格不是什么黑科技，也没有什么耀眼的新技术。
 
-服务网格本质是通过 iptables 劫持发送到应用容器的流量，转发具有流控能力的 Sidecar，实现业务与非业务逻辑解耦的目的，并彻底解决 Spring Cloud 为代表的第二代微服务框架所面临的本质问题。
+服务网格本质是通过 iptables 劫持发送到应用容器的流量，将原本在业务层要处理的分布式技术问题，下沉到具有流控能力的 Sidecar 中处理，实现业务与非业务逻辑解耦的目的，并彻底解决 Spring Cloud 为代表的第二代微服务框架所面临的本质问题[^2]。
 
-关于服务网格的详细解读，请参阅本书第八章服务网格概论篇。
 
 [^1]: 参见 https://www.infoq.cn/news/2017/11/WHAT-SERVICE-MESH-WHY-NEED/
-[^2]: 参见 https://istio.io/v1.15/blog/2021/proxyless-grpc/
-[^3]: 参见 https://istio.io/latest/zh/blog/2023/ambient-merged-istio-main/
+[^2]: 关于服务网格的详细解读，请参阅本书第八章第一节。
+
+[^3]: 参见 https://istio.io/v1.15/blog/2021/proxyless-grpc/
+[^4]: 参见 https://istio.io/latest/zh/blog/2023/ambient-merged-istio-main/
  
