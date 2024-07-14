@@ -1,6 +1,7 @@
 <template>
   <ParentLayout>
     <template #page-content-bottom>
+      
        <div class="page-info">
 
         <div class="star">

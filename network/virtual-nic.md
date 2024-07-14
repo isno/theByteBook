@@ -1,16 +1,18 @@
 # 3.5.2 虚拟网卡 TUN/TAP 和 Veth
 
-## 1. TUN/TAP
-
 目前主流的虚拟网卡有 TUN/TAP 和 Veth 两种，时间上 TUN/TAP 出现的更早，Linux 内核 2.4.x 起就已支持。
 
-TUN/TAP 不是一个设备，而是两个相对独立的虚拟网络设备：
+## 1. TUN/TAP
+
+首先，TUN/TAP 不是一个设备，而是两个相对独立的虚拟网络设备：
 - 其中 TAP 模拟了以太网设备，操作的是数据帧，工作在 L2；
 - TUN 则模拟了网络层设备，操作的是 IP 数据包，工作在 L3。
 
-我们可以把 TUN/TAP 理解为一端连着网络协议栈，另一端连着用户态程序，这种能力可以将 TCP/IP 协议栈处理好的网络包发送给任何一个使用 TUN/TAP 驱动的用户进程。**协议栈中的数据包原本被发送到 eth0 设备或者其他借口，现在转发到用户态程序，用户态程序对它加工处理，从而实现数据压缩、流量加密、透明代理等功能**。
+**TUN/TAP 设备可以被视作一种特殊的网络接口，它们在 Linux 系统中起到了着连接内核协议栈和用户态程序的作用，这种设计赋予了用户态程序直接访问和处理网络数据包的能力**。
 
-如图 3-20 示例，应用程序通过 TUN 发送数据包，TUN 设备发现另一端被 VPN 程序关联，便会通过字符设备发送给 VPN，VPN 收到数据包之后修改内容，然后封装到另一个发送给 B 地址的新报文中。
+举一个例子，协议栈中的数据包原本被发送到 eth0 设备或者其他的接口。有了 TUN/TAP 接口，现在可以被转发到某个特殊的用户态程序，用户态程序对数据包进行二次加工处理，从而实现数据压缩、流量加密、透明代理等等功能。
+
+如图 3-20 示例的 VPN 应用，普通的应用程序发送一个正常的网络请求，数据包进入 Linux 内核时，会被路由到 TUN 设备接口。而 TUN 设备另一端与 VPN 程序关联，VPN 收到数据包之后修改内容，然后封装到另一个发送给 B 地址的新报文中，新的数据包再被发送到内核，最后通过 eth0 接口发送出去。
 
 :::center
   ![](../assets/tun.svg)<br/>
@@ -21,29 +23,15 @@ TUN/TAP 不是一个设备，而是两个相对独立的虚拟网络设备：
 这种将一个数据包封装到另一个数据包的处理方式被称为 “隧道”。隧道技术是构建虚拟逻辑网络的经典做法，OpenVPN、Vtun、Flannel UDP 模式 等都是基于 TUN/TAP 实现隧道封装的。
 :::
 
-容器网络解决方案 Flannel UDP 模式曾使用 TUN 设备实现容器间 Overlay 网络，**但使用 TUN/TAP 设备传输数据需要经过两次协议栈，会有多次的封包/解包，产生额外的性能损耗**，这也是 Flannel UDP 模式被弃用的原因。
+容器网络解决方案 Flannel 的 UDP 模式曾使用 TUN 设备实现容器间隧道网络，**但使用 TUN/TAP 设备传输数据需要经过两次协议栈，且有多次的封包/解包过程，产生额外的性能损耗**，这也是后来 Flannel UDP 模式被弃用的原因。
 
-## 2. Veth
+## 2. 虚拟网卡 Veth
 
-Veth 是另一种主流的虚拟网卡方案，在 Linux Kernel 2.6 版本支持网络命名空间的同时，也提供了专门的虚拟 Veth（Virtual Ethernet，虚拟以太网）设备，用来让两个隔离的网络命名空间可以互相通信。
+Linux 内核 2.6 版本支持网络命名空间的同时，也提供了专门的虚拟网卡 Veth（Virtual Ethernet，虚拟以太网网卡），用来支持隔离的网络命名空间与外界进行通信。
 
-**简单理解 Veth 就是一根带两个 Ethernet 网卡的`网线`，从一头发数据，另一头收数据，如果 veth-1 和 veth-2 是一对 Veth 设备，veth-1 发送的数据会由 veth-2 收到，反之亦然**。
+**我们可以把 Veth 理解成带着两个“水晶头”的一根“网线”，从网线的一头（Veth-1）发送数据，另一头（Veth2）就会收到数据，因此 Veth 也被说成是一对设备，被称作 Veth-Pair**。
 
-所以严格来说 Veth 也是一对设备，因而也常被称作 veth-pair。
-
-:::center
-  ![](../assets/veth.svg)<br/>
- 图 3-21 Veth 设备对
-:::
-
-因为 Veth 这个特性，它常常充当着一个桥梁，连接着同主机内的虚拟网络，典型的例子像两个隔离的网络命名空间之间的连接、Linux Bridge 和 OVS （Open vSwitch）之间的连接等，通过这种方式，从而构建出复杂的虚拟网络拓扑架构。
-
-:::center
-  ![](../assets/cni0.svg)<br/>
-图 3-22 Pod 通过 Veth 互联以及桥接到 Linux Bridge
-:::
-
-我们在 Kubernetes 主机中查看网卡设备，总能看到一堆 Veth 开头的网卡设备信息，这些就是为不同 Pod 之间通信而创建的虚拟网卡。
+Veth 典型的使用例子是，实现隔离的网络命名空间之间的互联，以及 Linux Bridge 和 Open vSwitch（OVS）等虚拟交换机的连接。我们在 Kubernetes 集群中查看网卡设备，总能看到一堆 Veth 开头的设备信息，这些就是为不同 Pod 之间通信而创建的虚拟网卡。
 
 ```plain
 $ ip addr
@@ -53,6 +41,51 @@ $ ip addr
        valid_lft forever preferred_lft forever
 ```
 
-虽然 Veth 模拟网卡直连的方式解决了两个容器之间的通信问题，然而对多个容器间通信，如果仍然只用 Veth 的话，事情就会变得非常麻烦，让每个容器都为与它通信的其他容器建立一对专用的 Veth Pair，根本不切实际。
+假设我们已经有两个相互隔离的网络命名空间 net1 和 net2，下面笔者进行操作演示，看看如何通过 veth 实现这网络命名空间的互通。
+
+1. 创建一对名为 veth1 和 veth2 的 veth 接口。
+
+```bash
+$ ip link add veth1 type veth peer name veth2
+```
+
+2、 接下来，要做的是把这对 veth pair 分别放到 net1 和 net2 中，这个可以使用 ip link set DEV netns NAME 来实现。
+
+```bash
+$ ip link set veth1 netns net1
+$ ip link set veth2 netns net2
+```
+3. 接下来，我们再给这对 veth pair 配置上 ip 地址，并启用它们。
+
+```bash
+$ ip netns exec net1 ip link set veth1 up
+$ ip netns exec net1 ip addr add 172.16.0.1/24 dev veth1
+$ ip netns exec net1 ip route
+172.16.0.0/24 dev veth1  proto kernel  scope link  src 172.16.0.1
+
+$ ip netns exec net2 ip link set veth2 up
+$ ip netns exec net2 ip addr add 172.16.0.2/24 dev veth2
+```
+
+可以看到，每个网络命名空间中，在配置完 ip 之后，还自动生成了对应的路由表信息：网络 172.16.0.0/24 数据报文都会通过 veth pair 进行传输。
+
+完成以上的操作，我们创建的网络拓扑结构如下所示。
+
+:::center
+  ![](../assets/veth.svg)<br/>
+ 图 3-21 Veth 设备对
+:::
+
+4. 最后，我们 ns1 中进行 ping 测试，可以看到两个命名空间是联通的了。
+
+```bash
+$ ip netns exec ns1 ping -c10 172.16.0.2
+PING 172.16.0.2 (172.16.0.2) 56(84) bytes of data.
+64 bytes from 172.16.0.2: icmp_seq=1 ttl=64 time=0.121 ms
+64 bytes from 172.16.0.2: icmp_seq=2 ttl=64 time=0.063 ms
+```
+
+虽然 Veth 模拟网卡直连的方式解决了两个容器之间的通信问题，然而对多个容器间通信，如果只用 Veth 的话，事情就会变得非常麻烦，让每个容器都为与它通信的其他容器建立一对专用的 Veth Pair，根本不切实际。
 
 此刻，就迫切需要有一台虚拟化的交换机，来解决多容器之间的通信问题，这就是我们前面多次提到的 Linux Bridge。
+

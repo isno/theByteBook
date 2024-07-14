@@ -6,15 +6,18 @@
   "license": "MIT",
   "scripts": {
     "dev": "vuepress dev .",
-    "build": "vuepress build ."
+    "build": "vuepress build .",
+    
   },
   "devDependencies": {
+
     "vuepress": "2.0.0-rc.0",
     "vuepress-plugin-comment2": "2.0.0-rc.4",
     "vuepress-plugin-md-enhance": "2.0.0-rc.4",
     "vuepress-plugin-reading-time2": "2.0.0-rc.4"
   },
   "dependencies": {
+  
     "vue-github-button": "3.1.0"
   }
 }

@@ -6,7 +6,7 @@
 
 一个完整、未复用连接的 HTTPS 请求需要经过以下 5 个阶段：**DNS 域名解析、TCP 握手、SSL 握手、服务器处理、内容传输**。
 
-如图 2-1 请求阶段分析所示，这些阶段共需要 4 个 RTT（Round-Trip Time，往返时间）[^2] = 1 RTT（DNS Lookup，域名解析）+ 1 RTT（TCP Handshark，TCP 握手）+ 2 RTT（SSL Handshark，SSL 握手）+ 1 RTT（Data Transfer，HTTP 内容请求传输）。
+如图 2-1 请求阶段分析所示，这些阶段共需要 5 个 RTT（Round-Trip Time，往返时间）[^2] = 1 RTT（DNS Lookup，域名解析）+ 1 RTT（TCP Handshark，TCP 握手）+ 2 RTT（SSL Handshark，SSL 握手）+ 1 RTT（Data Transfer，HTTP 内容请求传输）。
 
 :::center
   ![](../assets/http-process.png)<br/>
@@ -17,7 +17,7 @@
 
 举个例子，假设北京到美国洛杉矶的 RTT 延迟为 190 毫秒，从北京访问美国洛杉矶的服务延迟就是`4*190（ms）+后端业务时延（ms）`，“4”代表的是 HTTPS 请求的 4 个 RTT。
 
-**因为 RTT 指标表示的是因物理距离产生的延迟，SSL 阶段有大量的加密/解密计算消耗。所以，这也指导我们优化的工作应该集中在办法减少 RTT、降低 SSL 计算量**。
+**因为 RTT 指标表示的是因物理距离产生的延迟，SSL 阶段有大量的加密/解密计算消耗。所以，这也指导我们优化的工作应该集中在减少 RTT、降低 SSL 计算量方面**。
 
 ## 2.2.2 各阶段耗时分析
 
@@ -73,6 +73,6 @@ time_total=0.088744
 由此可见，如果想要降低 HTTPS 接口延迟，那么优化域名解析环节和 SSL 两个阶段将会带来显著的性能收益。
 
 [^1]: 参见 https://blog.cloudflare.com/a-question-of-timing/
-[^2]: RTT（Round-Trip Time）是网络请求从起点到目的地然后再回到起点所花费的时长。
+[^2]: RTT（Round-Trip Time）一个网络数据包从起点到目的地然后再回到起点所花费的时长。
 [^3]: TTFB（Time To First Byte，首字节时间）用户客户端从所请求服务器接收首个字节数据所需的时间，是衡量服务质量的重要指标。
 
