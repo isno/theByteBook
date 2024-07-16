@@ -164,16 +164,17 @@ export default defineUserConfig({
                         children: [
                             '/network/netfilter.md',
                             '/network/conntrack.md',
-                            '/network/XDP.md',
                         ]
                     },
                     {
-                        text: '3.4 内核参数优化实践',
+                        text: '3.4 内核优化以及内核旁路技术',
                         link: '/network/kernel-performance.md',
                         children: [
                             "/network/RSS.md",
                             "/network/netstack-performance.md",
                             '/network/kernel-bypass.md',
+                            '/network/XDP.md',
+                            
                         ]
                     },
                     {
@@ -183,9 +184,7 @@ export default defineUserConfig({
                             "/network/network-namespace.md",
                             "/network/virtual-nic.md",
                             "/network/linux-bridge.md",
-                            "/network/vxlan.md",
-                            "/network/macvlan.md",
-                        ]
+                            "/network/vxlan.md"                        ]
                     },
                     
                     '/network/conclusion.md',
