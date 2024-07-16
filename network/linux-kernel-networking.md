@@ -1,12 +1,11 @@
 # 3.3 Linux 内核网络框架
 
-Linux 网络数据包的处理看似是一套相对固定和封闭的流程，事实却并非如此，从 Linux 内核 2.4 版本起，内核就开放了一套通用的，可提供代码干预网络数据包在协议栈流转的过滤框架 —— Netfilter。
+Linux 网络数据包的处理看似是一套相对固定和封闭的流程，事实却并非如此，从 Linux 内核 2.4 版本起，内核就开放了一套通用的、可提供代码干预网络数据包在协议栈流转的过滤框架 —— Netfilter。
 
 :::tip 什么是 Netfilter
 
-Netfilter 是 Linux 内核中的一个软件框架，用于管理网络数据包。不仅具有网络地址转换（NAT）的功能，也具备数据包内容修改、以及数据包过滤等防火墙功能。
+Netfilter 是 Linux 内核中的一个强大的网络子系统，它提供了网络数据包过滤、网络地址转换（NAT）、数据包的修改和多种其他网络相关操作的功能。
 
-系统管理者利用 iptables、nftables、ebtables 和 arptables 等来控制 Netfilter 管理通过 Linux 操作系统的各种网络数据包。
 :::
 如图 3-2 所示的“数据包通过 Netfilter 时的流向过程”，里面包含了 XDP、Netfilter 和 traffic control 部分，是参考内核协议栈各 hook 点位置和 iptables 规则优先级的经典配图。
 

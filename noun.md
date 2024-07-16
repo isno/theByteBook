@@ -18,6 +18,7 @@
 | NAT | Network Address Translation | 网络地址转换 |
 | TTFB | Time To First Byte | 首字节时间 |
 | BBR | Bottleneck Bandwidth and RTT | Google 推出的拥塞控制算法 |
+|PPS|Packet Per Second | 包 / 秒，表示以网络包为单位的传输速率 |
 | BDP | Bandwidth-Delay Product | 带宽时延积 |
 |RDMA| Remote Direct Memeory Access | 远程内容直接读取|
 | 南北流量 | NORTH-SOUTH traffic | 用户访问服务器的流量 |
