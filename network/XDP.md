@@ -1,97 +1,57 @@
-# 3.4.4 快速数据路径 XDP
+# 3.4.4 eBPF 和 快速数据路径 XDP 
 
-基于 DPDK 完全基于内核旁路这一思想，天然就无法与内核技术生态很好的结合。
+由于 DPDK 完全基于“内核旁路”这一思想，天然就无法与内核技术生态很好的结合。
 
-2016 年，在 Linux Netdev 会议上，David S. Miller[^1] 喊出了 “DPDK is not Linux” 的口号。同年，伴随着 eBPF 技术的成熟，Linux 内核终于迎来了属于自己的高速公路 —— XDP（eXpress Data Path，快速数据路径），其具有足以媲美 DPDK 的性能以及背靠 Linux 内核的多种独特优势。
+2016 年，在 Linux Netdev 会议上，David S. Miller[^1] 喊出了 “DPDK is not Linux” 的口号。同年，伴随着 eBPF 技术的成熟，Linux 内核终于迎来了属于自己的高速公路 —— XDP（eXpress Data Path，快速数据路径），其具有足以媲美 DPDK 的性能以及背靠 Linux 内核，无需第三方代码库和许可、无需专用的 CPU 等多种独特优势。
 
-## 1. XDP 概述
+## 1. eBPF 技术简介
 
-XDP 本质上是 Linux 内核网络模块中的一个 BPF Hook，能够动态挂载 eBPF 程序逻辑，**使得 Linux 内核能够在数据报文到达 L2（网卡驱动层）时就对其进行针对性高速处理，无需再“循规蹈矩”地进入到内核网络协议栈**。
+DPDK 技术是完全绕过内核，直接将数据包传递到用户空间处理。XDP 正好相反，XDP 选择完全在内核空间中执行我们定义好的程序来处理数据包。
 
-如图 3-13 所示，XDP 程序在内核提供的网卡驱动中直接取得网卡收到的数据帧，你会看到数据并不经过内核网络协议栈，而是直达用户态应用程序，应用程序利用 AF_XDP 类型的 socket 接收数据。
+那么，如何在内核中执行用户态定义的程序呢？这里就引入了BPF（Berkeley Packet Filter）技术。在解释BPF之前，我们先探讨一下为什么需要 BPF。
 
-:::tip AF_XDP
-类同 AF_INET 用于 IPv4 类型地址的通讯，AF_XDP 则是一套基于 XDP 的通讯的实现。
-:::
+过去的网络监控程序通常作为用户级进程运行。为了分析仅在内核空间中的数据，它们不得不将数据从内核空间复制到用户空间，并进行上下文切换，这与直接在内核中分析数据相比，造成了显著的性能损耗。随着网络速度和流量的爆炸性增长，仅在用户空间处理如此庞大的流量数据已变得不再可行。因此，一种直接在内核空间执行高效安全的程序的机制，也就是 BPF 应运而生。 
+
+自Linux内核版本2.5起就开始支持BPF，但早期的BPF主要用于网络数据包的捕获和过滤。到了Linux内核3.18版本，开发者推出了一套全新的BPF架构，这就是我们今天所说的eBPF（Extended Berkeley Packet Filter）。与早期的BPF相比，eBPF的功能不再局限于网络分析，而是发展成为一个多功能的通用执行引擎，适用于性能分析、系统追踪、网络优化等多种场景。
+
+如今，许多文档中提到的 BPF 实际上指的是eBPF，而将早期的 BPF 称为 cBPF（Classic Berkeley Packet Filter）。
+
+
+## 2. XDP 实际是 eBPF 的钩子
+
+XDP 本质上是 Linux 网络处理流程中的一个 eBPF 钩子，它允许开发人员在数据进入内核的早期阶段（网卡驱动层内，数据包进入网络协议栈之前），使用 eBPF 高效地处理数据包。如图 3-13 所示，eBPF 程序通过不同的 XDP 动作码来决定网络数据包的后续处理方式：
+
+- XDP_ABORTED 意味着程序错误，会将数据包丢掉。
+- XDP_DROP 会在网卡驱动层直接将该数据包丢掉，无需再进一步处理，也就是无需再耗费任何额外的资源。
+- XDP_PASS 会将该数据包继续送往内核的网络协议栈，和传统的处理方式一致。这也使得 XDP 可以在有需要的时候方便地使用传统的内核协议栈进行处理。
+- XDP_TX 会将该数据包从同一块网卡返回。
+- XDP_REDIRECT 则是将数据包重定向到其他的网卡或 CPU，结合 AF_XDP[^2]可以将数据包直接送往用户空间。
 
 :::center
-  ![](../assets/XDP.svg)<br/>
- 图 3-13 XDP 处理数据包的过程
+  ![](../assets/xdp.png)<br/>
+ 图 3-13 XDP 架构概览
 :::
 
-XDP 在业界最出名的一个应用场景就是 Facebook 基于 XDP 实现高效的防 DDoS 攻击，其本质上就是实现尽可能早地实现“丢包”，而不去消耗系统资源创建完整的网络栈链路。
+XDP 在业界最出名的一个应用是 Facebook 的 Katran 系统，该系统实现了高效的防 DDoS 攻击，其本质上就是尽可能早的 XDP_DROP “丢包”，从而瓦解 DDoS 的根本目标 —— 占满被攻击主机的 CPU 资源使得其他正常流量无法被处理。
 
-那么，我们第一个 XDP 程序就来模拟防 DDoS 最重要的操作，丢弃所有的数据包。编写下面的代码，确保你的内核不低于 4.15，且已安装好相应的编译工具。
 
-```c
-#include <linux/bpf.h>
-/*
- * Comments from Linux Kernel:
- * Helper macro to place programs, maps, license in
- * different sections in elf_bpf file. Section names
- * are interpreted by elf_bpf loader.
- * End of comments
- * You can either use the helper header file below
- * so that you don't need to define it yourself:
- * #include <bpf/bpf_helpers.h> 
- */
-#define SEC(NAME) __attribute__((section(NAME), used))
-SEC("xdp")
-int xdp_drop_the_world(struct xdp_md *ctx) {
-    // drop everything
-  // 意思是无论什么网络数据包，都drop丢弃掉
-    return XDP_DROP;
-}
-char _license[] SEC("license") = "GPL";
-```
+## 3. XDP 与 eBPF 应用示例
 
-接下来就是编译工作了，利用 clang 命令行工具配合后端编译器 LLVM 来进行操作。
-
-```bash
-$ clang -O2 -target bpf -c xdp-drop-world.c -o xdp-drop-world.o
-```
-
-加载 XDP 程序要用到 ip 这个命令行工具，它能帮助我们将程序加载到内核的 XDP Hook 上。
-
-```bash
-[root@Node1 ~]# link set dev [device name] xdp obj xdp-drop-world.o
-[root@Node2 ~]# ping 192.168.1.3
-PING 192.168.1.3 (192.168.1.3): 56 data bytes
-Request timeout for icmp_seq 0
-Request timeout for icmp_seq 1
-Request timeout for icmp_seq 2
-```
-
-上面的命令中，[device name] 是本机某个网卡设备的名称。将 XDP 程序加载到内核后，从外部 ping 名为[device name] 网卡的 IP，你将看到完全 ping 不通。
-
-接下来，将 XDP 程序从网卡卸载，你会看到 ping 又正常了。
-
-```bash
-[root@Node1 ~]# link set dev [device name] xdp off
-[root@Node2 ~]# ping 192.168.1.3
-PING 192.168.1.3 (192.168.1.3): 56 data bytes
-64 bytes from 192.168.1.3: icmp_seq=0 ttl=53 time=42.608 ms
-64 bytes from 192.168.1.3: icmp_seq=1 ttl=53 time=43.902 ms
-64 bytes from 192.168.1.3: icmp_seq=2 ttl=53 time=42.829 ms
-```
-
-## 2. XDP 应用示例
-
-前面讲过的 conntrack 是 Netfilter 在 Linux 内核中的连接跟踪实现。换句话说，只要具备了 hook 能力，能拦截到进出主机的每个数据包，就完全可以摆脱 Netfilter，实现另外一套连接跟踪。
+前面讲过的 conntrack 是 Netfilter 在 Linux 内核中的连接跟踪实现。换句话说，只要具备了 hook 内核的能力，能拦截到进出主机的每个数据包，就完全可以摆脱 Netfilter，实现另外一套连接跟踪。
 
 云原生网络方案 Cilium 在 1.7.4+ 版本就实现了这样一套独立的连接跟踪和 NAT 机制，其基本原理是：
 
-- 基于 BPF hook 实现数据包的拦截功能（等价于 netfilter 的 hook 机制）。
+- 基于 BPF hook 实现数据包的拦截功能（等价于 Netfilter 的 hook 机制）。
 - 在 BPF hook 的基础上，实现一套全新的 conntrack 和 NAT。
 
-因此使用 Cilium 解决 Kubernetes 容器间通信时，即便在 Node 节点卸载 Netfilter，也不会影响 Cilium 对 Kubernetes ClusterIP、NodePort、ExternalIPs 和 LoadBalancer 等功能的支持。
+因此使用 Cilium 作为 Kubernetes 容器间通信解决方案时，即便 Node 节点内卸载 Netfilter，也不会影响 Cilium 对 Kubernetes ClusterIP、NodePort、ExternalIPs 和 LoadBalancer 等功能的支持。
 
 :::center
   ![](../assets/cilium.svg)<br/>
  图 3-14 Cilium 方案中实现的 conntrack
 :::
 
-由于 Cilium 方案的连接跟踪机制独立于 Netfilter，因此它的 conntrack 和 NAT 信息也没有存储在内核中的 conntrack table 和 NAT table 中，常规的 conntrack/netstats/ss/lsof 等工具看不到 nat、conntrack 数据，所以得另外使用 Cilium 的命令查询，譬如：
+由于 Cilium 方案的连接跟踪机制独立于 Netfilter，因此它的 conntrack 和 NAT 信息也没有存储在内核中的 conntrack table 和 NAT table 中，常规的 conntrack/netstats/ss/lsof 等工具看不到 NAT、conntrack 数据，得另外使用 Cilium 提供的查询命令，例如：
 
 ```bash
 $ cilium bpf nat list
@@ -99,4 +59,4 @@ $ cilium bpf ct list global
 ```
 
 [^1]: Linux 内核开发者，自 2005 年开始，已经提交过 4989 个 patch，是 Linux 核心源代码第二大的贡献者。
-
+[^2]: 相较 AF_INET 是基于传统网络的 Linux socket，AF_XDP 则是一套基于 XDP 的高性能 Linux socket。
