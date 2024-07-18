@@ -1,4 +1,4 @@
-# 2.2 HTTPS 请求阶段分析
+# 2.2 HTTPS 请求阶段与耗时分析
 
 开始优化 HTTPS 请求之前，我们得先清楚一个 HTTPS 请求有哪些阶段，以及各个阶段耗时如何计算。
 
@@ -21,15 +21,31 @@
 
 ## 2.2.2 各阶段耗时分析
 
-HTTPS 请求的各个阶段可以使用 curl 工具进行详细的耗时分析。
+HTTPS 请求的各个阶段可以使用 curl 命令进行详细的耗时分析。
 
-如表 2-2 所示，curl 提供了详细的耗时分析选项，可以让我们准确计算每一个环节的耗时，找准问题源头，从而提升网络优化的效率和质量。
+curl 命令提供了 -w 参数，该参数支持 curl 按照指定的格式打印与请求相关的信息，部分信息可以用特定的变量表示，例如 status_code、size_download、time_namelookup 等等。因为我们要进行耗时分析，所以只关注和请求耗时有关的变量（以 time_ 开头的变量）。
+
+先往文本文件 curl-format.txt 写入下面的内容：
+
+```bash
+$ cat curl-format.txt
+    time_namelookup:  %{time_namelookup}\n
+       time_connect:  %{time_connect}\n
+    time_appconnect:  %{time_appconnect}\n
+      time_redirect:  %{time_redirect}\n
+   time_pretransfer:  %{time_pretransfer}\n
+ time_starttransfer:  %{time_starttransfer}\n
+                    ----------\n
+         time_total:  %{time_total}\n
+```
+
+上述的变量具体是什么意思呢？笔者整理了表 2-2，供读者参考。
 
 :::center
-表 2-2 curl 网络请求阶段分析
+表 2-2 curl 支持的与请求耗时有关的变量
 :::
 
-| 请求阶段 | 释义 |
+| 变量名称 | 变量释义 |
 |:--|:--|
 | time_namelookup | 从请求开始到域名解析完成的耗时 |
 | time_connect | 从请求开始到 TCP 三次握手完成耗时 |
@@ -39,11 +55,12 @@ HTTPS 请求的各个阶段可以使用 curl 工具进行详细的耗时分析�
 | time_starttransfer | 从请求开始到内容传输前的时间 |
 | time_total | 从请求开始到完成的总耗时 |
 
-对 https://www.thebyte.com.cn (一个简单的静态网页) 使用 curl 测试：
+
+我们先看看一个简单的请求，如下所示：
 
 ```bash
-$ curl -w '\n time_namelookup=%{time_namelookup}\n time_connect=%{time_connect}\n time_appconnect=%{time_appconnect}\n time_redirect=%{time_redirect}\n time_pretransfer=%{time_pretransfer}\n time_starttransfer=%{time_starttransfer}\n time_total=%{time_total}\n' -o /dev/null -s 'https://www.thebyte.com.cn/'
-// 输出的结果
+$ curl -w "@curl-format.txt" -o /dev/null -s 'https://www.thebyte.com.cn/'
+// curl 打印的与耗时有关的信息（单位秒）
 time_namelookup=0.025021
 time_connect=0.033326
 time_appconnect=0.071539
@@ -52,11 +69,17 @@ time_pretransfer=0.071622
 time_starttransfer=0.088528
 time_total=0.088744
 ```
+这个命令各个参数的意义是：
+- -w：从文件中读取要打印信息的格式。
+- -o /dev/null：把响应的内容丢弃，我们并不关心 HTTPS 的返回内容，只关心请求的耗时情况。
+- -s：不输出请求的进度条。
 
-利用上述的输出结果，可以计算出一些需要关注的性能指标，例如域名解析请求耗时、TCP 建立耗时、TTFB[^3]等，表 2-3 为这些指标的计算方式及说明。
+不过，得注意 curl 打印的各个耗时都是从请求发起的那一刻开始计算，我们再将其转换为 HTTPS 各阶段耗时，例如域名解析耗时、TCP 建立耗时、TTFB 耗时[^3]等。
+
+表 2-3 为 curl 内各个步骤耗时与 HTTPS 指标计算关系。
 
 :::center
-表 2-3 网络请求耗时计算
+表 2-3 HTTPS 请求各阶段耗时计算
 :::
 | 耗时 | 说明 |
 |:--|:--|
@@ -65,10 +88,10 @@ time_total=0.088744
 | SSL 耗时 = time_appconnect - time_connect | TLS 握手以及加解密处理 |
 | 服务器处理请求耗时 = time_starttransfer - time_pretransfer | 服务器响应第一个字节到全部传输完成耗时 |
 | TTFB  = time_starttransfer - time_appconnect | 服务器从接收请求到开始到收到第一个字节的耗时 |
-| 总耗时 = time_total ||
+| 总耗时 = time_total | 整个 HTTPS 的请求耗时|
 
 
-分析上述对 https://www.thebyte.com.cn 测试的结果，可以看到域名解析时间大约占据了总时间的 28%，TCP 连接大约占据了总时间的 9%，而 SSL 层耗时则占据了总时间的近 50%。
+根据 curl 打印的各个耗时信息，计算出 HTTPS 的各个阶段耗时，我们能看到域名解析耗时大约占据了总耗时的 28%，TCP 握手耗时大约占据了总耗时的 9%，而 SSL 层的耗时则占据了总耗时的近 50%。
 
 由此可见，如果想要降低 HTTPS 接口延迟，那么优化域名解析环节和 SSL 两个阶段将会带来显著的性能收益。
 

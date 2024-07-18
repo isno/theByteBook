@@ -123,7 +123,7 @@ Kubernetes 围绕容器抽象了一系列的“资源”概念能描述整个分
 
 OCI 和 CNCF 这两个围绕容器的基金会对云原生生态的发展发挥了非常重要的作用，二者不是竞争而是相辅相成，共同制定了一系列行业事实标准。
 
-其中与容器相关的最为重要的几个规范包括：CRI（Container Runtime Interface，容器运行时接口规范）、CNI（Container Runtime Interface，容器网络接口规范）、CSI（Container Storage Interface，容器存储接口规范）、OCI Distribution Spec、OCI Image Spec、OCI Runtime Spec，它们之间的关系如图 1-16 所示。
+其中与容器相关的最为重要的几个规范包括：CRI（Container Runtime Interface，容器运行时接口规范）、CNI（Container Network Interface，容器网络接口规范）、CSI（Container Storage Interface，容器存储接口规范）、OCI Distribution Spec、OCI Image Spec、OCI Runtime Spec，它们之间的关系如图 1-16 所示。
 
 :::center
   ![](../assets/container-2.jpeg)<br/>

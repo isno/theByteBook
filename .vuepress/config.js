@@ -111,7 +111,7 @@ export default defineUserConfig({
                     '/network/latency.md',
                     '/http/latency.md',
                     {
-                        text: '2.3 域名解析环节',
+                        text: '2.3 域名解析的原理与实践',
                         link:  '/http/dns.md',
        
                         children: [
@@ -120,7 +120,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '2.4 HTTP 请求优化',
+                        text: '2.4 HTTP 数据压缩优化',
                         link:  '/http/http-performance.md',
        
                         children: [
