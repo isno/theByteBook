@@ -1,8 +1,8 @@
 # 2.6.1 网络拥塞控制原理
 
-Google 曾在 ACM 杂志上发布过一篇论文《BBR: Congestion-Based Congestion Control》，论文主要介绍了 BBR 算法的设计，内容中一张配图（图 2-22）形象说明了网络拥塞的产生和控制逻辑。
-
 ## 1. 网络拥塞的产生与控制逻辑
+
+Google 曾在 ACM 杂志上发布过一篇论文《BBR: Congestion-Based Congestion Control》，论文主要介绍了 BBR 算法的设计，内容中一张配图（图 2-22）形象说明了网络拥塞的产生和控制逻辑。
 
 :::center
   ![](../assets/bbr-cc.png)<br/>
@@ -57,7 +57,7 @@ Google 曾在 ACM 杂志上发布过一篇论文《BBR: Congestion-Based Congest
 
 :::center
   ![](../assets/bbr-2.png)<br/>
- 图 2-24 估计最优工作点 (max BW , min RTT)
+ 图 2-24 无法同时得到 max BW 和 min RTT
 :::
 
 ## 3. BBR 的解题思路以及状态机设计
