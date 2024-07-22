@@ -129,14 +129,21 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '2.5 HTTPS 原理及 SSL 优化',
+                        text: '2.5 HTTPS 加密原理及优化实践',
                         link:  '/http/https-summary.md',
                         children: [
                             '/http/https.md',
                             '/http/ssl.md'
                         ]
                     },
-                    "/http/bbr.md",
+                    {
+                        text: '2.6 网络拥塞控制原理与 BBR 实践',
+                        link:  '/http/congestion.md',
+                        children: [
+                            '/http/congestion-control.md',
+                            '/http/bbr.md'
+                        ]
+                    },
                     '/http/Edge-Acceleration.md',
 
                     {
@@ -167,18 +174,23 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '3.4 内核优化以及内核旁路技术',
+                        text: '3.4 内核网络优化实践',
                         link: '/network/kernel-performance.md',
                         children: [
                             "/network/RSS.md",
-                            "/network/netstack-performance.md",
-                            '/network/kernel-bypass.md',
+                            "/network/netstack-performance.md"                            
+                        ]
+                    },
+                     {
+                        text: '3.5 内核旁路技术',
+                        link: "/network/kernel-bypass.md",
+                        children: [
+                            '/network/DPDK.md',
                             '/network/XDP.md',
-                            
                         ]
                     },
                     {
-                        text: '3.5 Linux 网络虚拟化',
+                        text: '3.5 Linux 网络虚拟化技术',
                         link: "/network/linux-vritual-net.md",
                         children: [
                             "/network/network-namespace.md",
