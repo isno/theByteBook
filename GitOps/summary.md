@@ -1,4 +1,4 @@
-# 第十章 GitOps 理念及落地实践
+# 第十章 GitOps 设计理念及落地实践
 
 :::tip <a/>
 there is no silver bullet，but sometimes there are goods arrows.
@@ -11,7 +11,7 @@ GitOps 起源于 Weaveworks[^2] 公司在 2017 年发表的一篇博客《GitOps
 
 这种方式下，我们需要将软件设施定义在 Git 仓库中进行管理，这里的软件设施不限于应用本身，也包括 IaaS、Kubernetes 这样的基础设置。每个工程师提交 Pull Request 修改软件设施，项目管理人员 Merge Request 合并修改，然后通过自动化程序（如 Flux CD、Argo CD 等）的方式在线上执行这些修改。
 
-本章我们了解 GitOps 出现的背景以及理念，然后实施一个包含代码测试、构建镜像、交付运行的 CI/CD 系统，并在文中讨论部分 CI/CD 工具的选型。
+本章我们首先了解 GitOps 出现的背景以及设计理念，然后基于 GitOps 设计理念实施一个包含代码测试、镜像构建、交付运行的 CI/CD 系统，并在其中讨论 CI/CD 工具如何选型。
 
 :::center
   ![](../assets/GitOps.png)<br/>

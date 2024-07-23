@@ -6,15 +6,13 @@
 
 :::tip William Morgan 对服务网格的定义
 
-“A service mesh is a dedicated infrastructure layer for handling service-to-service communication. It’s responsible for the reliable delivery of requests through the complex topology of services that comprise a modern, cloud native application. In practice, the service mesh is typically implemented as an array of lightweight network proxies that are deployed alongside application code, without the application needing to be aware.”
-
 服务网格是一个处理服务通讯的专门的基础设施层。它的职责是在由云原生应用组成服务的复杂拓扑结构下进行可靠的请求传送。在实践中，它是一组和应用服务部署在一起的轻量级的网络代理，对应用服务透明。
 
 :::
 
-感受服务网格从无到有、被社区接受、巨头入局、众人皆捧的历程。
+通过下文，感受服务网格从无到有，被社区接受，巨头入局，众人皆捧的发展历程。
 
-- 2016年 9 月，在 SF MicroServices 大会上，“ServiceMesh”这个术语第一次在公开场合使用，这标志着服务网格从 Buoyant 公司内部走向社区，并开始被广泛接受以及推崇。
+- 2016 年 9 月，在 SF MicroServices 大会上，“ServiceMesh”这个术语第一次在公开场合使用，这标志着服务网格从 Buoyant 公司内部走向社区，并开始被广泛接受以及推崇。
 - 2017 年 1 月，Linkerd 加入 CNCF，项目被归类到 CNCF 为其单独开辟的“ServiceMesh”分类，这代表着服务网格理念被主流社区认同。
 - 2017 年 4 月，Linkerd 发布 1.0 版本。这标志着服务网格产品实现了最重要的里程碑“被客户接受并在生产线上被大规模应用”，服务网格从理念开始走向生产实践。
 - 2017 年 5 月，Google、IBM 以及 Lyft 联合发布 Istio 0.1 版本，以 Istio 为代表的第二代服务网格产品开始登场。

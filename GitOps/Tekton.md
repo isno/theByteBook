@@ -6,7 +6,7 @@ Tekton 的前身是 Knative 项目的 build-pipeline 项目，这个项目是为
 
 :::
 
-Tekton 基于 Kubernetes 定义了一系列自定义资源定义（CRD），用于灵活地在 Kubernetes 中创建、管理和运行 CI/CD 流水线。由于完全基于 Kubernetes 实现，Tekton 相比传统的 CI 系统（如 Gitlab CI、Jenkins 等），更符合云原生理念，成为当下最具优势的 CI/CD 解决方案。
+Tekton 基于 Kubernetes 定义了一系列 CRD（Custom Resource Define，自定义资源定义），用来灵活地在 Kubernetes 中创建、管理和运行 CI/CD 流水线。由于完全基于 Kubernetes 实现，Tekton 相比 Gitlab CI、Jenkins 这类传统的 CI 系统，更符合云原生理念，因此成为云原生场景下最具优势的 CI/CD 解决方案。
 
 :::center
   ![](../assets/Tekton.png)<br/>

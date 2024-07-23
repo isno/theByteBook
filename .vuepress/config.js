@@ -345,7 +345,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第十章：GitOps 理念及落地实践',
+                text: '第十章：GitOps 设计理念及落地实践',
                 link: '/GitOps/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
