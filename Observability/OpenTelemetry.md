@@ -27,7 +27,9 @@ OpenCensus 最初目标并不是抢 OpenTracing 的饭碗，而是为了把 Go �
   图 9-22 OpenTracing 和 OpenCensus 功能、特性对比
 :::
 
-作为协议标准，这种竞争/分裂未免太消耗社区资源。对用户而言，一边是老牌 APM 厂商，一边是影响力巨大的 Google 和微软。选择困难症发作的同时，一个新的想法不断被讨论：**是否能有一个统一标准，能够同时支持 Metrics、Tracing、Logs 相关可观测数据的项目呢？**
+虽说 OpenTracing 和 OpenCensus 促进了可观测系统的发展，然后作为一种协议标准，它们之间的竞争/分裂未免太消耗社区资源。
+
+对用户而言，一边是老牌 APM 厂商，一边是影响力巨大的 Google 和微软。选择困难症发作的同时，一个新的想法不断被讨论：**是否能有一个统一标准，能够同时支持 Metrics、Tracing、Logs 相关可观测数据的项目呢？**
 
 ## 9.4.3 OpenTelemetry
 
