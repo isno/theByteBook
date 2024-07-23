@@ -4,11 +4,11 @@ Dapper 论文发布后，市场也出现了大量的追踪系统，如 Jaeger、
 
 ## 9.4.1 OpenTracing
 
-为了解决追踪系统各自为政的乱象，一些老牌 APM 所代表的厂商（Uber、LightStep、Redhat）定义了一套厂商无关、语言无关的分布式追踪的标准协议 —— OpenTracing。
+为了解决追踪系统各自为政的乱象，一些老牌 APM（Application Performance Monitoring，应用程序性能监控）系统代表的厂商（Uber、LightStep、Redhat）定义了一套厂商无关、语言无关的分布式追踪的标准协议 —— OpenTracing。
 
-只要遵守 OpenTracing 规范，任何公司的追踪探针、存储、界面就可以互换或者组合。OpenTracing 规范提出之后，业内知名的追踪系统 Jaeger 、Zipkin、Skywalking 等项目很快宣布宣布实现和支持 OpenTracing。
+OpenTracing 规范提出之后，业内知名的追踪系统 Jaeger 、Zipkin、Skywalking 等项目很快宣布宣布实现和支持 OpenTracing。使用这类符合 OpenTracing 规范的追踪系统，系统内的探针、存储、界面都可以互换或者重新组合。
 
-2016 CNCF 接纳 OpenTracing 成为 CNCF 第三个项目，前两个是鼎鼎大名的 Kubernetes 和 Prometheus，由此可见开源世界对 APM 的重视，对统一标准的重视和渴望。
+2016 年，CNCF 接纳 OpenTracing 成为 CNCF 第三个项目，前两个项目是鼎鼎大名的 Kubernetes 和 Prometheus，由此可见开源界对 APM 的重视，对统一标准的重视和渴望。
 
 ## 9.4.2 OpenCensus
 
@@ -18,7 +18,9 @@ OpenCensus 最初目标并不是抢 OpenTracing 的饭碗，而是为了把 Go �
 
 随着项目的进展，开发人员想：“为什么不把其它各种语言的相关采集都统一呢？”。于是，OpenCensus 的场景进一步扩大了，不仅做了 Metrics 基础指标监控，还做了 OpenTracing 的老本行 —— 分布式跟踪。
 
-从 OpenTracing 和 OpenCensus 从功能和特性上来看，两者各有优缺点：OpenTracing 支持的语言更多、相对对其他系统的耦合性要更低；OpenCensus支持 Metrics、Tracing，同时从 API 层一直到基础设施层都进行了支持。
+图 9-22 概述了 OpenTracing 和 OpenCensus 功能和特性的对比，两者各有优缺点：
+- OpenTracing 支持的语言更多、相对对其他系统的耦合性要更低；
+- OpenCensus支持 Metrics、Tracing，同时从 API 层一直到基础设施层都进行了支持。
 
 :::center
   ![](../assets/opentracing-vs-opencensus.jpg)<br/>
