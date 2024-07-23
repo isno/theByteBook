@@ -287,16 +287,8 @@ export default defineUserConfig({
                 children: [
                     '/container/borg-omega-k8s.md',
                     '/container/orchestration.md',
-                    '/container/image.md',                    {
-                        text: '7.4 容器运行时：从 Docker 到 CRI',
-                        collapsable: false,
-                        sidebarDepth: 1,
-                        link: '/container/runtime.md',
-                        children: [
-                            "/container/Docker.md",
-                            "/container/CRI.md"
-                        ]
-                    },
+                    '/container/image.md', 
+                     "/container/CRI.md",
                     "/container/storage.md",
                     "/container/container-network.md",
                     {

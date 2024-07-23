@@ -1,8 +1,10 @@
-# 7.4.2 CRI 运行时规范
+# 7.4 容器运行时：从 Docker 到 CRI
 
-:::tip <a/> 
-本节 Kubernetes 容器运行时调用链配图以及性能测试数据来源于文章《Kubernetes Containerd Integration Goes GA》[^1]，在此统一注明，后面不再单独列出。
-:::
+Docker 大概也没想到，在 2022 年它还能再次成为舆论的焦点，事件的起源是 Kubernetes 宣布开始进入废弃 dockershim 支持的倒计时，最后讹传讹被人误以为 Docker 不能再用了。
+
+虽说此次事件有众多标题党的推波助澜，但也侧面说明了 Kubernetes 与 Docker 的关系十分微妙。本节，我们把握这两者关系的变化，从中理解容器运行时规范以及 Kubernetes CRI 容器运行时接口的演变。
+
+## 1. Docker 与 Kubernetes 
 
 早期 Kubernetes 完全依赖且绑定 Docker，并没有过多考虑够日后使用其他容器引擎的可能性。当时 kubernetes 管理容器的方式通过内部的 DockerManager 直接调用 Docker API 来创建和管理容器。
 
@@ -11,11 +13,11 @@
   图 7-15 Kubernetes 早期调用 Docker 的链路
 :::
 
-Docker 和 CoreOS 分裂之后，被 Google 投资的 CoreOS 推出了 rkt 运行时实现，Kubernetes 又实现了对 rkt 的支持。随着容器技术的蓬勃发展，越来越多运行时出现，如果继续使用与 Docker 类似强绑定的方式，Kubernetes 的工作量将无比庞大。
+后来，市场上出现了越来越多的容器容器运行时，比如 CoreOS[^1] 推出的开源容器引擎 Rocket（简称 rkt）。rkt 出现之后，Kubernetes 用强绑定 Docker 的方式又实现了对 rkt 的支持。随着容器技术的蓬勃发展，越来越多运行时出现，如果继续使用与 Docker 类似强绑定的方式，Kubernetes 的工作量将无比庞大。
 
-Kubernetes 要重新考虑对所有容器运行时的兼容适配问题了。
+Kubernetes 需要重新考虑对所有容器运行时的兼容适配问题了。
 
-## 1. 容器运行时接口 CRI
+## 2. 容器运行时接口 CRI
 
 Kubernetes 从 1.5 版本开始，在遵循 OCI 基础上，将容器操作抽象为一个接口，该接口作为 Kubelet 与运行时实现对接的桥梁，Kubelet 通过发送接口请求对容器进行启动和管理，各个容器运行时只要实现这个接口就可以接入 Kubernetes，这便是 CRI（Container Runtime Interface，容器运行时接口）。
 
@@ -30,7 +32,7 @@ CRI 实现上是一套通过 Protocol Buffer 定义的 API，从配图 7-16 可�
   图 7-16 CRI 是通过 gRPC 实现的 API
 :::
 
-## 2. Kubernetes 专用容器运行时 CRI-O
+## 3. Kubernetes 专用容器运行时 CRI-O
 
 2017 年，由 Google、RedHat、Intel、SUSE、IBM 联合发起的 CRI-O（Container Runtime Interface Orchestrator）项目发布了首个正式版本。
 
@@ -45,7 +47,7 @@ Google 推出 CRI-O 摆出了直接挖掉 Docker 根基的意图，但此时 Doc
 
 不过也能够想像此时 Docker 心中肯定充斥了难以言喻的危机感。
 
-## 3. Containerd 与 CRI 的关系演进
+## 4. Containerd 与 CRI 的关系演进
 
 Docker 并没有“坐以待毙”，开始主动革新。
 
@@ -82,7 +84,7 @@ Docker 并没有“坐以待毙”，开始主动革新。
   图 7-20 Containerd vs Docker 的性能测试
 :::
 
-## 4. 安全容器运行时 Kata Containers
+## 5. 安全容器运行时 Kata Containers
 
 尽管容器有许多技术优势，然而传统以 runc 为代表基于共享内核技术进行的软隔离还是存在一定的风险性。如果某个恶意程序利用系统缺陷从容器中逃逸，就会对宿主机造成严重威胁，尤其是公有云环境，安全威胁很可能会波及到其他用户的数据和业务。
 
@@ -102,7 +104,7 @@ Kata Containers 安全容器的诞生解决了许多普通容器场景无法解�
   图 7-22 CRI 和 Kata Containers 的集成 [图片来源](https://github.com/kata-containers/documentation/blob/master/design/architecture.md)
 :::
 
-## 5. 容器运行时生态
+## 6. 容器运行时生态
 
 今天，如图 7-23 所示，符合 CRI 规范的容器运行时已达十几种，要使用哪一种容器运行时取决于你安装 Kubernetes 时宿主机上的容器运行时环境。对于云计算厂商来说，如果没有特殊的需求（譬如因为安全性要求必须隔离内核）采用的容器运行时普遍都已是 Containerd，毕竟运行性能以及稳定对它们来说就是核心生产力和竞争力。
 
@@ -111,4 +113,5 @@ Kata Containers 安全容器的诞生解决了许多普通容器场景无法解�
   图 7-23 容器运行时生态 [图片来源](https://landscape.cncf.io/guide#runtime--container-runtime)
 :::
 
+[^1]: CoreOS 是一款产品也是一个公司的名称，后来产品改名 Container Linux。除了 Container Linux，CoreOS 还开发了 Etcd、Flannel、CNI 这些影响深远的项目。2018 年 1 月 30 号，CoreOS 被 RedHat 以 2.5 亿美的价格收购（当时 CoreOS 的员工才 130 人）。
 [^1]: 参见 https://kubernetes.io/blog/2018/05/24/kubernetes-containerd-integration-goes-ga/
