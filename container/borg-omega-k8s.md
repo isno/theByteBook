@@ -4,7 +4,7 @@
 
 这三代系统的设计虽然出于不同目，但每一代都受前一代的强烈影响。
 
-## 7.1.1 Borg
+## 7.1.1 Borg 系统
 Borg 是 Google 内部第一代容器管理系统。它的架构如图 7-1 所示，是典型的 Master（BorgMaster) + Agent（Borglet）架构。
 
 用户的操作请求提交给 Master，由 Master 负责记录下“某某实例运行在某某机器上”这类元信息，Agent 通过与 Master 通讯得知分配给自己的任务，然后在 Work 节点中执行任务等操作。
@@ -36,7 +36,7 @@ Borg 通过不同类型 Workload 的混部共享计算资源，**提升了资源
 
 随着 Google 内部的应用程序越来越多地被部署到 Borg 上，应用团队与基础架构团队开发了大量围绕 Borg 的管理工具和服务：资源需求量预测、自动扩缩容、服务发现和负载均衡、Quota 管理等等，并逐渐形成一个基于 Borg 的内部生态。
 
-## 7.1.2 Omega
+## 7.1.2 Omega 系统
 
 驱动 Borg 生态发展的是 Google 内部的不同团队，从结果看，Borg 生态是一堆异构、自发的工具和系统，而非一个有设计的体系。
 
@@ -56,7 +56,7 @@ Omega 继承了 Borg 中经过验证的成功设计，完全从头开始开发�
   图 7-2 Borg 与 Omega 是 Google 最关键的基础设施 [图片来源](https://cs.brown.edu/~malte/pub/dissertations/phd-final.pdf)
 :::
 
-## 7.1.3 Kubernetes
+## 7.1.3 Kubernetes 系统
 
 Google 开发的第三套容器管理系统叫 Kubernetes。
 
