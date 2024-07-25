@@ -58,11 +58,7 @@ Omega 继承了 Borg 中经过验证的成功设计，完全从头开始开发�
 
 ## 7.1.3 Kubernetes 系统
 
-Google 开发的第三套容器管理系统叫 Kubernetes。
-
-开发这套系统的背景是：
-- 全球越来越多的开发者开始对 Linux 容器感兴趣（Linux 容器是 Google 的家底，却被 Docker 搞偷袭）；
-- Google 已经把公有云基础设施作为一门业务在卖，且在持续增长（Google 是云计算概念提出者，但起了大早赶了个晚集，云计算市场被 AWS 、阿里云等占尽先机）。
+凭借多年运行 Borg 和 GCP（Google Cloud Platform，Google 云端平台）的经验，使得 Google 非常认可容器技术，也深知目前 Docker 在规模化使用场景下的不足。如果 Google 率先做好这件事不仅能让自己在云计算市场扳回一局，而且也能抓住一些新的商业机会。比如，在 AWS 上运行的应用有可能自由地移植到 GCP 上运行，这对于 Google 的云计算业务无疑极其有利。
 
 2013 年夏天，Google 的工程师们开始讨论借鉴 Borg 的经验进行容器编排系统的开发，并希望用 Google 十几年的技术积累影响错失的云计算市场格局。Kubernetes 项目获批后，Google 在 2014 年 6 月的 DockerCon 大会上正式宣布将其开源。
 
