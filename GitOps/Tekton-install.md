@@ -1,4 +1,4 @@
-# 10.4.1 安装 Tekton
+# 10.4.2 安装 Tekton
 
 安装 Tekton 非常简单，通过 kubectl apply 官方提供的安装文件即可（但需要注意 Kubernetes 集群版本要求）。
 

@@ -1,17 +1,18 @@
-# 10.4.2 Tekton 的资源对象
+# 10.4.1 Tekton 中的资源对象
 
-实践之前，我们先了解 Tekton 定义的涉及构建 CI/CD 流水线相关的资源对象。
+Tekton 充分利用了 Kubernetes 资源和扩展能力，定义了一系列构建流水线相关的 CRD 资源对象，核心资源对象如下：
 
-- **Task**：Tekton 编排流水线的最小单位，Task 内部可以定义 Steps 子步骤进行串行处理，子步骤如编译代码、构建和推送镜像。子步骤之间可以定义 inputs 和 outputs 进行参数传递。
-- **TaskRun**：可以理解为一个 Task 对象的最终执行器。TaskRun 提交到 Kubernetes 之后，控制器会拉起一个 Pod，并在 Pod 内执行 Task。
-- **Pipeline**：Tekton 中的流水线，由一个或多个 Task 组成，Task 之间使用 DAG（有向无环图）编排，Task 之间可以定义 inputs 和 outputs 进行参数传递。
-- **PipelineRun**：可以理解为一个 Pipeline 对象的最终执行器。PipelineRun 对象提交到 Kubernetes 之后，Tekton 会具体实例化出一个 Pipeline 对象进行执行。
+- **Task（任务）**：Task 是 Tekton 中描述任务的最小单位，用于定义具体的任务。Task 由一系列 Steps（子步骤）串行处理。例如一个程序可用性测试任务，它由克隆代码仓库、程序编译、执行测试等子步骤组成。
+- **TaskRun**：TaskRun 可以理解为一个 Task 对象的最终执行器。Task 只是用来描述任务，创建之后并不会执行，只有与它进行关联的 TaskRun 被创建之后，才会在 Kubernetes 集群中拉起一个 Pod 真正执行任务。
+- **Pipeline（流水线）**：是一个或多个 Task 组合。Pipeline 中的任务可以按顺序执行，也可以定义依赖关系。
+- **PipelineRun**：同 TaskRun 一样，PipelineRun 可以理解为 Pipeline 对象的最终执行器。PipelineRun 对象提交到 Kubernetes 之后，Tekton 会具体实例化出一个 Pipeline 对象进行执行。
 
-这些对象之间的关系如图 10-6 所示（右侧蓝色部分）。
+
+当用户创建完各类 Task 和 Pipeline 之后，当如代码提交、git merge 等外部事件触发时，Tekton 中的 TriggerBinding 组件解析事件中的参数（如 git 仓库地址），传递给 Pipeline，然后执行代码测试、镜像构建、镜像推送等任务，其流程如图 10-6 所示。
 
 :::center
   ![](../assets/tekton-pipeline.png)<br/>
-  图 10-6 Tekton 构建流水线
+  图 10-6 使用 Tekton 进行持续集成的流程
 :::
 
 

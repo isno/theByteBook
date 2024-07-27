@@ -357,8 +357,8 @@ export default defineUserConfig({
                         text: "10.4 使用 Tekton 进行持续集成",
                         link: '/GitOps/Tekton.md',
                         children: [
-                            '/GitOps/Tekton-install.md',
                             '/GitOps/Tekton-CRD.md',
+                            '/GitOps/Tekton-install.md',
                             '/GitOps/Tekton-test.md',
                             '/GitOps/Tekton-build-image.md',
                             '/GitOps/Tekton-trigger.md',
