@@ -20,8 +20,8 @@ Linux Bridge 还有一个重要的特点：**它除了最基本的交换机功�
 
 举个例子，某个容器 A 向另外一台节点中的容器 B 发起通信，容器 A 发出去的数据包先到达 Linux bridge，因为目的地 IP 不属于 Linux bridge 转发的范畴，因此 Linux bridge 将数据包送到宿主机协议栈进一步处理。
 
-接下来，宿主机协议栈根据容器间通信模型，判断如何处理数据包。如果容器间网络模型是 Overlay 类型，宿主机内核将数据包交由 VTEP（VXLAN Tunnel Endpoints，VXLAN 隧道端点）或者 TUN 设备进行二次封装。
+接下来，宿主机协议栈根据容器间通信模型，判断如何处理数据包。如果容器间网络模型是 Overlay 类型，宿主机内核将数据包交由 VTEP（VXLAN Tunnel Endpoints，VXLAN 隧道端点）或者 TUN 设备，基于宿主机的 IP 网络进行二次封装。
 
-新数据包的目的 IP 属于另外一台节点，且宿主机开启了 IP forward 功能，最后数据包通过宿主机的 eth0 发送出去。
+因为宿主机开启了 IP forward 功能，且封装后的数据包目的 IP 与宿主机处于同一个网络，最后数据包通过宿主机的 eth0 接口发送出去。
 
 
