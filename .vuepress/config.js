@@ -187,6 +187,7 @@ export default defineUserConfig({
                         children: [
                             '/network/DPDK.md',
                             '/network/XDP.md',
+                            '/network/RDMA.md',
                         ]
                     },
                     {
