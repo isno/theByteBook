@@ -133,11 +133,13 @@ export default defineUserConfig({
                         link:  '/http/https-summary.md',
                         children: [
                             '/http/https.md',
-                            '/http/ssl.md'
+                            '/http/ssl.md',
+                            '/http/ssl-certificate.md',
+                            '/http/ssl-performance-result.md'
                         ]
                     },
                     {
-                        text: '2.6 网络拥塞控制原理与 BBR 实践',
+                        text: '2.6 网络拥塞控制原理与优化实践',
                         link:  '/http/congestion.md',
                         children: [
                             '/http/congestion-control.md',
@@ -147,7 +149,7 @@ export default defineUserConfig({
                     '/http/Edge-Acceleration.md',
 
                     {
-                        text: '2.8 使用新一代的传输协议 QUIC',
+                        text: '2.8 新一代可靠传输协议 QUIC 与实践',
                         link:  '/http/http3.md',
                         children: [
                             '/http/quic.md',
@@ -197,7 +199,8 @@ export default defineUserConfig({
                             "/network/network-namespace.md",
                             "/network/virtual-nic.md",
                             "/network/linux-bridge.md",
-                            "/network/vxlan.md"                        ]
+                            "/network/vxlan.md"
+                        ]
                     },
                     
                     '/network/conclusion.md',
@@ -369,19 +372,7 @@ export default defineUserConfig({
                     '/GitOps/ArgoCD.md',
                     '/GitOps/conclusion.md',
                 ]
-            }/*
-            ,{
-                text: '第十一章：构建大模型计算平台',
-                collapsable: false,
-                sidebarDepth: 1,
-                link: '/AI/summary.md',
-                children: [
-                    '/AI/background.md',
-                    '/AI/RDMA.md',
-                    '/AI/Storage.md',
-                    '/AI/GPU.md'
-                ]
-            },*/
+            }
         ]
     })
 });
