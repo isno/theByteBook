@@ -191,7 +191,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '3.5 Linux 网络虚拟化技术',
+                        text: '3.6 Linux 网络虚拟化技术',
                         link: "/network/linux-vritual-net.md",
                         children: [
                             "/network/network-namespace.md",
