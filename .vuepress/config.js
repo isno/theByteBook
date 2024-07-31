@@ -172,6 +172,7 @@ export default defineUserConfig({
                         link: "/network/linux-kernel-networking.md",
                         children: [
                             '/network/netfilter.md',
+                            '/network/iptables.md',
                             '/network/conntrack.md',
                         ]
                     },
