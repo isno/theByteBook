@@ -129,7 +129,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '2.5 HTTPS 加密原理及优化实践',
+                        text: '2.5 SSL 加密原理及优化实践',
                         link:  '/http/https-summary.md',
                         children: [
                             '/http/https.md',
