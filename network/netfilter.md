@@ -2,6 +2,19 @@
 
 Netfilter 是 Linux 内核中的一个强大的网络子系统，它提供了网络数据包过滤、网络地址转换（NAT）、数据包的修改和多种其他网络相关操作的功能。
 
+如果把数据包比作流水，Netfilter 相当于在 Linux 系统中的“水管”装了 5 个阀门（术语称 hook）[^1]。用户空间的程序（如 iptables、IPVS 等）可以向这些 hook 点注册钩子函数，添加数据包处理规则。当有数据包经过时，就会自动触发注册在这里的钩子函数，从而干预 Linux 的网络通信，实现数据包的过滤、修改、SNAT/DNAT 等各种功能。
+
+这 5 个 hook 分别是：
+
+- PREROUTING：数据包进入内核协议栈后立即触发此 hook，在进行任何路由判断（将包发往哪里）之前。
+- LOCAL_IN：接收到的包经过路由判断，如果目的是本机，将触发此 hook。
+- FORWARD：数据包经过路由判断，如果目的是其他机器，将触发此 hook。
+- LOCAL_OUT：本机产生的准备发送的包，在进入协议栈后立即触发此 hook。
+- POST_ROUTING：本机产生的准备发送的包或者转发的包，在经过路由判断之后，将触发此 hook。
+
+
+
+
 如图 3-2 所示的“数据包通过 Netfilter 时的流向过程”，里面包含了 XDP、Netfilter 和 traffic control 部分，是参考内核协议栈各 hook 点位置和 iptables 规则优先级的经典配图。
 
 :::center
@@ -9,20 +22,7 @@ Netfilter 是 Linux 内核中的一个强大的网络子系统，它提供了网
   图 3-2 数据包通过 Netfilter 时的流向过程 [图片来源](https://en.wikipedia.org/wiki/Netfilter)
 :::
 
-Netfilter 实际上就是一个数据包过滤器框架，Netfilter 在网络包收发以及路由的“管道”中，一共切了 5 个口（hook），分别是：
 
-- PREROUTING：接收到的包进入协议栈后立即触发此 hook，在进行任何路由判断（将包发往哪里）之前。
-- LOCAL_IN：接收到的包经过路由判断，如果目的是本机，将触发此 hook。
-- FORWARD：接收到的包经过路由判断，如果目的是其他机器，将触发此 hook。
-- LOCAL_OUT：本机产生的准备发送的包，在进入协议栈后立即触发此 hook。
-- POST_ROUTING：本机产生的准备发送的包或者转发的包，在经过路由判断之后，将触发此 hook。
-
-**其它内核模块（譬如 iptables、IPVS 等）可以向这些 hook 点注册钩子函数。当有数据包经过时，就会自动触发注册在这里的钩子函数，这样程序代码就能够通过钩子函数干预 Linux 的网络通信**，实现对数据包过滤、修改、SNAT/DNAT 等各种功能。
-
-:::tip 额外知识
-
-Hook 设计模式在其他软件系统中随处可见，譬如 eBPF、Git、Kubernetes 等等，Kubernetes 在编排调度、网络、资源定义等通过暴露接口的方式，允许用户根据自己的需求插入自定义代码或逻辑来扩展 Kubernetes 的功能。 
-:::
 
 
 如图 3-4 Kubernetes 网络模型说明，当一个 Pod 跨 Node 进行通信时经过了哪些“管道”。
@@ -38,3 +38,5 @@ Hook 设计模式在其他软件系统中随处可见，譬如 eBPF、Git、Kube
 
 对 Linux 内核网络框架基本了解之后，我们继续了解 Netfilter 的上层应用 iptables。
 
+
+[^1]: hook 设计模式在其他软件系统中随处可见，譬如 eBPF、Git、Kubernetes 等等，Kubernetes 在编排调度、网络、资源定义等通过暴露接口的方式，允许用户根据自己的需求插入自定义代码或逻辑来扩展 Kubernetes 的功能。 
