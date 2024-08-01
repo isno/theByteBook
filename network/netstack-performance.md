@@ -80,6 +80,6 @@ net.ipv4.tcp_slow_start_after_idle = 0
 
 最大努力交付计算机工程最典型的体现就是 TCP 协议，TCP 需要三次握手来建立连接，也是为了降低不确定性。
 
-再看本节所有的调整，你是否体会到，只不过是在“最大努力交付”的背景下“不那么努力”一点。
+回顾本节的内容，你是否体会到：所有的参数调整只不过是在“最大努力交付”背景下“不那么努力”一点。
 
 [^1]: https://www.starduster.me/2020/03/02/linux-network-tuning-kernel-parameter/
