@@ -1,4 +1,4 @@
-# 7.2 从 Container 到 Pod
+# 7.2 容器的原理与演进
 
 字面上，“Container”这个词很难让人形象地理解其真正含义，Kubernetes 中的“Pod”也是如此。
 

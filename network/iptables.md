@@ -1,10 +1,10 @@
-# 3.3.2 数据包过滤 iptables
+# 3.3.2 数据包过滤工具 iptables
 
-Netfilter 的钩子回调固然强大，但要通过程序编码才能使用，并不适合系统管理员日常运维。
+Netfilter 的钩子回调固然强大，但得通过程序编码才能使用，并不适合系统管理员日常运维。
 
-用过 Linux 系统的开发人员或多或少都使用过 iptables，它常被称为 Linux 系统“自带的防火墙”。严谨地讲，iptables 能做的事情已经远超防火墙的范畴，它的定位应是能够代替 Netfilter 多数常规功能的 IP 包过滤工具。
+用过 Linux 系统的工程师多多少少都使用过 iptables，它常被称为 Linux 系统“自带的防火墙”。严谨地讲，iptables 能做的事情其实远超防火墙的范畴，它的定位应是能够代替 Netfilter 多数常规功能的 IP 包过滤工具。
 
-Netfilter 与 iptables 两者之间的关系如图 3-5 所示，iptables 在用户空间管理数据包处理规则，内核中 Netfilter 根据 iptables 的配置对数据包进行处理。
+Netfilter 与 iptables 两者之间的关系如图 3-5 所示，iptables 在用户空间管理数据包处理规则，内核中 Netfilter 根据 iptables 的配置规则对数据包进行处理。
 
 :::center
   ![](../assets/iptables.png)<br/>

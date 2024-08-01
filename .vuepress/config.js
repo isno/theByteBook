@@ -143,7 +143,8 @@ export default defineUserConfig({
                         link:  '/http/congestion.md',
                         children: [
                             '/http/congestion-control.md',
-                            '/http/bbr.md'
+                            '/http/bbr.md',
+                            '/http/bbr-effect.md'
                         ]
                     },
                     '/http/Edge-Acceleration.md',
