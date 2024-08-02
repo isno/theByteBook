@@ -13,14 +13,14 @@
 
 Proxyless 模式的设计理念是，服务间通信总是要选择一种协议进行，那么将协议的类库（SDK）扩展，使其具有流量控制的能力，不就能代替 Sidecar 代理了吗？且 SDK 和应用同属于一个进程，必然有更优秀的性能表现，Sidecar 诟病的延迟问题也将迎刃而解。
 
-2021 年 Istio 官方博客发表了一篇文章 《基于 gRPC 的无代理服务网格》，文中介绍了基于 gRPC 实现的一种 Proxyless 模式的服务网格。Proxyless 模式的工作原理如图 8-18 所示，服务网格不再使用代理进行数据面通信，核心的流控能力被集成在 gRPC 库中。但这种方案仍然需要一个 Agent，这个 Agent 通过xDS 协议与控制平面交互，负责告知 gRPC 库如何连接到 istiod、如何获取证书等。
+2021 年 Istio 官方博客发表了一篇文章 《基于 gRPC 的无代理服务网格》，文中介绍了基于 gRPC 实现的一种 Proxyless 模式的服务网格。Proxyless 模式的工作原理如图 8-18 所示，服务网格不再依赖 Sidecar，服务之间的流控能力被集成在 gRPC 库中。但这种方案仍然需要一个 Agent，Agent 通过 xDS 协议与控制平面交互，负责告知 gRPC 库如何连接到 istiod、如何获取证书等。
 
 :::center
   ![](../assets/proxyless.svg)<br/>
  图 8-18 Proxyless 模式
 :::
 
-相比部署独立的 Sidecar 代理实现的服务间通信，Proxyless 模式实现的服务间通信具有性能、稳定性、资源消耗低等明显的优势。从官方博客给出的性能测试报告来看：gRPC Proxyless 模式下的延迟情况接近基准测试，资源消耗也相对较低。
+相比部署独立的 Sidecar 代理实现的服务间通信，Proxyless 模式实现的服务间通信具有性能、稳定性、资源消耗低等明显的优势。根据官方博客的性能测试报告来看：gRPC Proxyless 模式下的延迟情况接近基准测试，资源消耗也相对较低。
 
 :::center
   ![](../assets/latencies_p50.svg)<br/>
@@ -52,28 +52,23 @@ Ambient Mesh 可以被理解为一种无 Sidecar 模式，但笔者认为将其�
 
 ## 8.5.3 Sidecarless 模式
 
-2022 年 Cilium 基于 eBPF 技术发布了具有服务网格能力的产品。Cilium 的服务网格产品提供了两种模式：对于 L3/L4 层的能力直接由 eBPF 支持；L7 层能力由一个公共的代理负责，以 DaemonSet 方式部署，如图 8-20 所示。
+2022 年 7 月，专注于容器网络领域的开源软件 Cilium 发布了 v1.12 版本。该版本最大的一个亮点是新增了一种 Sidecarless 模式的 ServiceMesh 功能。
+
+Cilium ServiceMesh 的工作原理如图 8-20 所示。首先，Cilium Agent 在节点中运行一个 Enovy 实例，作为所有容器的共享代理，这样不需要在每个 Pod 内放置一个 Sidecar 了。然后，再借助 Cilium CNI 底层网络能力，在容器内数据包经过内核时，与节点中的共享代理打通，实现控制、安全和观察的能力，从而构建出一种新形态的服务网格。
 
 :::center
   ![](../assets/sidecarless.png)<br/>
- 图 8-20 Sidecarless 模式
+ 图 8-20 Cilium ServiceMesh 的工作原理
 :::
 
-Cilium 认为，内核加上共享型代理的引入可以极大的减少代理的数量，从而降低资源消耗和维护成本，而在内核层面进行通信管理也提高了性能。
-
-基于 eBPF 的服务网格在设计思路上其实和 Proxyless 如出一辙，即找到一个非 Sidecar 的地方去实现流量控制能力，它们一个是基于通信协议类库，一个是基于内核的扩展性。eBPF 通过内核层面提供的可扩展能力，在流量经过内核时实现了控制、安全和观察的能力，从而构建出一种新形态的服务网格。
-
-:::center
-  ![](../assets/service-mesh-kernel.jpg)<br/>
- 图 8-21 Sidecarless 在内核实现流量观察、控制能力
-:::
-
-图 8-22 的基准测试，由于 Cilium 中使用无边车模式模式，本身少了一次代理，每一次代理基本会加大 400-500us 左右的延迟，对于延迟要求很高的系统是无法接受的。以及 eBPF 传递数据的 CTX Redirect / CTX Redirect Peer / CTX Redirect Neight 的能力 (eBPF 加速 packet 传递，bypass 内核网络协议栈，不会使用 iptables，加速网络，降低延时) 等。所以性能上 Cilium Service Mesh 是比默认没有任何加速方案的 Istio (基于 iptables 和内核网络栈的方案) 要好很多。
+其他的 ServiceMesh 项目（Linkerd、Istio 等），几乎都是借助 Linux 内核网络协议栈，而 Cilium Service Mesh 基于 eBPF 技术在内核层面扩展，因此有着天生的网络加速效果，根据 8-22 的性能测试看出，基于 ebPF 加速的 ServiceMesh，比默认没有任何加速方案的 Istio 要好很多。
 
 :::center
   ![](../assets/cilium-istio-benchmark.webp)<br/>
- 图 8-22 使用 Cilium Sidecarless 模式及 Istio Sidecar 模式的基准测试 [图片来源](https://isovalent.com/blog/post/2022-05-03-servicemesh-security/)
+ 图 8-22 Cilium Sidecarless 模式与 Istio Sidecar 模式的性能测试 [图片来源](https://isovalent.com/blog/post/2022-05-03-servicemesh-security/)
 :::
+
+基于 eBPF 技术的服务网格设计思路上其实和 Proxyless 如出一辙，即找到一个非 Sidecar 的地方去实现流量控制能力，它们一个是基于通信协议类库，一个是基于内核的扩展性。
 
 但同样，软件领域没有银弹，Sidecarless 是取舍后的结果，eBPF 并不是万能钥匙，也存在内核版本要求、编写难度大、安全等方面的问题。
 
