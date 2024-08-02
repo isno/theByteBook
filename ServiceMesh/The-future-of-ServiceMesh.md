@@ -43,20 +43,20 @@ Cilium ServiceMesh 的工作原理如图 8-20 所示。首先，Cilium Agent 在
  图 8-20 Cilium ServiceMesh 的工作原理
 :::
 
-Linkerd、Istio 这类的 ServiceMesh 项目，几乎都是借助 Linux 内核网络协议栈处理请求，而 Cilium Service Mesh 基于 eBPF 技术在内核层面扩展，因此有着天生的网络加速效果。根据图 8-22 所示的性能测试来看，基于 ebPF 加速的 ServiceMesh，比默认没有任何加速方案的 Istio 要好很多。
+Linkerd、Istio 这类的 ServiceMesh 项目，几乎都是借助 Linux 内核网络协议栈处理请求，而 Cilium Service Mesh 基于 eBPF 技术在内核层面扩展，因此有着天生的网络加速效果。根据图 8-22 所示的性能测试来看，基于 eBPF 加速的 Envoy，比默认没有任何加速 Istio 要好很多。
 
 :::center
   ![](../assets/cilium-istio-benchmark.webp)<br/>
  图 8-22 Cilium Sidecarless 模式与 Istio Sidecar 模式的性能测试 [图片来源](https://isovalent.com/blog/post/2022-05-03-servicemesh-security/)
 :::
 
-基于 eBPF 技术的服务网格设计思路上其实和 Proxyless 如出一辙，即找到一个非 Sidecar 的地方去实现流量控制能力，它们一个是基于通信协议类库，一个是基于内核的扩展性。
+Cilium ServiceMesh 的设计思路上其实和 Proxyless 如出一辙，即找到一个非 Sidecar 的地方去实现流量控制能力，它们一个是基于通信协议类库，一个是基于内核的扩展性。
 
-但同样，软件领域没有银弹，Sidecarless 是取舍后的结果，eBPF 并不是万能钥匙，也存在内核版本要求、编写难度大、安全等方面的问题。
+但同样，软件领域没有银弹，Sidecarless 是取舍后的结果，eBPF 并不是万能钥匙，也存在内核版本要求高、编写难度大和容易造成安全隐患等问题。
 
 ## 8.5.3 Ambient Mesh 模式
 
-2022 年 9 月 Istio 发布了一个名为 “Ambient Mesh” 的无边车数据平面模型，宣称用户无需使用 Sidecar 代理，就能将网格数据平面集成到其基础设施中，同时还能保持 Istio 零信任安全、遥测和流量治理等特性。
+2022 年 9 月，服务网格代表项目 Istio 发布了一个名为 “Ambient Mesh” 的无边车数据平面模型，宣称用户无需使用 Sidecar 代理，就能将网格数据平面集成到其基础设施中，同时还能保持 Istio 零信任安全、遥测和流量治理等特性。
 
 为了避免 Sidecar 种种缺陷，Ambient Mesh 不再为任何 Pod 注入 Sidecar，而是将网格功能的实现进一步下沉到 Istio 的自有组件中。Ambient将原本 Envoy 处理的功能分成两个不同的层次：安全覆盖层（ztunnel）和七层处理层（waypoint），如图 1-28 所示。
 

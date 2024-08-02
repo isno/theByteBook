@@ -1,10 +1,12 @@
 # 8.3 服务网格的产品与生态
 
-前文介绍 Buoyant 在 2016 年第一代 ServiceMesh 产品 Linkerd，同一时期，Matt Klein 也在 Lyft 开始了 Envoy 的开发。第一代 ServiceMesh 稳步推进的过程中，世界的另一角落，Google 和 IBM 两个巨头也开始握手合作，它们联合 Lyft 启动了 Istio 项目。
+Buoyant 公司在 2016 年，发布了第一代 ServiceMesh 项目 Linkerd。同一时期，离开 Twitter 的工程师 Matt Klein 加入了 Lyft，并开启了 Envoy 项目。
+
+第一代 ServiceMesh 稳步推进的过程中，世界的另一角落，Google 和 IBM 两个巨头开始握手合作，它们联合 Lyft 启动了 Istio 项目。
 
 ## 8.3.1 Istio 入局
 
-2017年5月，Google、IBM、Lyft 宣布新一代的服务网格 Istio 开源，有巨头背书以及**新增控制平面的设计理念**让 Istio 得到极大关注和发展，并迅速成为第二代服务网格的代表产品。
+2017年5月，Google、IBM 和 Lyft 宣布新一代的服务网格 Istio 开源，有巨头背书以及**新增控制平面的设计理念**让 Istio 得到极大关注和发展，并迅速成为第二代服务网格的代表项目。
 
 Istio 最大的创新在于它为服务网格带来前所未有的控制力：
 
@@ -25,9 +27,9 @@ Istio 最大的创新在于它为服务网格带来前所未有的控制力：
 
 ## 8.3.2 Linkerd 2.0 出击
 
-Istio 被争相追捧的同时，作为服务网格概念的创造者 William Morgan 自然不甘心出局，公司生死存亡之际，瞄准 Istio 的缺陷（过于复杂）并借鉴 Istio 的设计理念（新增控制平面），开始重新设计它们的服务网格产品并主打轻量化，目标是世界上最轻、最简单、最安全的 Kubernetes 专用服务网格。
+Istio 被争相追捧的同时，作为服务网格概念的创造者 William Morgan 自然不甘心出局，公司生死存亡之际，瞄准 Istio 的缺陷（过于复杂）并借鉴 Istio 的设计理念（新增控制平面），开始重新设计它们的服务网格，主打轻量化，目标是世界上最轻、最简单、最安全的 Kubernetes 专用服务网格。
 
-Buoyant 第二代服务网格产品别出心裁的使用 Rust 构建数据平面 linkerd2-proxy ，再使用 Go 开发了控制平面 Conduit。产品最初以 Conduit 命名，在 Conduit 加入 CNCF 后不久，宣布与原有的 Linkerd 项目合并，被重新命名为Linkerd 2[^1]，
+Buoyant 第二代服务网格别出心裁的使用 Rust 构建数据平面 linkerd2-proxy ，再使用 Go 开发了控制平面 Conduit。该项目最初以 Conduit 命名，在 Conduit 加入 CNCF 后不久，宣布与原有的 Linkerd 项目合并，被重新命名为 Linkerd 2[^1]，
 
 Linkerd2 的架构如图 8-12 所示，增加了控制平面，但整体简单：
 - 控制层面组件只有 destination（类似 Pilot）、identity（类似 Citadel）和 proxy injector（代理注入器）。
@@ -42,9 +44,9 @@ Linkerd2 的架构如图 8-12 所示，增加了控制平面，但整体简单�
 
 除了头部的 Linkerd2、Istio 玩家外，明显能影响微服务格局的新兴领域，又怎少得了传统的 Proxy 玩家。
 
-先是远古玩家 Nginx 祭出自己新一代的产品 Nginx Service Mesh，理念是简化版的服务网格，F5 Networks 公司顺势推出商业产品 Aspen Mesh，定位企业级服务网格项目。API 网关独角兽 Kong 推出了 Kuma，主打通用型的服务网格，有意思的是 Kong 选择了 Envoy 作为数据平面，而非它自己的核心内核 OpenResty。接着 APISIX 推出了 Amesh...
+先是远古玩家 Nginx 祭出自己新一代的产品 Nginx ServiceMesh，理念是简化版的服务网格，F5 Networks 公司顺势推出商业化产品 Aspen Mesh，定位企业级服务网格项目，API 网关独角兽 Kong 推出了 Kuma，主打通用型的服务网格，有意思的是 Kong 选择了 Envoy 作为数据平面，而非它自己的核心内核 OpenResty，接着 APISIX 推出了 Amesh...。
 
-与 William Morgan 死磕 Istio 策略不同，绝大部分在 Proxy 领域根基深厚玩家，从一开始就没有想过要做一套完整服务网格方案，而是选择实现 xDS 协议或基于 Istio 扩展，兼容 Istio，作为 Istio 的数据平面出现。
+与 William Morgan 死磕 Istio 策略不同，绝大部分在 Proxy 领域根基深厚玩家，从一开始就没有想过做一套完整服务网格方案，而是选择实现 xDS 协议或基于 Istio 扩展，兼容 Istio，作为 Istio 的数据平面出现。
 
 至 2023 年，服务网格经过 8 年的发展，产品生态如图 8-12 所示，虽然有众多的选手，但就社区活跃度而言，Istio 还是牢牢占据了头部地位。
 
@@ -75,7 +77,7 @@ Linkerd2 的架构如图 8-12 所示，增加了控制平面，但整体简单�
 
 总结 Linkerd 和 Istio 在性能和资源成本上的巨大差异主要归结于 Linkerd2-proxy，这个微代理为 Linkerd 的整个数据平面提供动力，所以这个基准测试很大程度上反映了 Linkerd2-proxy 和 Envoy 的性能和资源消耗对比。
 
-虽然 Linkerd2-proxy 性能卓越，但语言过于小众，开源社区的 contributor 数量稀少（只有 53 人，Envoy 则有 1,104 人），未选择实现 xDS 那么它的未来的发展也取决于 Linkerd 发展如何。
+虽然 Linkerd2-proxy 性能卓越，但语言过于小众，导致开源社区的贡献者数量稀少，截止 2024 年 6月，Linkerd2-proxy 的贡献者只有 53 人，Envoy 则有 1,104 人。此外，Linkerd2-proxy 不支持服务网格控制协议 xDS，那么它的未来的发展也只能取决于 Linkerd 发展如何。
 
 [^1]: 参见 https://github.com/linkerd/linkerd2
 [^2]: 参见 https://github.com/kinvolk/service-mesh-benchmark
