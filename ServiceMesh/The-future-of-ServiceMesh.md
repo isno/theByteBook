@@ -56,21 +56,30 @@ Cilium ServiceMesh 的设计思路上其实和 Proxyless 如出一辙，即用�
 
 ## 8.5.3 Ambient Mesh 模式
 
-2022 年 9 月，服务网格代表项目 Istio 发布了一个名为 “Ambient Mesh” 的新型数据平面，宣称用户无需使用 Sidecar 代理，就能将网格数据平面集成到其基础设施中，同时还能保持 Istio 零信任安全、遥测和流量治理等特性。
+2022 年 9 月，服务网格代表项目 Istio 发布了一种全新的数据平面模式 “Ambient Mesh”。使用 Ambient Mesh ，工程师们无需在每个应用内（Pod）部署 Sidecar 代理，同时还能保持 Istio 零信任安全、可观测和流量治理等特性。
 
-为了避免 Sidecar 种种缺陷，Ambient Mesh 不再为任何 Pod 注入 Sidecar，而是将网格功能的实现进一步下沉到 Istio 的自有组件中。Ambient将原本 Envoy 处理的功能分成两个不同的层次：安全覆盖层（ztunnel）和七层处理层（waypoint），如图 1-28 所示。
+Istio 推出 “Ambient Mesh” 的原因还在于，Sidecar 从基本加密到高级 L7 策略实现所有数据平面功能。在实践中，这使得 Sidecar 成为一个 0 和 1 的命题（要么全有，要么全无），即使工作负载对传输安全性要求不高，工程师们仍然需要付出部署和维护 Sidecar 的运营成本。
 
-- ztunnel（Zero Trust Tunnel，零信任隧道）是 Ambient 新引入的组件，以 Daemonset 的方式部署在每个节点上，处于类似 CNI 网格底层 。ztunnel 为网格中的应用通信提供 mTLS、遥测、身份验证和 L4 授权功能，但不执行任何七层协议相关的处理。
-- 七层治理架构中新增了 waypoint 组件，为用户按需启用 L7 功能提供支持，以获得 Istio 的全部功能，例如限速、故障注入、负载均衡、熔断等。
+Ambient Mesh 将原本 Sidecar 的功能拆分为：L7 处理层和安全覆盖层。
 
 :::center
-  ![](../assets/ambient-mesh-arch.png)<br/>
- 图 8-19 Ambient Mesh 模式
+  ![](../assets/ambient-layers.png)<br/>
+ 图 8-19 ambient-layers
 :::
 
-Ambient Mesh 可以被理解为一种无 Sidecar 模式，但笔者认为将其描述为“中心化代理模式”更为准确，这是因为这种模式侧重于通过共享和中心化的代理进行流量管理，以替代位于应用容器旁边的 Sidecar 代理。
+实现安全覆盖层的是 Ambient 新引入的 ztunnel（Zero Trust Tunnel，零信任隧道）组件 ，它以 Daemonset 的方式部署在每个节点上，ztunnel 为网格中的应用通信提供 mTLS、遥测、身份验证和 L4 处理。
 
-从官方的博客来看，Istio 在过去的半年中一直在推进 Ambient Mesh 的开发，并于 2023 年 2 月将其合并到了 Istio 的主代码分支。这也从一定程度上说明 Istio 未来的发展方向之一就是持续的对 Ambient Mesh 改进并探索多种数据平面的可能性。
+实现 L7 处理层的是，Ambient 新引入的 waypoint 组件，它以 Deployment 的形式部署，可以动态伸缩，为应用提供限速、故障注入、负载均衡、熔断等。
+
+L7 处理层和安全覆盖层两者是独立的，如果用户无需 L7 流量管理，那么只要部署 ztunnel 即可。
+
+
+根据官方的博客信息，Istio 在过去的半年中一直在推进 Ambient Mesh 的开发，并于 2023 年 2 月将其合并到了 Istio 的主代码分支。这也从一定程度上说明 Istio 未来的发展方向之一就是持续的对 Ambient Mesh 改进并探索多种数据平面的可能性。
+
+最后，无论是 Sidecarless 还是 Ambient Mesh，它们的设计思路都用中心化的代理，替代位于应用容器旁边的 Sidecar 代理。这在一定程度上解决了传统 Sidecar 带来的资源消耗、网络延迟问题。但坏处是，Proxyless、Sidecar、ambient 模式，使得服务网格越来越抽象、配置越来越难以理解。
+
+
+
 
 
 [^1]: 参见 https://istio.io/latest/zh/blog/2021/proxyless-grpc/
