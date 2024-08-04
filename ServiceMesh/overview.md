@@ -59,14 +59,14 @@ Linkerd2 的架构如图 8-12 所示，增加了控制平面，但整体简单�
 
 两年之后，Linkerd 以及 Istio 都发布了多个更成熟的版本，两者的性能表现如何？笔者引用 William Morgan 文章《Benchmarking Linkerd and Istio》[^3]中的数据，向读者介绍 Linkerd v2.11.1、Istio v1.12.0 两个项目之间延迟与资源消耗的表现。
 
-首先是延迟数据的表现，如图 8-13 所示，中位数（P50）延迟的表现 Linkerd 在 6ms 的基准延迟上增加了 6ms 额外延迟，而 Istio 的额外延迟为 15ms。值得注意的是，P90 以后两者开始出现显著差异，最极端的 Max 数据表现上，Linkerd 在 25ms 的基准延迟上增加了 25 ms 额外延迟，而 Istio 则增大了 5 倍，高达 253 ms 的额外延迟。
+首先是网络延迟的表现，如图 8-13 所示，中位数（P50）延迟的表现 Linkerd 在 6ms 的基准延迟上增加了 6ms 额外延迟，而 Istio 的额外延迟为 15ms。值得注意的是，P90 以后两者开始出现显著差异，最极端的 Max 数据表现上，Linkerd 在 25ms 的基准延迟上增加了 25 ms 额外延迟，而 Istio 则增大了 5 倍，高达 253 ms 的额外延迟。
 
 :::center
   ![](../assets/latency-200rps.png)<br/>
   图 8-13 Linkerd 与 Istio 的延迟对比
 :::
 
-继续看 Istio 与 Linkerd 在数据平面的性能对比，如图 8-14 所示，Linkerd 代理消耗的内存最大 26 Mb，Istio 的 Envoy 代理消耗的内存最大在156.2 Mb，是 Linkerd 的 6倍。同样，Linkerd 的最大代理 CPU 时间记录为 36ms，而 Istio 的代理 CPU 时间记录为 67ms，比前者多出 85%。
+继续看 Istio 与 Linkerd 数据平面在资源消耗方面的表现。如图 8-14 所示，Linkerd 代理消耗的内存最大 26 Mb，Istio 的 Envoy 代理消耗的内存最大 156.2 Mb，是 Linkerd 的 6倍。同样，Linkerd 的最大代理 CPU 时间记录为 36ms，而 Istio 的代理 CPU 时间记录为 67ms，比前者多出 85%。
 
 :::center
   ![](../assets/linkerd-resource.png)<br/>
