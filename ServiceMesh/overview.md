@@ -1,8 +1,8 @@
 # 8.3 服务网格的产品与生态
 
-Buoyant 公司在 2016 年，发布了第一代 ServiceMesh 项目 Linkerd。同一时期，离开 Twitter 的工程师 Matt Klein 加入了 Lyft，并开启了 Envoy 项目。
+Buoyant 公司在 2016 年，发布了第一代服务网格 Linkerd。同一时期，离开 Twitter 的工程师 Matt Klein 加入了 Lyft，并开启了 Envoy 项目。
 
-第一代 ServiceMesh 稳步推进的过程中，世界的另一角落，Google 和 IBM 两个巨头开始握手合作，它们联合 Lyft 启动了 Istio 项目。
+第一代服务网格稳步推进的过程中，世界的另一角落，Google 和 IBM 两个巨头开始握手合作，它们联合 Lyft 启动了 Istio 项目。
 
 ## 8.3.1 Istio 入局
 
