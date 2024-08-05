@@ -1,11 +1,11 @@
 # 作者
 
-码农
+软件工程师，上海
 
 ## 兴趣
 
 - Networking
-- Container、Service Mesh、Cloud、Infra..
+- Cloud、Infra、Container、ServiceMesh...
 
 ## 公众号
 
