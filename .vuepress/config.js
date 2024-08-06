@@ -129,7 +129,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '2.5 SSL 加密原理及优化实践',
+                        text: '2.5 SSL 加密原理与优化实践',
                         link:  '/http/https-summary.md',
                         children: [
                             '/http/https.md',
@@ -258,7 +258,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第六章：分布式共识及算法',
+                text: '第六章：分布式共识与算法',
                 collapsable: true,
                 link: '/consensus/summary.md',
                 sidebarDepth: 2,
@@ -336,7 +336,7 @@ export default defineUserConfig({
                     "/observability/What-is-Observability.md",
                     "/observability/Observability-vs-Monitoring.md",
                     {
-                        text: "9.3 遥测数据分类及处理",
+                        text: "9.3 遥测数据分类与应用",
                         link: '/observability/signals.md',
                         children: [
                             '/observability/metrics.md',
@@ -351,7 +351,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第十章：GitOps 设计理念及落地实践',
+                text: '第十章：GitOps 设计理念与落地实践',
                 link: '/GitOps/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
