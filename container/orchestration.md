@@ -130,7 +130,7 @@ cgroup.sane_behavior                memory.memsw.usage_in_bytes
 | net_prio | 可以为各个 cgroup 中的应用程序动态配置每个网络接口的流量优先级 |
 |perf_event | 允许使用 perf 工具对 crgoups 中的进程和线程监控|
 
-Linux cgroups 的设计简单易用，对于 Docker 等容器系统而言，它们之需要再每个子系统下面为每个容器创建一个控制组（用新建目录的方式），启动容器进程之后，再把进程的 PID 填写到对应控制组的 task 文件即可。
+Linux cgroups 的设计简单易用，对于 Docker 等容器系统而言，它们只需要在每个子系统下面为每个容器创建一个控制组（用新建目录的方式），启动容器进程之后，再把进程的 PID 填写到对应控制组的 task 文件即可。
 
 如下代码所示，创建一个新的控制组（目录为 $hostname），设置进程（PID = 3892）的内存被限制在 1 GB，只允许使用 1/4 CPU 时间。 
 
