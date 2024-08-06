@@ -18,7 +18,7 @@ $ cp /bin/bash new-root/bin
 $ cp /lib64/{ld-linux-x86-64.so*,libc.so*,libdl.so.2,libreadline.so*,libtinfo.so*} new-root/lib64
 $ sudo chroot new-root
 ```
-这个隔离环境用处不大，只有 bash 以及一些内置的函数，但也足以说明它的作用“运行在 new-root 根目录下进程的文件系统与宿主机隔离了”。
+虽然这个隔离环境用处不大，只有 bash 以及一些内置的函数，但也足以说明它的作用：“运行在 new-root 根目录下进程的文件系统与宿主机隔离了”。
 
 ```bash
 bash-4.2# cd bin 
@@ -50,7 +50,7 @@ chroot 最初的目的是为了实现文件的隔离，并非为了容器而设�
 从 Linux 内核 2.6.19 起，陆陆续续添加了 UTS、IPC、PID、Network、User 等命名空间。至 Linux 内核 3.8 版本，Linux 已经完成容器所需的 6 项最基本资源隔离。
 
 :::center
-表 7-1 Linux 目前支持的八类命名空间
+表 7-1 Linux 系统目前支持的八类命名空间
 :::
 
 | 命名空间 | 隔离的资源 | 内核版本|
@@ -65,7 +65,7 @@ chroot 最初的目的是为了实现文件的隔离，并非为了容器而设�
 | Time| 隔离系统时间，Linux 5.6 内核版本起支持进程独立设置系统时间 | 5.6 |
 
 
-我们创建子进程通常使用 fork()，fork 背后调用的是 clone()，如果要为创建的子进程设置各类资源隔离，使用 clone 并指定 flags 参数即可。
+在 Linux 中，为进程设置各类命名空间也非常简单，通过系统调用函数 clone 并指定 flags 的参数即可。
 
 ```c
 int clone(int (*fn)(void *), void *child_stack,
@@ -73,7 +73,7 @@ int clone(int (*fn)(void *), void *child_stack,
          /* pid_t *ptid, struct user_desc *tls, pid_t *ctid */ );
 ```
 
-如下代码所示，通过 clone 创建子进程，新建的子进程将会“看到”一个全新的系统环境。这个环境内，挂载的文件目录、进程 PID、进程通信资源、网络及网络设备、UTS 等，全部与宿主机隔离。
+如下代码所示，通过调用 clone 函数，并指定 flags 参数的方式创建子进程，新建的子进程将会“看到”一个全新的系统环境，进程挂载的文件目录、进程 PID、进程间通信资源、网络及网络设备、UTS 等等资源，全部与宿主机隔离。
 
 ```c
 int flags = CLONE_NEWNS | CLONE_NEWPID | CLONE_NEWIPC | CLONE_NEWNET | CLONE_NEWUTS;
@@ -82,21 +82,15 @@ int pid = clone(main_function, stack_size, flags | SIGCHLD, NULL);
 
 ## 7.2.3 资源全方位限制
 
-进程的资源隔离已经完成，如果再对使用资源进行额度限制，就能对进程的运行环境实现一个进乎完美的隔离。
+进程的资源隔离已经完成，如果再对使用资源进行额度限制，就能对进程的运行环境实现进乎完美的隔离。这就要用 Linux 内核的第二项技术 —— Linux Control Cgroup（Linux 控制组群，简称 cgroups）。
 
-这就要用 Linux 内核的第二项技术： Linux Control Cgroup —— 简称 cgroups。
+cgroups 是 Linux 内核中用来隔离、分配并限制某个进程组使用资源配额的机制，例如用来控制进程 CPU 占用时间、内存的大小、磁盘 I/O 速度等。该项目由 Google 工程师（主要是 Paul Menage 和 Rohit Seth）在 200 年发起，当时取的名字叫“进程容器”（Process container）。不过，在 Linux 内核中，容器（container）这个名词有许多不同的意义，为避免混乱，于是被重命名为 cgroups 。2008 年，cgroups 合并到 Linux 内核 2.6.24 版本 后正式对外发布，这一阶段的 cgroups 被称为第一代 cgroups。
 
-:::tip cgroups（控制群组）
+2016 年 3 月发布的 Linux 内核 4.5 版本中，搭载了由 Facebook 工程师 Tejun Heo 重新编写的“第二代 cgroups”，相较于 v1 版本，Facebook 工程师编写的 cgroups 提供了更加统一的资源控制接口，使得对于 CPU、内存、I/O 等资源的限制更加一致和统一。不过由于兼容性和稳定性原因，目前多数容器运行时默认使用的仍然是第一代 cgroups。
 
-cgroups 是一种内核级别的资源管理机制，可以实现对 Linux 进程或者进程组的资源限制、隔离和统计功能，最早由 Google 工程师 Paul Menage 和 Rohit Seth 于 2006 年发起，在 2008年合并到 2.6.24 版内核后正式对外发布，这一阶段的 cgroups 被称为第一代 cgroups。
+Linux 系统通过文件系统向用户暴露 cgroups 的操作接口，操作接口以文件和目录的方式组织在操作系统的 /sys/fs/cgroup 路径下。
 
-2016 年 3 月发布的 Linux 内核 4.5 版本中，搭载了由 Facebook 工程师 Tejun Heo 重新编写的“第二代 cgroups”，相较于 v1 版本，Facebook 工程师编写的 cgroups 提供了更加统一的资源控制接口，使得对于 CPU、内存、I/O 等资源的限制更加一致和统一。
-
-不过由于兼容性和稳定性原因，目前多数容器运行时默认使用的是第一代 cgroups。
-:::
-
-
-Linux 系统执行 ` ll /sys/fs/cgroup `，可以看到有很多 blkio、cpu 这样的目录。这也叫子系统，子系统显示了当前机器可被 cgroups 限制的资源种类。
+在 Linux 中执行 ` ll /sys/fs/cgroup `命令。
 
 ```bash
 $ ll /sys/fs/cgroup
@@ -104,22 +98,26 @@ $ ll /sys/fs/cgroup
 drwxr-xr-x 2 root root  0 2月  17 2023 blkio
 lrwxrwxrwx 1 root root 11 2月  17 2023 cpu -> cpu,cpuacct
 lrwxrwxrwx 1 root root 11 2月  17 2023 cpuacct -> cpu,cpuacct
+drwxr-xr-x 3 root root  0 2月  17 2023 memory
 ...
 ```
-在对应的子系统内，创建目录，比如。
+可以看到，在 /sys/fs/cgroup 下有很多 blkio、cpu、memory 这样的子目录。子目录在 cgroups 中也被称为控制组群子系统，子系统明确了这类资源可具体被限制的种类。例如，对于内存子系统而言，它有如下配文文件：
 
 ```bash
-$ mkdir /sys/fs/cgroup/memory/test
-$ ls /sys/fs/cgroup/memory/test
+$ ls /sys/fs/cgroup/memory
 cgroup.clone_children               memory.memsw.failcnt
 cgroup.event_control                memory.memsw.limit_in_bytes
+cgroup.procs                        memory.memsw.max_usage_in_bytes
+cgroup.sane_behavior                memory.memsw.usage_in_bytes
 ```
-这样的目录被称为”控制群组“，控制群组创建后会自动生成一系列资源限制文件。目前，Linux 系统一般支持如下控制群组。
+以上各个文件作用不同，memory.kmem.limit_in_bytes 文件限制应用的总内存使用，memory.stat 用于统计内存使用情况，memory.failcnt 文件报告内存达到 memory.limit_in_bytes 设定的限制值的次数等等。
+
+目前，主流的 Linux 支持的控制组群子系统如表 7-2 所示。
 
 :::center
-表 7-2 cgroups 控制群组子系统
+表 7-2 cgroups 控制组群子系统
 :::
-| 控制群组子系统 | 功能|
+| 控制组群子系统 | 功能|
 |:--|:--|
 |blkio | 控制并监控 cgroup 中的任务对块设备(例如磁盘、USB 等) I/O 的存取 |
 | cpu | 控制 cgroups 中进程的 CPU 占用率 |
@@ -132,19 +130,18 @@ cgroup.event_control                memory.memsw.limit_in_bytes
 | net_prio | 可以为各个 cgroup 中的应用程序动态配置每个网络接口的流量优先级 |
 |perf_event | 允许使用 perf 工具对 crgoups 中的进程和线程监控|
 
+Linux cgroups 的设计简单易用，对于 Docker 等容器系统而言，它们之需要再每个子系统下面为每个容器创建一个控制组（用新建目录的方式），启动容器进程之后，再把进程的 PID 填写到对应控制组的 task 文件即可。
 
-控制群组内的资源限制往文件内写入资源管理配置，最后则是将进程 PID 写入 tasks 文件里，然后配置生效。
-
-如下所示，3892 这个进程内存被限制在 1 GB、只允许使用 1/4 CPU 时间。 
+如下代码所示，创建一个新的控制组（目录为 $hostname），设置进程（PID = 3892）的内存被限制在 1 GB，只允许使用 1/4 CPU 时间。 
 
 ```bash
 /sys/fs/cgroup/memory/$hostname/memory.limit_in_bytes=1GB // 容器进程及其子进程使用的总内存不超过 1GB
-/sys/fs/cgroup/cpu/$hostname/cpu.shares=256 // CPU 总 slice 是 1024，因此限制进程最多只能占用 1/4 CPU 时间
+/sys/fs/cgroup/cpu/$hostname/cpu.shares=256 // CPU 时间总数为 1024，设置 256 后，限制进程最多只能占用 1/4 CPU 时间
 
 echo 3892 > /sys/fs/cgroup/cpu/$hostname/tasks 
 ```
 
-至此，相信读者们也一定理解容器是什么，容器不是轻量化的虚拟机，也没有创造出真正的沙盒（容器之间共享系统内核，这也是为什么又出现了 kata、gVisor 等内核隔离的沙盒容器），只是使用了 Namespace、cgroups 等技术进行资源隔离、限制以及拥有独立 rootfs 的特殊进程。
+至此，相信读者们一定理解容器是什么，容器不是轻量化的虚拟机，也没有创造出真正的沙盒（容器之间共享系统内核，这也是为什么又出现了 kata、gVisor 等内核隔离的沙盒容器），只是使用了命名空间、cgroups 等技术进行资源隔离、限制以及拥有独立根目录（rootfs）的特殊进程。
 
 ## 7.2.4 设计容器协作的方式
 
