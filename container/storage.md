@@ -171,7 +171,7 @@ mountOptions:
   - debug
 volumeBindingMode: Immediate
 ```
-在这个过程中，Kubernetes 将根据 StorageClass 定义的模板和 PVC 的请求规格，自动创建一个新的 PV 实例。这个新创建的 PV 将被自动绑定到 PVC 上，使得 PVC 的状态从 Pending 变为 Bound，表示存储资源已经准备就绪。
+StorageClass 资源提交到 Kubernetes 集群后，Kubernetes 将根据 StorageClass 定义的模板和 PVC 的请求规格，自动创建一个新的 PV 实例。新创建的 PV 将被自动绑定到 PVC 上，使得 PVC 的状态从 Pending 变为 Bound，表示存储资源已经准备就绪。
 
 随后，Pod 就能够利用 PVC 声明的存储资源，无论是用于数据持久化还是其他存储需求。
 
@@ -206,7 +206,7 @@ Kubernetes 中的 Volume 创建和管理主要由 VolumeManager（卷管理器�
 4. 如果有一个 Pod 调度到某个节点之后，它所定义的 PV 还没有被挂载，ADController 就会调用 VolumePlugin，把远端的 Volume 挂载到目标节点中的设备上（如：/dev/vdb）。
 
 5. 在节点中，当 VolumManager 发现一个 Pod 调度到自己的节点上并且 Volume 已经完成了挂载，它就会执行 mount 操作，将本地设备（也就是刚才得到的 /dev/vdb）挂载到 Pod 在节点上的一个子目录 `/var/lib/kubelet/pods/[pod uid]/volumes/kubernetes.io~iscsi/[PV name]（以 iscsi 为例）`。
-6. kubelet 通过容器运行时（如 containerd）启动 Pod 的 Containers，用 bind mount 方式将已挂载到本地全局目录的卷映射到容器中。
+6. Kubelet 通过容器运行时（如 containerd）启动 Pod 的容器，并使用 bind mount 方式将已挂载到本地目录的卷映射到容器中。
 
 上述流程的每个步骤都对应 CSI（容器存储接口）提供的标准接口。云存储厂商只需按此标准接口实现自己的云存储插件，即可无缝衔接 Kubernetes 底层编排系统，提供多样化的云存储、备份和快照等能力。
 
