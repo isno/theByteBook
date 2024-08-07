@@ -1,13 +1,13 @@
 # 7.5 容器持久化存储设计
 
 
-镜像作为不可变的基础设施，要求同一份镜像能复制出完全一致的容器运行实例，这就意味着在容器内写入的任何数据是无法真正写入镜像内的！
+镜像作为不可变的基础设施，要求同一份镜像能复制出完全一致的容器运行实例，这就意味着在容器内写入的数据和容器镜像没有任何关联，当容器重启时，写入的任何数据将消失殆尽。
 
-那容器系统怎么解决数据持久化呢？我们由浅入深，先从 Docker 看起。
+那容器系统怎么实现数据持久化存储呢？我们由浅入深，先从 Docker 看起。
 
 ## 7.5.1 Docker 的存储设计
 
-Docker 通过挂载宿主机目录到 Docker 容器内部的方式实现持久化存储。目前，Docker 支持 3 种挂载：bind mount、volume、tmpfs mount。
+Docker 通过挂载宿主机目录到 Docker 容器内部的方式实现持久化存储。目前，Docker 支持 3 种挂载：bind mount、volume 和 tmpfs mount。
 
 :::center
   ![](../assets/types-of-mounts-volume.webp)<br/>
@@ -18,21 +18,23 @@ bind mount 是 Docker 最早支持的挂载类型，只要用过 Docker，肯定
 ``` bash
 $ docker run -v /usr/share/nginx/html:/data nginx:lastest
 ```
-上面的命令实际上就是 MS_BIND 类型的 mount 系统调用。
+上述操作实际上就是利用 MS_BIND 类型的 mount 系统调用。
 
 ```c
 // 将宿主机中的 /usr/share/nginx/html 挂载到 rootfs 指定的挂载点 /data 上
 mount("/usr/share/nginx/html","rootfs/data", "none", MS_BIND, nulll)
 ```
-这种挂载的方式显然有明显的缺陷：
-- **通过映射的方式挂载宿主机中的一个绝对路径，这就跟操作系统强相关**。这意味着 bind mount 的方式无法写在 dockerfile 中，不然镜像在其他环境可能无法启动。其次，宿主机中被挂载的目录明面上看不出和 Docker 的关系，操作系统内其他进程有可能误写，存在安全隐患。
-- 容器被广泛使用后，**容器存储的需求绝对不是简单的映射关系就能搞定**，存储位置不限于宿主机（有可能是网络存储）、存储的介质不限于磁盘（可能是 tmpfs）、存储的类型也不仅仅是文件系统（还有可能是块设备或者对象存储）。如果是**网络存储完全没必要先挂载到操作系统，再挂载到容器某个目录，Docker 完全可以实现类似 iSCSI 协议、NFS 协议越过操作系统，对接这些网络存储**。
+通过 mount 命令挂载宿主机目录实现的数据持久化存储，显然存在明显的缺陷：
+- **容器内的目录通过 mount 挂载到宿主机中的一个绝对路径，这就跟操作系统强相关**。这也意味着 bind mount 的方式无法写在 dockerfile 中，不然镜像在其他环境可能无法启动。其次，宿主机中被挂载的目录明面上看不出和 Docker 的关系，操作系统内其他进程有可能误写，存在安全隐患。
+- 容器被广泛使用后，**容器存储的需求绝对不是挂载到某个目录就能搞定**。存储位置不限于宿主机（有可能是网络存储）、存储的介质不限于磁盘（可能是 tmpfs）、存储的类型也不仅仅是文件系统（还有可能是块设备或者对象存储）。
+
+此外，如果是网络存储那也没必要先挂载到操作系统，再挂载到容器内某个目录。Docker 完全可以实现类似 iSCSI 存储协议、NFS 存储协议越过操作系统，直接对接网络存储。
 
 为此，Docker 从 1.7 版本起提供全新的挂载类型 Volume（存储卷）：
 - 它首先在宿主机开辟了一块属于 Docker 空间（Linux 中该目录是 /var/lib/docker/volumes/），这样就解决了 bind mount 映射宿主机绝对路径的问题；
 - 考虑存储的类型众多，仅靠 Docker 自己实现并不现实，Docker 1.10 版本中又增加了对 Volume Driver 的支持，借助社区力量丰富 Docker 的存储驱动种类。
 
-经过一系列的设计，Docker 用户只要通过 docker plugin install 安装额外的第三方卷驱动，就能使用想要的网络存储或者各类云厂商提供的存储。
+经过一系列的设计，现在 Docker 用户只要通过 docker plugin install 安装额外的第三方卷驱动，就能使用想要的网络存储或者各类云厂商提供的存储。
 
 ## 7.5.2 Kubernetes 的存储设计
 
@@ -41,26 +43,24 @@ mount("/usr/share/nginx/html","rootfs/data", "none", MS_BIND, nulll)
 - 也开辟了属于 Kubernetes 的空间（该目录是 /var/lib/kubelet/pods/[pod uid]/volumes）；
 - 也设计了存储驱动（Volume Plugin）扩展支持出众多的存储类型。
 
-不同的是，作为一个工业级的容器编排系统，Kubernetes Volume 的实现要比 Docker 复杂那么一点以及类型多出一丢丢。
+不同的是，作为一个工业级的容器编排系统，Kubernetes Volume 要比 Docker 复杂那么一点以及类型多出一丢丢。
 
 :::center
   ![](../assets/volume-list.png)<br/>
    图 7-25 Kubernetes 中的 Volume 分类
 :::
 
-乍一看，这么多 Volume 类型难以下手。然而，总结起来就 3 类：
+乍一看，这么多 Volume 类型实在难以下手。然而，总结起来就 3 类：
 
-- 普通的 Volume。
-- 持久化的 Volume。
-- 特殊的 Volume（譬如 Secret、Configmap，将 Kubernetes 集群的配置信息以 Volume 方式挂载到 Pod 中，并实现 POSIX 接口来访问这些对象中的数据。严格讲此类 Volume 并不属于存储，所以本节就不再展开讨论）。
+- 普通的 Volume；
+- 持久化的 Volume；
+- 特殊的 Volume（例如 Secret、Configmap，它们将 Kubernetes 集群的配置信息以 Volume 方式挂载到 Pod 中，并实现 POSIX 接口，使容器内的应用像读写本地文件一样读写各类配置信息。严格讲此类 Volume 并不属于存储，笔者就不再展开讨论了）。
 
 ## 7.5.3 普通的 Volume
 
-**设计普通 Volume 的目标并不是为了持久地保存数据，而是为同一个 Pod 中多个容器提供可共享的存储资源**。
+**设计普通 Volume 的目标并不是为了持久保存数据，而是使同一个 Pod 内多个容器可共享某些数据**。普通类型的 Volume 代表有：
 
-普通类型的 Volume 代表有：
-
-- EmptyDir，常见的应用方式是一个 Sidecar 容器通过 EmtpyDir 来读取另外一个容器的日志文件。
+- 第一种是 EmptyDir，常见的应用方式是 Sidecar 容器通过 EmtpyDir 来读取另外一个容器的日志文件。
 - 另外一种是 HostPath，和 EmptyDir 的区别是 HostPath 提供了一种向在同一节点所有容器共享本地存储的方法。使用 Loki 日志系统，第一步要 Pod 挂载相同的宿主机 HostPath Volume，这样才能读取到宿主机内所有 Pod 写入的日志。
 
 如图 7-26 所示，EmptyDir 类型的 Volume 被包含在 Pod 内，生命周期与挂载它的 Pod 是一致的，当 Pod 因某种原因被销毁时，这类 Volume 也会随之删除。而 HostPath 如果 Pod 被调度到另外一台节点，也相当于存储被删除。 

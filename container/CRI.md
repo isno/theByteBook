@@ -32,7 +32,7 @@ CRI 实现上是一套通过 Protocol Buffer 定义的 API，从图 7-16 可以�
   图 7-16 CRI 是通过 gRPC 实现的 API
 :::
 
-## 7.4.3 Kubernetes 专用容器运行时 CRI-O
+## 7.4.3 Kubernetes 专用容器运行时
 
 2017 年，由 Google、RedHat、Intel、SUSE、IBM 联合发起的 CRI-O（Container Runtime Interface Orchestrator）项目发布了首个正式版本。
 
@@ -80,7 +80,7 @@ Docker 并没有“坐以待毙”，开始主动革新。回顾本书第一章 
   图 7-20 Containerd 与 Docker 的性能对比
 :::
 
-## 7.4.5 安全容器运行时 Kata Containers
+## 7.4.5 安全容器运行时
 
 尽管容器有许多技术优势，然而以 runc 为代表基于共享内核技术进行的“软隔离”，还是存在一定的风险性。如果某个恶意程序利用系统缺陷从容器中逃逸，就会对主机造成严重威胁，尤其是公有云环境，安全威胁很可能会波及到其他用户的数据和业务。
 
