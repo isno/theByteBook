@@ -36,7 +36,7 @@ mount("/usr/share/nginx/html","rootfs/data", "none", MS_BIND, nulll)
 
 经过一系列的设计，现在 Docker 用户只要通过 docker plugin install 安装额外的第三方卷驱动，就能使用想要的网络存储或者各类云厂商提供的存储。
 
-## 7.5.2 Kubernetes 的存储设计
+## 7.5.2 Kubernetes 的存储卷：Volume
 
 我们从 Docker 返回到 Kubernetes 中，同 Docker 类似的是：
 - Kubernetes 也抽象出了 Volume 来解决持久化存储；
@@ -139,7 +139,7 @@ spec:
       claimName: pv-claim
 ```
 
-## 7.5.5 PV 的使用：从静态到动态
+## 7.5.5 PV 的使用：从手动到自动
 
 在 Kubernetes 中，如果系统中没有合适的 PV 满足 PVC 的需求，PVC 将一直处于 Pending 状态，直到系统里产生了一个合适的 PV，这期间 Pod 将无法正常启动。
 
@@ -235,7 +235,7 @@ Kubernetes 中的 Volume 创建和管理主要由 VolumeManager（卷管理器�
 
 这种定义文件分配、实现方式、存储信息和提供功能的标准被称为文件系统（File System）。常见的文件系统有 FAT32、NTFS、exFAT、ext2/3/4、XFS、BTRFS 等等。
 
-在网络存储中，底层数据存储在另一台服务器上，不同客户端以类似文件系统的方式访问该服务器上的文件，这样的系统称为网络文件系统。常见的网络文件系统有 Windows 网络的 CIFS（Common Internet File System，也称 SMB）和类 Unix 系统的 NFS（Network File System）。
+如果将文件存储在网络服务器中，使用客户端以类似文件系统的方式访问该服务器上的文件，这样的系统称为网络文件系统。常见的网络文件系统有 Windows 网络的 CIFS（Common Internet File System，也称 SMB）和类 Unix 系统的 NFS（Network File System）。
 
 ### 3. 对象存储
 
