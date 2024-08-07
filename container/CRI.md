@@ -84,7 +84,9 @@ Docker 并没有“坐以待毙”，开始主动革新。回顾本书第一章 
 
 尽管容器有许多技术优势，然而以 runc 为代表基于共享内核技术进行的“软隔离”，还是存在一定的风险性。如果某个恶意程序利用系统缺陷从容器中逃逸，就会对主机造成严重威胁，尤其是公有云环境，安全威胁很可能会波及到其他用户的数据和业务。
 
-出于对传统容器安全性的担忧，业界开始基于传统虚拟化技术，开发强安全性容器项目。其中的代表项目有 Kata Containers、gVisor 等。Kata Containers 本质是通过虚拟化的硬件模拟出一台“微型虚拟机”，然后在这台虚拟机中安装了一个精简的 Linux 内核来实现强隔离。Kata Containers 的虚拟机中有一个特殊的 init 进程负责虚拟机内的进程，虚拟机内的进程天然就共享各个命名空间，也就是说 Kata Containers 天生就带有 Pod 的概念。 
+出于对传统容器安全性的担忧，Intel 在 2015 年启动了它们以虚拟机为基础的容器技术：Clear　Container。Clear Container 依赖 Intel VT 的硬件虚拟化技术以及高度定制的 QEMU-KVM（qemu-lite）来提供高性能的基于虚拟机的容器。在 2017 年，Clear container 项目加入了 Hyper RunV，这是一个基于 hypervisor 的 OCI 运行时。最终，以上项目合并，成了现在耳熟能详的 Kata Containers 项目。
+
+Kata Containers 本质是通过虚拟化的硬件模拟出一台“微型虚拟机”，然后在这台虚拟机中安装了一个精简的 Linux 内核来实现强隔离。Kata Containers 的虚拟机中有一个特殊的 init 进程负责虚拟机内的进程，虚拟机内的进程天然就共享各个命名空间，也就是说 Kata Containers 天生就带有 Pod 的概念。 
 
 在安全性优势的基础上，Kata Containers 也在虚拟化上也追求极致的轻薄，从而让整体资源消耗和弹性能力接近 runc 容器方案，以此达到 Secure as VM、Fast as Container 的技术目标。
 
@@ -93,7 +95,7 @@ Docker 并没有“坐以待毙”，开始主动革新。回顾本书第一章 
   图 7-21 Kata Containers 与传统容器技术的对比 [图片来源](https://katacontainers.io/learn/)
 :::
 
-此外，为了跟上层编排框架对接，并缩短容器的调用链，Kata-Containers 运行符合 OCI 规范，同时兼容 Kubernetes CRI，它们的集成关系如图 7-22 所示。
+此外，为了跟上层编排框架对接，融入容器生态，Kata-Containers 运行符合 OCI 规范，同时兼容 Kubernetes CRI，它们的集成关系如图 7-22 所示。
 
 :::center
   ![](../assets/kata-container.jpg)<br/>
