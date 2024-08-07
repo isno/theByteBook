@@ -1,20 +1,20 @@
 # 7.5 容器持久化存储设计
 
 
-镜像作为不可变的基础设施，要求同一份镜像能复制出完全一致的镜像实例，这就意味着在容器内写入的任何数据是无法真正写入镜像内的！
+镜像作为不可变的基础设施，要求同一份镜像能复制出完全一致的容器运行实例，这就意味着在容器内写入的任何数据是无法真正写入镜像内的！
 
 那容器系统怎么解决数据持久化呢？我们由浅入深，先从 Docker 看起。
 
 ## 7.5.1 Docker 的存储设计
 
-Docker 通过挂载宿主机目录到 Docker 内部的方式，实现持久化存储。目前，Docker 支持 3 种挂载：bind mount、volume、tmpfs mount。
+Docker 通过挂载宿主机目录到 Docker 容器内部的方式实现持久化存储。目前，Docker 支持 3 种挂载：bind mount、volume、tmpfs mount。
 
 :::center
   ![](../assets/types-of-mounts-volume.webp)<br/>
   图 7-24 Docker 中持久存储的挂载种类
 :::
 
-bind mount 是 Docker 最早支持的挂载类型，只要用过 Docker，肯定熟悉下面挂载方式。
+bind mount 是 Docker 最早支持的挂载类型，只要用过 Docker，肯定熟悉下面挂载方式。该命令启动一个 Nginx 容器，并将宿主机的 /usr/share/nginx/html 目录，挂载到容器内 /data 目录。
 ``` bash
 $ docker run -v /usr/share/nginx/html:/data nginx:lastest
 ```
