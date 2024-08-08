@@ -43,48 +43,48 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 
 根据上面的路由规则，Container-1 的发出的数据包交由 flannel.1 接口处理，也就是说数据包进入了隧道的“起始端点”。
 
-所以，当“起始端点”收到“原始的 IP 包”之后，就得想办法构造出 VXLAN 内层以太网帧，然后发给隧道网络“目的地端点”，也就是 Node2 中的 VTEP 设备。
+所以，当“起始端点”收到“原始的 IP 包”之后，就得想办法构造出 VXLAN 网络内层以太网帧，然后发给隧道网络“目的地端点”，也就是 Node2 中的 VTEP 设备。这样，才能构建出虚拟的二层网络。
 
-构造内层以太网帧，需要解决的问题是 flannel.1 得知道源 MAC 地址，目地 MAC 地址。源 MAC 地址很简单，因为数据包是从 flannel.1 设备发出，源 MAC 地址就是 flannel.1 设备的 MAC 地址。那目的地 MAC 地址呢？也就是 Node2 中 flannel.1 设备的 MAC 地址怎么获取？
+现在，需要解决的问题是 Node1 节点中的 flannel.1 设备得知道 Node2 中 flannel.1 设备的 IP 地址和 MAC 地址。此时，我们已经根据 Node1 的路由表知道了 VTEP 设备的 IP 地址（也就是 100.10.2.0）。那 flannel.1 设备的 MAC 地址从哪里获取？
 
-实际上，这个地址也已经由 fanneld 自动添加到 Node1 ARP 表中了，在 Node1 中通过 ip 命令查看。
+实际上，Node2 中 VTEP 设备的 MAC 地址也已经由 fanneld 自动添加到 Node1 ARP 表中了，在 Node1 中通过 ip 命令查看。
 ```bash
 [root@Node1 ~]# ip n | grep flannel.1
 10.244.1.0 dev flannel.1 lladdr ba:74:f9:db:69:c1 PERMANENT # PERMANENT 表示永不过期
 ```
-上面记录的意思是，IP 地址 10.10.1.0（Node2 flannel.1 设备的 IP）对应的 MAC 地址是 ba:74:f9:db:69:c1。
+上面记录的意思是，IP 地址 10.10.1.0（也就是 Node2 flannel.1 设备的 IP）对应的 MAC 地址是 ba:74:f9:db:69:c1。
 
 :::tip 注意
 这里 ARP 表记录并不是通过 ARP 协议学习得到的，而是 flanneld 预先为每个节点设置好的，没有过期时间。
 :::
 
-现在，隧道网络的内层数据帧已经封装好了。接下来 Linux 内核还要把内层数据帧作为 Payload 封装到宿主机网络中的数据帧中。然后通过搭便车方式，在宿主机 eth0 网卡中传输。
+现在，隧道网络的内层数据帧已经封装好了。接下来 Linux 内核还要把内层数据帧再封装到宿主机网络中的数据帧中。然后通过搭便车方式，通过宿主机 eth0 网卡发送出去。
 
 为了实现“搭便车”的机制，Linux 内核会在内层数据帧前面塞一个特殊的 VXLAN Header，表示“乘客”实际是 Linux 内核中 VXLAN 模块要使用的数据。
 
-VXLAN header 里面有个重要的标志 VNI，这是 VETP 设备判断是否属于自己要处理的依据。Flannel VXLAN 工作模式，所有节点中的 VNI 默认为 1，这也是 VTEP 设备为什么叫 flannel.1 的原因。
+VXLAN header 里面有个重要的标志 VNI，这是 VETP 设备判断是否属于自己要处理的依据。Flannel VXLAN 工作模式中，所有节点中的 VNI 默认为 1，这也是 VTEP 设备为什么叫 flannel.1 的原因。
 
-接着，Linux 内核接续构造外层 VXLAN UDP 报文，要进行 UDP 封装，就要知道四元组信息：源IP、源端口、目的IP、目的端口。
+接着，Linux 内核会把上面的二层数据帧封装进一个 UDP 报文。要进行 UDP 报文封装，就要知道四元组信息：源IP、源端口、目的IP、目的端口。
 - Linux 内核中默认为 VXLAN 分配的 UDP 监听端口为 8472。
-- 目的 IP 则通过 fdb 转发表获得。当然，fdb 表中的数据也是由 Flannel 提前设置好的。
+- 目的 IP 则通过 fdb（forwarding database，网桥设备转发表）转发表获得。当然，fdb表中的数据也是由 Flannel 提前设置好的。
 
-使用 bridge fdb show 查看 fdb 表的记录。
+使用 bridge fdb show 命令查看 fdb 表的记录。
 
 ```bash
 [root@Node1 ~]# bridge fdb show | grep flannel.1
 ba:74:f9:db:69:c1 dev flannel.1 dst 192.168.50.3 self permanent
 ```
-上面记录的意思是，目的 MAC 地址为 92:8d:c4:85:16:ad 的数据帧封装后，应该发往哪个目的IP。根据上面的记录可以看出，UDP 包的目的 IP 应该为 192.168.2.103，也就是 Node2 宿主机 IP。
+上面记录的意思是，目的 MAC 地址为 92:8d:c4:85:16:ad（ Node2 VTEP 设备的 MAC 地址）的数据帧封装后，应该发往哪个目的IP（宿主机网络中节点的 IP）。根据上面的记录可以看出，UDP 包的目的 IP 应该为 192.168.2.103，也就是 Node2 节点的 IP。
 
-至此，Linux 内核已经得到了所有完成 VXLAN 封包所需的信息，然后调用 UDP 协议的发包函数进行发包。后面的过程和本机的 UDP 程序发包没什么区别了：Linux 内核对 UDP 包封装到宿主机的二层数据帧内，然后到达 Node2。
+至此，VTEP 已经得到了封包所需的所有信息，然后调用 UDP 协议的发包函数通过宿主机网络发送出去。后面的过程和本机的 UDP 程序发包没什么区别了。
 
-继续，再看看 Node2 是如何处理这个数据包的，当数据包到达 Node2 的 8472 端口后：
-- VXLAN 模块比较 VXLAN Header 中的 VNI 和本机的 VXLAN 网络的 VNI 是否一致。
+继续，在接着看 Node2 是如何处理这个数据包的，当数据包到达 Node2 的 8472 端口后：
+- 内核中的 VXLAN 模块比较 VXLAN Header 中的 VNI 和本机的 VXLAN 网络的 VNI 是否一致。
 - 再比较内层数据帧中目的 MAC 地址与本机的 flannel.1 设备的 MAC 地址是否一致。
 
-两个判断匹配后，则去掉数据包的 VXLAN Header 和 Inner Ethernet Header，得到原始的 container-1 发出的数据包。
+两个判断匹配后，则去掉数据包的 VXLAN Header 和内层帧 Header，得到原始的 container-1 发出的数据包。
 
-然后，根据 Node2 节中的路由规则（由 Flannel 维护）。
+然后，根据 Node2 节中的路由规则（由 Flannel 维护），目的地属于 100.10.2.0/24 网段的数据包交由 cni0 设备处理。
 
 ```bash
 [root@peng03 ~]# route -n
@@ -93,7 +93,8 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 ...
 100.10.2.0      0.0.0.0         255.255.255.0   U     0      0        0 cni0
 ```
-上面的路由规则中，目的地属于 100.10.2.0 /24 网段的数据包交由 cni0 设备处理。后面，就是我们在本书第三章《Linux 网络虚拟化》的内容了。
+
+后面，就是我们在本书第三章《Linux 网络虚拟化》的内容了。
 
 ## 7.6.2 三层路由模式
 
