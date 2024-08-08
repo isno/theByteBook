@@ -56,7 +56,7 @@ KEDA 由以下组件组成：
   图 7-35 KADA 架构图
 :::
 
-如下，一个 Kafka 伸缩配置。minReplicaCount 和 maxReplicaCount 分别定义了要伸缩的对象的最小和最大副本数量，minReplicaCount 可以为 0 即缩容到没有副本，比方说 Kafka 队列一直没有新消息就可以完全缩容，有新消息进来的时候 keda 又会自动扩容。
+以下是一个 Kafka 的伸缩配置示例。minReplicaCount 和 maxReplicaCount 分别定义了伸缩对象的最小和最大副本数量。其中，minReplicaCount 可以设置为 0，这意味着在没有新消息的情况下，Kafka 的副本数量可以缩减至 0，实现完全缩容。当 Kafka 队列中有新消息到达时，KEDA 会自动触发扩容操作，确保系统能够及时处理消息负载。
 
 ```yaml
 apiVersion: keda.sh/v1alpha1
@@ -84,12 +84,11 @@ spec:
 
 ## 7.8.4 集群动态扩展：Cluster AutoScaler
 
-随着业务的发展，应用会逐渐增多，每个应用使用的资源也会增加，总会出现集群资源不足的情况。为了动态应对这一状况，还应该实现能够根据整个集群的资源使用情况增/减节点。
+随着业务的发展，应用数量和资源需求都会逐渐增加，最终可能导致集群资源不足。那么动态伸缩的范畴应该扩展到整个集群范围，也就是说能根据资源利用率情况自动增/减节点。
 
-Cluster AutoScaler 是一个自动扩展和收缩 Kubernetes 集群 Node 的扩展：
-- 当集群容量不足时，它会自动去 Cloud Provider（支持绝大部分的云服务商 GCE、GKE、Azure、AKS、AWS 等等）创建新的 Node；
-- 当 Node 长时间资源利用率很低时（低于 50%），会自动把该节点 Pod 调度到其他 Node 上面，然后删除节点以节省开支。
-
+在 Kubernetes 中，Cluster AutoScaler 是专门用于自动扩展和缩减集群节点的组件。它的主要功能如下：
+- 当集群容量不足时，Cluster AutoScaler 会自动向云服务提供商（如 GCE、GKE、Azure、AKS、AWS 等）请求创建新的节点，从而扩展集群容量，确保应用能够获得所需的资源。
+- 当某个节点的资源利用率长期处于较低水平（如低于 50%），Cluster AutoScaler 会自动将该节点上的 Pod 重新调度到其他节点，然后删除低效节点，将其资源归还给云服务商，从而节省运营成本。
 
 :::center
   ![](../assets/Cluster-AutoScaler.png)<br/>
