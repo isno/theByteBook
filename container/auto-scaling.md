@@ -1,4 +1,4 @@
-# 7.7.3 资源动态调整
+# 7.8 资源动态调整
 
 应用的实际流量会不断变化，因此使用率也是不断变化的，应该有一种自动调整应用的资源的策略，譬如一个在线电子商城：
 - 促销的时候访问量会增加，应该自动增加服务运算能力来应对；
@@ -6,7 +6,7 @@
 
 运算能力的增减有两种方式：增减 Pod 的数量以及改变单个 Pod 的资源，这两种方式分别对应了 Kubernetes 的 HPA 和 VPA 组件。
 
-## 1. 横向 Pod 自动扩展：Horizontal Pod AutoScaling
+## 7.8.1 横向 Pod 自动扩展：Horizontal Pod AutoScaling
 
 横向 Pod 自动扩展的思路是这样的：kubernetes 会运行一个 controller，周期性地监听 Pod 的资源使用情况：
 - 当高于设定的阈值时，会自动增加 pod 的数量；
@@ -23,7 +23,7 @@
 
 目前官方的监控数据来源是 metrics server 项目，可以配置的资源 CPU、自定义的监控数据（比如 prometheus） 等。
 
-## 2. 垂直 Pod 自动扩展：Vertical Pod AutoScaling
+## 7.8.2 垂直 Pod 自动扩展：Vertical Pod AutoScaling
 
 和 HPA 的思路相似，只不过 VPA 调整的是单个 Pod 的 request 值（包括 CPU 和 memory）。VPA 包括三个组件：
 
@@ -33,7 +33,7 @@
 
 可以看到，这三个组件的功能是互相补充的，共同实现了动态修改 Pod 请求资源的功能。
 
-## 3. 基于事件驱动的 HPA 增强
+## 7.8.3 基于事件驱动的 HPA 增强
 
 HPA 虽然能基于外部指标实现弹性伸缩，但缺点是仅与 Prometheus 指标关联。
 
@@ -82,7 +82,7 @@ spec:
         offsetResetPolicy: latest
 ```
 
-## 4. 集群动态扩展：Cluster AutoScaler
+## 7.8.4 集群动态扩展：Cluster AutoScaler
 
 随着业务的发展，应用会逐渐增多，每个应用使用的资源也会增加，总会出现集群资源不足的情况。为了动态应对这一状况，还应该实现能够根据整个集群的资源使用情况增/减节点。
 
