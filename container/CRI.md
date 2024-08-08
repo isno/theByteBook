@@ -88,8 +88,6 @@ Docker 并没有“坐以待毙”，开始主动革新。回顾本书第一章 
 
 Kata Containers 本质是通过虚拟化的硬件模拟出一台“微型虚拟机”，然后在这台虚拟机中安装了一个精简的 Linux 内核来实现强隔离。Kata Containers 的虚拟机中有一个特殊的 init 进程负责虚拟机内的进程，虚拟机内的进程天然就共享各个命名空间，也就是说 Kata Containers 天生就带有 Pod 的概念。 
 
-在安全性优势的基础上，Kata Containers 也在虚拟化上也追求极致的轻薄，从而让整体资源消耗和弹性能力接近 runc 容器方案，以此达到 Secure as VM、Fast as Container 的技术目标。
-
 :::center
   ![](../assets/kata-container.jpeg)<br/>
   图 7-21 Kata Containers 与传统容器技术的对比 [图片来源](https://katacontainers.io/learn/)
