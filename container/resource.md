@@ -12,7 +12,7 @@
 ```
 注意 Mebibyte 和 Megabyte 的区分，123 Mi = `123*1024*1024 B` 、123 M = `1*1000*1000 B`，显然使用带小 i 的更准确。
 
-## 2. Extended Resource 与 Device Plugin 
+## 2. 资源扩展与设备插件
 
 Kubernetes 在 Pod 中并没有专门为 GPU 设置一个专门的资源类型，而是使用了一个特殊字段（Extended Resource），来负责传递 GPU 资源。
 
@@ -79,25 +79,23 @@ Pod 只能过"nvidia.com/gpu:2" 这种简单的“计数形式”，来申请 2 
 
 :::
 
-## 3. 节点资源分配控制
+## 3. 节点资源管理
 
-由于每台 Node 上会运行 kubelet/docker/containerd 等 Kubernetes 相关基础服务，Kubernetes 资源管理和调度时，需要把这些基础服务的资源使用量预留出来。
+由于每台节点上都运行着 kubelet、docker 或 containerd 等 Kubernetes 基础服务，因此在进行资源管理和调度时，需要预留这些服务所消耗的资源。预留之后的剩余资源才是 Pod 真正可以使用的。此外，考虑到驱逐机制的存在，kubelet 会确保节点上的资源使用率不会达到 100%，因此 Pod 实际可用的资源会再少一些。
 
-预留的资源通过下面的参数控制：
+节点预留资源通过下面两个参数控制：
 
-- --kube-reserved=[cpu=100m][,][memory=100Mi][,][ephemeral-storage=1Gi]：控制预留给 kubernetes 集群组件的 CPU、memory 和存储资源。
-- --system-reserved=[cpu=100mi][,][memory=100Mi][,][ephemeral-storage=1Gi]：预留给系统的 CPU、memory 和存储资源。
+- --kube-reserved=[cpu=100m][,][memory=100Mi][,][ephemeral-storage=1Gi]：预留给 kubernetes 组件 CPU、内存和存储资源。
+- --system-reserved=[cpu=100mi][,][memory=100Mi][,][ephemeral-storage=1Gi]：预留给系统的 CPU、内存和存储资源。
 
-预留之外的资源才是 Pod 真正能使用的，考虑到驱逐机制，kubelet 会保证节点上的资源使用率不会真正到 100%，因此 Pod 的实际可使用资源会稍微再少一点。
-
-最终，一个 Node 节点的资源逻辑分配如下图所示。
+最终，一个节点资源分配如图 7-33 所示。节点可分配资源（Node Allocatable Resource）= 节点所有资源（Node Capacity） -（ Kubernetes 组件预留资源（Kube Reserved）-系统预留资源（System Reserved）- 为驱逐预留的资源（Eviction-Threshold）。
 
 :::center
   ![](../assets/k8s-resource.svg)<br/>
   图 7-33 Node 资源逻辑分配图
 :::
 
-Node Allocatable Resource（节点的可用资源 ）= Node Capacity - Kube Reserved - System Reserved - Eviction-Threshold。
+
 
 
 
