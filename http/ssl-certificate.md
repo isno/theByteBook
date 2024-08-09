@@ -4,11 +4,12 @@ SSL 层中的证书验证也是一个比较耗时的环节：服务器需要把�
 
 ### 1. 证书校验优化
 
-客户端在验证证书过程中，需要判断当前证书状态是否被撤销/过期等，需要再去访问 CA 下载 CRL（Certificate Revocation List，证书撤销列表）[^1]或者 OCSP（Online Certificate Status Protocol，在线证书状态协议）数据[^2]，这又会产生 DNS 查询、建立连接、收发数据等一系列网络通信，增加多个 RTT。
+在验证证书时，客户端需要检查证书状态是否被撤销或过期，通常会访问 CA 下载 CRL（证书撤销列表）或查询 OCSP（在线证书状态协议）。这些操作涉及 DNS 查询、建立连接和收发数据，增加了多个 RTT。
 
-改进的方式是在服务端开启 OCSP Stapling，OCSP Stapling 原本需要客户端实时发起的 OCSP 请求转嫁给服务端，服务端通过预先访问 CA 获取 OCSP 响应，然后在握手时随着证书一起发给客户端，免去了客户端连接 CA 服务器查询的环节，解决了 OCSP 的隐私和性能问题。
+改进方法是启用服务端的 OCSP Stapling 功能。OCSP Stapling 将原本由客户端发起的 OCSP 查询转移到服务端进行。服务端预先从 CA 获取 OCSP 响应，并在握手时将其与证书一并发送给客户端，从而免除了客户端连接 CA 服务器的步骤。
 
-1. 在 Nginx 中配置 OCSP Stapling 服务。
+以 Nginx 配置 OCSP Stapling 功能为例，配置如下所示。
+
 ```nginx configuration
 server {
     listen 443 ssl;
@@ -27,52 +28,71 @@ server {
 }
 ```
 
-2. 检查服务端是否已开启 OCSP Stapling。
+配置完成之后，使用 openssl 测试服务端是否已开启 OCSP Stapling 功能。
 
 ```bash 
 $ openssl s_client -connect thebyte.com.cn:443 -servername thebyte.com.cn -status -tlsextdebug < /dev/null 2>&1 | grep "OCSP" 
-```
-若结果中存在“successful”关键字，则表示已开启 OCSP Stapling 服务。
-```plain
 OCSP response:
 OCSP Response Data:
     OCSP Response Status: successful (0x0)
     Response Type: Basic OCSP Response
 ```
+若结果中存在“successful”关键字，则表示已开启 OCSP Stapling 服务。
 
-### 2. 证书中非对称算法升级
+### 2. 配置 ECC 证书
 
-HTTPS 常用的密钥交换算法有两种：
-- 分别是 RSA 
-- ECDHE（Elliptic Curve Diffie-Hellman Ephemeral，椭圆曲线 Diffie-Hellman 密钥交换）算法。
+在 TLS 协议中，应用数据都是经过对称加密后传输的，传输中所使用的对称密钥，则是在握手阶段通过非对称密钥交换而来。常见的 AES-GCM、ChaCha20-Poly1305 都是对称加密算法。
 
-使用 ECDHE 算法的证书一般被称之为 ECC 证书，相应的 RSA 算法的证书就是 RSA 证书。
+目前最常用的密钥交换算法有 RSA 和 ECDHE（椭圆曲线 Diffie-Hellman 密钥交换）。RSA 历史悠久，兼容性好，但不支持 PFS （Perfect Forward Secrecy，完美前向保密。保证即使私钥泄露，也无法破解泄露之前通信内容）。而 ECDHE 是使用了 ECC（椭圆曲线）的 DH（Diffie-Hellman）算法，计算速度快，支持 PFS。
 
-RSA 算法在密钥交换过程中需要进行大数的模幂运算，相对耗时。而 ECDHE 算法利用椭圆曲线密码学，可以用更小的密钥尺寸实现相同的安全级别。如图 2-19 所示，256 位 ECC Key 在安全性上等同于 3072 位 RSA Key。
+内置 ECDSA 公钥的证书一般被称之为 ECC 证书，内置 RSA 公钥的证书就是 RSA 证书。
 
-:::center
-  ![](../assets/ecc.png)<br/>
- 图 2-19 ECC vs RSA
-:::
+RSA 证书可以用于 RSA 密钥交换（RSA 非对称加密）或 ECDHE 密钥交换（RSA 非对称签名）；而 ECC 证书只能用于 ECDHE 密钥交换（ECDSA 非对称签名）。
 
-所以，相比 RSA 证书，ECC 证书具有更高的安全性高以及处理速度更快的优点，尤其适合在移动设备上使用。
+ECC 证书最大的缺点就是兼容性问题，古代的 Windows XP 和 Android2.3 不支持 ECDHE 密钥交换。
 
+好消息是，Nginx 1.11.0 开始提供了对 RSA/ECC 双证书的支持。它的实现原理是：分析在 TLS 握手中双方协商得到的 Cipher Suite，如果支持 ECDSA 就返回 ECC 证书，否则返回 RSA 证书。
 
-ECC 证书在 2019 年之前的缺点就是兼容性问题，古代的 XP 和 Android2.3 不支持这种加密方式。不过 2019 年 Nginx 发布了 1.11.0 版本，开始提供了对 RSA/ECC 双证书的支持，它可以在 TLS 握手的时候根据客户端支持的加密方法选择对应的证书，以向下兼容古代客户端。
+使用适当的椭圆曲线生成 ecc 密钥。例如，secp256r1（即 P-256）和 secp384r1（即 P-384）是常用的椭圆曲线。使用更高安全级别的曲线（如 secp384r1）可以提供更强的加密强度，但会增加计算负担。
 
+```bash
+# 生成 ECC 私钥
+$ openssl ecparam -name secp256r1 -genkey -noout -out ecc_private_key.pem
+```
+基于私钥 生成 CSR 证书请求文件。
+```
+# 生成 CSR（证书签名请求）
+openssl req -new -key ecc_private_key.pem -out ecc_csr.pem
+```
+
+将 CSR 提交给证书颁发机构，获取一个签发的证书。
 
 在 Nginx 里可以用 ssl_ciphers、ssl_ecdh_curve 等指令配置服务器使用的密码套件和协议，把优先使用的放在前面，配置示例：
 
-```plain
-ssl_dyn_rec_enable on;
-ssl_protocols TLSv1.3 TLSv1.2; // 优先使用 TLSv1.3 协议
-ssl_ecdh_curve X25519:P-256;
-ssl_ciphers EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+ECDSA+AES128:EECDH+aRSA+AES128:RSA+AES128:EECDH+ECDSA+AES256:EECDH+aRSA+AES256:RSA+AES256:EECDH+ECDSA+3DES:EECDH+aRSA+3DES:RSA+3DES:!MD5;
-ssl_prefer_server_ciphers on;
-ssl_session_cache shared:SSL:20m;
-ssl_session_timeout 15m;
-ssl_session_tickets off;
+```nginx
+server {
+    listen 443 ssl;
+    server_name example.com;
+    # 选择支持的加密算法
+    ssl_protocols TLSv1.2 TLSv1.3;
+    # 启用服务器端选择加密套件的优先级
+    ssl_prefer_server_ciphers on;
+
+    ssl_ecdh_curve              X25519:P-256:P-384:P-521;
+
+    # 配置证书和密钥
+    ssl_certificate /etc/nginx/ssl/example.com.pem; # ECC 证书
+    ssl_certificate_key /etc/nginx/ssl/example.com.key; # ECC 密钥
+
+
+    # 配置密码套件
+    ssl_ciphers 'ECDHE+CHACHA20:ECDHE+CHACHA20-draft:ECDSA+AES128:ECDHE+AES128:RSA+AES128:RSA+3DES';
+}
 ```
+
+启用服务器端优先选择加密套件的机制。默认情况下，客户端可以选择加密套件。如果启用该选项，服务器将优先选择其支持的最安全的加密套件，而不是接受客户端的选择。
+
+
 配置完成之后，使用 https://myssl.com/ 服务测试证书配置，如图 2-20 所示。
 
 :::center

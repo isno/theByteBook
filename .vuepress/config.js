@@ -119,15 +119,7 @@ export default defineUserConfig({
                             '/http/http-dns.md',
                         ]
                     },
-                    {
-                        text: '2.4 HTTP 数据压缩优化',
-                        link:  '/http/http-performance.md',
-       
-                        children: [
-                            '/http/compress.md',
-                            '/http/protobuf.md',
-                        ]
-                    },
+                    '/http/compress.md',
                     {
                         text: '2.5 SSL 加密原理与应用实践',
                         link:  '/http/https-summary.md',
