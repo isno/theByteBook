@@ -1,12 +1,12 @@
-# 2.8 使用新一代的传输协议 QUIC
+# 2.8 QUIC 协议的设计原理与应用实践
 
-2022 年 6 月 6 日，IETF QUIC 和 HTTP 工作组成员 Robin Mark 在推特上宣布：“历时 5 年，HTTP/3 终于被标准化为 RFC 9114”，这对于 HTTP 演进意义重大。
+QUIC (Quick UDP Internet Connection，快速 UDP 网络连接) 是一种基于 UDP 封装的安全、可靠传输协议，它的目标是取代 TCP 成为标准且效率更高的安全传输协议。
 
-HTTP/3 正式推出后，网络中一位工程师对不同版本的 HTTP 进行了一项延迟测试（客户端位于上海，服务器位于旧金山）。测试结果显示，使用 HTTP/1.1 协议的平均响应时间为 3,500 ms，HTTP/2 将这一数字缩短至 2,500 ms，而最新的 HTTP/3 协议则显著提高了性能，平均响应时间仅为 1,300 ms。
+大部分人都会以为是 IETF（Internet Engineering Task Force，互联网工程任务组）在推动 QUIC 替换 TCP 协议，实际上推动的先驱是 Google 公司。早在 2013 年，Google 在它的服务器（如 Google.com、youtube.com）和 Chrome 浏览器中启用了名为“快速 UDP 网络连接（QUIC）”的全新传输协议，该协议业内一般称 gQUIC。
+
+2015 年，Google 将 gQUIC 提交给 IETF，IETF 规范后的 QUIC 协议称 iQUIC，早期 iQUIC 有 h3-27、h3-29 和 h3 v1 等多个“草稿”版本。2018 年末，IETF 推出了最新一代的互联网标准 HTTP/3。图 2-26 展示了各个版本的 HTTP 协议对比。可以看到，HTTP/3 最大的特点是使用 QUIC 协议，并在内部集成 TLS 协议。
 
 :::center
-  ![](../assets/http3.png)<br/>
-  图 2-25 长距离通信下 HTTP 各个版本的延迟测试 [图片来源](https://www.cnblogs.com/myshowtime/p/16227260.html)
+  ![](../assets/http-quic.png)<br/>
+ 图 2-26 各个 HTTP 协议对比：HTTP/3 基于 UDP，并利用 QUIC 实现了安全、可靠的数据传输
 :::
-
-HTTP/3 的性能为何提升如此明显？带着这个问题，我们来了解 HTTP/3 背后的可靠链接协议 QUIC ，以及 QUIC 对比传统 TCP 协议的种种优势。
