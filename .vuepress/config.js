@@ -129,7 +129,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '2.5 SSL 加密原理与优化实践',
+                        text: '2.5 SSL 加密原理与应用实践',
                         link:  '/http/https-summary.md',
                         children: [
                             '/http/https.md',
@@ -139,7 +139,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '2.6 网络拥塞控制原理与优化实践',
+                        text: '2.6 网络拥塞控制原理与应用实践',
                         link:  '/http/congestion.md',
                         children: [
                             '/http/congestion-control.md',
@@ -150,7 +150,7 @@ export default defineUserConfig({
                     '/http/Edge-Acceleration.md',
 
                     {
-                        text: '2.8 QUIC 协议的设计原理与应用实践',
+                        text: '2.8 QUIC 设计原理与应用实践',
                         link:  '/http/http3.md',
                         children: [
                             '/http/quic.md',
