@@ -126,6 +126,7 @@ export default defineUserConfig({
                         children: [
                             '/http/https.md',
                             '/http/ssl.md',
+                            '/http/OCSP-Stapling',
                             '/http/ssl-certificate.md',
                             '/http/ssl-performance-result.md'
                         ]

@@ -8,36 +8,7 @@ SSL 层中的证书验证也是一个比较耗时的环节：服务器需要把�
 
 改进方法是启用服务端的 OCSP Stapling 功能。OCSP Stapling 将原本由客户端发起的 OCSP 查询转移到服务端进行。服务端预先从 CA 获取 OCSP 响应，并在握手时将其与证书一并发送给客户端，从而免除了客户端连接 CA 服务器的步骤。
 
-以 Nginx 配置 OCSP Stapling 功能为例，配置如下所示。
 
-```nginx configuration
-server {
-    listen 443 ssl;
-    server_name  thebyte.com.cn;
-    index index.html;
-
-    ssl_certificate         server.pem; #证书的.cer文件路径
-    ssl_certificate_key     server-key.pem; #证书的.key文件
-
-    # 开启 OCSP Stapling 当客户端访问时 NginX 将去指定的证书中查找 OCSP 服务的地址，获得响应内容后通过证书链下发给客户端。
-    ssl_stapling on;
-    ssl_stapling_verify on;# 启用OCSP响应验证，OCSP信息响应适用的证书
-    ssl_trusted_certificate /path/to/xxx.pem;# 若 ssl_certificate 指令指定了完整的证书链，则 ssl_trusted_certificate 可省略。
-    resolver 8.8.8.8 valid=60s;# 添加resolver解析OSCP响应服务器的主机名，valid表示缓存。
-    resolver_timeout 2s;# resolver_timeout表示网络超时时间
-}
-```
-
-配置完成之后，使用 openssl 测试服务端是否已开启 OCSP Stapling 功能。
-
-```bash 
-$ openssl s_client -connect thebyte.com.cn:443 -servername thebyte.com.cn -status -tlsextdebug < /dev/null 2>&1 | grep "OCSP" 
-OCSP response:
-OCSP Response Data:
-    OCSP Response Status: successful (0x0)
-    Response Type: Basic OCSP Response
-```
-若结果中存在“successful”关键字，则表示已开启 OCSP Stapling 服务。
 
 ### 2. 配置 ECC 证书
 

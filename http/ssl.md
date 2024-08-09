@@ -4,12 +4,7 @@
 
 2018 年，IETF 发布的 TLS 1.3 协议改进了握手流程，并取消了部分安全性较低的加密功能。使用 TLS 1.3，握手只需 1 次 RTT，甚至可以在复用之前连接时实现零 RTT。
 
-:::center
-  ![](../assets/tls1.3.png)<br/>
- 图 2-18 TLS 1.3 协议的握手过程
-:::
-
-在 Nginx 中配置 TLS 1.3，确保 Nginx 版本为 1.13.0 及以上，OpenSSL 版本为 1.1.1 及以上。然后在配置文件的 server 块中设置以下参数即可。
+Nginx 中配置 TLS 1.3 如下所示。确保 Nginx 版本为 1.13.0 及以上，OpenSSL 版本为 1.1.1 及以上，然后在配置文件中通过 ssl_protocols 指令增加 TLSv1.3 选项。
 
 ```nginx
 server {
