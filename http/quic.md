@@ -5,13 +5,7 @@ QUIC (Quick UDP Internet Connection，快速 UDP 网络连接) 是一种基于 U
 
 大部分人都会以为是 IETF（Internet Engineering Task Force，互联网工程任务组）在推动 QUIC 替换 TCP 协议，实际上推动的先驱是 Google 公司。早在 2013 年，Google 在它的服务器（如 Google.com、youtube.com）和 Chrome 浏览器中启用了名为“快速 UDP 网络连接（QUIC）”的全新传输协议，该协议业内一般称 gQUIC。
 
-通过下述内容，概览 QUIC 演进的历程:
-
-- 2015 年，Google 将 gQUIC提交给 IETF，并在 IETF 的推动下对其进行规范化 ，IETF 规范后的 QUIC 协议称 iQUIC，早期 iQUIC 草案有 h3-27、h3-29 和 h3 v1 等不同版本。
-- 2018 年末，IETF 正式批准了 iQUIC 使用 HTTP/3 的版本号，将其确立为最新一代的互联网标准。
-- 2022 年 6月 6 日，历时 9 年，IETF 正式标准化基于 QUIC 协议的 HTTP/3 为 RFC9114。
-
-图 2-26 展示了各个版本的 HTTP 协议对比，HTTP/3 最大的特点是使用 QUIC 协议，并在内部集成 TLS 协议。
+2015 年，Google 将 gQUIC 提交给 IETF，IETF 规范后的 QUIC 协议称 iQUIC，早期 iQUIC 有 h3-27、h3-29 和 h3 v1 等多个草案版本。2018 年末，IETF 推出了最新一代的互联网标准 HTTP/3。图 2-26 展示了各个版本的 HTTP 协议对比。可以看到，HTTP/3 最大的特点是使用 QUIC 协议，并在内部集成 TLS 协议。
 
 :::center
   ![](../assets/http-quic.png)<br/>
@@ -20,7 +14,7 @@ QUIC (Quick UDP Internet Connection，快速 UDP 网络连接) 是一种基于 U
 
 ## 1.QUIC 出现的背景
 
-QUIC 出现之前，HTTP 中使用 TCP 作为传输数据的底层协议。
+QUIC 出现之前，HTTP 使用 TCP 作为传输数据的底层协议。
 
 然而，作为一个 40 年前开发的传输层通信协议，肯定没有想到今天移动设备盛行的场景。如今复杂的移动网络环境下，TCP 存在着先天的设计缺陷，这些问题集中在以下几点：
 
