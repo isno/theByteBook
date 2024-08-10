@@ -131,15 +131,7 @@ export default defineUserConfig({
                             '/http/ssl-performance-result.md'
                         ]
                     },
-                    {
-                        text: '2.6 网络拥塞控制原理与应用实践',
-                        link:  '/http/congestion.md',
-                        children: [
-                            '/http/congestion-control.md',
-                            '/http/bbr.md',
-                            '/http/bbr-effect.md'
-                        ]
-                    },
+                    '/http/congestion-control.md',
                     '/http/Edge-Acceleration.md',
                     '/http/quic.md',
                     "/http/conclusion.md"

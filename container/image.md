@@ -148,7 +148,7 @@ Nydus 主要优化了镜像层（layer）的设计结构，通过将镜像层的
   图 7-11 Nydus 是怎么工作的 [图片来源](https://d7y.io/zh/blog/2022/06/06/evolution-of-nydus/)
 :::
 
-根据官网的性能测试数据，Nydus 能够把常见应用镜像的启动时间，从数分钟缩短到数秒钟。
+如图 7-12 所示，OCIv1 与 Nydus 镜像的启动时间对比中，Nydus 能将常见应用镜像的启动时间从数分钟缩短到仅数秒钟。
 
 :::center
   ![](../assets/nydus-performance.png)<br/>
