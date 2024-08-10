@@ -141,15 +141,7 @@ export default defineUserConfig({
                         ]
                     },
                     '/http/Edge-Acceleration.md',
-
-                    {
-                        text: '2.8 QUIC 设计原理与应用实践',
-                        link:  '/http/http3.md',
-                        children: [
-                            '/http/quic.md',
-                            '/http/quic-performance.md'
-                        ]
-                    },
+                    '/http/quic.md',
                     "/http/conclusion.md"
                 ]
             },
