@@ -107,8 +107,7 @@ Facebook 2021 年 10 月发生了一起重大的宕机故障，当时使用 dig 
 ..
 ```
 
-下一节，笔者以 Facebook 2021 年的宕机事件为例，说明当“权威域名服务器”出现故障时会是什么影响。
-
+接下来，笔者以 Facebook 2021 年的宕机事件为例，说明当“权威域名服务器”出现故障时会是什么影响。
 
 [^1]: 参见 https://www.akamai.com/blog/news/akamai-summarizes-service-disruption-resolved
 [^2]: 参见 https://en.wikipedia.org/wiki/2021_Facebook_outage

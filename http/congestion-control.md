@@ -111,17 +111,25 @@ $ echo net.ipv4.tcp_congestion_control=bbr >> /etc/sysctl.conf && sysctl -p
 $ tc qdisc add dev eth0 root netem loss 1% latency 25ms
 ```
 
-设置完测试环境后，在客户端节点中，使用 iperf3 命令测试两个主机之间的网络传输性能。iperf3 参数 -c 的意思是，以客户端模式运行，请求 10.0.1.188 服务端的 8080 端口。
 
-```bash
-$ iperf3 -c 10.0.1.188 -p 8080
-```
 
 ## 2.6.6 BBR 性能表现
 
 BBR 是迄今为止跨越不同路由发送数据的最快的算法，它尤其适合在存在一定丢包率的长链路环境下使用。
 
-通过控制不同的延迟和丢包参数，对不同的拥塞控制算法进行网络吞吐量测试。测试结果如表 2-3 所示，可以看出，BBR 在大带宽长链路（如跨海、跨国、跨多个运营商的网络）和轻微丢包的网络环境下表现尤为出色。
+接下来，我们通过 tc 工具模拟弱网环境，对不同的拥塞控制算法进行网络吞吐量测试。如下所示，设置 eth0 网络接口上的流量的丢包率设置为 1% 和延迟设置为 25 毫秒。
+
+```bash
+$ tc qdisc add dev eth0 root netem loss 1% latency 25ms
+```
+
+在客户端节点使用 iperf3 工具测试两个主机之间的网络传输性能。下面 iperf3 参数 -c 的意思是，以客户端模式运行，请求 10.0.1.188 服务端的 8080 端口。
+
+```bash
+$ iperf3 -c 10.0.1.188 -p 8080
+```
+
+测试结果如表 2-3 所示，可以看出，BBR 在轻微丢包的网络环境下表现尤为出色。
 
 :::center
 表 2-3 各拥塞控制算法在不同丢包率环境下的性能测试 [表数据来源](https://toonk.io/tcp-bbr-exploring-tcp-congestion-control/index.html)
