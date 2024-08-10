@@ -5,6 +5,19 @@
 :::center
 表 2-3 各拥塞控制算法在不同丢包率环境下的性能测试 [表数据来源](https://toonk.io/tcp-bbr-exploring-tcp-congestion-control/index.html)
 :::
-:::center
-  ![](../assets/result2.png)<br/>
-:::
+
+|网络吞吐|拥塞控制算法（服务端）|延迟|丢包率|
+|:--|:--|:--|:--|
+|2.35Gb/s| Cubic| <1ms| 0% |
+|195 Mb/s| Reno| <140ms| 0% |
+|147 Mb/s| Cubic| <140ms| 0% |
+|344 Mb/s| Westwood| <140ms| 0% |
+|340 Mb/s| BBR| <140ms| 0% |
+|1.13 Mb/s| Reno| <140ms| 1.5% |
+|1.23 Mb/s| Cubic| <140ms| 1.5% |
+|2.46 Mb/s| Westwood| <140ms| 1.5% |
+|**160 Mb/s**| BBR| <140ms| 1.5% |
+|0.65 Mb/s| Reno| <140ms| 3% |
+|0.78 Mb/s| Cubic| <140ms| 3% |
+|0.97 Mb/s| Westwood| <140ms| 3% |
+|**132 Mb/s**| BBR| <140ms| 3% |
