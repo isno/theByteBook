@@ -1,15 +1,21 @@
 # 2.5.2 HTTPS 优化实践
 
-HTTPS 的延迟要比 HTTP 高几百毫秒，尤其在弱网环境下更为明显。
-
-接下来，笔者将介绍升级 TLS 协议、开启 OCSP Stapling 和升级 TLS 算法的方式，来加速 HTTPS 请求。。
+HTTPS 的延迟要比 HTTP 高几百毫秒，尤其弱网环境下 HTTPS 的延迟问题更为明显。接下来，笔者介绍通过级 TLS 协议、选择合适的密码套件和开启 OCSP Stapling 等手段，来加速 HTTPS 请求。
 
 ## 1. 升级 TLS1.3 
 
-HTTPS 连接建立时，TLS 握手通常需要最多 2 次 RTT，导致延迟比 HTTP 高几百毫秒，。2018 年发布的 TLS 1.3 协议优化了握手流程，将握手时间缩短至 1 次 RTT，甚至可以复用之前连接时实现零 RTT。
+HTTPS 连接建立时，TLS 握手通常需要最多 2 次 RTT，导致延迟比 HTTP 高几百毫秒。2018 年发布的 TLS 1.3 协议优化了握手流程，将握手时间缩短至 1 次 RTT，甚至可以复用之前连接时实现零 RTT。
 
+以 Nginx 配置为例，确保 Nginx 版本为 1.13.0 及以上，OpenSSL 版本为 1.1.1 及以上，然后在配置文件中通过 ssl_protocols 指令增加 TLSv1.3 选项即可。
 
-Nginx 中配置 TLS 1.3 协议如下所示。
+```
+server {
+	listen 443 ssl;
+	ssl_protocols TLSv1.2 TLSv1.3;
+
+	# 其他 SSL 配置...
+}
+```
 
 ## 2. 选择合适的密码套件
 
@@ -26,8 +32,6 @@ server {
     # 其他 SSL 配置...
 }
 ```
-
-ssl_protocols 指令用于启动特定的加密协议，确保 Nginx 版本为 1.13.0 及以上，OpenSSL 版本为 1.1.1 及以上，然后在配置文件中通过 ssl_protocols 指令增加 TLSv1.3 选项。
 
 ssl_prefer_server_ciphers on 设置协商加密算法时，优先使用我们服务端的加密套件，而不是客户端浏览器的加密套件。
 
@@ -86,10 +90,12 @@ OCSP Response Data:
 
 ## 5. 优化效果
 
-SSL 层的优化手段除了软件层面还有一些硬件加速的方案，例如使用 QAT 加速卡（Quick Assist Technology，Intel 公司推出的一种专用硬件加速技术）。如表 2-2，通过对 ECC、RSA、TLS1.2、TLS1.3 等不同维度的测试，以获取最佳的配置方案。
+HTTPS 优化手段除了软件层面，还有一些硬件加速的方案，如使用 QAT 加速卡（Quick Assist Technology，Intel 公司推出的一种专用硬件加速技术）。
+
+通过对不同的证书（ECC 和 RSA），不同的 TLS 协议（TLS1.2、TLS1.3）进行压测，测试结果如表 2-2 所示。
 
 :::center
-表 2-2 HTTPS 证书性能基准测试
+表 2-2 HTTPS 性能基准测试
 :::
 |场景|QPS|Time|单次发出请求数|
 |:--|:--|:--|:--|
@@ -100,6 +106,6 @@ SSL 层的优化手段除了软件层面还有一些硬件加速的方案，例�
 |ECC 证书 + TLS1.2| 639.39| 203.319ms|100|
 |ECC 证书 + TLS1.3| 627.39| 159.390ms|100|
 
-从 SSL 加速的结果上看，使用 ECC 证书明显比 RSA 证书性能提升很多，即使 RSA 使用了 QAT 加速，比起 ECC 还是存在差距。此外，QAT 方案也存在硬件成本高、维护成本高的缺陷。
+从 SSL 加速的结果上看，使用 ECC 证书明显比 RSA 证书性能提升很多，即使 RSA 使用了 QAT 加速，比起 ECC 还是存在差距。此外，QAT 方案也存在硬件成本高、维护成本高的缺陷，不再推荐使用。
 
-所以，SSL 最优的设置是使用 TLS1.3 + ECC 证书方式。
+所以，推荐 HTTPS 设置使用 TLS1.3 协议 + ECC 证书方式。
