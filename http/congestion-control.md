@@ -1,11 +1,13 @@
 # 2.6 网络拥塞控制原理与实践
 
-本节，我们来了解拥塞控制的原理，分析新一代的拥塞控制算法 BBR（Bottleneck Bandwidth and Round-trip propagation time，瓶颈带宽和往返传播时间算法）设计，并对比 BBR 与传统拥塞算法的效率。
+你可能听说过TCP上的一些术语，例如Cubic、Tahoe、Vegas、Reno、Westwood，以及最近流行的BBR等。这些都是 TCP 中使用的不同拥塞控制算法。
+
+这些算法的作用是决定发送方应该以多快的速度发送数据，并同时适应网络的变化（也就是拥塞控制）。如果没有这些算法，我们的互联网一定会被数据填满并且崩溃。
+
+
 ## 2.6.1 网络拥塞控制原理
 
-当网络中的数据传输量超过了网络的带宽容量时，会出现数据传输缓慢、数据包丢失，这种情况叫做拥塞（congestion）。若不对拥塞进行控制，网络会因为过载变得完全不可用。
-
-图 2-22 展示了拥塞的产生和控制逻辑，其本质是控制图中横轴 inflight 数据量。首先，解释图中的一些术语：
+图 2-22 展示了网络拥塞的产生和控制逻辑。首先，解释图中的一些术语：
 
 - RTprop (Round-Trip propagation time，两个节点之间最小时延)：两个节点之间的最小时延，取决于物理距离，距离越长，时延越大。
 - BtlBw（Bottleneck Bandwidth，瓶颈带宽）：如果把网络链路想象成水管，RTprop 就是水管的长度，BtlBw 则是水管最窄处的直径。
@@ -101,17 +103,7 @@ net.ipv4.tcp_congestion_control = cubic
 ```bash
 $ echo net.ipv4.tcp_congestion_control=bbr >> /etc/sysctl.conf && sysctl -p
 ```
-网络拥塞控制是单向生效，也就是说作为下行方的服务端调整了，客户端与服务端之间的网络吞吐即可提升。
-
-拥塞控制算法设置为 BBR 之后，我们可以使用 tc 工具模拟真实的网络环境，测试 BBR 的效果。
-
-下面，使用 tc 工具设置两台服务器的收/发增加 25ms 的延迟以及 1% 的丢包率。
-
-```bash
-$ tc qdisc add dev eth0 root netem loss 1% latency 25ms
-```
-
-
+网络拥塞控制是单向生效，也就是说作为下行方的服务端调整了，BBR 算法即可生效。
 
 ## 2.6.6 BBR 性能表现
 
@@ -129,7 +121,7 @@ $ tc qdisc add dev eth0 root netem loss 1% latency 25ms
 $ iperf3 -c 10.0.1.188 -p 8080
 ```
 
-测试结果如表 2-3 所示，可以看出，BBR 在轻微丢包的网络环境下表现尤为出色。
+测试结果如表 2-3 所示。可以看出，BBR 在轻微丢包的网络环境下表现尤为出色。
 
 :::center
 表 2-3 各拥塞控制算法在不同丢包率环境下的性能测试 [表数据来源](https://toonk.io/tcp-bbr-exploring-tcp-congestion-control/index.html)
