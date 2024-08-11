@@ -121,14 +121,11 @@ export default defineUserConfig({
                     },
                     '/http/compress.md',
                     {
-                        text: '2.5 SSL 加密原理与应用实践',
+                        text: '2.5 HTTPS 加密原理与优化实践',
                         link:  '/http/https-summary.md',
                         children: [
                             '/http/https.md',
                             '/http/ssl.md',
-                            '/http/OCSP-Stapling',
-                            '/http/ssl-certificate.md',
-                            '/http/ssl-performance-result.md'
                         ]
                     },
                     '/http/congestion-control.md',
