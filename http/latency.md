@@ -1,6 +1,6 @@
 # 2.2 HTTPS 优化分析
 
-开始优化 HTTPS 请求之前，我们得先清楚一个 HTTPS 请求有哪些阶段，以及各个阶段耗时如何计算。
+开始优化 HTTPS 请求之前，我们得先清楚一个 HTTPS 请求有哪些阶段，以及各个阶段延迟（也称时延或耗时）如何计算。
 
 ## 2.2.1 请求阶段分析
 
@@ -19,9 +19,9 @@ RTT 是评估本地网络与远程计算机连接状况的重要指标，常用�
 
 ## 2.2.2 各阶段耗时分析
 
-HTTPS 请求的各个阶段可以使用 curl 命令进行详细的耗时分析。
+HTTPS 请求的各个阶段可以使用 curl 命令进行详细的延迟分析。
 
-curl 命令提供了 -w 参数，该参数支持 curl 按照指定的格式打印与请求相关的信息，部分信息可以用特定的变量表示，例如 status_code、size_download、time_namelookup 等等。因为我们要进行耗时分析，所以只关注和请求耗时有关的变量（以 time_ 开头的变量）。往文本文件 curl-format.txt 写入下面的内容：
+curl 命令提供了 -w 参数，该参数支持 curl 按照指定的格式打印与请求相关的信息，部分信息可以用特定的变量表示，例如 status_code、size_download、time_namelookup 等等。因为我们要进行耗时分析，所以只关注和请求延迟有关的变量（以 time_ 开头的变量）。往文本文件 curl-format.txt 写入下面的内容：
 
 ```bash
 $ cat curl-format.txt
@@ -38,17 +38,17 @@ $ cat curl-format.txt
 上述的变量的含义，如表 2-2 所示。
 
 :::center
-表 2-2 curl 支持的与请求耗时有关的变量
+表 2-2 curl 支持的与请求延迟有关的变量
 :::
 
 | 变量名称 | 变量释义 |
 |:--|:--|
 | time_namelookup | 从请求开始到域名解析完成的耗时 |
-| time_connect | 从请求开始到 TCP 三次握手完成耗时 |
+| time_connect | 从请求开始到 TCP 三次握手完成的耗时 |
 | time_appconnect | 从请求开始到 TLS 握手完成的耗时 |
 | time_pretransfer | 从请求开始到向服务器发送第一个 GET/POST 请求开始之前的耗时 |
-| time_redirect | 重定向时间，包括到内容传输前的重定向的 DNS 解析、TCP 连接、内容传输等时间 |
-| time_starttransfer | 从请求开始到内容传输前的时间 |
+| time_redirect | 重定向耗时，包括到内容传输前的重定向的 DNS 解析、TCP 连接、内容传输等时间 |
+| time_starttransfer | 从请求开始到内容传输前的耗时 |
 | time_total | 从请求开始到完成的总耗时 |
 
 
