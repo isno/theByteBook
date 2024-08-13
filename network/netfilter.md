@@ -1,38 +1,25 @@
 # 3.3.1 内核网络框架 Netfilter
 
-Netfilter 是 Linux 内核中的一个强大的网络子系统，它提供了数据包过滤、网络地址转换（NAT）、数据包的修改和多种其他网络相关操作的功能。
+Linux 网络数据包的处理看似是一套相对固定和封闭的流程，事实却并非如此，从 Linux 内核 2.4 版本起，内核就开放了一套通用的、可提供代码干预网络数据包在协议栈流转的过滤框架 —— Netfilter。
 
-如果把数据包比作流水，Netfilter 相当于在 Linux 系统中的“水管”装了 5 个阀门（术语称 hook）[^1]。内核中的其他模块（如 iptables、IPVS 等）可以向这些 hook 点注册钩子函数。当有数据包经过这些 hook 时，就会自动触发注册在这里的钩子函数，从而干预 Linux 的网络通信。这 5 个 hook 分别是：
-
-- PREROUTING：数据包进入内核协议栈后立即触发此 hook，在进行任何路由判断（将包发往哪里）之前。
-- LOCAL_IN：接收到的包经过路由判断，如果目的是本机，将触发此 hook。
-- FORWARD：数据包经过路由判断，如果目的是其他机器，将触发此 hook。
-- LOCAL_OUT：本机产生的准备发送的包，在进入协议栈后立即触发此 hook。
-- POST_ROUTING：本机产生的准备发送的包或者转发的包，在经过路由判断之后，将触发此 hook。
-
-
-如图 3-2 所示的“数据包通过 Netfilter 时的流向过程”，里面包含了 XDP、Netfilter 和 traffic control 部分，是参考内核协议栈各 hook 点位置和 iptables 规则优先级的经典配图。
+Netfilter 围绕网络协议栈（主要在网络层）埋下了 5 个钩子（也称 hook）。内核中的其他模块（如 iptables、IPVS 等）可以向这些钩子注册回调函数。当数据包进入网络层，经过这些钩子时，就会自动触发注册在这里的钩子函数，从而干预 Linux 的网络通信。这 5 个钩子在网络协议栈的位置如图 3-2 所示。
 
 :::center
-  ![](../assets/Netfilter-packet-flow.svg)<br/>
-  图 3-2 数据包通过 Netfilter 时的流向过程 [图片来源](https://en.wikipedia.org/wiki/Netfilter)
+  ![](../assets/netfilter-hook.svg)<br/>
+  图 3-2 
 :::
 
+这 5 个钩子的含义和作用如下：
+
+- PREROUTING：只要数据包从设备（如网卡）那里进入到协议栈，就会触发该钩子。当我们需要修改数据包的 “Destination IP” 时，会使用到它，即 PREROUTING 钩子主要用于目标网络地址转换（DNAT，Destination NAT）。
+- FORWARD：顾名思义，这里指代转发数据包。前面的 PREROUTING 钩子并未经过 IP 路由，不管数据包是不是发往本机的，全部都照单全收。但经过 IP 路由后，如果发现数据包不是发往本机，则会触发 FORWARD 钩子进行处理。此时，本机就相当于一个路由器，作为网络数据包的中转站，FORWARD 钩子的作用就是处理这些被转发的数据包，以此来保护其背后真正的“后端”机器。
+- INPUT：经过 IP 路由后，如果发现数据包是发往本机的，则会触发本钩子。INPUT 钩子一般用来加工发往本机的数据包，当然也可以做数据过滤，从而保护本机的安全。
+- OUTPUT：数据包送达到应用层处理后，会把结果送回请求端，在经过 IP 路由之前，会触发该钩子。Output 钩子 一般用于加工本地进程输出的数据包，同时也可以限制本机的访问权限，比如发往 www.example.org 的数据包都丢弃掉。
+- POSTROUTING：数据出协议栈之前，都会触发该钩子，无论这个数据是转发的，还是经过本机进程处理过的。POSTROUTING 钩子 一般用于源网络地址转换（SNAT，Source NAT）。
 
 
+Netfilter 允许在同一个钩子处，注册多个回调函数。因此向钩子注册回调函数必须明确优先级，以便按照明确的优先顺序触发回调函数。因为回调函数有多个，如果把这些回调函数串起来，就构成了一条链，我们将其称为回调链（Chained Callbacks）。这个设计影响了围绕 Netfilter 构建的上层应用基本都带有“链”的概念，例如稍后介绍的 iptables。
 
-如图 3-4 Kubernetes 网络模型说明，当一个 Pod 跨 Node 进行通信时经过了哪些“管道”。
-
-首先，数据包从 Pod 的 veth-pair 接口发送到 cni0 虚拟网桥，cni 网桥把数据包送到主机协议栈，经过 PREROUTING hook，调用相关的链做 DNAT，经过 DNAT 处理后，数据包目的地址变成另外一个 Pod 地址。
-
-因为开启了 ip_forword，Linux 具有了路由功能，内核协议栈判断目的地不属于本机，经过 FORWARD、POST_ROUTING 到达 eth0，最后通过主机网络发送到其他节点。
-
-:::center
-  ![](../assets/netfilter-k8s.svg)<br/>
-  图 3-4 Pod 发起请求另外一个节点，经过 Linux bridge、PREROUTING、FORWARD、POSTROUTING 
-:::
-
-对 Linux 内核网络框架基本了解之后，我们继续了解 Netfilter 的上层应用 iptables。
-
+虽说 Netfilter 框架就是一套简单的事件回调机制，但它却是整个 Linux 网络大厦的基石，包括地址转换、封包处理、地址伪装、基于协议的连接跟踪、数据包过滤、透明代理、带宽限速以及访问控制等，都是在 Netfilter 基础上实现的。
 
 [^1]: hook 设计模式在其他软件系统中随处可见，譬如 eBPF、Git、Kubernetes 等等，Kubernetes 在编排调度、网络、资源定义等通过暴露接口的方式，允许用户根据自己的需求插入自定义代码或逻辑来扩展 Kubernetes 的功能。 
