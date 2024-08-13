@@ -44,32 +44,47 @@ iptables 把一些常用数据包管理操作总结成具体的动作，下面�
 
 ## 2. iptables 自定义链
 
-iptables 规则允许数据包跳转到其他链继续处理，同时 iptables 也支持创建自定义链。自定义链可以看作是对调用它的链的扩展，自定义链结束的时候，可以返回 Netfilter hook，也可以再继续跳转到其他自定义链，这种设计使 iptables 具有强大的分支功能，管理员可以组织更大更复杂的网络规则。
+除了 5 个内置链外，iptables 支持管理员创建用于实现某些管理目的自定义链。向自定义链添加规则和向内置链规则的方式是一样的。不同的地方在于，自定义链只能通过从另一个规则跳转（jump）到它。
 
-Kubernetes 中 kube-proxy 组件的 iptables 模式就是利用自定义链模块化地实现了 Service 功能。
+自定义链可以看作是对调用它的链的扩展，例如自定义链结束的时候，可以返回内置链，也可以再继续跳转到其他自定义链。这种设计使 iptables 具有强大的分支功能，管理员可以组织更大更复杂的网络规则。
 
-通过下面的命令，查看 kube-proxy 创建的自定义链。
+容器管理系统 Kubernetes 中 kube-proxy 组件的 iptables 模式就是利用自定义链模块化地实现了 Service 功能。
+
+一旦创建一个 Service，Kubernetes 就会在主机添加这样一条 iptable 规则。
 
 ```bash
-$ iptables -S -t nat
--A PREROUTING -m -comment --comment "kubernetes service portals" -j KUBE-SERVICES
--A OUTPUT -m -comment --comment "kubernetes service portals" -j KUBE-SERVICES
--A POSTROUTING -m -comment --comment "kubernetes postrouting rules " -j KUBE-POSTROUTING
+-A KUBE-SERVICES -d 10.0.1.175/32 -p tcp -m tcp --dport 80 -j KUBE-SVC-NWV5X
+```
+这条 iptables 规则的含义是：凡是目的地址是 10.0.1.175、目的端口是 80 的 IP 包，都应该跳转到另外一条名叫 KUBE-SVC-NWV5X 的 iptables 链进行处理。目的地 10.0.1.175 其实就是 Service 的 VIP（Virtual IP Address，虚拟 IP 地址）。可以看到，它只是 iptables 中一条规则的配置，并没有任何网络设备，所以 ping 不通。
+
+接下来的 KUBE-SVC-NWV5X 是一组规则的集合，如下所示：
+
+```bash
+-A KUBE-SVC-NWV5X --mode random --probability 0.33332999982 -j KUBE-SEP-WNBA2
+-A KUBE-SVC-NWV5X --mode random --probability 0.50000000000 -j KUBE-SEP-X3P26
+-A KUBE-SVC-NWV5X -j KUBE-SEP-57KPR
 ```
 
-如图 3-7 所示，KUBE-SERVICE 作为整个反向代理的入口链，KUBE-SVC-XXX 为具体某一服务的入口链，KUBE-SERVICE 链会根据具体的服务 IP 跳转至具体的 KUBE-SVC-XXX 链，然后 KUBE-SVC-XXX 链再根据一定的负载均衡算法跳转至 Endpoint（某一个具体的 Pod 地址和端口）。
+可以看到，这一组规则实际上是一组随机模式（–mode random）的自定义链。随机转发的目的地为 `KUBE-SEP-<hash>` 自定义链。所以这一组规则就是 Service 实现负载均衡的位置。
 
-:::center
-  ![](../assets/custom-chain.png)<br/>
-  图 3-7 kube-proxy 通过 iptables 自定义链实现 Service 功能
-:::
+查看自定义链`KUBE-SEP-<hash>`的明细，我们就很容易理解 Service 进行转发的具体原理了，如下所示：
+
+```bash
+-A KUBE-SEP-WNBA2 -s 10.244.3.6/32  -j MARK --set-xmark 0x00004000/0x00004000
+-A KUBE-SEP-WNBA2 -p tcp -m tcp -j DNAT --to-destination 10.244.3.6:9376
+```
+可以看到，自定义链`KUBE-SEP-<hash>`实际是一条 DNAT 规则。DNAT 规则的作用就是在 PREROUTING 检查点之前，也就是在路由之前，将流入 IP 包的目的地址和端口，改成 –to-destination 所指定的新的目的地址和端口。可以看到，目的地址和端口 10.244.3.6:9376，正是被代理 Pod 的 IP 地址和端口。
+
+这样，访问 Service VIP 的 IP 包经过上述 iptables 处理之后，就已经变成了访问具体某一个后端 Pod 的 IP 包了。
 
 ## 3. iptables 性能问题
 
 容器编排系统 Kubernetes 中，用来处理流量分发和请求转发的组件 kube-proxy 有两种工作模式：iptables 和 IPVS，两者区别如下：
 
-- iptables 的规则匹配是线性的，匹配的时间复杂度是 O(N)，规则更新是非增量式的，哪怕增加/删除一条规则，也是修改整体的 iptables 规则表，当集群内 Service 数量较多，会有不小的性能影响；
-- IPVS 专门用于高性能负载均衡，使用了更高效的哈希表，时间复杂度为 O(1)，性能与规模无关。
+- iptables 模式完全使用 iptables 规则处理流量和负载均衡。iptable 规则匹配是线性的，时间复杂度是 O(N)。规则更新是非增量式的，哪怕增加/删除一条规则，也是修改整体的 iptables 规则表。当集群内 Service 数量较多，修改或者匹配负载均衡规则，会对集群性能有不小的影响；
+- ipvs 模式使用内核中 IPVS 模块创建虚拟机的方式实现负载均衡（并非利用 iptables 规则），性能和 Service 规模无关。
+
+不过需要注意的是，IPVS 模块只负责上述的负载均衡和代理功能。而一个完整的 Service 流程正常工作所需要的包过滤、SNAT 等操作，还是要靠 iptables 来实现。只不过，这些辅助性的 iptables 规则数量有限，也不会随着 Pod 数量的增加而增加。
 
 如图 3-9 所示的基准测试，当 1,000 个服务（10,000 个 Pod）以上时，这两个模式的性能表现产生明显差异。
 
