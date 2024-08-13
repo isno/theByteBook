@@ -6,9 +6,12 @@ Netfilter 的钩子回调固然强大，但得通过程序编码才能使用，�
 
 ## 1. iptables 表和链
 
+iptable 将注册在 netfilter 钩子处的回调函数进一步抽象
 
-iptables 把一些常用数据包管理意图总结成具体的行为，下面列出部分行为供读者参考：
+iptable 有 5 个内置链（PREROUTING、INPUT、FORWARD、OUTPUT、POSTROUTING），可以看出这几个内置链对应 Netfilter hook。当数据包经过 netfilter 的 hook 时，数据包依次匹配里面的规则。
 
+
+iptables 把一些常用数据包管理操作总结成具体的动作，下面列出部分动作供读者参考：
 
 - ACCEPT：允许数据包通过，继续执行后续的规则。
 - DROP：直接丢弃数据包；
@@ -20,9 +23,9 @@ iptables 把一些常用数据包管理意图总结成具体的行为，下面�
 - MASQUERADE：地址伪装，可以理解为动态的 SNAT。通过它可以将源地址绑定到某个网卡上，因为这个网卡的 IP 可能是动态变化的，此时用 SNAT 就不好实现；
 - LOG：内核对数据包进行日志记录。
 
-不同的链上能处理的事情有区别，而相同的行为放在一起也便于管理，比如包过滤的规则（ACCEPT，DROP，RETURN，REJECT 等）就可以合并到一起，这便有了规则表的概念。把规则表与链进行关联，而不是规则本身与链关联，通过一个中间层解耦了链与具体的某条规则，原先复杂的对应关系就变得简单了。
+不同的链上能处理的事情有区别，而相同的动作放在一起也便于管理，比如数据包过滤的动作（ACCEPT，DROP，RETURN，REJECT 等）可以合并到一处，数据包的修改动作（DNAT、SNAT）可以合并到另外一处，这便有了动作规则表的概念。
 
-这 5 张表分别是：
+将规则表与链进行关联，而不是规则本身与链关联，通过一个中间层解耦了链与具体的某条规则，原先复杂的对应关系就变得简单了。iptable 的 5 张表为：
  
 - raw 表：配置该表主要用于去除数据包上的连接追踪机制。默认情况下，连接会被跟踪，所以配置该表后，可以加速数据包穿越防火墙，提高性能。
 - mangle 表：修改数据包内容，常用于数据包报文头的修改，比如服务类型（Type of Service, ToS），生存周期（Time to Live, TTL），Mark 标记等。
@@ -31,9 +34,7 @@ iptables 把一些常用数据包管理意图总结成具体的行为，下面�
 - security 表：安全增强，一般用于 SELinux 中，其他情况并不常用。
 
 
-iptable 有 5 个内置链（PREROUTING、INPUT、FORWARD、OUTPUT、POSTROUTING），可以看出这几个内置链对应 Netfilter hook。当数据包经过 netfilter 的 hook 时，数据包依次匹配里面的规则。
-
-如图 3-6 所示，一个目的是本机的数据包依次经过 PREROUTING 链上面的 mangle、nat 表，然后再依次经过 INPUT 链的 mangle、filter、nat 表，最后到达本机某个应用。
+一个链上可以关联的表可以有多个，所以这 5 张表在一个链上执行的时候得有个顺序：raw --> mangle --> nat --> filter --> security，即先去连接追踪，再改数据包，然后做源或目标地址转换，最后是过滤和安全。数据包具体经过的表、链的关系和顺序如图 3-6 所示。
 
 :::center
   ![](../assets/Netfilter-packet-flow.svg)<br/>
@@ -43,9 +44,7 @@ iptable 有 5 个内置链（PREROUTING、INPUT、FORWARD、OUTPUT、POSTROUTING
 
 ## 2. iptables 自定义链
 
-iptables 规则允许数据包跳转到其他链继续处理，同时 iptables 也支持创建自定义链，不过自定义链没有注册到 Netfilter hook，自定义链只能通过规则跳转到它。
-
-自定义链可以看作是对调用它的链的扩展，自定义链结束的时候，可以返回 Netfilter hook，也可以再继续跳转到其他自定义链，这种设计使 iptables 具有强大的分支功能，管理员可以组织更大更复杂的网络规则。
+iptables 规则允许数据包跳转到其他链继续处理，同时 iptables 也支持创建自定义链。自定义链可以看作是对调用它的链的扩展，自定义链结束的时候，可以返回 Netfilter hook，也可以再继续跳转到其他自定义链，这种设计使 iptables 具有强大的分支功能，管理员可以组织更大更复杂的网络规则。
 
 Kubernetes 中 kube-proxy 组件的 iptables 模式就是利用自定义链模块化地实现了 Service 功能。
 
