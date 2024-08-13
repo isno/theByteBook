@@ -52,7 +52,7 @@ $ iptables -S -t nat
 
 ## 3. iptables 性能问题
 
-Kubernetes 中 kube-proxy 组件有两种模式 iptables 和 IPVS，两者区别如下：
+容器编排系统 Kubernetes 中，用来处理流量分发和请求转发的组件 kube-proxy 有两种工作模式：iptables 和 IPVS，两者区别如下：
 
 - iptables 的规则匹配是线性的，匹配的时间复杂度是 O(N)，规则更新是非增量式的，哪怕增加/删除一条规则，也是修改整体的 iptables 规则表，当集群内 Service 数量较多，会有不小的性能影响；
 - IPVS 专门用于高性能负载均衡，使用了更高效的哈希表，时间复杂度为 O(1)，性能与规模无关。
@@ -64,4 +64,4 @@ Kubernetes 中 kube-proxy 组件有两种模式 iptables 和 IPVS，两者区别
   图 3-9 iptables 与 IPVS 的性能差异 [图片来源](https://www.tigera.io/blog/comparing-kube-proxy-modes-iptables-or-ipvs/)
 :::
 
-所以，当 Kubernetes 规模较大时，应该避免使用 iptables 模式。如果 CNI 插件使用的是 Cilium，还可以创建一个没有 kube-proxy 的 Kubernetes 集群，减少 iptables/netfilter 的影响，全方位提升网络性能。 
+所以，当 Kubernetes 管理的节点规模较大时，应该避免使用 iptables 模式。如果 CNI 插件使用的是 Cilium，还可以创建一个没有 kube-proxy 的 Kubernetes 集群，减少 iptables/netfilter 的影响，全方位提升网络性能。 
