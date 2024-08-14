@@ -24,7 +24,7 @@ Brotli 是 Google 推出的开源无损压缩算法，它内部包含一个预�
 :::
 
 
-在服务端的软件（如 nginx）安装好 Brotli 模块（ngx_brotli）后，可以与 gzip 一同启用。Nginx 中的 Brotli 配置示例如下所示。
+服务端的软件（如 nginx）安装好 Brotli 模块（ngx_brotli）后，可以与 gzip 一同启用，保持最大的兼容性。Nginx 中 Brotli 配置示例如下所示。
 
 ```nginx
 http {
