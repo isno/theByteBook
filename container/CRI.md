@@ -1,8 +1,8 @@
 # 7.4 容器运行时的演变
 
-Docker 大概也没想到：它诞生十多年后，还能再次成为舆论的焦点。事件的起源是 Kubernetes 宣布开始进入废弃 dockershim 支持的倒计时，最后讹传讹被人误以为 Docker 不能再用了。
+Docker 大概也没想到：它诞生十多年后，还能再次成为舆论的焦点。事件的起源是 Kubernetes 宣布开始进入废弃 dockershim 支持的倒计时，最后讹传讹被人误以为 Docker 不能再用了。虽说此次事件有众多标题党的推波助澜，但也从侧面说明了 Kubernetes 与 Docker 的关系十分微妙。
 
-虽说此次事件有众多标题党的推波助澜，但也从侧面说明了 Kubernetes 与 Docker 的关系十分微妙。本节，我们根据这两者关系的变化，深入理解容器运行时规范以及 Kubernetes CRI 容器运行时接口的演变。
+本节，我们根据这两者关系的变化，深入理解 Kubernetes 容器运行时接口（CRI）的演变。
 
 ## 7.4.1 Docker 与 Kubernetes 
 
