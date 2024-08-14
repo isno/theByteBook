@@ -1,4 +1,4 @@
-# 3.6.2 虚拟网卡 TUN/TAP 和 Veth
+# 3.5.2 虚拟网卡 TUN/TAP 和 Veth
 
 目前主流的虚拟网卡有 TUN/TAP 和 Veth 两种，时间上 TUN/TAP 出现的更早，Linux 内核 2.4.x 起就已支持。
 

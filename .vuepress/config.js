@@ -151,16 +151,8 @@ export default defineUserConfig({
                             '/network/conntrack.md',
                         ]
                     },
-                    {
-                        text: '3.4 内核网络优化实践',
-                        link: '/network/kernel-performance.md',
-                        children: [
-                            "/network/RSS.md",
-                            "/network/netstack-performance.md"                            
-                        ]
-                    },
                      {
-                        text: '3.5 内核旁路技术',
+                        text: '3.4 内核旁路技术',
                         link: "/network/kernel-bypass.md",
                         children: [
                             '/network/DPDK.md',
@@ -169,7 +161,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: '3.6 Linux 网络虚拟化技术',
+                        text: '3.5 Linux 网络虚拟化技术',
                         link: "/network/linux-vritual-net.md",
                         children: [
                             "/network/network-namespace.md",

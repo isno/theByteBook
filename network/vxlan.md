@@ -1,4 +1,4 @@
-# 3.6.4 Overlay 网络通信 VXLAN 
+# 3.5.4 Overlay 网络通信 VXLAN 
 
 有了各类虚拟设备之后，下一步就是利用这些设备实现不同容器间的网络互联。容器网络模型多数属于 Overlay 网络，所以本节笔者以 Linux 内核中的 VXLAN 模块为例，介绍 Overlay 网络的通信原理。
 
