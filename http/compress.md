@@ -19,8 +19,8 @@ Brotli 是 Google 推出的开源无损压缩算法，它内部包含一个预�
 如图 2-9 所示，各类型压缩算法在不同压缩等级下的效果对比。可以看到，Brotli 压缩效果比常用的 Gzip 高出 17% 至 30%。
 
 :::center
-  ![](../assets/brotli.jpeg)<br/>
-  图 2-9 Brotli、Zopfli、gzip 压缩算法在不同压缩等级下的压缩率对比
+  ![](../assets/brotli.png)<br/>
+  图 2-9 Brotli、Zopfli、gzip 不同压缩等级下的压缩率对比
 :::
 
 

@@ -48,12 +48,7 @@ ServiceMesh 之所以称为服务网格，是因为每台节点同时运行着�
 
 相信你已经清楚服务网格不是什么黑科技，也没有什么耀眼的新技术。
 
-服务网格本质是通过 iptables 劫持发送到应用容器的流量，将原本在业务层要处理的分布式技术问题，下沉到具有流控能力的 Sidecar 中处理，实现业务与非业务逻辑解耦的目的，并彻底解决 Spring Cloud 为代表的第二代微服务框架所面临的本质问题[^2]。
+服务网格本质是通过 iptables 劫持发送到应用容器的流量，将原本在业务层要处理的分布式技术问题，下沉到具有流控能力的 Sidecar 中处理，实现业务与非业务逻辑解耦的目的。
 
 
 [^1]: 参见 https://www.infoq.cn/news/2017/11/WHAT-SERVICE-MESH-WHY-NEED/
-[^2]: 关于服务网格的详细解读，请参阅本书第八章第一节。
-
-[^3]: 参见 https://istio.io/v1.15/blog/2021/proxyless-grpc/
-[^4]: 参见 https://istio.io/latest/zh/blog/2023/ambient-merged-istio-main/
- 

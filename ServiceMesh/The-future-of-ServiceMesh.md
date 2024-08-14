@@ -13,7 +13,7 @@
 
 Proxyless 模式的设计理念是，服务间通信总是要选择一种协议进行，那么将协议的类库（SDK）扩展，使其具有流量控制的能力，不就能代替 Sidecar 代理了吗？且 SDK 和应用同属于一个进程，必然有更优秀的性能表现，Sidecar 诟病的延迟问题也将迎刃而解。
 
-2021 年 Istio 官方博客发表了一篇文章 《基于 gRPC 的无代理服务网格》，文中介绍了基于 gRPC 实现的一种 Proxyless 模式的服务网格。Proxyless 模式的工作原理如图 8-18 所示，服务之间的流控能力再依赖 Sidecar，而是被集成在 gRPC 库中。但这种方案额外需要一个代理（图中的 Istio Agent）通过 xDS 协议与控制平面交互，负责告知 gRPC 库如何连接到 istiod、如何获取证书、如何配置规则等。
+2021 年 Istio 官方博客发表了一篇文章 《基于 gRPC 的无代理服务网格》[^1]，文中介绍了一种基于 gRPC 框架实现的 Proxyless 模式的服务网格。Proxyless 模式的工作原理如图 8-18 所示，服务之间的流控能力再依赖 Sidecar，而是被集成在 gRPC 库中。但这种方案额外需要一个代理（图中的 Istio Agent）通过 xDS 协议与控制平面交互，负责告知 gRPC 库如何连接到 istiod、如何获取证书、如何配置规则等。
 
 :::center
   ![](../assets/proxyless.svg)<br/>
@@ -56,7 +56,7 @@ Cilium Sidecarless 模式设计思路上其实和 Proxyless 如出一辙，即�
 
 ## 8.5.3 Ambient Mesh 模式
 
-2022 年 9 月，服务网格 Istio 发布了一种全新的数据平面模式 “Ambient Mesh”。Ambient Mesh 让用户无需使用 Sidecar 代理，就能将网格数据平面集成到其基础设施中，同时还能保持 Istio 的零信任安全、可观测和流量治理等核心特性。
+2022 年 9 月，服务网格 Istio 发布了一种全新的数据平面模式 “Ambient Mesh”[^2]。Ambient Mesh 让用户无需使用 Sidecar 代理，就能将网格数据平面集成到其基础设施中，同时还能保持 Istio 的零信任安全、可观测和流量治理等核心特性。
 
 以往 Istio 的设计中，Sidecar 实现了从基本加密到高级 L7 策略所有数据平面功能。在实践中，这使得 Sidecar 成为一个 0 和 1 的命题（要么全有，要么全无），即使服务对传输安全性要求不高，工程师们仍然需要付出部署和维护 Sidecar 的额外成本。
 
@@ -75,3 +75,4 @@ Cilium Sidecarless 模式设计思路上其实和 Proxyless 如出一辙，即�
 
 
 [^1]: 参见 https://istio.io/latest/zh/blog/2021/proxyless-grpc/
+[^2]: 参见 https://istio.io/latest/zh/blog/2023/ambient-merged-istio-main/
