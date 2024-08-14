@@ -8,9 +8,7 @@
 
 ## 7.3.1 镜像分层设计原理
 
-上述的 rootfs 仅解决了应用运行环境一致性的问题，但并未解决所有问题。比如，应用每次升级或运行环境有改动时，该怎么办？难道要重新制作一次 rootfs 吗？
-
-如果将整个 rootfs 粗暴地打包在一起，不仅无法复用，还会占用大量存储空间。例如，笔者基于 CentOS ISO 制作了一个 rootfs，并安装了 Java 运行环境用于部署 Java 应用。那么，笔者的同事发布 Java 应用时，肯定想复用之前安装过 Java 运行环境的 rootfs，而不是重新制作一个。此外，如果每个人都重新制作 rootfs，考虑到一台主机通常运行几十个容器，将会占用巨大的存储空间。
+上述的 rootfs 仅解决了应用运行环境一致性的问题，但并未解决所有问题。比如，应用升级或运行环境有改动时，要重新制作一次 rootfs 吗？如果整个 rootfs 粗暴地打包在一起，不仅无法复用，还会占用大量存储空间。举例来说，笔者基于 CentOS ISO 制作了一个 rootfs，并配置好了 Java 运行环境。那么，笔者的同事发布 Java 应用时，肯定想复用之前安装过 Java 运行环境的 rootfs，而不是重新制作一个。此外，如果每个人都重新制作 rootfs，考虑到一台主机通常运行几十个容器，将会占用巨大的存储空间。
 
 分析上述 Java 应用对 rootfs 的需求，会发现底层的 rootfs（CentOS + JDK）其实不变。那么，是否可以以增量修改的方式支持不同应用的依赖？比如，所有人维护一个共同的“base rootfs”，然后根据应用的不同依赖，制作不同的镜像，如 CentOS + JDK + app-1、CentOS + JDK + app-2 和 CentOS + Python + app-3。
 
@@ -42,7 +40,11 @@ $ sudo mount -t overlay overlay \
  ./merged
 ```
 
-如图 7-7 所示，用户将在 merged 目录中看到 lowerdir 和 upperdir 中的所有文件。lowerdir 作为只读层，提供基础文件系统；upperdir 作为读写层，存储用户的增量修改；merged 目录则呈现了最终的统一文件系统视图，包含 lower 和 upper 两层的内容。
+如图 7-7 所示，挂载后的文件系统各个层含义以及说明：
+
+- lower 作为只读层，提供基础文件系统；
+- upper 作为读写层，存储用户的增量修改；
+- merged 目录则呈现了最终的统一文件系统视图，包含 lower 和 upper 两层的内容。
 
 :::center
   ![](../assets/overfs.jpeg)<br/>
