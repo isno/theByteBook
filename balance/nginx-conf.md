@@ -1,35 +1,34 @@
-# 4.4.1 Nginx 代理配置指南
+# 4.4.1 七层代理配置指南
 
-七层负载均衡的典型实现相信读者们已经非常熟悉，没错，就是 Nginx。常见的网关 OpenResty、Kong 核心都是 Nginx，它们的配置也基本延续 Nginx 的配置规范。
+Nginx 是七层负载均衡的典型实现相信，常见的网关 OpenResty、Kong 核心都是基于 Nginx，它们的配置也基本延续 Nginx 的配置规范。本节，笔者选取部分代理相关的参数配置进行说明，以便读者了解 Nginx 或以 Nginx 为核心的网关配置操作。
 
-本节，笔者选取部分代理相关的参数配置进行说明，以便读者了解 Nginx 或以 Nginx 为核心的网关配置操作。
-
-Nginx 的主配置文件是 nginx.conf，这个配置文件一共由三部分组成，分别为全局块、events 块和 http 块。http 块中又包含 http 全局块、多个 server 块。每个 server 块中可以包含 server 全局块和多个 location 块，在同一配置块中嵌套的配置块，各个之间不存在次序关系，它们的关系如图 4-14所示。
+Nginx 的主配置文件是 nginx.conf，这个配置文件一共由三部分组成：main、event 和 http。http 中又嵌套虚拟机。它们的嵌套关系如图 4-14所示。
 
 :::center
   ![](../assets/nginx-conf.png)<br/>
   图 4-14 Nginx 配置
 :::
 
-## 1. 缓冲（Buffer）
+## 1. Buffer 配置
 
-作为反向代理，缓冲主要是解决后端 Server 与用户网络不对等的情况，譬如 Nginx 到 Server 是 100KiB/s，用户到 Nginx 是 10Kib/s，这种情况下，如果没有启用 buffer，会导致 Nginx 使用较长的时间处理用户端与后端 Server 的连接，高并发下会出现大量的连接积压。
+在反向代理中，Buffer（缓冲）主要解决后端服务器与用户网络不对等的情况。如 Nginx 到后端服务器是 100KiB/s，用户到 Nginx 是 10Kib/s。这种情况下，如果没有启用 Buffer，会导致 Nginx 使用较长的时间处理用户端与后端服务器的连接，高并发下容易出现连接积压。
 
-开启代理缓冲后 Nginx 可以用较快的速度尽可能将响应体读取并缓冲到本地内存或磁盘中，然后同时根据客户端的网络质量以合适的网速将响应传递给客户端。
-这样既解决了 server 端连接过多的问题也保证了能持续稳定地向客户端传递响应。
+配置正确的 Buffer，将后端服务器的响应缓冲到 Nginx 服务器，Nginx 根据客户端的网络质量以匹配的网速将响应传递给客户端。这样既解决了连接积压问题，也实现了持续稳定地向客户端传递响应。Nginx 配置 Buffer 的示例如下：
 
-Nginx 使用 proxy_buffering 指令启用和禁用缓冲，proxy_buffers 指令设置每个连接读取响应的缓冲区的大小和数量，默认情况下缓冲区大小等于一个内存页，4K 或 8K，具体取决于操作系统。
-
-proxy_buffer_size 可以用来设置后端服务器响应的第一部分存储在单独的缓冲区，此部分通常是相对较小的响应 headers，通常将其设置成小于默认值。
-
-```plain
+```nginx
 location / {
-    proxy_buffers 16 4k;
+    proxy_buffering on;
+    proxy_buffers 4 32k;
     proxy_buffer_size 2k;
-    proxy_pass http://localhost:8080;
+    # 其他 nginx 配置
 }
 ```
-## 2. 缓存（Cache）
+proxy_buffers 指令设置了为每个请求分配的 Buffer 大小和数量，4 指定了每个请求的 Buffer 数量，32K 指定了每个 Buffer 的大小（一个接口的响应一般在 32k）。proxy_buffer_size 指令设置了为处理响应头部分（HTTP header 部分）分配的 Buffer 的大小。
+
+
+## 2. Cache 配置
+
+缓存静态内容（如图片、CSS、JS 文件）可加速静态内容的访问，缓存动态内容可减少对后端服务器的请求次数，降低后端服务器的压力。
 
 启用缓存后，Nginx 将响应保存在磁盘中，返回给客户端的数据首先从缓存中获取，这样子相同的请求不用每次都发送给后端服务器，减少到后端请求的数量。
 
