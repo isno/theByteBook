@@ -135,7 +135,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第三章：深入 Linux 内核网络',
+                text: '第三章：深入 Linux 内核网络技术',
                 collapsable: true,
                 link: '/network/summary.md',
                 sidebarDepth: 2,
