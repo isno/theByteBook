@@ -7,7 +7,7 @@
 
 ## 2.6.1 网络拥塞控制原理
 
-图 2-22 展示了网络拥塞的产生和控制逻辑。首先，解释图中的一些术语：
+RTT 和传输速率与网络拥塞直接相关，图 2-22 展示了两者对网络拥塞的影响及其控制逻辑。首先，解释图中的一些术语：
 
 - RTprop (Round-Trip propagation time，两个节点之间最小时延)：两个节点之间的最小时延，取决于物理距离，距离越长，时延越大。
 - BtlBw（Bottleneck Bandwidth，瓶颈带宽）：如果把网络链路想象成水管，RTprop 就是水管的长度，BtlBw 则是水管最窄处的直径。
@@ -21,9 +21,9 @@
 
 inflight 数据受 RTT 和传输速率的影响，分为三个区间：
 
-1. (0，BDP)：称为应用受限区（app limited）。在这个区间内，inflight 数据量未占满瓶颈带宽。
-2. (BDP，BtlBwBuffSize)：称为带宽受限区（bandwidth limited）。在这个区间内，inflight 数据量已达到链路瓶颈容量，但尚未超过瓶颈容量加缓冲区容量。此时，应用能发送的数据量主要受带宽限制。
-3. (BDP + BtlBwBuffSize，infinity)：称为缓冲区受限区（buffer limited）。在这个区间内，实际发送速率已超过瓶颈容量加缓冲区容量，超出部分的数据会被丢弃，从而产生丢包。
+1. (0，BDP)：称为应用受限区（app limited）。在这个区间内，inflight 数据量未占满瓶颈带宽。RTT 最小、传输速率最高。
+2. (BDP，BtlBwBuffSize)：称为带宽受限区（bandwidth limited）。在这个区间内，inflight 数据量已达到链路瓶颈容量，但尚未超过瓶颈容量加缓冲区容量。此时，应用能发送的数据量主要受带宽限制。RTT 逐渐变大，传输速率到达上限。
+3. (BDP + BtlBwBuffSize，infinity)：称为缓冲区受限区（buffer limited）。在这个区间内，实际发送速率已超过瓶颈容量加缓冲区容量，超出部分的数据会被丢弃，从而产生丢包。RTT 以及传输速率均达到上限。
 
 根据图 2-22，可以看出，拥塞本质是 inflight 数据量持续向右侧偏离 BDP 线的行为，而拥塞控制就是控制 inflight 数据量在以上哪个区间内。很明显，当 inflight 数据量处于应用受限区和带宽受限区的边界时，传输速率接近瓶颈带宽，也没有丢包。
 
