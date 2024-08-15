@@ -39,7 +39,7 @@ Proxyless 模式的设计理念是，服务间通信总是要选择一种协议�
 Cilium Sidecarless 模式的服务网格工作原理如图 8-20 所示。Cilium 通过在节点中运行一个 Enovy 实例，作为所有容器的共享代理，这样不需要在每个 Pod 内放置一个 Sidecar 了。然后，再借助 Cilium CNI 底层网络能力，当业务容器的数据包经过内核时，与节点中的共享代理打通，从而构建出一种新形态的服务网格。
 
 :::center
-  ![](../assets/sidecarless.png)<br/>
+  ![](../assets/sidecarless.svg)<br/>
  图 8-20 经过 eBPF 加速的服务网格和传统服务网格的区别
 :::
 
