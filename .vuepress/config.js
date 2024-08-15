@@ -165,6 +165,7 @@ export default defineUserConfig({
                         link: "/network/linux-vritual-net.md",
                         children: [
                             "/network/network-namespace.md",
+                            "/network/tuntap.md",
                             "/network/virtual-nic.md",
                             "/network/linux-bridge.md",
                             "/network/vxlan.md"

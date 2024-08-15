@@ -3,7 +3,7 @@
 HTTPS 的请求过程中，客户端与服务端要协商确认 TLS 版本，选择合适的密码套件（Cipher Suite），下载数字证书并验证数字证书，然后生成会话密钥。不做任何优化的情况下，这些操作让
 HTTPS 的延迟要比 HTTP 高出几百毫秒。
 
-在本文中，我们将通过升级 TLS 协议、选择合适的密码套件以及开启 OCSP Stapling 的方式来加快 HTTPS 请求的速度。
+本节，我们通过升级 TLS 协议、选择合适的密码套件以及开启 OCSP Stapling 的方式，加快 HTTPS 请求的速度。
 
 
 ## 1. 使用 TLS1.3 协议 
@@ -24,7 +24,7 @@ server {
 ## 2. 使用 ECC 证书
 
 HTTPS 数字证书分为 RSA 证书和 ECC 证书。两者的区别在于：
-- RSA 证书使用的是 RSA 算法生成的公钥，兼容性好，但不支持 PFS （Perfect Forward Secrecy，完美前向保密。保证即使私钥泄露，也无法破解泄露之前通信内容）。
+- RSA 证书使用的是 RSA 算法生成的公钥，兼容性好，但不支持 PFS（Perfect Forward Secrecy，完美前向保密。保证即使私钥泄露，也无法破解泄露之前通信内容）。
 - ECC 证书使用的是椭圆曲线算法（Elliptic Curve Cryptography）生成的公钥，它的计算速度快，安全性高，支持 PFS，能以更小的密钥长度提供更高的安全性。例如，256 位的 ECC 密钥提供的安全性约等于 3072 位的 RSA 密钥。
 
 
