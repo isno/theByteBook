@@ -10,14 +10,29 @@ DPDK 技术是完全绕过内核，直接将数据包传递到用户空间进行
 
 那么，如何在内核中执行用户空间定义的程序呢？这就需要用到 BPF（Berkeley Packet Filter，伯克利包过滤器）技术——一种允许在内核空间运行经过安全验证的代码的机制。
 
-自 Linux 内核版本 2.5 起，Linux 系统就开始在支持 BPF 技术了，但早期的 BPF 主要用于网络数据包的捕获和过滤。到了 Linux 内核 3.18 版本，开发者推出了一套全新的 BPF 架构，也就是我们今天所说的 eBPF（Extended Berkeley Packet Filter）。与早期的 BPF 相比，eBPF 的功能不再局限于网络分析。它几乎可以访问 Linux 内核所有关联的资源，并逐渐发展成为一个多功能的通用执行引擎，适用于网络优化（Networking）、系统安全（Security）、可观测性（Observability）和系统追踪（Tracing）等多种场景。
+自 Linux 内核版本 2.5 起，Linux 系统就开始在支持 BPF 技术了，但早期的 BPF 主要用于网络数据包的捕获和过滤。到了 Linux 内核 3.18 版本，开发者推出了一套全新的 BPF 架构，也就是我们今天所说的 eBPF（Extended Berkeley Packet Filter）。与早期的 BPF 相比，eBPF 的功能不再局限于网络分析，它几乎可以访问 Linux 内核所有关联的资源（因为有了无处不在的钩子），并逐渐发展成为一个多功能的通用执行引擎。
 
-如今，许多文档中提到的 BPF 实际上指的是 eBPF，而将早期的 BPF 称为 cBPF（Classic Berkeley Packet Filter）。
+
+其实，不难发现。Linux 系统通过钩子触发 eBPF 程序。
+
+- TC（Traffic Control）钩子：用于在 Linux Traffic Control 系统中执行数据包的过滤和处理。
+- XDP 钩子：直接在网络驱动程序层处理数据包，可以实现非常高性能的网络数据包处理。
+- LSM（Linux Security Modules）钩子：与 SELinux、AppArmor 等安全模块集成，用于增强系统安全性
+- File Operations 钩子：用于监控和修改文件操作，如打开、读取、写入、关闭等。
+- ...。
 
 :::center
-  ![](../assets/ebpf.webp)<br/>
+  ![](../assets/ebpf-go.webp)<br/>
  图 3-13 eBPF 的技术架构
 :::
+
+上图展示了一个程序是如何被加载、验证并执行的。具体来看，经历了如下步骤：
+- 第一步：编写的c eBPF程序，经过编译器，编译为eBPF伪代码，即eBPF字节码（具体会在第二讲中进行介绍）
+- 第二步：编译好的代码，会被eBPF所对应的高级语言库程序加载，并由高级语言进行系统调用处理（目前eBPF支持golang、python、c/c++、rust等）
+- 第三步：通过系统调用陷入内核后，首先由内核eBPF程序进行验证（verify），这一步确保（1）程序本身无误（不会崩溃、不会出现死循环）；（2）没有权限异常；然后进行将编译为eBPF伪代码的程序再转换为具体的机器指令集，以优化程序执行，并最终挂载到对应的hook点或追踪点。
+- 第四步：内核在处理某个追踪点时，刚好有eBPF,就会触发事件，并由加载的eBPF程序处理
+
+正是由于这些突出的特性，eBPF 可以附加到各种内核子系统，包括网络、跟踪和 Linux 安全模块（LSM）。比如 Facebook 开源的高性能网络负载均衡器 Katran、Isovalent 开源的容器网络方案 Cilium，以及著名的内核跟踪排错工具 BCC 和 bpftrace 等。
 
 
 ## 2. XDP 实际是加载 eBPF 程序的钩子
