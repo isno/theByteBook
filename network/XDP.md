@@ -40,7 +40,7 @@ DPDK 技术是完全绕过内核，直接将数据包传递到用户空间进行
 
 正是由于这些突出的特性，eBPF 可以附加到各种内核子系统，包括网络、跟踪和 Linux 安全模块（LSM）。比如 Facebook 开源的高性能网络负载均衡器 Katran，内核跟踪排错工具 BCC 和 bpftrace，以及 Isovalent 开源的容器网络方案 Cilium 等等都是利用 eBPF 技术实现的。以 Cilium 为例，它在 eBPF 和 XDP 钩子（也有其他的钩子）基础上，实现了一套全新的 conntrack 和 NAT 机制。并以此为基础，构建出如 L3/L4 负载均衡、网络策略、观测和安全认证等各类高级功能。
 
-由于 Cilium 实现的底层网络功能现独立于 Netfilter，因此它的 conntrack 条目和 NAT 信息不会存储在内核中的 conntrack 表和 NAT 表中。常规的 Linux 命令 conntrack、netstat、ss 和 lsof 等，都无法查看 NAT 和 conntrack 数据。得使用 Cilium 提供的查询命令才行，例如：
+由于 Cilium 实现的底层网络功能现独立于 Netfilter，因此它的 conntrack 条目和 NAT 信息不会存储在 Linux 内核默认的 conntrack 表和 NAT 表中。常规的 Linux 命令 conntrack、netstat、ss 和 lsof 等，都无法查看 NAT 和 conntrack 数据。得使用 Cilium 提供的查询命令才行，例如：
 
 ```bash
 $ cilium bpf nat list
