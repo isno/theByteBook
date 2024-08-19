@@ -39,7 +39,7 @@ ServiceMesh 之所以称为服务网格，是因为每台节点同时运行着�
 
 值得一提的是，虽然服务网格都在使用 Sidecar 作为数据平面，但 Sidecar 模式并不是服务网格所特有的。Sidecar 一种常见的容器设计模式，Kubernetes 的工作负载 Pod 中可以运行多个容器，所有业务容器之外的其他容器都可以被称为 Sidecar，例如日志收集 Sidecar、请求代理 Sidecar、链路追踪 Sidecar 等等。
 
-如图 1-25 所示，app-container 是一个主业务容器，longing-agent 是一个日志收集的容器。有了 longing-agent，主业务容器完全不需要关心日志怎么处理、怎么传送到后端、怎么对接到日志系统。你思考这样开发一个高内聚、低耦合的系统是否更加容易？
+如图 1-25 所示，app-container 是一个主业务容器，logging-agent 是一个日志收集的容器。有了 logging-agent，主业务容器完全不需要关心日志怎么处理、怎么传送到后端、怎么对接到日志系统。你思考这样开发一个高内聚、低耦合的系统是否更加容易？
 
 :::center
   ![](../assets/k8s-sidecar.png)<br/>
