@@ -1,3 +1,5 @@
 # 3.3 Linux 内核网络框架
 
+Linux 网络数据包的处理看似是一套相对固定和封闭的流程，事实却并非如此，从 Linux 内核 2.4 版本起，内核就开放了一套通用的、可提供代码干预网络数据包在协议栈流转的过滤框架 —— Netfilter。
 
+Netfilter 的主要作者是 Rusty Russell，他在 Linux 内核 2.4 版本中引入了 Netfilter 框架，并设计了 iptables 工具，可以说是整个 Linux 网络大厦最重要的基石。
