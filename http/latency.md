@@ -103,5 +103,5 @@ time_total=0.088744
 
 [^1]: 参见 https://blog.cloudflare.com/a-question-of-timing/
 [^2]: RTT（Round-Trip Time）一个网络数据包从起点到目的地然后再回到起点所花费的时长。
-[^3]: TTFB（Time To First Byte，首字节时间）用户客户端从所请求服务器接收首个字节数据所需的时间，是衡量服务质量的重要指标。
+[^3]: TTFB（Time To First Byte，首字节时间）指从浏览器请求页面到接收来自服务器发送的信息的第一个字节的时间。
 
