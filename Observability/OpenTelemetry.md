@@ -1,25 +1,15 @@
 # 9.4 可观测性标准演进
 
-Dapper 论文发布后，市场也出现了大量的追踪系统，如 Jaeger、Pinpoint、Zipkin 等，这些系统都以 Dapper 论文为原型实现，各个系统功能并没有本质差别，但又受限于实现细节，彼此之间很难搭配工作。
+收 Dapper 论文发布的影响，市场出现了大量的追踪系统，如 Jaeger、Pinpoint、Zipkin 等。这些系统都以 Dapper 论文为原型实现，各个系统功能并没有本质差别，但又受限于实现细节，彼此之间很难搭配工作。
 
 
-为了解决追踪系统各自为政的乱象，一些老牌 APM（Application Performance Monitoring，应用程序性能监控）系统代表的厂商（Uber、LightStep、Redhat）定义了一套厂商无关、语言无关的分布式追踪的标准协议 —— OpenTracing。
+为了解决追踪系统各自为政的乱象，一些老牌 APM（Application Performance Monitoring，应用程序性能监控）系统代表的厂商（如 Uber、LightStep、Redhat）定义了一套厂商无关、语言无关的分布式追踪的标准协议 —— OpenTracing。
 
-OpenTracing 规范提出之后，业内知名的追踪系统 Jaeger 、Zipkin、Skywalking 等项目很快宣布宣布实现和支持 OpenTracing。使用这类符合 OpenTracing 规范的追踪系统，系统内的探针、存储、界面都可以互换或者重新组合。2016 年，CNCF 接纳 OpenTracing 成为 CNCF 第三个项目，前两个项目是鼎鼎大名的 Kubernetes 和 Prometheus，由此可见开源界对 APM 的重视，对统一标准的重视和渴望。
+OpenTracing 提供了一个抽象层，使得开发者可以使用统一的接口记录和传播追踪信息，并且可以方便地切换不同的追踪实现工具（如 Jaeger、Zipkin 等）。OpenTracing 规范提出之后，业内知名的追踪系统 Jaeger 、Zipkin、Skywalking 等项目很快宣布宣布实现和支持 OpenTracing。使用符合 OpenTracing 规范的追踪系统后，系统内的探针、存储、界面都可以互换或者重新组合。2016 年，CNCF 接纳 OpenTracing 成为 CNCF 第三个项目，前两个项目是鼎鼎大名的 Kubernetes 和 Prometheus，由此可见业界对统一 APM 标准的重视和渴望。
+
+OpenTracing 推出不久之后，Google 和微软联合推出了 OpenCensus 项目。OpenCensus 最初目标并不是抢 OpenTracing 的饭碗，而是为了把 Go 语言的 Metrics 采集、链路跟踪与 Go 语言自带的 Profile 工具打通，统一用户的使用方式。随着项目的进展，开发人员想：“为什么不把其它各种语言的相关采集都统一呢？”。于是，OpenCensus 的场景进一步扩大了，不仅做了 Metrics 基础指标监控，还做了 OpenTracing 的老本行 —— 分布式跟踪。
 
 
-OpenTracing 推出不久之后，Google 和微软又联合推出了 OpenCensus 项目。OpenCensus 最初目标并不是抢 OpenTracing 的饭碗，而是为了把 Go 语言的 Metrics 采集、链路跟踪与 Go 语言自带的 Profile 工具打通，统一用户的使用方式。
-
-随着项目的进展，开发人员想：“为什么不把其它各种语言的相关采集都统一呢？”。于是，OpenCensus 的场景进一步扩大了，不仅做了 Metrics 基础指标监控，还做了 OpenTracing 的老本行 —— 分布式跟踪。
-
-图 9-22 概述了 OpenTracing 和 OpenCensus 功能和特性的对比，两者各有优缺点：
-- OpenTracing 支持的编程语言更多、相对其他系统的耦合性要更低；
-- OpenCensus 支持 Metrics、Tracing，同时从 API 层一直到基础设施层都进行了支持。
-
-:::center
-  ![](../assets/opentracing-vs-opencensus.jpg)<br/>
-  图 9-22 OpenTracing 和 OpenCensus 功能、特性对比
-:::
 
 虽说 OpenTracing 和 OpenCensus 促进了可观测系统的发展，然后作为一种协议标准，它们之间的竞争/分裂未免太消耗社区资源。对用户而言，一边是老牌 APM 厂商，一边是影响力巨大的 Google 和微软。选择困难症发作的同时，一个新的想法不断被讨论：“是否能有一个统一标准，能够同时支持 Metrics、Tracing、Logs 相关可观测数据的项目呢？”。
 
