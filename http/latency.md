@@ -55,7 +55,7 @@ $ cat curl-format.txt
 我们先看看一个简单的请求，如下所示：
 
 ```bash
-$ curl -w "@curl-format.txt" -o /dev/null -s 'https://www.thebyte.com.cn/'
+$ curl -w "@curl-format.txt" -o /dev/null -s 'https://www.iq.com/'
 // curl 打印的与耗时有关的信息（单位秒）
 time_namelookup=0.025021
 time_connect=0.033326
