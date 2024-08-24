@@ -9,11 +9,8 @@ OpenTracing 提供了一个抽象层，使得开发者可以使用统一的接�
 
 OpenTracing 推出不久之后，Google 和微软联合推出了 OpenCensus 项目。OpenCensus 最初目标并不是抢 OpenTracing 的饭碗，而是为了把 Go 语言的 Metrics 采集、链路跟踪与 Go 语言自带的 Profile 工具打通，统一用户的使用方式。随着项目的进展，开发人员想：“为什么不把其它各种语言的相关采集都统一呢？”。于是，OpenCensus 的场景进一步扩大了，不仅做了 Metrics 基础指标监控，还做了 OpenTracing 的老本行 —— 分布式跟踪。
 
-
-
 虽说 OpenTracing 和 OpenCensus 促进了可观测系统的发展，然后作为一种协议标准，它们之间的竞争/分裂未免太消耗社区资源。对用户而言，一边是老牌 APM 厂商，一边是影响力巨大的 Google 和微软。选择困难症发作的同时，一个新的想法不断被讨论：“是否能有一个统一标准，能够同时支持 Metrics、Tracing、Logs 相关可观测数据的项目呢？”。
 
-## 9.4.3 OpenTelemetry
 
 为了更好的将 Traces、Metrics 和 Logs 融合在一起，OpenTelemetry（简称 OTel）诞生了。
 
