@@ -9,12 +9,13 @@
 :::center
 表 4-1 业内网关代表方案
 ::: 
-|语言|网关|特点|
-|:--|:--|:--|
-|Nginx + LuaJIT|OpenResty| 原始 Web 开发平台 |
-|Nginx + Lua| Kong| 社区活跃、成熟度高、Postgres 存储、二次开发成本高 |
-|Nginx + Lua| Apache/APISIX | 云原生化、使用 etcd 存储、性能高、二次开发成本低|
-|Java|Spring Cloud Alibaba| Spring Cloud 生态、社区成熟度高、国内应用广泛|
+网关|特点|
+|:--|:--|
+OpenResty| 基于 Nginx 和 LuaJIT 的高性能 Web 平台。通过 LuaJIT 引擎，OpenResty 允许用户在 Nginx 中编写 Lua 脚本。这使得开发者可以在请求处理的不同阶段（如请求、响应、重写、日志等）动态地执行自定义逻辑 ，快速构造出足以胜任 10K 乃至 1000K 以上单机并发连接的高性能 Web 应用系统。|
+|Kong| 社区活跃、成熟度高、Postgres 存储、二次开发成本高 |
+|Spring Cloud Gateway| Spring Cloud Gateway 是 Spring 生态系统中的一个网关解决方案，适用于 SpringBoot 和 SpringCloud 构建的微服务系统|
+|Traefik| Docker、Kubernetes 等容器编排系统紧密结合。 |
+|Envoy | Envoy 是 Lyft 开发的一款面向服务网格的高性能网络代理，支持高级的路由控制、负载均衡策略、服务发现和健康检查等。Envoy 与 Istio 等服务网格解决方案紧密结合，通常作为它们的数据平面代理使用。|
 
 这些现代化的网关方案各有各的特点，实现的功能也非常强大，简单列举部分网关功能，以便读者对“强大功能”有个直观的感受。
 
