@@ -36,9 +36,7 @@ Raft 是强 Leader 模型的算法，日志项只能由 Leader 复制给其他�
 
 ## 2. 实现日志的一致性
 
-实际上日志项的管理不只是简单追加。
-
-当一个 Follower 新加入集群或者 Leader 刚晋升之时，Leader 并不知道要同步哪些日志给 Follower，同时旧的 Leader 转变为 Follower 时，也会携带一些上一任 term 中仅在本地被 committed 的日志项，而当前新的 Leader 并不存在这些日志项。
+当一个 Follower 新加入集群或 Leader 刚晋升时，Leader 并不清楚需要同步哪些日志给 Follower。此外，当旧的 Leader 转变为 Follower 时，可能携带上一任期（term）中仅在本地提交的日志项，而这些日志项在当前新的 Leader 上并不存在。
 
 Raft 算法中，通过 Leader 强制 Follower 复制自己的日志项，来处理不一致的日志。具体包括两个步骤：
 
