@@ -2,7 +2,7 @@
   "name": "thebyte",
   "version": "1.0.0",
   "main": "index.js",
-  "author": "isno <caxcn@qq.com>",
+  "author": "isno",
   "license": "MIT",
   "scripts": {
     "dev": "vuepress dev .",
