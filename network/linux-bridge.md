@@ -40,7 +40,7 @@ $ ip link set veth0 netns net1
 $ ip link set veth2 netns net2
 
 # 将 veth 另一端连接到 br0
-$ ip link set dev veth0 master br0
+$ ip link set dev veth1 master br0
 $ ip link set dev veth3 master br0
 ```
 
