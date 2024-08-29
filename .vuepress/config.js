@@ -221,7 +221,6 @@ export default defineUserConfig({
                         ]
                     },
                     '/distributed-transaction/idempotent.md',
-                    '/distributed-transaction/CAS.md',
                     '/distributed-transaction/conclusion.md'
                 ]
             },

@@ -1,10 +1,9 @@
-# 9.3.4 性能分析
+# 9.3.4 性能分析 Profiles
 
-熟悉 Go 语言的朋友一定了解 pprof，当我们需要对软件进行性能分析时，可以通过 pprof 的 CPU profiling 或者 Memory profiling 功能分析函数耗时以及内存占用情况。
+熟悉 Go 语言的开发者一定了解 pprof。当我们需要对软件进行性能分析时，可以通过 pprof 的 CPU profiling 或 Memory profiling 功能来分析函数的耗时和内存占用情况。可观测性领域，Profiles 和 Go 中的 pprof 概念相同，都是通过对动态程序进行 profiling，生成程序运行时的动态画像（也就是 Profiles），帮助我们了解程序使用各类资源的全貌。
 
-可观测中的 Profiles 和 Go 中的 pprof 是一个概念，是对动态程序进行 profiling 时程序运行的动态画像，可以让我们足够细地了解到程序使用各类资源的全貌，是回答从“是什么”到“为什么”的重要依据，如通过 trace 获知延迟在什么地方产生，再通过 Profiles 定位到哪行代码影响。
 
-Profiles 数据一般表示成火焰图、堆栈图，内存分析图等形式，2021 年国内某站崩溃，工程师们使用火焰图观察到到一处 Lua 代码存在异常，并定位到问题的源头[^1]。
+Profiles 数据一般表示成火焰图、堆栈图或内存分析图等形式，是从“是什么”到“为什么”这一过程中至关重要的依据。例如，通过 trace 发现延迟产生的位置，再借助 Profiles 生成的火焰图进一步定位到具体的代码行。2021 年国内某站崩溃，工程师们就是使用火焰图观察到到一处 Lua 代码存在异常，并定位到问题的源头[^1]。
 
 :::center
   ![](../assets/lua-cpu-flame-graph.webp)<br/>
@@ -22,13 +21,13 @@ Profiles 数据一般表示成火焰图、堆栈图，内存分析图等形式�
 
 可观测中的 Profiles 数据由多种不同的 Profiler 生成，常见的有：
 
-- CPU Profilers （CPU 分析器）。
-- Heap Profilers（堆分析器）。
-- GPU Profilers （GPU 分析器）。
-- Mutex Profilers （互斥锁分析器）。
-- IO Profilers （IO 分析器）。
-- Language-specific Profilers（特定于语言的分析器，譬如 JVM Profiler）。
+- CPU Profiler（CPU 分析器）：用于分析哪些函数或方法在运行时消耗了最多的 CPU 时间。例如，通过 CPU Profiler，我们可以确定某个算法的优化是否减少了 CPU 使用率。
+- Heap Profiler（堆分析器）：用于监测程序的内存使用情况，帮助发现内存泄漏或不必要的内存分配。例如，在 Java 应用中，Heap Profiler 可以帮助找到导致内存溢出的具体对象或数据结构。
+- GPU Profiler（GPU 分析器）：用于分析图形处理单元（GPU）的利用情况，常用于游戏开发或图形密集型应用。
+- Mutex Profiler（互斥锁分析器）：用于检测互斥锁的竞争情况，帮助优化多线程程序的并发性能。
+- IO Profiler（IO 分析器）：用于分析输入输出操作的性能，帮助发现瓶颈。例如，IO Profiler 可以指出文件读写操作的延迟或网络请求的耗时，从而优化数据传输效率。
+- Language-specific Profiler：特定于语言的分析器，如 JVM Profiler，专门用于分析运行在 Java 虚拟机上的应用程序。
 
-传统上，这些 Profiler 并不适合在产生环境中运行（开销很大），不过由于采样分析变得越来越可行（只增加了很少的开销），这使得生产环境中添加 Profiler 观察某段时间内的全局 Profiles 数据成为可能。
+传统上，这些分析器并不适合在产生环境中运行（开销很大），不过由于采样分析变得越来越可行（只增加了很少的开销），在生产环境中添加 Profiler 来收集某段时间内的全局 Profiles 数据变得越来越可行。
 
 [^1]: 参见《2021.07.13 我们是这样崩的》https://www.bilibili.com/read/cv17521097/

@@ -18,7 +18,7 @@
 5. 在 ksoftirqd 线程被唤醒后，内核会进行软中断处理。这时，内核会调用网卡驱动在内核中注册的 NAPI（New API）poll 接口，从 RingBuffer 中提取数据包，并生成 skb（Socket Buffer）数据。skb 是 Linux 内核中用于管理网络数据包的主要结构。它包含了网络包的所有信息，包括头部、数据负载等，并在内核的各个网络协议层之间传递。
 6. skb 被传递到内核协议栈中进行处理。这里涉及多个网络层次的处理操作：
 	- 网络层（L3 Network layer）：例如 IP 层会根据主机中的路由表，判断数据包路由到哪一个网络接口（Network Interface）。这里的网络接口可能是稍后介绍的虚拟设备，或者是物理网卡 eth0 接口。
-	- 传输层（L3 Network layer）：例如 TCP 层会解封装数据包，处理网络地址转换（NAT）、连接跟踪（conntrack）等任务。
+	- 传输层（L4 Transport layer）：例如 TCP 层会解封装数据包，处理网络地址转换（NAT）、连接跟踪（conntrack）等任务。
 7. 在内核协议栈处理完成后，将数据包传递到 socket 接收缓冲区。应用程序随后利用系统调用（如 Socket API）从这个缓冲区中读取数据，完成数据的接收过程。
 
 
