@@ -36,8 +36,8 @@ $ ip link add veth0 type veth peer name veth1
 $ ip link add veth2 type veth peer name veth3
 
 # 将 veth 网线的一端连接到网络命名空间内
-$ ip link set veth0 netns net1
-$ ip link set veth2 netns net2
+$ ip link set veth0 netns ns1
+$ ip link set veth2 netns ns2
 
 # 将 veth 另一端连接到 br0
 $ ip link set dev veth1 master br0
@@ -48,11 +48,11 @@ $ ip link set dev veth3 master br0
 
 ```bash
 # 配置命名空间1
-$ ip netns exec net1 ip link set veth1 up
-$ ip netns exec net1 ip addr add 172.16.0.1/24 dev veth1
+$ ip netns exec ns1 ip link set veth1 up
+$ ip netns exec ns1 ip addr add 172.16.0.1/24 dev veth1
 # 配置命名空间2
-$ ip netns exec net2 ip link set veth2 up
-$ ip netns exec net2 ip addr add 172.16.0.2/24 dev veth2
+$ ip netns exec ns2 ip link set veth2 up
+$ ip netns exec ns2 ip addr add 172.16.0.2/24 dev veth2
 ```
 
 接下来，我们检查几个命名空间之间是否可达。

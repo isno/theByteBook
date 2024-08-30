@@ -301,12 +301,17 @@ export default defineUserConfig({
                 children: [
                     "/observability/What-is-Observability.md",
                     "/observability/Observability-vs-Monitoring.md",
-                    '/observability/signals.md',
-                    '/observability/metrics.md',
-                    '/observability/logging.md',
-                    '/observability/tracing.md',
-                    '/observability/profiles.md',
-                    '/observability/dumps.md',
+                    {
+                        text: "9.3 遥测数据的分类及处理",
+                        link: '/observability/signals.md',
+                        children: [
+                            '/observability/metrics.md',
+                            '/observability/logging.md',
+                            '/observability/tracing.md',
+                            '/observability/profiles.md',
+                            '/observability/dumps.md',
+                        ]
+                    },
                     '/observability/OpenTelemetry.md',
                     '/observability/conclusion.md',
                 ]
