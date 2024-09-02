@@ -9,9 +9,9 @@ SDN 的核心思想是在现有的物理网络之上再新增一层虚拟网络�
   图 3-24 SDN 网络中 Overlay 与 Underlay 网络模型
 :::
 
-SDN 的发展要早于云原生十余年，发展过程中出现多种 Overlay 网络的具体实现，如 Geneve（Generic Network Virtualization Encapsulation）、VXLAN（Virtual Extensible LAN）、STT（Stateless Transport Tunneling）等等。这些技术本质上是一种隧道技术，也就是将数据包封装在另一个数据包中，在现有物理网络之上创建一个虚拟网络。虚拟网络中的容器不需要关心底层物理网络的路由规则等细节，物理网络也不需要针对容器 IP 进行专门路由配置。因此以 VXLAN 为代表的 Overlay 网络作为一种不调底层网络实现的容器组网技术，快速的在容器领域铺开了。
+SDN 的发展要早于云原生十余年，发展过程中出现多种 Overlay 网络的具体实现，如 Geneve（Generic Network Virtualization Encapsulation）、VXLAN（Virtual Extensible LAN）、STT（Stateless Transport Tunneling）等等。这些技术本质上是一种隧道技术，也就是将数据包封装在另一个数据包中，在现有物理网络之上创建一个虚拟网络。虚拟网络中的容器不需要关心底层物理网络的路由规则等细节，物理网络也不需要针对容器 IP 进行专门路由配置。因此以 VXLAN 为代表的 Overlay 网络作为一种无需调底层网络实现的容器组网技术，快速在容器领域铺开了。
 
-在学习 VXLAN 之前，我们有必要充分了解一些基础的物理通信原理。接下来，笔者将先介绍 VXLAN 的前身 VLAN（Virtual Local Area Network，虚拟局域网）。
+学习 VXLAN 之前，我们有必要充分了解一些基础的物理通信原理。接下来，笔者将先介绍 VXLAN 的前身 VLAN（Virtual Local Area Network，虚拟局域网）。
 
 ## 1. 虚拟局域网 VLAN
 

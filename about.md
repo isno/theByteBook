@@ -14,17 +14,18 @@
 	<img src="./assets/qrcode-v2.png" width = "250"  align=center />
 </div>
 
-<!---
+<div style="display: none">
 
 第一章《云原生》 done
 第二章《极致网络》done
-第三章 《Linux 内核》done
+第三章《Linux 内核》done
 第四章《负载均衡》 
-第五章 《分布式事务》
+第五章《分布式事务》
 第六章《分布式共识》
 
 第七章《容器编排技术》
 第八章《服务网格》 done
-第九章 《可观测》
-第十章 《gitops 》
-->
+第九章《可观测》
+第十章《gitops 》
+
+</div>

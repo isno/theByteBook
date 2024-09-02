@@ -119,15 +119,15 @@ Prometheus 也考虑了长期存储的场景，你可以通过它的远端存储
 
 采集/存储指标最终目的要用起来，也就是要“展示分析”以及“预警”。
 
-在可观测数据展示方面，Grafana Dashboard 基本已经成为事实的标准。Grafana 的 slogan 是“Dashboard anything. Observe everything.”。Prometheus 提供了名为 PromQL 的数据查询语言，这是一套完全由 Prometheus 定制的数据查询 DSL，能对时序数据进行高效的过滤、聚合和计算，已被广泛用在数据查询、可视化、报警处理等日常使用中。
+在可观测数据展示方面，Grafana Dashboard 基本已经成为事实的标准。Grafana 的 slogan 是“Dashboard anything. Observe everything.”。Prometheus 提供了名为 PromQL（Prometheus Query Language）的数据查询语言，这是一套完全由 Prometheus 定制的数据查询 DSL，能对时序数据进行高效地过滤、聚合和计算，已被广泛用在数据查询、可视化、报警处理等日常使用中。
 
-Grafana 提供了对 PromQL 的完整支持，两者结合的结果是“只要你能想到的数据就能转成任何你想要的图表”。
+Grafana 对 PromQL 提供了全面支持，两者的结合意味着“只要你能想到的数据，都能转化为你想要的图表”。
 
 :::center
   ![](../assets/grafana-dashboard-english.png)<br/>
   图 9-7 通过 PromQL 查询指标数据，Grafana 展示指标数据
 :::
 
-在预警方面，Prometheus 只负责数据的采集和生成预警信息，预警的专门处理由 Alertmanager 负责。
+在预警方面，Prometheus 负责数据的采集和预警信息的生成，而预警信息的进一步处理则由 Alertmanager 组件专门负责。
 
-Prometheus 定义好预警规则，会周期性对预警规则进行计算，如果满足预警条件就会向 Alertmanager 发送预警信息，Alertmanager 对这些预警信息进一步的处理，譬如去重，降噪，分组等，最后通过多种的通知渠道如邮件、微信、或者通用的 WebHook 通知用户。
+Prometheus 首先定义预警规则，并定期对这些规则进行评估。一旦检测到预警条件被触发，Prometheus 会向 Alertmanager 发送预警信息。Alertmanager 对这些预警信息进一步的处理，例如去重、降噪、分组等。最后，Alertmanager 通过多种通知渠道，如邮件、微信、或者通用的 WebHook 机制，将处理后的预警信息传达给用户。

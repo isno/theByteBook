@@ -112,6 +112,7 @@ spec:
       spec:
         pipelineRef:
           name: github-pipeline
+        params:
         - name: repo
           value: $(tt.params.git-repository-url)
 ```
