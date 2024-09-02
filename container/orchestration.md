@@ -84,7 +84,7 @@ int pid = clone(main_function, stack_size, flags | SIGCHLD, NULL);
 
 进程的资源隔离已经完成，如果再对使用资源进行额度限制，就能对进程的运行环境实现进乎完美的隔离。这就要用 Linux 内核的第二项技术 —— Linux Control Cgroup（Linux 控制组群，简称 cgroups）。
 
-cgroups 是 Linux 内核中用来隔离、分配并限制某个进程组使用资源配额的机制，例如用来控制进程 CPU 占用时间、内存的大小、磁盘 I/O 速度等。该项目由 Google 工程师（主要是 Paul Menage 和 Rohit Seth）在 200 年发起，当时取的名字叫“进程容器”（Process container）。不过，在 Linux 内核中，容器（container）这个名词有许多不同的意义，为避免混乱，于是被重命名为 cgroups 。2008 年，cgroups 合并到 Linux 内核 2.6.24 版本 后正式对外发布，这一阶段的 cgroups 被称为第一代 cgroups。
+cgroups 是 Linux 内核中用来隔离、分配并限制某个进程组使用资源配额的机制，例如用来控制进程 CPU 占用时间、内存的大小、磁盘 I/O 速度等。该项目由 Google 工程师（主要是 Paul Menage 和 Rohit Seth）在 2000 年发起，当时取的名字叫“进程容器”（Process container）。不过，在 Linux 内核中，容器（container）这个名词有许多不同的意义，为避免混乱，于是被重命名为 cgroups 。2008 年，cgroups 合并到 Linux 内核 2.6.24 版本 后正式对外发布，这一阶段的 cgroups 被称为第一代 cgroups。
 
 2016 年 3 月发布的 Linux 内核 4.5 版本中，搭载了由 Facebook 工程师 Tejun Heo 重新编写的“第二代 cgroups”，相较于 v1 版本，Facebook 工程师编写的 cgroups 提供了更加统一的资源控制接口，使得对于 CPU、内存、I/O 等资源的限制更加一致和统一。不过由于兼容性和稳定性原因，目前多数容器运行时默认使用的仍然是第一代 cgroups。
 
