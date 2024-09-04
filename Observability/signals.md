@@ -1,6 +1,6 @@
 # 9.3 可观测数据的分类及处理
 
-“可观测性”能力的应用离不开数据与信息，而日志（logs）、链路链路（trace）和指标（metrics）是最重要的数据信息源。
+“可观测性”能力的应用离不开数据与信息，而指标（metrics）、日志（logs）和链路追踪（trace）和被称为可观测性的“三大支柱”。
 
 - **指标，可量化系统状态和性能**：指标是系统事件发生数量的统计聚合，每一个指标数据以度 量内容、度量数值与度量时间点组成，例如服务 QPS、API 响应延迟、某个接口的失败数等。指标是发现问题的起点，典型例子是你收到一条预警“12 点 22分，接口请求成功率跌到了 10%“，你立刻意识到情况不妙并开始处理，结合链路追踪、日志等数据找到 root cause，从而解决问题。
 
@@ -16,7 +16,6 @@
  图 9-3 Metrics，Tracing，Logging 三者之间的关系 [图片来源](https://peter.bourgon.org/blog/2017/02/21/metrics-tracing-and-logging.html)
 :::
 
-
-现在，CNCF 发布的可观测性白皮书中[^1]，将这些可观测的数据统一称为 Signals（信号），主要的 Signals 除了 Metrics、Logs、Traces 之外又增加了 Profiling（性能剖析）和 Core dump（核心转储）。
+现在，CNCF 发布的可观测性白皮书中[^1]，将这些观测的数据统一称为信号（Signals），主要的信号除了 指标、日志、链路追踪之外又增加了性能剖析（Profiling）和核心转储（Core dump）。
 
 [^1]: 参见 https://github.com/cncf/tag-observability/blob/main/whitepaper.md

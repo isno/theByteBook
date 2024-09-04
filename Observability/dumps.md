@@ -1,6 +1,6 @@
 # 9.3.5 核心转储 Core dump
 
-Core dump 历史悠久，很在就在 Unix 类系统中出现。在任何安装了《Linux man 手册》的 Linux 发行版上，都可以通过运行 man core 来查阅相关信息。
+核心转储（Core dump）历史悠久，很在就在 Unix 类系统中出现。在任何安装了《Linux man 手册》的 Linux 发行版上，都可以通过运行 man core 来查阅相关信息。
 
 ```bash
 $ man core
@@ -12,7 +12,7 @@ A small number of signals which cause abnormal termination of a process
 ...
 ```
 
-核心转储（Core dump）中的 “core” 代表内存，而 “dump” 意为转储或导出。当程序异常终止或系统崩溃时，Linux 系统会将程序的关键运行状态保存到一个 core dump 文件中。这个文件中包含寄存器信息（如程序指针、栈指针）、内存管理信息以及其他处理器和操作系统的状态数据。借助程序调试工具 gdb，就能分析出具体哪一行代码引发了程序崩溃。
+核心转储（Core dump）中的 “core” 代表内存，而 “dump” 意为转储或导出。当程序异常终止或系统崩溃时，Linux 系统会将程序的关键运行状态保存到一个 core dump 文件中。这个文件中包含寄存器信息（如程序指针、栈指针）、内存管理信息以及其他处理器和操作系统的状态数据。借助 Linux 系统下的程序调试工具 gdb，就能分析出具体哪一行代码引发了程序崩溃。
 
 需要注意的是，由于 core dump 文件可能占用大量磁盘空间，复杂的应用程序崩溃时生成的文件甚至能达到几十 GB。因此，Linux 默认禁用了 core dump 功能。如果需要启用 core dump，必须通过命令 ulimit -c unlimited 取消对 core 文件大小的限制。
 
