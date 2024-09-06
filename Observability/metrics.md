@@ -1,24 +1,28 @@
 # 9.3.1 指标数据的收集与处理
 
-度量的工作包含对指标数据进行收集、存储、再处理（展示/触发预警）。这一些列的处理流程，正是所有普适监控系统的主要工作。
+指标（Metrics）是监控的代名词。与日志不同，日志是对应用程序操作的一种记录，而监控更多是通过对指标数据的聚合，来对应用程序在特定时间内行为的衡量。
+
 
 提到监控系统，避不开 Prometheus，Prometheus 已经成为云原生中指标监控的事实标准。
 :::tip 额外知识
-Google 的 Borg 系统孕育出了 Kubernetes，Prometheus 的前身 —— Google 内部的监控系统 Brogmon 则由前 Google工程师在 Soundcloud 以开源软件的形式继承下来。
+Google 的 Borg 系统孕育出了 Kubernetes，Prometheus 的前身 —— Google 内部配套的监控系统 Brogmon 则由前 Google工程师在 Soundcloud 以开源软件的形式继承下来。
 :::
 
-如图 9-4 所示的 Prometheus 架构，它通过不同的子功能实现埋点采集、爬取和传输、存储、计算、展示等，再通过搭积木组合出一个以应用为中心，功能强大的监控告警系统。
+如图 9-4 所示的 Prometheus 架构，它通过不同的子功能实现指标采集、存储、计算和展示等，再通过搭积木组合出一个以应用为中心，功能强大的监控告警系统。Prometheus 中核心组件的说明如下：
+
+- Prometheus Server：基于指标的监控系统的大脑，Prometheus Server 的主要工作是使用拉模型（Pull）从各个目标收集指标，然后存储为时间序列数据，并提供查询和分析接口。
+- Service Discovery（服务发现）：在微服务、容器化、云环境等动态系统中，服务的 IP 地址、端口、实例等经常发生变化。Prometheus 通过 Kubernetes、Consul、DNS 等多种服务发现机制，能够自动发现被监控目标，并从中抓取数据，无需手动配置。
+- Alertmanager：处理来自 Prometheus Server 的告警信息。它负责将告警路由到不同的通知渠道，如电子邮件、Slack、PagerDuty 等，并支持告警抑制、告警分组等功能。
+
+- Pushgateway：Prometheus 默认使用拉取模型（也就是 pull 的方式）来抓取指标，然而有些场景是需要业务主动将指标 Push 到 Prometheus。笔者举一个 Kubernetes cronjob 上运行的一个批处理作业示例帮你理解，该作业每天根据某些事件运行 5 分钟。在这种情况下，Prometheus 将无法使用拉机制正确抓取服务级别指标。因此，我们需要将指标推送到 prometheus，而不是等待 prometheus 拉取指标。Pushgateway 相当于一个中间代理，批处理作业可以使用 HTTP API 将指标推送到 Pushgateway。然后 Pushgateway 在 /metrics 端点上公开这些指标。然后 Prometheus 从 Pushgateway 中抓取这些指标。
+- Alert Manager：Prometheus 监控系统的关键部分。它的主要工作是根据 Prometheus 警报配置中设置的指标阈值发送警报。警报由 Prometheus 触发（注意，是由 Prometheus 进程触发原始告警）并发送到 Alertmanager。Alertmanager 对告警去重、抑制、静默、分组，最后使用各类通知媒介（电子邮件、slack 等）发出告警事件。
 
 :::center
   ![](../assets/prometheus-arch.png)<br/>
   图 9-4 Prometheus 的架构设计
 :::
 
-分析 Prometheus 架构及总结对指标的处理，所有监控系统总体上要解决的问题其实就 3 个：
 
-- 怎么收集指标（定义指标的类型/将定义后的指标类型告诉监控服务端）。
-- 收集后指标怎么存储。
-- 指标如何被使用（展示/预警）。
 
 ## 1. 定义指标的类型
 
@@ -96,7 +100,23 @@ Prometheus 相比 zabbix 这类传统监控系统，最大的特点是对指标�
 10（节点）* 30（服务）* 20 (指标) * (86400/5) （秒） = 103,680,000（记录）
 ```
 
-可见，这种规模级别的数据不能再常规的思路/普通的数据库存储。回顾指标数据有什么特征？纯数字、具有时间属性，它们肯定也有关系嵌套、不用考虑主键/外键、不用考虑事务处理。
+对于一个规模仅有 10 个节点的业务而言，一天的业务数据肯定远远达不到 1 亿条。构建监控系统，不可能让辅助性的数据称为成本负担。因为，指标数据不能再常规的思路/普通的数据库存储。
+
+回顾指标数据有什么特征？
+
+```json
+  {
+    "metric": "http_requests_total",  // 指标名称，表示 HTTP 请求的总数
+    "labels": {                       // 标签，用于描述该指标的不同维度
+      "method": "GET",                // HTTP 请求方法
+      "handler": "/api/v1/users",     // 请求的处理端点
+      "status": "200"                 // HTTP 响应状态码
+    },
+    "value": 1458                     // 该维度下的请求数量
+  },
+```
+
+纯数字、具有时间属性，它们肯定也有关系嵌套、不用考虑主键/外键、不用考虑事务处理。
 
 对于这类基于时间，揭示其趋势性、规律性的数据，业界也发展出了专门优化的数据库类型 —— 时序数据库（TSDB）。
 
