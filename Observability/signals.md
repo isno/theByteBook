@@ -16,6 +16,6 @@
  图 9-3 Metrics，Tracing，Logging 三者之间的关系 [图片来源](https://peter.bourgon.org/blog/2017/02/21/metrics-tracing-and-logging.html)
 :::
 
-现在，CNCF 发布的可观测性白皮书中[^1]，将这些观测的数据统一称为信号（Signals），主要的信号除了 指标、日志、链路追踪之外又增加了性能剖析（Profiling）和核心转储（Core dump）。
+现在，CNCF 发布的可观测性白皮书中[^1]，将这些系统输出的数据统一称为信号（Signals），主要的信号除了 指标、日志、链路追踪之外又增加了性能剖析（Profiling）和核心转储（Core dump）。
 
 [^1]: 参见 https://github.com/cncf/tag-observability/blob/main/whitepaper.md
