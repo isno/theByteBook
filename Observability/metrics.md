@@ -41,21 +41,19 @@ Google 的 Borg 系统孕育出了 Kubernetes，Prometheus 的前身 —— Goog
 
 ## 2. 通过 Exporter 收集指标
 
-不同监控系统收集指标数据基本就两种方式：
+定义完指标的类型之后，接下来的工作是把指标从监控的目标收集起来。
 
-- 被监控目标主动 push 到中心 Collector（譬如各种 Agent 采集器，Telegraf 等）；
-- 中心 Collector 通过 pull 的方式从被监控的目标中主动拉取。
+但问题是，对于大量现有的服务、系统甚至硬件，它们并不会暴露 Prometheus 格式的指标，比如：
 
-图 9-5 所示，Prometheus 主动从监控源拉取暴露的 HTTP 服务地址（通常是/metrics，也称为 Exporter）拉取监控样本数据。这样的好处是 Prometheus 可以控制采集频率，保证自身系统的稳定。
+- Linux 的很多指标信息以文件形式记录在 proc 下的各个目录中，如 /proc/meminfo 里记录内存信息, /proc/stat 里记录 CPU 信息;
+- Redis 的监控信息需要通过 INFO 命令获取;
+- 路由器等硬件的监控信息需要通过 SNMP 协议获取;
 
-:::center
-  ![](../assets/prometheus-exporter.png)<br/>
-  图 9-5 Prometheus 通过 Exporter 的实例 target 中主动拉取监控数据
-:::
+要监控这些目标，我们有两个方法：一是改动目标系统的代码, 让它主动暴露 Prometheus 格式的指标。第二种是编写一个代理服务, 将其它监控信息转化为 Prometheus 格式的指标。
 
-:::tip Exporter
-Exporter 一个相对开放的概念，可以是一个独立运行的程序独立于监控目标以外，也可以是直接内置在监控目标中，只要能够向 Prometheus 提供标准格式的监控样本数据即可。
-:::
+
+
+Prometheus 收集指标的方式很简单，作用是把从目标采集到的监控数据转换为 Prometheus 标准格式的指标类型，再将指标以 HTTP（（接口通常是 /metrics）的方式暴露给 Prometheus。
 
 如下，从一个 metrics 接口获取类型指标为 Counter 样本。
 ```bash
@@ -65,6 +63,13 @@ $ curl http://127.0.0.1:8080/metrics | grep http_request_total
 http_request_total 5
 ```
 
+
+广义上讲，所有可以向 Prometheus 提供监控样本数据的程序都可以被称为一个 Exporter，Exporter 的一个实例被称为 target，Prometheus 会通过轮询的形式定期从这些 target 中获取样本数据。
+
+:::center
+  ![](../assets/prometheus-exporter.png)<br/>
+  图 9-5 Prometheus 通过 Exporter 的实例 target 中主动拉取监控数据
+:::
 
 Prometheus 相比 zabbix 这类传统监控系统，最大的特点是对指标全方位的收集：
 
