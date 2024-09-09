@@ -107,18 +107,18 @@ ClickHouse 的关键特点有列式存储、向量化查询执行、高效压缩
 
 <center >表 9-13 行式数据库存储结构</center>
 
-|Row |WatchID |JavaEnable  |Title| GoodEvent |EventTime|
+|Row | ProductId |sales  |Title| GoodEvent |CreateTime|
 |:--|:--|:--|:--|:--|:--|
-| #0 | 89354350662 |1 |Investor Relations|  1 |2016-05-18 05:19:20|
-| #1 |  90329509958 | 0|  Contact us |  1 | 2016-05-18 08:10:20| 
-| #2 |  89953706054 | 1 | Mission|  1 | 2016-05-18 07:38:00| | 
+| #0 | 89354350662 |120 |Investor Relations|  1 |2016-05-18 05:19:20|
+| #1 |  90329509958 | 10|  Contact us |  1 | 2016-05-18 08:10:20| 
+| #2 |  89953706054 | 78 | Mission|  1 | 2016-05-18 07:38:00| | 
 | #N |  ...|  ...|  ...|  ... | ...
 
 
-行式数据库一张表中的一行内的所有数据在物理介质内是彼此相邻存储的。如果要进行查询，
+行式数据库一张表中的一行内的所有数据在物理介质内是彼此相邻存储的。如果要执行下面的 SQL：
 
 ```
-SELECT sum(数量) FROM 表 WHERE product_id=1000
+SELECT sum(sales) FROM 表 WHERE  ProductId=90329509958
 ```
 
 首先需要将所有行从磁盘加载到内存中，然后进行扫描和过滤（检查是否符合 where 条件），过滤出目标行之后，再判断是否有聚合函数，如有则执行相应的计算和排序，最终输出结果。整个流程可能需要非常长的时间。
@@ -128,29 +128,23 @@ SELECT sum(数量) FROM 表 WHERE product_id=1000
 
 |Row:| #0 | #1 | #2 | #N|
 |:--|:--|:--|:--|:--|
-|WatchID:| 89354350662 |90329509958 |89953706054 |...|
+|ProductId:| 89354350662 |90329509958 |89953706054 |...|
 |JavaEnable: |1 |0| 1 |...|
 |Title: | Investor  Relations | Contact us | Mission |...|
 |GoodEvent: | 1| 1| 1| ...|
-|EventTime: | 2016-05-18 05:19:20 |2016-05-18 08:10:20 |2016-05-18 07:38:00 |...|
+|CreateTime: | 2016-05-18 05:19:20 |2016-05-18 08:10:20 |2016-05-18 07:38:00 |...|
 
 可以看到，列式存储不是讲一行中的所有值存储在一起，而是将每列中的所有值存储在一起
 
 在列式数据库中你可以只读取你需要的数据。例如，如果只需要读取100列中的5列，这将帮助你最少减少20倍的I/O消耗。
 
-此外，列式存储和数据压缩通常是伴生的，数据压缩的本质是通过一定的步长对数据进行匹配扫描，发现重复部分后进行编码转换。因此，数据中重复项越多，压缩率越高。面向列式存储，同一列字段的数据具有相同的数据类型和语义，重复项的可能性自然更高。
+此外，列式存储和数据压缩通常是伴生的，数据压缩的本质是通过一定的步长对数据进行匹配扫描，发现重复部分后进行编码转换。因此，数据中重复项越多，压缩率越高。面向列式存储，同一列字段的数据具有相同的数据类型和语义，重复项的可能性自然更高。按列配置压缩编解码器。我们决定为所有列保留默认的 LZ4 压缩。我们对 DateTime 列使用了 Double-Delta，对 Float 列使用了 Gorilla，对固定大小的 String 列使用了 LowCardinality。
 
 近几年来，经常能在国内各个技术公众号看到关于列式数据库的实践分享，图 9-15 中的数据来源技术文章《B站基于Clickhouse的下一代日志体系建设实践》，文章中的数据表明 B 站使用 ClickHouse 降低了 60%+ 的存储成本[^2]
 
 :::center
   ![](../assets/es-vs-clickhouse.png)<br/>
   图 9-15 同一份日志在 Elasticsearch、ClickHouse 和 ClickHouse(zstd) 中的容量对比
-:::
-
-上面提到的 ClickHouse，它是由 Yandex（一家俄罗斯搜索引擎公司）开源的用于 MPP (Massively Parallel Processing，大规模并行处理)架构的列式存储分析型数据库。
-
-:::tip 来自官方的介绍
-ClickHouse® is an open-source **column-oriented** database management system that allows generating analytical data reports in **real-time**.
 :::
 
 根据 Yandex 的内部测试结果，ClickHouse 表现出了惊人的查询性能，从它的跑分结果来看（图 9-16），ClickHouse 比 Vertia（一款商业的 MPP 分析软件）快约 5 倍、比 Hive 快 279 倍、比 MySQL 快 801 倍。当之无愧阐述 ClickHouse 介绍中“实时”（real-time）二字含义，正如 ClickHouse 的宣传所言，其他的开源系统太慢、商用太贵，只有 ClickHouse 在成本与性能之间做到了良好平衡，又快还开源。
