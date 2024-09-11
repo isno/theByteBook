@@ -78,18 +78,18 @@ spec:
 
 ## 7.8.4 集群节点自动伸缩
 
-随着业务的发展，应用数量和资源需求都会逐渐增加，最终可能导致集群资源不足。那么动态伸缩的范畴应该扩展到整个集群范围，也就是说能根据资源利用率情况自动增/减节点。
+随着业务的发展，应用数量和资源需求都会逐渐增加，最终可能导致集群资源不足。动态伸缩的范畴应该扩展到整个集群范围，也就是说能根据资源利用率情况自动增/减节点。
 
 在 Kubernetes 中，Cluster AutoScaler 是专门用于自动扩展和缩减集群节点的组件。它的主要功能如下：
-- 当集群容量不足时，Cluster AutoScaler 会自动向云服务提供商（如 GCE、GKE、Azure、AKS、AWS 等）请求创建新的节点，从而扩展集群容量，确保应用能够获得所需的资源。
-- 当某个节点的资源利用率长期处于较低水平（如低于 50%），Cluster AutoScaler 会自动将该节点上的 Pod 重新调度到其他节点，然后删除低效节点，将其资源归还给云服务商，从而节省运营成本。
+- 自动扩展（Scale Up）：当集群中的节点资源不足以满足当前的 Pod 请求时，Cluster AutoScaler 会自动向云服务提供商（如 GCE、GKE、Azure、AKS、AWS 等）请求创建新的节点，从而扩展集群容量，确保应用能够获得所需的资源。
+- 自动缩减（Scale Down）：当某个节点的资源利用率长期处于较低水平（如低于 50%），Cluster AutoScaler 会自动将该节点上的 Pod 重新调度到其他节点，并在确定某些节点可以安全地移除时，将这些节点从集群中移除，以减少成本和资源浪费。
 
 :::center
   ![](../assets/Cluster-AutoScaler.png)<br/>
   图 7-36 Cluster AutoScaler 伸缩原理
 :::
 
-Cluster Autoscaler 虽然是 Kubernetes 官方标准，但是由于他深度依赖公有云厂商，因此具体使用方法，功能以及限制以公有云厂商具体实现为准。
+Cluster Autoscaler 虽然是 Kubernetes 官方标准，但是由于他深度依赖公有云厂商，因此具体使用方法、功能以及限制以公有云厂商具体实现为准。笔者就不再过多介绍了。
 
 [^1]: 参见 https://keda.sh/docs/2.12/scalers/
 [^2]: 参见 https://keda.sh/community/#end-users
