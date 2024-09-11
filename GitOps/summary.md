@@ -1,4 +1,4 @@
-# 第十章 GitOps 设计理念及落地实践
+# 第十章 GitOps 理念与实现设计
 
 :::tip <a/>
 there is no silver bullet，but sometimes there are goods arrows.
