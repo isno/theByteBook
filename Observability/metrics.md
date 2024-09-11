@@ -158,7 +158,12 @@ Prometheus 也考虑了长期存储的场景，你可以通过它的远端存储
 
 采集/存储指标最终目的要用起来，也就是要“展示分析”以及“预警”。
 
-在可观测数据展示方面，Grafana Dashboard 基本已经成为事实的标准。Grafana 的 slogan 是“Dashboard anything. Observe everything.”。Prometheus 提供了名为 PromQL（Prometheus Query Language）的数据查询语言，这是一套完全由 Prometheus 定制的数据查询 DSL，能对时序数据进行高效地过滤、聚合和计算，已被广泛用在数据查询、可视化、报警处理等日常使用中。
+在可观测数据展示方面，Grafana Dashboard 基本已经成为事实的标准。Grafana 的 slogan 是“Dashboard anything. Observe everything.”。这句话并不是夸大：
+- 在报表类型方面，Grafana 支持趋势图，柱状图，统计数值，仪表盘，表格，饼图，状态图，热力图，纯文字，词云，玫瑰图等超过 100 多种的报表类型。
+- 在数据源方面，Grafana Dashboard 支持市面上所有常用的数据源，笔者列举部分供你参考：MySQL、MariaDB、MongoDB，PostgresSQL、Sqlite、Influxdb、Clickhouse、IotDB、Graphite、Azure、AWS，Gitlab，Github，SAPHANA，Oracle，JIRA，Json，CSV。如果你找不到“你想要的数据源”，那只说明一个问题：你的数据源已经被市场淘汰了。
+
+
+Prometheus 提供了名为 PromQL（Prometheus Query Language）的数据查询语言，这是一套完全由 Prometheus 定制的数据查询 DSL，能对时序数据进行高效地过滤、聚合和计算，已被广泛用在数据查询、可视化、报警处理等日常使用中。
 
 Grafana 对 PromQL 提供了全面支持，两者的结合意味着“只要你能想到的数据，都能转化为你想要的图表”。
 

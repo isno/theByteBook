@@ -29,7 +29,7 @@ OpenTracing 推出不久之后，Google 和微软联合推出了 OpenCensus 项�
   图 9-23 集成 OpenTelemetry 的可观测架构 [图片来源](https://opentelemetry.io/docs/)
 :::
 
-由此可见，OpenTelemetry 定位明确：**专注于数据采集和标准规范的统一，对于数据如何去使用、存储、展示、告警，标准本身并不涉及**。你可以使用 Prometheus + Grafana 做 Metrics 存储、展示，使用 Jaeger 做分布式跟踪的存储和展示。
+由此可见，OpenTelemetry 定位明确：专注于数据采集和标准规范的统一，对于数据如何去使用、存储、展示、告警，标准本身并不涉及。你可以使用 Prometheus + Grafana 做 Metrics 存储、展示，使用 Jaeger 做分布式跟踪的存储和展示。这使得 OpenTelemetry 既不会因动了“数据的蛋糕”，引起生态抵制，也极大保存了精力，得以专注于实现兼容“所有的语言、所有的系统”的数据采集器。
 
-这使得 OpenTelemetry 既不会因动了“数据的蛋糕”，引起生态抵制，也极大保存了精力，得以专注于实现兼容“所有的语言、所有的系统”的数据采集器。
+OpenTelemetry 目前在市场上的应用情况正在逐渐增加，尤其是容器化和微服务的架构中。现今，许多云服务提供商和容器平台，如 AWS、Google Cloud、Azure、阿里云 等均已开始支持和推广 OpenTelemetry。
 
