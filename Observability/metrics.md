@@ -46,18 +46,8 @@ Prometheus 的架构包括 Prometheus Server、Client、Push Gateway、Exporters
 
 定义完指标的类型之后，接下来的工作是把指标从监控的目标收集起来。
 
-但问题是，对于大量现有的服务、系统甚至硬件，它们并不会暴露 Prometheus 格式的指标，比如：
+Prometheus 收集指标的方式很简单，作用是把从目标采集到的监控数据转换为 Prometheus 标准格式的指标类型，再将指标以 HTTP（接口通常是 /metrics）的方式暴露给 Prometheus。如下，从一个 metrics 接口获取类型指标为 Counter 样本。
 
-- Linux 的很多指标信息以文件形式记录在 proc 下的各个目录中，如 /proc/meminfo 里记录内存信息, /proc/stat 里记录 CPU 信息;
-- Redis 的监控信息需要通过 INFO 命令获取;
-- 路由器等硬件的监控信息需要通过 SNMP 协议获取;
-
-要监控这些目标，我们有两个方法：一是改动目标系统的代码, 让它主动暴露 Prometheus 格式的指标。第二种是编写一个代理服务, 将其它监控信息转化为 Prometheus 格式的指标。
-
-
-Prometheus 收集指标的方式很简单，作用是把从目标采集到的监控数据转换为 Prometheus 标准格式的指标类型，再将指标以 HTTP（（接口通常是 /metrics）的方式暴露给 Prometheus。
-
-如下，从一个 metrics 接口获取类型指标为 Counter 样本。
 ```bash
 $ curl http://127.0.0.1:8080/metrics | grep http_request_total
 # HELP http_request_total The total number of processed http requests
@@ -65,14 +55,20 @@ $ curl http://127.0.0.1:8080/metrics | grep http_request_total
 http_request_total 5
 ```
 
-广义上讲，所有可以向 Prometheus 提供监控样本数据的程序都可以被称为一个 Exporter，Exporter 的一个实例被称为 target，Prometheus 会通过轮询的形式定期从这些 target 中获取样本数据。这样的好处是 Prometheus 可以控制采集频率，保证自身系统的稳定。
+Prometheus 只要通过轮询的形式定期从这些监控目标（target）中获取样本数据即可，通过主动轮询的方式还可以控制采集频率，业务系统异常的时保证自身系统的稳定。
 
 :::center
   ![](../assets/prometheus-exporter.png)<br/>
   图 9-5 Prometheus 通过 Exporter 的实例 target 中主动拉取监控数据
 :::
 
-Prometheus 相比 zabbix 这类传统监控系统，最大的特点是对指标全方位的收集：
+但问题是，对于大量现有的服务、系统甚至硬件，它们并不会暴露 Prometheus 格式的指标，比如：
+
+- Linux 的很多指标信息以文件形式记录在 proc 下的各个目录中，如 /proc/meminfo 里记录内存信息, /proc/stat 里记录 CPU 信息;
+- Redis 的监控信息需要通过 INFO 命令获取;
+- 路由器等硬件的监控信息需要通过 SNMP 协议获取;
+
+要监控这些目标，我们有两个方法：一是改动目标系统的代码, 让它主动暴露 Prometheus 格式的指标。第二种是编写一个代理服务, 将其它监控信息转化为 Prometheus 格式的指标。向 Prometheus 提供监控样本数据的程序都可以被称为一个 Exporter。通过 Exporter 对指标全方位的收集。
 
 - **宿主机监控数据**：Node Exporter 以 DaemonSet 的方式运行在宿主机，收集节点的负载、CPU、内存、磁盘以及网络这样的常规机器的数据。
 - **Kubernetes 本身的运行情况**：Kubernetes 的 API Server、Kubelet 等组件内部通过暴露 /metrics 接口，向 Prometheus 提供各个 Controller 工作队列、请求 QPS 等 Kubernetes 本身工作的情况。
@@ -122,9 +118,9 @@ Prometheus 相比 zabbix 这类传统监控系统，最大的特点是对指标�
   },
 ```
 
-纯数字、具有时间属性，它们肯定也有关系嵌套、不用考虑主键/外键、不用考虑事务处理。对于这类基于时间，揭示其趋势性、规律性的数据，业界也发展出了专门优化的数据库类型 —— 时序数据库（Time-Series Database）。
+指标类型的数据是纯数字的、具有时间属性，它们肯定没有关系嵌套、不用考虑主键/外键、不用考虑事务处理。对于这类基于时间，揭示其趋势性、规律性的数据，业界也发展出了专门优化的数据库类型 —— 时序数据库（Time-Series Database，简称 TSDB）。
 
-时序数据库其实并不是一个新鲜的概念，追溯其历史，1999 年问世的 RRDtool 应该是最早的专用时序数据库。2015 年起，时序数据库逐步开始流行。现在，在排行网站 DB-engines 上面，时序数据库已成为流行度最高的数据库。时序数据库（TSDB）与常规数据库（如关系型数据库或 NoSQL 数据库）在设计和用途上存在显著区别。笔者列举部分差异供你参考：
+时序数据库其实并不是一个新鲜的概念，追溯其历史，1999 年问世的 RRDtool 应该是最早的专用时序数据库。2015 年起，时序数据库逐步开始流行。现在，在排行网站 DB-engines 上面，时序数据库已成为流行度最高的数据库。时序数据库与常规数据库（如关系型数据库或 NoSQL 数据库）在设计和用途上存在显著区别。笔者列举部分差异供你参考：
 
 - 数据结构：时序数据库专为处理时间序列数据而设计。数据通常包括时间戳、测量值和标签。例如，如图所示的时序数据库结构，其中索引为时间戳（timestamp），不同的列记录了在该时间戳下的属性值。metric 表示度量（类似于关系型数据库中的表），data point 表示数据点（类似于关系型数据库中的行），field 是度量下随时间戳变化的属性值，tags 是附加的属性信息。
 
