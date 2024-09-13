@@ -108,8 +108,7 @@ Prometheus 相比 zabbix 这类传统监控系统，最大的特点是对指标�
 
 对于一个规模仅有 10 个节点的业务而言，`7*24` 小时不间断地生成数据，有时一天的数据量就超过 1 TB。虽然，你也可以用关系数据库或 NoSQL 数据库来处理时序数据，但这类数据库并没有充分利用时序数据的特点，需要源源不断投入更多的计算资源和存储资源来处理，系统的运营维护成本急剧上升。
 
-
-回顾指标数据有什么特征？
+如何低成本的存储这些海量数据，是个关乎系统可用的重要课题。我们回顾指标数据有什么特征？
 
 ```json
   {
@@ -117,33 +116,31 @@ Prometheus 相比 zabbix 这类传统监控系统，最大的特点是对指标�
     "labels": {                       // 标签，用于描述该指标的不同维度
       "method": "GET",                // HTTP 请求方法
       "handler": "/api/v1/users",     // 请求的处理端点
-      "status": "200"                 // HTTP 响应状态码
+      "status": "200",                // HTTP 响应状态码
     },
-    "value": 1458                     // 该维度下的请求数量
+    "value": 1458,                    // 该维度下的请求数量
   },
 ```
 
 纯数字、具有时间属性，它们肯定也有关系嵌套、不用考虑主键/外键、不用考虑事务处理。对于这类基于时间，揭示其趋势性、规律性的数据，业界也发展出了专门优化的数据库类型 —— 时序数据库（Time-Series Database）。
 
-时序数据库其实并不是一个新鲜的概念，追溯其历史，1999 年问世的 RRDtool 应该是最早的专用时序数据库。2015 年起，时序数据库逐步开始流行。现在，在排行网站 DB-engines 上面，时序数据库已成为流行度最高的数据库。时序数据库（TSDB）与常规数据库（如关系型数据库或 NoSQL 数据库）在设计和用途上存在显著区别，主要体现在数据结构、写入和查询模式、存储优化等方面：
+时序数据库其实并不是一个新鲜的概念，追溯其历史，1999 年问世的 RRDtool 应该是最早的专用时序数据库。2015 年起，时序数据库逐步开始流行。现在，在排行网站 DB-engines 上面，时序数据库已成为流行度最高的数据库。时序数据库（TSDB）与常规数据库（如关系型数据库或 NoSQL 数据库）在设计和用途上存在显著区别。笔者列举部分差异供你参考：
 
-- 数据结构：时序数据库是专为处理时间序列数据设计，数据通常包括三部分：时间戳、测量值和标签。如图所示为一个时序数据库的显示形式，其索引为 timestamp，后面不同的列记录了在当前时间戳下的属性值。  其中 metric 表示为度量，也就是关系型数据库中的 table。data point 是数据点，也就是关系型数据库的 row，timestamp 为产生数据点的时间。而 field 是度量下会随着时间戳变化的属性值，tags 是附加信息，一般是跟时间戳关系不大的属性信息。
+- 数据结构：时序数据库专为处理时间序列数据而设计。数据通常包括时间戳、测量值和标签。例如，如图所示的时序数据库结构，其中索引为时间戳（timestamp），不同的列记录了在该时间戳下的属性值。metric 表示度量（类似于关系型数据库中的表），data point 表示数据点（类似于关系型数据库中的行），field 是度量下随时间戳变化的属性值，tags 是附加的属性信息。
 
 :::center
   ![](../assets/tsdb.svg)<br/>
   图 9-7 时序数据库结构
 :::
 
-- 数据写入：时序数据库使用 LSM-Tree 来代替常规数据库中的 B+Tree。所有的写入操作，会先写入内存存储区（MemTable，通常是跳表或平衡树）。当 MemTable 满时，数据再被批量写入磁盘文件中，虽然写磁盘文件延迟较高，但磁盘写入操作是批量进行的。所以，时序数据库比常规的关系数据库（用 B Tree ）有着更高的写入吞吐量。
-- 数据保留策略：时序数据往往有明确的生命周期（如监控数据可能只需要保留几天或几个月），时序数据库通常具备自动化的数据保留策略（data retention），用来确保数据库的存储空间不会无限膨胀。例如，基于时间的保留策略，保留最近 30 天的数据，超过 30 天的数据将自动删除。
+- 数据写入：时序数据库使用 LSM-Tree（Log-Structured Merge-Tree）来替代常规数据库中的 B+Tree。在时序数据库中，所有写入操作首先写入内存存储区（MemTable，通常为跳表或平衡树）。当 MemTable 满时，数据会被批量写入磁盘文件中。虽然磁盘写入延迟较高，但由于批量操作，时序数据库在写入吞吐量上通常优于传统关系数据库（使用 B+Tree）。
+- 数据保留策略：时序数据通常有明确的生命周期，例如监控数据可能只需保留几天或几个月。时序数据库通常具有自动化的数据保留策略（data retention），以防止存储空间无限膨胀。例如，可以设置基于时间的保留策略，保留最近 30 天的数据，超过 30 天的数据将自动删除。
 
 
+默认情况下，Prometheus 将数据存储在本地 TSDB 中，并设定了默认的存储时限（15天），这种设计的理念基于“指标数据通常反映短期内的系统行为假设，而非长期/可靠分布式存储”。默认保留 15 天的数据，超过时间的数据会自动删除。Prometheus 的本地存储主要针对短期数据监控，若需要长期存储，可通过远程存储扩展（Remote Read/Write API）与外部存储系统集成。Thanos、Cortex、VictoriaMetrics、Mimir 等方案都可以为 Prometheus 提供长期存储、水平扩展、高可用性和多租户支持。
 
-默认情况下，Prometheus 将数据存储在本地 TSDB 中，并设定了默认的存储时限（15天），这种设计的理念基于“指标数据通常反映短期内的系统行为假设，而非长期/可靠分布式存储”。默认保留 15 天的数据，超过时间的数据会自动删除。用户也可以通过调整 --storage.tsdb.retention.time 参数来自定义数据保留时长。
+Prometheus 最大的一个特点是其 PromQL 是 Prometheus 内置的数据查询语言，其提供对时间序列数据丰富的查询，聚合以及逻辑运算能力的支持，同时 PromQL中 还提供了大量的内置函数可以实现对数据的高级处理。被广泛应用在 Prometheus 的日常应用当中，包括对数据查询、可视化、告警处理当中。
 
-PromQL（Prometheus Query Language）是 Prometheus 的核心特性之一，它提供了强大的查询功能。PromQL 支持对时间序列数据进行丰富的查询、聚合和逻辑运算。例如，你可以使用 PromQL 来预测磁盘空间是否会在12小时后被占满、找出CPU占用率前5位的服务、查询过去1分钟内系统负载超过其CPU核心数两倍的实例等。
-
-PromQL 提供了大量内置的聚合函数，支持对时间序列进行操作，包括求和、平均、最小值、最大值等。聚合函数可以根据时间段对数据进行汇总或统计，适用于生成监控指标和报警条件。
 例如，计算最近 5 分钟内 HTTP 请求总数的速率，并对所有实例的请求进行求和。
 
 ```PromQL
@@ -151,27 +148,46 @@ sum(rate(http_requests_total[5m])) 表示
 ```
 
 
-
-Prometheus 也考虑了长期存储的场景，你可以通过它的远端存储扩展（Remote Read/Write API）将数据存储到任意第三方存储上。目前，社区已经涌现出大量适用于长期时序数据存储的解决方案，如 Thanos、VictoriaMetrics、SignalFx、InfluxDB 和 Graphite 等。这些时序数据库一般具有更高的可用性、可扩展能力，笔者就不再一一介绍了。
-
 ## 4. 展示分析/预警
 
 采集/存储指标最终目的要用起来，也就是要“展示分析”以及“预警”。
 
-在可观测数据展示方面，Grafana Dashboard 基本已经成为事实的标准。Grafana 的 slogan 是“Dashboard anything. Observe everything.”。这句话并不是夸大：
-- 在报表类型方面，Grafana 支持趋势图，柱状图，统计数值，仪表盘，表格，饼图，状态图，热力图，纯文字，词云，玫瑰图等超过 100 多种的报表类型。
-- 在数据源方面，Grafana Dashboard 支持市面上所有常用的数据源，笔者列举部分供你参考：MySQL、MariaDB、MongoDB，PostgresSQL、Sqlite、Influxdb、Clickhouse、IotDB、Graphite、Azure、AWS，Gitlab，Github，SAPHANA，Oracle，JIRA，Json，CSV。如果你找不到“你想要的数据源”，那只说明一个问题：你的数据源已经被市场淘汰了。
+
+在数据分析和可视化领域，Grafana Labs 公司开发的 Grafana 已成为事实上的标准。最初，Grafana 专注于时间序列数据的监控与分析，但随着项目的发展，它已经扩展到所有需要数据可视化和监控的场景，包括 IT 运维、应用性能监控以及物联网、金融、医疗等行业。
+
+图 9-17 展示了一个 Grafana 仪表板（Dashboard）。在这个仪表板中，有两个关键概念：
 
 
-Prometheus 提供了名为 PromQL（Prometheus Query Language）的数据查询语言，这是一套完全由 Prometheus 定制的数据查询 DSL，能对时序数据进行高效地过滤、聚合和计算，已被广泛用在数据查询、可视化、报警处理等日常使用中。
+- 数据源（Data Source）：在 Grafana 中，数据源指的是为其提供数据的服务。Grafana 支持多种数据源，包括时序数据库（如 Prometheus、Graphite、InfluxDB）、日志数据库（如 Loki、Elasticsearch）、关系型数据库（如 MySQL、PostgreSQL），以及云监控平台（如 Google Cloud Monitoring、Amazon CloudWatch、Azure Monitor）。Grafana 插件库中提供了多达 165 种数据源。如果找不到某个特定的数据源，那通常意味着该数据源已经被市场淘汰。
+- 面板（Panel）：面板是仪表板中的基本构建块，用于显示各种可视化图表。Grafana 提供了多种图表类型，如仪表盘、表格、折线图、柱状图、热力图、饼图和直方图等。每个面板可以单独配置，并具备交互选项。通过 Panel 的 Query Editor（查询编辑器），可以为每个面板设置不同的数据源。例如，如果以 Prometheus 作为数据源，那在 Query Editor 中，我们使用 PromQL 查询语言从 Prometheus 中查询出相应的数据，并且将其可视化。Grafana 支持多种数据源，每个面板可配置不同的数据源，这样就可以在一个统一的界面上（仪表板）整合和展示来自多种不同系统的数据。
 
-Grafana 对 PromQL 提供了全面支持，两者的结合意味着“只要你能想到的数据，都能转化为你想要的图表”。
+Grafana 几乎涵盖了所有的数据源和图表类型。正如 Grafana 的宣传语所说：“Dashboard anything. Observe everything.”，只要你能想到的数据，都能转化为你想要的图表。
 
 :::center
   ![](../assets/grafana-dashboard-english.png)<br/>
-  图 9-7 通过 PromQL 查询指标数据，Grafana 展示指标数据
+  图 9-7 Grafana 的仪表盘
 :::
 
-在预警方面，Prometheus 负责数据的采集和预警信息的生成，而预警信息的进一步处理则由 Alertmanager 组件专门负责。
 
-Prometheus 首先定义预警规则，并定期对这些规则进行评估。一旦检测到预警条件被触发，Prometheus 会向 Alertmanager 发送预警信息。Alertmanager 对这些预警信息进一步的处理，例如去重、降噪、分组等。最后，Alertmanager 通过多种通知渠道，如邮件、微信、或者通用的 WebHook 机制，将处理后的预警信息传达给用户。
+在预警方面，Prometheus 负责数据采集和预警信息的生成，而 Alertmanager 则专门处理这些预警信息。以下是一个具体的例子，展示如何使用 Prometheus 告警规则来监控某个 HTTP 接口的 QPS。
+
+```yaml
+groups:
+  - name: example-alerts
+    rules:
+    - alert: HighQPS
+      expr: sum(rate(http_requests_total[5m])) by (instance, job) > 1000
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "High QPS detected on instance {{ $labels.instance }}"
+        description: "Instance {{ $labels.instance }} (job {{ $labels.job }}) has had a QPS greater than 1000 for more than 5 minutes."
+```
+
+这段规则会定期通过 PromQL 语法检测过去 5 分钟内某个被监控目标（instance）中的某个具体服务（job）的 QPS 是否大于 1000。如果条件满足，Prometheus 就会触发告警，并将其发送到 Alertmanager。Alertmanager 对告警进行进一步处理，例如：
+
+- 分组（Grouping）：将具有相似标签的告警进行分组，以减少告警冗余。例如，若多个实例的故障告警属于同一服务，Alertmanager 可以将这些告警合并为一个群组发送，而不是发送多个独立的通知。
+- 抑制（Inhibition）：定义规则来抑制某些告警的触发。当某个重要告警已触发时，可以避免其他相关但不那么重要的告警再次触发，从而防止告警风暴。例如，当整个服务宕机时，单个实例宕机的告警可以被抑制。
+- 静默（Silencing）：在特定时间段内禁用某些告警通知。静默操作可以通过指定标签、持续时间和备注等条件设置，常用于维护期间的告警屏蔽。
+- 路由（Routing）：根据告警标签或其他规则将告警路由到不同的接收端。Alertmanager 支持通过标签、优先级等条件进行灵活的路由设置。例如，将高优先级告警发送到短信和电话通知，而将低优先级告警仅通过邮件发送。

@@ -2,9 +2,9 @@
 
 处理日志本来是件稀松平常的事情，但在工程师们普遍“爱写”日志的影响下，日志处理由量变引发质变，成为典型的大数据场景之一：高吞吐写入（GB/s）、低成本海量存储（PB 级别）、亿级数据量实时检索（1s 内）。
 
-本节，笔者从数据索引原理和存储成本分析的角度，介绍三种各具特色的日志系统方案： Elastic（全文索引）、Loki（仅索引元数据）和 ClickHouse（列式数据库）。
+本节，笔者从数据索引原理和存储成本的角度，介绍三种各具特色的日志系统方案：Elastic Stack（全文索引）、Loki（仅索引元数据）和 ClickHouse（列式数据库）。
 
-## 1. 传统解决方案 ELK
+## 1. 全文索引解决方案 ELK
 
 讨论实现一套完整的日志系统，工程师们或多或少都应该听说过这几个名词：ELK、ELKB 或者 Elastic Stack（为统一明确，后续统称 Elastic Stack），这些其实说得都是同一套实现日志处理方案的开源组件。
 
@@ -67,16 +67,24 @@ Elasticsearch 冗余数据机制在观测场景下导致极高的存储成本。
 
 ## 2. 日志处理新贵 Loki 
 
-Loki 是一个由 Grafana Labs 公司开发的日志聚合系统。相当于实现了一个分布式的（grep、awk、sed）搜索、过滤和分析的日志系统。
+Grafana Loki（简称 Loki）是由 Grafana Labs 公司开发的是一个可水平扩展、高度可用、多租户的日志聚合系统。
 
-Loki 日志系统的架构如下所示，有两个核心的组件：
+受 Prometheus 的启发，Loki 使用类似 Prometheus 的标签索引机制来存储和查询日志数据。Loki 采用了轻量级的索引设计，将日志元数据（例如时间戳、标签等）和实际日志内容分离。实际日志内容不做什么索引，以块（Block）的形式存储在。
 
-- Promtail：Promtail 是 Loki 的代理，它负责收集日志并将它们发送到 Loki。Promtail 通常在产生日志的机器上运行，可以直接读取日志文件，也可以接收由其他进程（如 Fluentd 或 Fluent Bit）转发的日志。
+如果您不想删除旧日志，也可以将日志存储在长期对象存储中，例如 Amazon Simple Storage Service (S3) or Google Cloud Storage (GCS)，或者本地文件系统内。
+
+
+
+
+典型的基于 Loki 实现的日志方案，有以下三个核心的组件：
+
+
+- Promtail：Promtail 是 Loki 的代理，它负责收集日志并将它们发送到 Loki。Promtail 操作模式是发现存储在磁盘上的日志文件，并将它们与一组标签关联起来转发给 Loki。Promtail 可以为与 Promtail 运行在同一节点上的 Kubernetes pod 进行服务发现，充当容器 sidecar 或 Docker 日志驱动程序，从指定文件夹读取日志，并跟踪 systemd 日志。当然，也可以接收由其他进程（如 Fluentd 或 Fluent Bit）转发的日志。
 
 - Loki：Loki 是主要的日志聚合和查询组件，它接收并存储日志，同时提供了一个查询接口（支持 LogQL，与 Grafana 密切集成）。
-
+- Grafana 用于查询和显示日志数据。您还可以从命令行、使用LogCLI或直接使用 Loki API 查询日志。
 :::center
-  ![](../assets/loki-arc.png)<br/>
+  ![](../assets/loki-arch.png)<br/>
   图 9-11 Loki 日志系统架构
 :::
 

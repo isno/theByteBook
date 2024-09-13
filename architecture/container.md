@@ -81,7 +81,7 @@ runc 是非常小的运行核，其目的在于提供一个干净简单的运行
 
 OCI 项目启动后，为了符合 OCI 标准，Docker 开始推动自身的架构向前演进。
 
-Docker 把与内部责管理容器执行、分发、监控、网络、构建、日志等功能的模块重构为 containerd 项目 。如图 7-13 所示，containerd 的架构主要分为三个部分：生态系统（Ecosystem）、平台（Platform）和客户端（Client），每个部分在整个系统中扮演着不同的角色，协同工作以提供全面的容器管理功能。
+Docker 把与内部负责管理容器执行、分发、监控、网络、构建、日志等功能的模块重构为 containerd 项目 。如图 7-13 所示，containerd 的架构主要分为三个部分：生态系统（Ecosystem）、平台（Platform）和客户端（Client），每个部分在整个系统中扮演着不同的角色，协同工作以提供全面的容器管理功能。
 
 :::center
   ![](../assets/containerd-arch.png)<br/>
