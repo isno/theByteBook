@@ -8,17 +8,9 @@
 Google 的 Borg 系统孕育出了 Kubernetes，Prometheus 的前身 —— Google 内部配套的监控系统 Brogmon 则由前 Google工程师在 Soundcloud 以开源软件的形式继承下来。
 :::
 
-如图 9-4 所示的 Prometheus 架构，
-Prometheus 的架构包括 Prometheus Server、Client、Push Gateway、Exporters 和 Alertmanager 等组件，它们共同构成了一个完整的监控系统。Prometheus Server 负责收集、存储和查询时间序列数据；Client 负责生成监控指标并暴露给 Prometheus Server；Push Gateway 用于处理短期任务的监控数据；Exporters 用于将第三方服务的监控数据转换为 Prometheus 可以理解的格式；Alertmanager 负责处理告警。
+如图 9-4 所示的 Prometheus 架构，其中 Service Discovery 用于自动发现被监控的目标，Exporters 用于将监控目标的指标数据转换为 Prometheus 可以理解的格式；Push Gateway 用于处理短期任务的监控数据；Prometheus Server 负责收集、存储和查询指标数据；Alertmanager 负责处理告警。
 
-它通过不同的子功能实现指标采集、存储、计算和展示等，再通过搭积木组合出一个以应用为中心，功能强大的监控告警系统。Prometheus 中核心组件的说明如下：
-
-- Prometheus Server：基于指标的监控系统的大脑，Prometheus Server 的主要工作是使用拉模型（Pull）从各个目标收集指标，然后存储为时间序列数据，并提供查询和分析接口。
-- Service Discovery（服务发现）：在微服务、容器化、云环境等动态系统中，服务的 IP 地址、端口、实例等经常发生变化。Prometheus 通过 Kubernetes、Consul、DNS 等多种服务发现机制，能够自动发现被监控目标，并从中抓取数据，无需手动配置。
-- Alertmanager：处理来自 Prometheus Server 的告警信息。它负责将告警路由到不同的通知渠道，如电子邮件、Slack、PagerDuty 等，并支持告警抑制、告警分组等功能。
-
-- Pushgateway：Prometheus 默认使用拉取模型（也就是 pull 的方式）来抓取指标，然而有些场景是需要业务主动将指标 Push 到 Prometheus。笔者举一个 Kubernetes cronjob 上运行的一个批处理作业示例帮你理解，该作业每天根据某些事件运行 5 分钟。在这种情况下，Prometheus 将无法使用拉机制正确抓取服务级别指标。因此，我们需要将指标推送到 prometheus，而不是等待 prometheus 拉取指标。Pushgateway 相当于一个中间代理，批处理作业可以使用 HTTP API 将指标推送到 Pushgateway。然后 Pushgateway 在 /metrics 端点上公开这些指标。然后 Prometheus 从 Pushgateway 中抓取这些指标。
-- Alert Manager：Prometheus 监控系统的关键部分。它的主要工作是根据 Prometheus 警报配置中设置的指标阈值发送警报。警报由 Prometheus 触发（注意，是由 Prometheus 进程触发原始告警）并发送到 Alertmanager。Alertmanager 对告警去重、抑制、静默、分组，最后使用各类通知媒介（电子邮件、slack 等）发出告警事件。
+Prometheus 通过不同组件对指标数据实现采集、存储、计算和展示的完整处理。
 
 :::center
   ![](../assets/prometheus-arch.png)<br/>
@@ -68,7 +60,11 @@ Prometheus 只要通过轮询的形式定期从这些监控目标（target）中
 - Redis 的监控信息需要通过 INFO 命令获取;
 - 路由器等硬件的监控信息需要通过 SNMP 协议获取;
 
-要监控这些目标，我们有两个方法：一是改动目标系统的代码, 让它主动暴露 Prometheus 格式的指标。第二种是编写一个代理服务, 将其它监控信息转化为 Prometheus 格式的指标。向 Prometheus 提供监控样本数据的程序都可以被称为一个 Exporter。通过 Exporter 对指标全方位的收集。
+Prometheus 的设计目标是作为一个通用的监控系统，实现所有的监视功能将使 Prometheus 变得过度复杂。另外，对于 Prometheus 本身，这也意味着它需要理解所有可能的监视项，这对一个通用的监视工具来说肯定是不现实的。
+
+Prometheus 解决的方式是通过一种代理程序，负责从不同的服务、应用、硬件或系统中收集指标数据，并将其转换为 Prometheus 支持的格式。这个代理，在 Prometheus 称为 Exporter，Exporter 将数据的收集与监控系统解耦，Prometheus 无需直接与每个服务交互。
+
+通过 Exporter，Prometheus 便实现了对系统全方位的监控。
 
 - **宿主机监控数据**：Node Exporter 以 DaemonSet 的方式运行在宿主机，收集节点的负载、CPU、内存、磁盘以及网络这样的常规机器的数据。
 - **Kubernetes 本身的运行情况**：Kubernetes 的 API Server、Kubelet 等组件内部通过暴露 /metrics 接口，向 Prometheus 提供各个 Controller 工作队列、请求 QPS 等 Kubernetes 本身工作的情况。
@@ -133,7 +129,15 @@ Prometheus 只要通过轮询的形式定期从这些监控目标（target）中
 - 数据保留策略：时序数据通常有明确的生命周期，例如监控数据可能只需保留几天或几个月。时序数据库通常具有自动化的数据保留策略（data retention），以防止存储空间无限膨胀。例如，可以设置基于时间的保留策略，保留最近 30 天的数据，超过 30 天的数据将自动删除。
 
 
-默认情况下，Prometheus 将数据存储在本地 TSDB 中，并设定了默认的存储时限（15天），这种设计的理念基于“指标数据通常反映短期内的系统行为假设，而非长期/可靠分布式存储”。默认保留 15 天的数据，超过时间的数据会自动删除。Prometheus 的本地存储主要针对短期数据监控，若需要长期存储，可通过远程存储扩展（Remote Read/Write API）与外部存储系统集成。Thanos、Cortex、VictoriaMetrics、Mimir 等方案都可以为 Prometheus 提供长期存储、水平扩展、高可用性和多租户支持。
+默认情况下，Prometheus 将数据存储在本地 TSDB 中，Prometheus 将所有数据按照时间范围“分片”存储，按照两小时为一个时间窗口，每两小时的数据存在一个块中，每个块中包含该时间窗口内的所有样本数据、元数据文件以及索引文件。
+通过时间窗口的形式保存数据，有利于 Prometheus 根据特定时间段进行数据查询。Prometheus 默认保留 15 天的数据，若需要长期存储，可通过远程存储扩展（Remote Read/Write API）与外部存储系统集成。Thanos、Cortex、VictoriaMetrics、Mimir 等方案都可以为 Prometheus 提供长期存储、水平扩展、高可用性和多租户支持。
+
+:::tip 什么是分片(sharding)
+
+“分片”（sharding）是数据库和数据存储系统中用来提高性能和可扩展性的一种技术。它将数据划分成更小的、独立的片段，每个片段称为一个“分片”。每个分片可以被单独管理和存储，这样可以减轻单个服务器的负担，提高系统的整体处理能力和可扩展性。
+
+笔者稍后介绍的 Elastic Stack、ClickHouse 等技术皆是利用了分片技术实现水平可扩展以及并行计算能力。
+:::
 
 Prometheus 最大的一个特点是其 PromQL 是 Prometheus 内置的数据查询语言，其提供对时间序列数据丰富的查询，聚合以及逻辑运算能力的支持，同时 PromQL中 还提供了大量的内置函数可以实现对数据的高级处理。被广泛应用在 Prometheus 的日常应用当中，包括对数据查询、可视化、告警处理当中。
 
