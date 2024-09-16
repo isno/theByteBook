@@ -1,16 +1,11 @@
 # 9.3.1 指标数据的收集与处理
 
-指标（Metrics）是监控的代名词。与日志不同，日志是对应用程序操作的一种记录，而监控更多是通过对指标数据的聚合，来对应用程序在特定时间内行为的衡量。
+指标（Metrics）是监控的代名词，提到监控系统，避不开 Prometheus。本节，笔者以剖析 Prometheus 系统为例，讲解指标的收集、存储和处理流程。
+
+2014 年，Google 的 Borg 系统孕育出了 Kubernetes，前 Google 工程师受 Borg 配套的监控系统 Brogmon 启发，在 Soundcloud 公司以开源软件的形式开启了 Prometheus 项目。2016 年 5 月继 Kubernetes 之后，Prometheus 称为 CNCF 第二个项目。经过多年的发展，Prometheus 现已成为云原生系统中指标监控的事实标准。
 
 
-提到监控系统，避不开 Prometheus，Prometheus 已经成为云原生中指标监控的事实标准。
-:::tip 额外知识
-Google 的 Borg 系统孕育出了 Kubernetes，Prometheus 的前身 —— Google 内部配套的监控系统 Brogmon 则由前 Google工程师在 Soundcloud 以开源软件的形式继承下来。
-:::
-
-如图 9-4 所示的 Prometheus 架构，其中 Service Discovery 用于自动发现被监控的目标，Exporters 用于将监控目标的指标数据转换为 Prometheus 可以理解的格式；Push Gateway 用于处理短期任务的监控数据；Prometheus Server 负责收集、存储和查询指标数据；Alertmanager 负责处理告警。
-
-Prometheus 通过不同组件对指标数据实现采集、存储、计算和展示的完整处理。
+如图 9-4 所示，可见 Prometheus 是一个模块化的系统，由多个独立的组件组成，每个组件负责特定的任务，其中 Service Discovery 用于自动发现被监控的目标，Exporters 用于将监控目标的指标数据转换为 Prometheus 可以理解的格式；Push Gateway 用于处理短期任务的监控数据；Prometheus Server 负责收集、存储和查询指标数据；Alertmanager 负责处理告警。
 
 :::center
   ![](../assets/prometheus-arch.png)<br/>
@@ -18,27 +13,31 @@ Prometheus 通过不同组件对指标数据实现采集、存储、计算和展
 :::
 
 
-
 ## 1. 定义指标的类型
 
-为方便用户使用和理解不同指标之间的差异，Prometheus 定义了四种不同的指标类型：
+为了方便用户使用和理解不同指标之间的差异，Prometheus 定义了四种不同的指标类型：
 
-- 计数器（Counter）: Counter 类型的指标其工作方式和计数器一样，初始为 0，只增不减（除非系统发生重置）。常见的监控指标如 http_requests_total、node_cpu 等都是 Counter 类型的监控指标。
-- **Gauge（仪表盘）**：与 Counter 不同，Gauge 类型的指标侧重于反应系统的当前状态，因此这类指标的样本数据可增可减。常见指标如 node_memory_MemFree（主机当前空闲的内容大小）、node_memory_MemAvailable（可用内存大小）都是 Gauge 类型的监控指标。
-- **Histogram（直方图）**：观测采样统计分类数据，观测数据放入有数值上界的桶中，并记录各桶中数据的个数。典型的如延时在 `0~50ms` 的请求数，500ms 以上慢查询数，大 Key 数等。
-- **Summary（摘要）**：聚合统计的多变量，跟 Histogram 有点像，但更有聚合总数的概念。典型的有有成功率、总体时延、总带宽量等。
+- 计数器（Counter）: Counter 是单调递增的计数器，适用于记录事件的累计次数。它只能递增或复位为 0，不能减少，通常用于记录某些不可逆的事件，如请求数、错误数等。常见的计数器指标为 HTTP 请求次数、系统错误次数、数据包发送量等。
+- 仪表盘（Gauge）：Gauge 用于表示可增可减的值，适用于那些随时间波动的数据，例如系统资源利用率。它可以随时间上下波动，如内存使用量、CPU 使用率等。
+- 直方图（Histogram）：Histogram 用于采样观测值并将其放入预定义的桶中，适合用来统计分布情况，特别是延迟、请求处理时间等场景。它不仅记录观测值的数量，还可以生成各个区间（桶）内的样本分布情况。Histogram 使用的场景如测量 API 的响应时间分布、处理任务的延迟等。
+- 摘要（Summary）：Summary 也用于采样观测值，提供整体的统计信息，类似于 Histogram，但它直接计算分位数（percentile），例如 50%、90% 等常见的统计值。它更适合需要精确分位数的数据分析，使用的场景如追踪延迟、响应时间，并希望得到特定分位数的精确结果，如响应时间的 99th 百分位数。
 
 :::center
   ![](../assets/four-metrics-type.png)<br/>
   图 9-5 Prometheus 定义的四种不同的指标类型
 :::
 
-
 ## 2. 通过 Exporter 收集指标
 
-定义完指标的类型之后，接下来的工作是把指标从监控的目标收集起来。
+定义完指标的类型之后，接下来的工作是把指标从监控的目标收集起来。收集指标似乎是很简单的事情，但问题是，对于大量现有的服务、系统甚至硬件，它们并不会暴露 Prometheus 格式的指标，比如：
 
-Prometheus 收集指标的方式很简单，作用是把从目标采集到的监控数据转换为 Prometheus 标准格式的指标类型，再将指标以 HTTP（接口通常是 /metrics）的方式暴露给 Prometheus。如下，从一个 metrics 接口获取类型指标为 Counter 样本。
+- Linux 的很多指标信息以文件形式记录在 proc 下的各个目录中，如 /proc/meminfo 里记录内存信息，/proc/stat 里记录 CPU 信息;
+- Redis 的监控信息需要通过 INFO 命令获取;
+- 路由器等硬件的监控信息需要通过 SNMP 协议获取;
+
+Prometheus 的做法是将数据的收集与监控系统解耦，实现这一关键能力的组件称 Exporter。Exporter 充当着连接监控系统与被监控目标之间的桥梁，不同的 Exporter 去理解不同的监控指标，并将其转换为 Prometheus 支持的格式。再将指标以 HTTP（接口通常是 /metrics）的方式暴露给 Prometheus。
+
+如下所示，从一个 metrics 接口获取类型指标为 Counter 的 Exporter 实例。Prometheus 只要通过轮询的形式定期从这些监控目标（target）中获取数据即可。
 
 ```bash
 $ curl http://127.0.0.1:8080/metrics | grep http_request_total
@@ -47,31 +46,7 @@ $ curl http://127.0.0.1:8080/metrics | grep http_request_total
 http_request_total 5
 ```
 
-Prometheus 只要通过轮询的形式定期从这些监控目标（target）中获取样本数据即可，通过主动轮询的方式还可以控制采集频率，业务系统异常的时保证自身系统的稳定。
-
-:::center
-  ![](../assets/prometheus-exporter.png)<br/>
-  图 9-5 Prometheus 通过 Exporter 的实例 target 中主动拉取监控数据
-:::
-
-但问题是，对于大量现有的服务、系统甚至硬件，它们并不会暴露 Prometheus 格式的指标，比如：
-
-- Linux 的很多指标信息以文件形式记录在 proc 下的各个目录中，如 /proc/meminfo 里记录内存信息, /proc/stat 里记录 CPU 信息;
-- Redis 的监控信息需要通过 INFO 命令获取;
-- 路由器等硬件的监控信息需要通过 SNMP 协议获取;
-
-Prometheus 的设计目标是作为一个通用的监控系统，实现所有的监视功能将使 Prometheus 变得过度复杂。另外，对于 Prometheus 本身，这也意味着它需要理解所有可能的监视项，这对一个通用的监视工具来说肯定是不现实的。
-
-Prometheus 解决的方式是通过一种代理程序，负责从不同的服务、应用、硬件或系统中收集指标数据，并将其转换为 Prometheus 支持的格式。这个代理，在 Prometheus 称为 Exporter，Exporter 将数据的收集与监控系统解耦，Prometheus 无需直接与每个服务交互。
-
-通过 Exporter，Prometheus 便实现了对系统全方位的监控。
-
-- **宿主机监控数据**：Node Exporter 以 DaemonSet 的方式运行在宿主机，收集节点的负载、CPU、内存、磁盘以及网络这样的常规机器的数据。
-- **Kubernetes 本身的运行情况**：Kubernetes 的 API Server、Kubelet 等组件内部通过暴露 /metrics 接口，向 Prometheus 提供各个 Controller 工作队列、请求 QPS 等 Kubernetes 本身工作的情况。
-- **Kubernetes Workload 相关的监控**：kuelet 内置的 cAdvisor 服务把 Metrics 信息细化到每一个容器的 CPU、文件系统、内存、网络等资源使用情况。
-- **业务的监控**：用户在应用内实现 Exporter，自定义出各式各样的 Metrics。
-
-除了上述监控范围，Prometheus 社区也涌现出大量各种用途的 Exporter。如表 9-1 所示，涵盖了从基础设施、中间件以及网络等各个方面，让 Prometheus 的监控范围涵盖用户关心的所有目标。
+通过 Exporter，Prometheus 可以监控几乎所有系统和应用，只需使用相应的 Exporter 或编写自定义的 Exporter。Prometheus 社区也涌现出大量各种用途的 Exporter。如表 9-1 所示，涵盖了从基础设施、中间件以及网络等各个方面，让 Prometheus 的监控范围涵盖用户关心的所有目标。
 
 :::center
 表 9-1 Prometheus 中常用 Exporter
@@ -161,7 +136,7 @@ sum(rate(http_requests_total[5m])) 表示
 - 数据源（Data Source）：在 Grafana 中，数据源指的是为其提供数据的服务。Grafana 支持多种数据源，包括时序数据库（如 Prometheus、Graphite、InfluxDB）、日志数据库（如 Loki、Elasticsearch）、关系型数据库（如 MySQL、PostgreSQL），以及云监控平台（如 Google Cloud Monitoring、Amazon CloudWatch、Azure Monitor）。Grafana 插件库中提供了多达 165 种数据源。如果找不到某个特定的数据源，那通常意味着该数据源已经被市场淘汰。
 - 面板（Panel）：面板是仪表板中的基本构建块，用于显示各种可视化图表。Grafana 提供了多种图表类型，如仪表盘、表格、折线图、柱状图、热力图、饼图和直方图等。每个面板可以单独配置，并具备交互选项。通过 Panel 的 Query Editor（查询编辑器），可以为每个面板设置不同的数据源。例如，如果以 Prometheus 作为数据源，那在 Query Editor 中，我们使用 PromQL 查询语言从 Prometheus 中查询出相应的数据，并且将其可视化。Grafana 支持多种数据源，每个面板可配置不同的数据源，这样就可以在一个统一的界面上（仪表板）整合和展示来自多种不同系统的数据。
 
-Grafana 几乎涵盖了所有的数据源和图表类型。正如 Grafana 的宣传语所说：“Dashboard anything. Observe everything.”，只要你能想到的数据，都能转化为你想要的图表。
+Grafana 几乎涵盖了所有的数据源和图表类型。正如 Grafana 的宣传语所言“只要你能想到的数据，都能转化为你想要的图表”。
 
 :::center
   ![](../assets/grafana-dashboard-english.png)<br/>

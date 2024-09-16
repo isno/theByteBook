@@ -19,7 +19,10 @@ Requests 和 limits 的配置除了表明资源情况和限制资源使用之外
 
 ## 2. 服务质量 Qos 等级
 
-当节点的资源不足时，节点内的部分容器会被驱逐（Eviction，将 Pod 从节点上移除）。Pod 的 QoS（Quality of Service，服务质量）级别，决定了当节点资源不足时 Kubernetes 如何处理节点上的 Pod。
+当节点的资源不足时，节点内的部分容器会被驱逐（Eviction）。驱逐是 K8s 的一个特殊功能，是在某些特殊场景下，为了寻求系统稳定最优解手段。当节点 NotReady、节点资源不足，把 pod 驱逐至其它节点，而不是谋求将节点压榨致宕机，更能保护业务的连续性和可用性。
+
+
+Pod 的 QoS（Quality of Service，服务质量）级别，决定了当节点资源不足时 Kubernetes 如何处理节点上的 Pod。
 
 Kubernetes 将容器划分为 3 个 Qos 等级，优先级依次递减：
 
