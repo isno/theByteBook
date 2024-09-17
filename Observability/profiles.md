@@ -28,7 +28,7 @@ Profiles 数据一般表示成火焰图、堆栈图或内存分析图等形式�
 - IO Profiler（I/O 分析器）：分析 I/O 操作的性能，如用来分析文件读写操作的延迟或网络请求的耗时，从而优化数据传输效率。
 - Language-specific Profiler：特定于语言的分析器，如 JVM Profiler，专门用于分析运行在 Java 虚拟机上的应用程序。
 
-过去，由于这些分析器开销很大，工程师们通常在万不得已的情况下才临时使用。不过，随着编程语言层面（如 Java Flight Recorder、Async Profiler）操作系统层面（如 systemTap、eBPF ）等低开销剖析方法的普及，常态化持续性能剖析（Continuous Profiling）辅助工程师精准抓取一些偶发故障的现场快照，也变得愈加可行。
+过去，由于这些分析器开销很大，工程师们通常在万不得已的情况下才临时使用。不过，随着编程语言层面（如 Java Flight Recorder、Async Profiler）操作系统层面（如 systemTap、eBPF ）等低开销剖析方法的普及，实现生成环境持续性能剖析（Continuous Profiling）精准抓取一些偶发故障的现场快照，也变得愈加可行。
 
 [^1]: 参见《2021.07.13 我们是这样崩的》https://www.bilibili.com/read/cv17521097/
 
