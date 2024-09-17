@@ -3,7 +3,7 @@
 指标（Metrics）是监控系统的代名词。谈及监控系统，无法绕过 Prometheus。本节将通过解析 Prometheus 系统，讲解指标的收集、存储和处理流程。
 
 
-Prometheus 项目始于 2012 年，灵感来自 Google 内部的 Borg 监控系统（Brogmon）。前 Google 工程师在 SoundCloud 公司将其开源，逐步发展为业界广泛使用的监控工具。2016 年 5 月，Prometheus 继 Kubernetes 之后，成为云原生计算基金会（CNCF）的第二个正式项目。经过多年的发展，Prometheus 已成为云原生系统中指标监控的事实标准。
+Prometheus 项目始于 2012 年，灵感来自 Google 内部的 Borg 监控系统（Brogmon），由前 Google 工程师在 SoundCloud 公司开发并开源。2016 年 5 月，Prometheus 继 Kubernetes 之后，成为云原生计算基金会（CNCF）的第二个正式项目。经过多年的发展，Prometheus 已成为云原生系统中指标监控的事实标准。
 
 如图 9-4 所示，Prometheus 是一个模块化系统，由多个独立组件组成，每个组件承担特定任务。服务发现（Service Discovery） 自动发现监控目标，Exporter 负责将监控目标的指标数据转换为 Prometheus 可理解的格式，Pushgateway 处理短期任务的监控数据，Prometheus 服务器 负责收集、存储和查询数据，而 Alertmanager 处理告警通知。
 
