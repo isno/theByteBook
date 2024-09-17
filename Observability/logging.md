@@ -32,7 +32,7 @@ Elasticsearch 能快速从海量的数据中检索出关键词匹配的日志。
 - T~1~ = "what is it"
 - T~2~ = "it is a banana"
 
-通过反向索引，我们就能得到下面的匹配关系。
+通过反向索引，得到下面的匹配关系。
 ```
 "a":      {2}
 "banana": {2}
@@ -44,7 +44,7 @@ Elasticsearch 能快速从海量的数据中检索出关键词匹配的日志。
 
 在 Elasticsearch 中，反向索引使得搜索操作能够快速定位包含特定关键词的文档，而无需逐一扫描所有文档。
 
-Elasticsearch 的极致查询的另一项关键是分片机制（sharding）。分片定义为，每一条数据（或者每条记录，每行，每个文档）只属特定的分片。每个分片都可以视为一个完整的数据库，在 Elasticsearch 中，分片是独立的 Lucene 实例。当文档写入时，Elasticsearch 会通过哈希函数（通常是基于文档 ID）计算出文档应该存储在哪个分片中，从而将文档有序分配到不同分片。通过分片，查询并行地在多个分片上执行，并行执行结束之后，再将结果聚合后再返回给客户端，这将大地提高了查询吞吐量。
+Elasticsearch 另一项关键是分片机制（sharding）。分片定义为，每一条数据（或者每条记录，每行，每个文档）只属特定的分片。每个分片都可以视为一个完整的数据库，在 Elasticsearch 中，分片是独立的 Lucene 实例。当文档写入时，Elasticsearch 会通过哈希函数（通常是基于文档 ID）计算出文档应该存储在哪个分片中，从而将文档有序分配到不同分片。通过分片，查询并行地在多个分片上执行，并行执行结束之后，再将结果聚合后再返回给客户端，这将大地提高了查询吞吐量。
 
 Elasticsearch 极致查询性能的背后，也付出了数据写入吞出率低和存储空间占用高的代价：
 
@@ -54,108 +54,25 @@ Elasticsearch 极致查询性能的背后，也付出了数据写入吞出率低
 
 ## 2. 轻量化处理方案 Loki 
 
-Grafana Loki（简称 Loki）是由 Grafana Labs 公司开发的是一个可水平扩展、高度可用、多租户的日志聚合系统。
+Grafana Loki（简称 Loki）是由 Grafana Labs 公司开发的一款日志聚合系统。它受到 Prometheus 的启发，设计理念是“对于日志的 Prometheus”，其特点是轻量、低成本以及与 Kubernetes 高度契合。
 
-受 Prometheus 的启发，Loki 使用类似 Prometheus 的标签索引机制来存储和查询日志数据。Loki 采用了轻量级的索引设计，将日志元数据（例如时间戳、标签等）和实际日志内容分离。实际日志内容不做什么索引，以块（Block）的形式存储在。
-
-如果您不想删除旧日志，也可以将日志存储在长期对象存储中，例如 Amazon Simple Storage Service (S3) or Google Cloud Storage (GCS)，或者本地文件系统内。
-
-
-
-
-典型的基于 Loki 实现的日志方案，有以下三个核心的组件：
-
-
-- Promtail：Promtail 是 Loki 的代理，它负责收集日志并将它们发送到 Loki。Promtail 操作模式是发现存储在磁盘上的日志文件，并将它们与一组标签关联起来转发给 Loki。Promtail 可以为与 Promtail 运行在同一节点上的 Kubernetes pod 进行服务发现，充当容器 sidecar 或 Docker 日志驱动程序，从指定文件夹读取日志，并跟踪 systemd 日志。当然，也可以接收由其他进程（如 Fluentd 或 Fluent Bit）转发的日志。
-
-- Loki：Loki 是主要的日志聚合和查询组件，它接收并存储日志，同时提供了一个查询接口（支持 LogQL，与 Grafana 密切集成）。
-- Grafana 用于查询和显示日志数据。您还可以从命令行、使用LogCLI或直接使用 Loki API 查询日志。
-:::center
-  ![](../assets/loki-arch.png)<br/>
-  图 9-11 Loki 日志系统架构
-:::
-
-Loki 明显优势是非常经济，它不再根据日志原始内容建立大量的全文索引，而是借鉴了 Prometheus 设计理念：由标签驱动的数据模型。Loki 使用标签来组织和索引日志数据，日志条目通过标签进行索引，日志内容不做任何索引，并压缩存储于对象存储中。
-
-查询时，Loki 会通过标签索引定位到相关的日志数据，并从对象存储中读取日志内容。
-
-假设你在一个分布式系统中收集应用程序日志，以下是一个简单的日志条目示例及其元数据。
-```bash
-2024-09-11T10:15:30.123Z [INFO] [app-123] User login successful: user_id=456
-2024-09-11T10:16:45.678Z [ERROR] [app-123] Failed to connect to database: timeout
-2024-09-11T10:17:55.432Z [WARN] [app-456] API rate limit exceeded: user_id=789
-```
-
-对于这些日志条目，Loki 使用以下标签来索引日志数据：
-
-- job：表示日志的来源或应用名称，例如 app-123 或 app-456。
-- level：表示日志的级别，例如 INFO、ERROR 或 WARN。
-- user_id：表示日志中涉及的用户 ID，这个字段可以作为日志内容的一部分，通常会被提取为标签。
-- host：表示日志产生的主机名称或 IP 地址（如果配置了）
-
-Loki 的索引将使用这些标签来组织和存储日志数据。以下是如何索引这些标签的示例：
-
-```json
-{
-  "streams": [
-    {
-      "stream": {
-        "job": "app-123",
-        "level": "INFO"
-      },
-      "values": [
-        ["2024-09-11T10:15:30.123Z", "User login successful: user_id=456"]
-      ]
-    },
-    {
-      "stream": {
-        "job": "app-123",
-        "level": "ERROR"
-      },
-      "values": [
-        ["2024-09-11T10:16:45.678Z", "Failed to connect to database: timeout"]
-      ]
-    },
-    ...
-  ]
-}
-
-```
-
-对象存储通常具有较低的存储成本，适合存储大量日志数据。
-
-
-相较于 Elastic 全文索引系统，Loki 只索引标签的，并将日志内容存储与对象存储中，最终存储成本可降低数十倍甚至更低。
-
-
-受 PromQL 的启发，Loki 也有自己的查询语言，称为 LogQL。
-实现日志的索引及存储之后，便可使用 Loki 查询语言（LogQL）进行查询、过滤、聚合等操作。
-
-```
-{job="app-123", level="ERROR"}
-```
-
-这个查询将检索所有 job 为 app-123 且 level 为 ERROR 的日志条目，并显示相关的日志内容和时间戳。
-
-
-作为 Grafana Labs 的自家产品，Loki 与 Grafana 以及 Prometheus 密切集成。例如：
-
-- 度量和日志集成：你可以在 Grafana 中创建一个仪表板，显示来自 Prometheus 的时序数据（如 CPU 使用率）和来自 Loki 的日志数据（如错误日志）。这样可以在同一面板上查看度量和日志信息，以便于更深入的故障排除和性能分析。
-- 警报和通知：Prometheus 可以用于生成警报，而 Loki 可以提供警报触发时的日志上下文。通过集成，可以在警报触发时从 Loki 中提取相关日志，以帮助诊断问题的根源。
-
-
-利用 Loki 的查询语法 LogQL 使用标签及运算符进行过滤，能展示出任何你想要的图表。
+Loki 的主要组件包括 Promtail（日志代理）、Distributor（分发器）、Ingester（写入器）、Querier（查询器）、Query Frontend（查询前端） 和 Ruler（规则处理器）。Promtail 负责从各种源收集日志，Distributor 处理和验证接收的日志，Ingester 负责存储和索引日志，Querier 用于查询日志，Query Frontend 处理查询请求，而 Ruler 负责监控和告警。
 
 :::center
-  ![](../assets/loki-dashboard.jpeg)<br/>
-  图 9-12 在 Grafana 中通过 LogQL 查询展示不同的图表
+  ![](../assets/loki_architecture_components.svg)<br/>
 :::
 
-最后，Loki 和 Elastic 都是优秀的日志解决方案，如何选择取决于具体场景：
-- Loki 相对轻量，具有较高的可扩展性和简化的存储架构，若是数据的处理不那么复杂，如应用程序日志和基础设施指标，并且以 Kubernetes 为底座的系统时，选择 Loki 更合适。
-- Elastic 相对重量，需要复杂的存储架构和较高的硬件要求，部署和管理也比较复杂，适合更大的数据集和更复杂的数据处理需求。
 
-## 3. 凶猛彪悍的 ClickHouse
+Loki 最大的一个特点是只为日志的元数据（如标签、时间戳）建立索引，而不是对原始日志数据进行全文索引。在 Loki 存储模型设计中，有两种主要类型的数据：块（Chunks）和索引（Indexes）：
+
+- 索引（Indexes）：索引存储了每个日志流的标签集，并将其与各个块关联起来。索引的作用是快速定位到特定的日志块，从而提高查询效率。索引通常存储在支持高读写性能的数据库中，如 Amazon DynamoDB、Google Bigtable 或 Apache Cassandra。
+- 块（Chunks）：块是 Loki 存储日志数据的主要方式，它们包含了实际的日志内容。当日志条目到达 Loki 时，它们会被压缩并存储为块，被保存在对象存储（如 Amazon S3 或 Google Cloud Storage）或本地文件系统中。
+
+当用户发起日志查询时，查询请求会首先根据查询条件中的“时间范围”和“标签”在索引中查找对应的 chunk。然后，Loki 会根据索引返回的 chunk 元数据，从 chunk 存储中读取并解压缩实际的日志数据，最终将日志返回给用户。
+
+只索引元数据，以及索引和 chunk 的分离存储模型，使 Loki 在处理大规模日志数据时具有明显的成本优势。
+
+## 3. 列式存储数据库 ClickHouse
 
 近些年，在日志处理场景，ClickHouse 也频繁出现。
 
