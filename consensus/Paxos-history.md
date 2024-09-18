@@ -1,6 +1,6 @@
 # 6.2.1 Paxos 起源
 
-Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文就是“兼职议会”，论文描述了一个虚构的古希腊岛屿考古发现故事。
+Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文为“兼职议会”。该篇论文的开头描述了一个虚构的古希腊岛屿考古发现故事。
 
 :::tip The Part-Time Parliament
 
@@ -9,19 +9,16 @@ Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文�
 
 :::
 
-如果不事先说明，也许你根本不会认识到上面是一篇关于分布式的论文。为了说明这个算法以及演讲效果，Lamport 演讲中还扮演了几次《夺宝奇兵》中印第安纳·琼斯风格的考古学家。不幸的是 Paxos 论文中采用希腊民主议会的比喻明显失败了，Lamport 像写小说一样，把一个复杂的数学问题弄成了一篇带有考古色彩的历史小说，听众没有记住 Paxos 算法，仅仅记住了印第安纳·琼斯。
+如果不事先说明，也许你根本不会意识到这是一篇关于分布式的论文。为了说明 Paxos 算法并增强演讲效果，Lamport 演讲中多次扮演《夺宝奇兵》中的 Indiana Jones 风格的考古学家。遗憾的是，Paxos 论文中采用的希腊民主议会的比喻显然不太成功，Lamport 像写小说一样，把一个复杂的数学问题写成了一篇带有考古色彩的历史小说，听众没有记住 Paxos 算法，仅仅记住了 Indiana Jones。
 
-1990 年，Lamport 将这篇论文提交给 TOCS ，根据 Lamport 自己的描述，TOCS 的三位审稿人看过 Lamport 的论文后认为“该论文虽然不怎么重要但还有些意思，但应该把所有 Paxos 相关的故事背景删掉”。Lamport 对这些缺乏幽默感的人颇为不爽，他不打算对论文做任何修改，最终论文的发表被搁置。
+1990 年，Lamport 将这篇论文提交给 TOCS（美国计算机协会旗下的一本学术期刊）。根据 Lamport 博文中的描述[^1]，TOCS 的三位审稿人在阅读后认为“该论文虽然不怎么重要，但还有些意思”，但建议删掉所有与 Paxos 相关的故事背景。Lamport 对这些缺乏幽默感的审稿人颇为不爽，拒绝对论文进行任何修改，最终论文的发表被搁置。
 
-:::tip <a/>
-本节《Paxos 的起源》部分内容来源于 lamport 的博客[^1]，笔者进行了修改使其更具故事性，有兴趣的读者可以阅读 lamport 的原文。
-:::
 
-虽然论文没有发表，但并不代表没有人关注这个算法，Bulter W.Lampson（1991 年图灵奖获得者）认识到这个算法的重要性，并在他的论文中《How to Build a Highly Availability System using Consensus》对 Paxos 进行了描述。此后，De Prisco、Lynch 和 Lampson 几人又联合在 TCS 发表了一篇论文《Revisiting the PAXOS algorithm》对 Paxos 算法进行了详细地描述和证明。经过 Lampson 等人的大力宣传，Paxos 算法逐渐被理论研究界的学者所重视。
+虽然论文没有发表，但并不代表没有人关注这个算法，Bulter W.Lampson（1991 年图灵奖获得者）认识到这个算法的重要性，并在他的论文中《How to Build a Highly Availability System using Consensus》对 Paxos 进行了描述。此后，De Prisco、Lynch 和 Lampson 几人又联合在 TCS（《理论计算机科学》期刊）发表了一篇论文《Revisiting the PAXOS algorithm》对 Paxos 算法进行了详细地描述和证明。经过 Lampson 等人的大力宣传，Paxos 算法逐渐被理论研究界的学者重视。
 
-另一方面，这些介绍 Paxos 论文的发表使 Lamport 觉得《The Part-Time Parliament》重新发表的时间到了。或许作为一种玩笑的延续，也或许为保留原有的工作（更直白的说法是 Lamport 本人认为该论文内容的描述和证明足够清晰，根本不需要修改），这次发布仅增加了一段编辑注解，而且编辑也在注解上也风趣了一把：
+另一方面，这些介绍 Paxos 论文的发表使 Lamport 觉得《The Part-Time Parliament》重新发表的时间到了。或许作为一种玩笑的延续，也或许为保留原有的工作，更直白的说法是 Lamport 本人认为该论文内容的描述和证明足够清晰，根本不需要修改。这次发布仅增加了一段编辑注解，而且编辑也在注解上也风趣了一把。
 
-:::tip
+:::tip <span></span>
 
 最近在 TOCS 编辑办公室的文件柜后面发现了这份投稿。尽管年代久远，主编仍认为值得发表。由于作者目前在希腊的群岛进行实地考察，无法联系，委托我准备文稿以发表。作者似乎是一位考古学家，对计算机科学只有短暂的兴趣。。。
 
@@ -31,7 +28,7 @@ Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文�
 :::
 《The Part-Time Parliament》[^2] 最终在 1998 年公开发表。
 
-这篇论文发表之后，还是有很多人抱怨这篇论文看不懂，人们只记住了那个奇怪的故事，而不是 Paxos 算法，Lamport 走到哪都要被人抱怨一通。于是他忍无可忍，2001 年使用计算机领域的概念重新描述了一遍算法，并发表了论文 《Paxos Made Simple》[^3]。这是一篇很短的论文，摘要只有一句话“The Paxos algorithm, when presented in plain English, is very simple.”！语气完全无法掩盖作者对 Paxos 的策略没有奏效的失望。
+《The Part-Time Parliament》论文发表之后，还是有很多人抱怨这篇论文看不懂，人们只记住了那个奇怪的故事，而不是 Paxos 算法。Lamport 走到哪都要被人抱怨一通，于是他忍无可忍，2001 年使用计算机领域的概念重新描述了一遍算法，并发表了论文 《Paxos Made Simple》[^3]。这是一篇很短的论文，摘要只有一句话“The Paxos algorithm, when presented in plain English, is very simple.”！语气完全无法掩盖作者对 Paxos 的策略没有奏效的失望。
 
 :::center
   ![](../assets/paxos.png) <br/>
