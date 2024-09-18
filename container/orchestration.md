@@ -1,16 +1,18 @@
 # 7.2 容器的原理与应用
 
-字面上“容器”这个词很难让人形象地理解真正含义，Kubernetes 中最核心的概念“Pod”也是如此。仅凭几句解释并不能充分理解这些概念，甚至还会引起误解，例如把容器与轻量化虚拟机混为一谈。如果容器类似虚拟机，那就应该有一种普适的方法把虚拟机里面的应用无缝地迁移到容器中，可是现实世界中并没有这种方法，虚拟机内的应用如果要迁移至容器系统，还得经过大量的适配以及改造工作。
+字面上，“容器”这个词难以让人形象地理解其真正含义，Kubernetes 中最核心的概念“Pod”也是如此。
 
-下面，笔者从最原始的文件系统隔离讲起，介绍容器在不同历史阶段的作用，从而深入理解容器技术的发展以及 Pod 的设计背景。
+仅靠几句简单的解释并不足以让人充分理解这些概念，甚至可能引发误解。例如，业内常常将容器与轻量级虚拟机混为一谈，如果容器类似于虚拟机，那么应该存在一种通用的方法，能够无缝地将虚拟机内的应用迁移至容器中，但现实中并不存在这种方法。
+
+本节，笔者将从最初的文件系统隔离开始，逐步介绍容器在不同历史阶段的作用，以帮助深入理解容器技术的发展及 Pod 的设计背景。
 
 ## 7.2.1 文件系统隔离
 
-容器的起点可以追溯到 1979 年 UNIX 系统中提供的 chroot 命令[^1]。chroot 命令是“change root”的缩写，该命令允许管理员将进程的根目录锁定在某个指定的位置，从而限制该进程访问的文件系统范围。
+容器的起源可以追溯到 1979 年 UNIX 系统中引入的 chroot 命令[^1]。chroot 是“change root”的缩写，它允许管理员将进程的根目录锁定在特定位置，从而限制进程对文件系统的访问范围。
 
-chroot 的隔离能力对安全性至关重要，比如创建一个蜜罐，用来安全地运行和监控可疑的代码或者程序，因此 chroot 之后的环境也被形象地称为 jail（监狱），突破 chroot 的方法被称为“越狱”。
+chroot 的隔离功能对安全性至关重要，例如可以创建一个蜜罐，用于安全地运行和监控可疑代码或程序。因此，chroot 环境也被形象地称为“jail”（监狱），而突破 chroot 的过程则被称为“越狱”。
 
-时至今日，chroot 命令仍然活跃于主流的 Linux 系统中。在绝大部分 Linux 系统中，仅需几步，就能为进程创建一个文件隔离环境。
+时至今日，chroot 命令仍然活跃于主流的 Linux 系统中。在绝大部分 Linux 系统中，只需几步操作，就可以为进程创建一个文件隔离环境。
 
 ```bash
 $ mkdir -p new-root/{bin,lib64,root}
@@ -18,7 +20,7 @@ $ cp /bin/bash new-root/bin
 $ cp /lib64/{ld-linux-x86-64.so*,libc.so*,libdl.so.2,libreadline.so*,libtinfo.so*} new-root/lib64
 $ sudo chroot new-root
 ```
-虽然这个隔离环境用处不大，只有 bash 以及一些内置的函数，但也足以说明它的作用：“运行在 new-root 根目录下进程的文件系统与宿主机隔离了”。
+尽管这个隔离环境功能有限，仅提供了 bash 和一些内置函数。但也足以说明它的作用：“运行在 new-root 根目录下的进程，其文件系统与宿主机隔离了”。
 
 ```bash
 bash-4.2# cd bin 
@@ -27,7 +29,7 @@ bash-4.2# pwd
 ```
 :::tip 额外知识
 
-除了 /bin 之外，如果我们把程序依赖的 /etc，/proc 等等都打包进去，实际上就得到了一个 rootfs 文件。**由于 rootfs 里打包的不只是应用，而是整个操作系统的文件和目录，也就意味着，应用以及它运行所需要的所有依赖，都被封装在了一起**，这就是容器被反复宣传至今一致性的由来。
+除了 /bin 之外，如果我们将程序依赖的 /etc、/proc 等目录一同打包进去，实际上就得到了一个 rootfs 文件。因为 rootfs 包含的不仅是应用，还有整个操作系统的文件和目录，这意味着应用及其所有依赖都被封装在一起，这正是容器被广泛宣传为一致性解决方案的由来。
 :::
 
 我们再运行一个 docker，看看两者之间的区别。
@@ -39,18 +41,20 @@ root@028f46a5b7db:/# cd bin
 root@028f46a5b7db:/bin# pwd
 /bin
 ```
-看起来跟 chroot 差不多，也是一个与宿主机隔离的文件系统环境，那这是否意味着 chroot 就是容器了呢？肯定不是，**chroot 只是改变了进程的根目录，而非创建了真正的独立隔离、安全的环境**。Linux 系统中，从大量的低层次资源（网络、磁盘、内存、处理器），到经操作系统控制的高层次资源（UNIX 分时、进程 ID、用户 ID、进程间通信），都存在大量的非文件暴露的操作入口。
+虽然 chroot 看起来与容器相似，都是创建与宿主机隔离的文件系统环境，但这并不意味着 chroot 就是容器。chroot 只是改变了进程的根目录，并未创建真正独立、安全的隔离环境。在 Linux 系统中，从低层次的资源（如网络、磁盘、内存、处理器）到操作系统控制的高层次资源（如 UNIX 分时、进程 ID、用户 ID、进程间通信），都存在大量非文件暴露的操作入口。
 
-因此，不论是 chroot，还是针对 chroot 安全问题改进后 pivot_root，都无法对资源实现完美的隔离。
+因此，无论是 chroot，还是针对 chroot 安全问题改进后的 pivot_root，都无法实现对资源的完美隔离。
 
 ## 7.2.2 资源全方位隔离
 
-chroot 最初的目的是为了实现文件的隔离，并非为了容器而设计。后来 Linux 吸收了 chroot 的设计理念，先是在 2.4.19 引入了 Mount 命名空间，这样就可以隔离挂载文件系统。又想到进程间通信也需要隔离，就有了 IPC（Process ID）命名空间。同时，容器还需要一个独立的主机名以便在网络中标识自己，于是有了 UTC（UNIX Time-Sharing）命名空间。有了独立的主机名，自然还要有独立的 IP、端口、路由等...。
+chroot 最初的目的是为了实现文件系统的隔离，并非专门为容器设计。
 
-从 Linux 内核 2.6.19 起，陆陆续续添加了 UTS、IPC、PID、Network、User 等命名空间。至 Linux 内核 3.8 版本，Linux 已经完成容器所需的 6 项最基本资源隔离。
+后来 Linux 吸收了 chroot 的设计理念，先是在 2.4.19 引入了 Mount 命名空间，这样就可以隔离挂载文件系统。又想到进程间通信也需要隔离，就有了 IPC（Process ID）命名空间。同时，容器还需要一个独立的主机名以便在网络中标识自己，于是有了 UTC（UNIX Time-Sharing）命名空间。有了独立的主机名，自然还要有独立的 IP、端口、路由等，又有了 Network 命名空间。
+
+从 Linux 内核 2.6.19 开始，陆续引入了 UTS、IPC、PID、Network 和 User 等命名空间。到 Linux 内核 3.8 版本时，Linux 已经实现了容器所需的六项基本资源隔离。
 
 :::center
-表 7-1 Linux 系统目前支持的八类命名空间
+表 7-1 Linux 系统目前支持的八类命名空间（Linux 4.6 版本起，新增了 Cgroup 和 Time 命名空间）
 :::
 
 | 命名空间 | 隔离的资源 | 内核版本|
@@ -65,7 +69,7 @@ chroot 最初的目的是为了实现文件的隔离，并非为了容器而设�
 | Time| 隔离系统时间，Linux 5.6 内核版本起支持进程独立设置系统时间 | 5.6 |
 
 
-在 Linux 中，为进程设置各类命名空间也非常简单，通过系统调用函数 clone 并指定 flags 的参数即可。
+在 Linux 中，为进程设置各种命名空间非常简单，只需通过系统调用函数 clone 并指定相应的 flags 参数即可。
 
 ```c
 int clone(int (*fn)(void *), void *child_stack,
@@ -73,7 +77,7 @@ int clone(int (*fn)(void *), void *child_stack,
          /* pid_t *ptid, struct user_desc *tls, pid_t *ctid */ );
 ```
 
-如下代码所示，通过调用 clone 函数，并指定 flags 参数的方式创建子进程，新建的子进程将会“看到”一个全新的系统环境，进程挂载的文件目录、进程 PID、进程间通信资源、网络及网络设备、UTS 等等资源，全部与宿主机隔离。
+如下代码所示，通过调用 clone 函数并指定相应的 flags 参数创建一个子进程。新创建的子进程将“看到”一个全新的系统环境，所有的资源，包括进程挂载的文件目录、进程 PID、进程间通信资源、网络及网络设备、UTS 等，都将与宿主机隔离。
 
 ```c
 int flags = CLONE_NEWNS | CLONE_NEWPID | CLONE_NEWIPC | CLONE_NEWNET | CLONE_NEWUTS;
@@ -84,13 +88,11 @@ int pid = clone(main_function, stack_size, flags | SIGCHLD, NULL);
 
 进程的资源隔离已经完成，如果再对使用资源进行额度限制，就能对进程的运行环境实现进乎完美的隔离。这就要用 Linux 内核的第二项技术 —— Linux Control Cgroup（Linux 控制组群，简称 cgroups）。
 
-cgroups 是 Linux 内核中用来隔离、分配并限制某个进程组使用资源配额的机制，例如用来控制进程 CPU 占用时间、内存的大小、磁盘 I/O 速度等。该项目由 Google 工程师（主要是 Paul Menage 和 Rohit Seth）在 2000 年发起，当时取的名字叫“进程容器”（Process container）。不过，在 Linux 内核中，容器（container）这个名词有许多不同的意义，为避免混乱，于是被重命名为 cgroups 。2008 年，cgroups 合并到 Linux 内核 2.6.24 版本 后正式对外发布，这一阶段的 cgroups 被称为第一代 cgroups。
+cgroups 是 Linux 内核中用于隔离、分配并限制进程组使用资源配额的机制。例如用来控制进程 CPU 占用时间、内存的大小、磁盘 I/O 速度等。该项目由 Google 工程师（主要是 Paul Menage 和 Rohit Seth）在 2000 年发起，当时取名字叫“进程容器”（Process container）。不过，在 Linux 内核中，容器（container）这个名词有许多不同的意义。为了避免与其他“容器”相关概念混淆，于是被重命名为 cgroups 。
 
-2016 年 3 月发布的 Linux 内核 4.5 版本中，搭载了由 Facebook 工程师 Tejun Heo 重新编写的“第二代 cgroups”，相较于 v1 版本，Facebook 工程师编写的 cgroups 提供了更加统一的资源控制接口，使得对于 CPU、内存、I/O 等资源的限制更加一致和统一。不过由于兼容性和稳定性原因，目前多数容器运行时默认使用的仍然是第一代 cgroups。
+2008 年，cgroups 合并到 Linux 内核 2.6.24 版本 后正式对外发布，这一阶段的 cgroups 被称为第一代 cgroups。2016 年 3 月发布的 Linux 内核 4.5 中引入了由 Facebook 工程师 Tejun Heo 重新编写的“第二代 cgroups”。相较于 v1 版本，第二代 cgroups 提供了更加统一的资源控制接口，使得对 CPU、内存、I/O 等资源的限制更加一致和统一。不过由于兼容性和稳定性原因，目前多数容器运行时（container runtime）默认使用的仍然是第一代 cgroups。
 
-Linux 系统通过文件系统向用户暴露 cgroups 的操作接口，操作接口以文件和目录的方式组织在操作系统的 /sys/fs/cgroup 路径下。
-
-在 Linux 中执行 ` ll /sys/fs/cgroup `命令，可以看到在 /sys/fs/cgroup 路径下有很多 blkio、cpu、memory 这样的子目录。
+Linux 系统通过文件系统向用户暴露 cgroups 的操作接口，这些接口以文件和目录的形式组织在 /sys/fs/cgroup 路径下。在 Linux 中执行 ls /sys/fs/cgroup 命令，可以看到在该路径下有许多子目录，如 blkio、cpu、memory 等。
 
 ```bash
 $ ll /sys/fs/cgroup
@@ -101,8 +103,7 @@ lrwxrwxrwx 1 root root 11 2月  17 2023 cpuacct -> cpu,cpuacct
 drwxr-xr-x 3 root root  0 2月  17 2023 memory
 ...
 ```
-子目录在 cgroups 中也被称为控制组群子系统，子系统明确了这类资源可具体被限制的种类。例如，对于内存子系统而言，它有如下配文文件：
-
+在 cgroups 中，子目录也被称为控制组子系统（control group subsystems），它们明确了可以限制的资源类型。例如，内存子系统包含以下配置文件：
 ```bash
 $ ls /sys/fs/cgroup/memory
 cgroup.clone_children               memory.memsw.failcnt
@@ -110,9 +111,9 @@ cgroup.event_control                memory.memsw.limit_in_bytes
 cgroup.procs                        memory.memsw.max_usage_in_bytes
 cgroup.sane_behavior                memory.memsw.usage_in_bytes
 ```
-以上各个文件作用不同，memory.kmem.limit_in_bytes 文件限制应用的总内存使用，memory.stat 用于统计内存使用情况，memory.failcnt 文件报告内存达到 memory.limit_in_bytes 设定的限制值的次数等等。
+这些文件各自具有不同的作用。例如，memory.kmem.limit_in_bytes 文件用于限制应用的总内存使用；memory.stat 用于统计内存使用情况；memory.failcnt 文件报告内存使用达到 memory.limit_in_bytes 设定的限制值的次数，等等。
 
-目前，主流的 Linux 支持的控制组群子系统如表 7-2 所示。
+目前，主流的 Linux 系统支持的控制组群子系统如表 7-2 所示。
 
 :::center
 表 7-2 cgroups 控制组群子系统
@@ -130,9 +131,9 @@ cgroup.sane_behavior                memory.memsw.usage_in_bytes
 | net_prio | 可以为各个 cgroup 中的应用程序动态配置每个网络接口的流量优先级 |
 |perf_event | 允许使用 perf 工具对 crgoups 中的进程和线程监控|
 
-Linux cgroups 的设计简单易用，对于 Docker 等容器系统而言，它们只需要在每个子系统下面为每个容器创建一个控制组（用新建目录的方式），启动容器进程之后，再把进程的 PID 填写到对应控制组的 task 文件即可。
+Linux cgroups 的设计简单易用。对于 Docker 等容器系统，它们只需在每个子系统下为每个容器创建一个控制组（通过新建目录的方式），然后在容器进程启动后，将进程的 PID 写入对应控制组的 tasks 文件即可。
 
-如下代码所示，创建一个新的控制组（目录为 $hostname），设置进程（PID = 3892）的内存被限制在 1 GB，只允许使用 1/4 CPU 时间。 
+如下代码所示，我们创建了一个新的控制组（目录名为 $hostname），将进程（PID 为 3892）的内存限制为 1 GB，并限制其 CPU 使用时间为 1/4。
 
 ```bash
 /sys/fs/cgroup/memory/$hostname/memory.limit_in_bytes=1GB // 容器进程及其子进程使用的总内存不超过 1GB
@@ -141,11 +142,12 @@ Linux cgroups 的设计简单易用，对于 Docker 等容器系统而言，它�
 echo 3892 > /sys/fs/cgroup/cpu/$hostname/tasks 
 ```
 
-最后，笔者也要补充一点，实际上 cgroups 对资源的限制也有不完善之处，提及最多的就是 /proc 文件系统的问题。/proc 文件系统记录了 Linux 运行中的一些特殊状态，例如 CPU 使用情况、内存占用情况等，这些数据也是 top 指令查看系统信息的主要来源。 
+最后，笔者需要补充一点，实际上 cgroups 对资源的限制也存在不完善之处，最常提到的问题是 /proc 文件系统的问题。/proc 文件系统记录了 Linux 系统中一些特殊状态，如 CPU 使用情况和内存占用情况，这些数据也是 top 命令查看系统信息的主要来源。
 
-但问题是，/proc 文件系统并不知道用户通过 cgroups 对进程做了什么样的限制。因此，在容器内执行 top 命令，你就会发现它显示的信息是宿主机的数据，而非容器内的数据。在生产环境中，这个问题必须得到解决，不然会给系统带来很大的问题。现在，一般使用 LXCFS（FUSE filesystem for LXC）专为维护一套容器使用的 /proc 文件系统，来解决上述问题。
+问题在于，/proc 文件系统并不反映通过 cgroups 对进程施加的限制。因此，在容器内部执行 top 命令时，显示的信息是宿主机的数据，而不是容器内部的数据。在生产环境中，这个问题必须得到解决，不然会给系统带来很大的问题。现在，业内一般使用 LXCFS（FUSE filesystem for LXC）来维护一套专用于容器的 /proc 文件系统，解决这个问题。
 
-至此，相信读者们一定理解容器是什么，**容器不是轻量化的虚拟机，也没有创造出真正的沙盒（容器之间共享系统内核，这也是为什么又出现了 kata、gVisor 等内核隔离的沙盒容器），只是使用了命名空间、cgroups 等技术进行资源隔离、限制以及拥有独立根目录（rootfs）的特殊进程**。
+至此，相信读者们一定理解容器是什么。容器并不是轻量化的虚拟机，也没有创建出真正的沙盒（容器之间共享系统内核，这也是为什么出现了如 kata 和 gVisor 等内核隔离的沙盒容器，7.4.5 节详细介绍）。容器只是利用命名空间、cgroups 等技术进行资源隔离和限制，并拥有独立的根目录（rootfs）的特殊进程。
+
 
 ## 7.2.4 设计容器协作的方式
 
