@@ -98,7 +98,7 @@ http_request_total 5
 - 数据结构：时序数据库使用 LSM-Tree（Log-Structured Merge-Tree）来替代常规数据库中的 B+Tree。在时序数据库中，所有写入操作首先写入内存存储区（MemTable，通常为跳表或平衡树）。当 MemTable 满时，数据会被批量写入磁盘文件中。虽然磁盘写入延迟较高，但由于批量操作，时序数据库在写入吞吐量上通常优于传统关系数据库（使用 B+Tree）。
 - 数据保留策略：时序数据通常有明确的生命周期，例如监控数据可能只需保留几天或几个月。时序数据库通常具有自动化的数据保留策略（data retention），以防止存储空间无限膨胀。例如，可以设置基于时间的保留策略，保留最近 30 天的数据，超过 30 天的数据将自动删除。
 
-Prometheus 服务端内置了一个强大的时序数据库（TSDB，该时序数据库与 Prometheus 同名）。该 TSDB 将数据按照时间范围进行“分片”存储，每两小时为一个时间窗口，数据被组织成时间块。每个时间块包含该时间段内的所有样本数据、元数据文件以及索引文件。通过这种时间窗口方式保存数据，Prometheus 可以高效地根据特定时间段进行查询。
+Prometheus 服务端内置了一个强大的时序数据库（该时序数据库与 Prometheus 同名）。Prometheus 时序数据库将数据按照时间范围进行“分片”存储，每两小时为一个时间窗口，数据被组织成时间块（chunk）。每个时间块包含该时间段内的所有样本数据、元数据文件以及索引文件。通过时间窗口以及分片的方式存储数据，使得 Prometheus 可以在海量数据规模的情况下，高效地根据特定时间段进行分析/查询指标。
 
 :::tip 什么是分片(sharding)
 
@@ -107,7 +107,9 @@ Prometheus 服务端内置了一个强大的时序数据库（TSDB，该时序�
 笔者稍后介绍的 Elastic Stack、ClickHouse 等技术皆是利用了分片技术实现水平可扩展以及并行计算能力。
 :::
 
-Prometheus 的时序数据库内置了专用的数据查询语言 PromQL（Prometheus Query Language）。PromQL 是一种由 Prometheus 定制的查询 DSL，其语法类似于支持函数和运算的 CSS 选择器。例如，如果我们有一个名为 http_requests_total 的指标，要计算过去 5 分钟内 host 标签为 server1 的请求速率，可以使用以下 PromQL 查询：
+Prometheus 时序数据库内置了专用的数据查询语言 PromQL（Prometheus Query Language）。PromQL 是一种由 Prometheus 定制的查询 DSL，其语法类似于支持函数和运算的 CSS 选择器。
+
+笔者举一个使用 PromQL 例子供你参考，假设我们有一个名为 http_requests_total 的指标，要计算过去 5 分钟内 host 标签为 server1 的请求速率，可以使用以下 PromQL 查询：
 
 ```PromQL
 rate(http_requests_total{host="server1"}[5m])
@@ -116,7 +118,7 @@ rate(http_requests_total{host="server1"}[5m])
 92.0
 ```
 
-通过 PromQL，可以对时间序列数据进行丰富的查询、聚合和逻辑运算，已广泛应用于 Prometheus 的数据查询、可视化和告警处理等日常操作中。掌握 PromQL 语法已成为必备技能，本文将不再详细介绍其语法细节了。
+通过 PromQL，可以对时间序列数据进行丰富的查询、聚合和逻辑运算，已广泛应用于 Prometheus 的数据查询、可视化和告警处理等日常操作中。掌握 PromQL 语法已成为必备技能，笔者就不再详细介绍其语法细节了。
 
 ## 4. 展示分析/预警
 
