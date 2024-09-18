@@ -4,11 +4,11 @@
 
 Prometheus 项目的灵感来自 Google 内部的 Borg 监控系统（Brogmon），由前 Google 工程师在 SoundCloud 公司发起并将其开源。2016 年 5 月，Prometheus 继 Kubernetes 之后，成为云原生计算基金会（CNCF）的第二个正式项目。经过多年的发展，Prometheus 已成为云原生系统中指标监控的事实标准。
 
-如图 9-4 所示，Prometheus 是一个模块化系统，由多个独立组件组成，每个组件承担特定任务。服务发现（Service Discovery）负责自动发现监控目标，Exporter 将监控目标的指标数据转换为 Prometheus 可理解的格式，Pushgateway 处理短期任务的监控数据，Prometheus 服务器负责数据的收集、存储和查询，而 Alertmanager 处理告警通知。
+如图 9-3 所示，Prometheus 是一个模块化系统，由多个独立组件组成，每个组件承担特定任务。服务发现（Service Discovery）负责自动发现监控目标，Exporter 将监控目标的指标数据转换为 Prometheus 可理解的格式，Pushgateway 处理短期任务的监控数据，Prometheus 服务器负责数据的收集、存储和查询，而 Alertmanager 处理告警通知。
 
 :::center
   ![](../assets/prometheus-arch.png)<br/>
-  图 9-4 Prometheus 处理指标流程图
+  图 9-3 Prometheus 处理指标流程图
 :::
 
 ## 1. 定义指标的类型
@@ -22,7 +22,7 @@ Prometheus 项目的灵感来自 Google 内部的 Borg 监控系统（Brogmon）
 
 :::center
   ![](../assets/four-metrics-type.png)<br/>
-  图 9-5 Prometheus 定义的四种不同的指标类型
+  图 9-4 Prometheus 定义的四种不同的指标类型
 :::
 
 ## 2. 通过 Exporter 收集指标
@@ -132,7 +132,7 @@ Grafana 几乎涵盖了所有的数据源和图表类型。正如 Grafana 的宣
 
 :::center
   ![](../assets/grafana-dashboard-english.png)<br/>
-  图 9-7 Grafana 的仪表盘
+  图 9-5 Grafana 的仪表盘
 :::
 
 在预警方面，Prometheus 负责数据采集和预警信息的生成，而 Alertmanager 则专门处理这些预警信息。以下是一个具体的例子，展示如何使用 Prometheus 告警规则来监控某个 HTTP 接口的 QPS。

@@ -11,11 +11,11 @@
 
 这三类数据源虽然各自侧重不同，但并非孤立存在，反而在系统问题处理上有天然的交集与互补。比如，先通过指标监控（告警）发现问题，再结合日志和链路追踪深入定位问题根源。可观测系统的建设，正是为了将日志、指标和链路追踪紧密结合，使我们能够从宏观到微观、从整体到细节，全方位地观测业务系统。
 
-这三者之间的关系，如下图 9-3 的韦恩图所示。
+这三者之间的关系，如下图 9-2 的韦恩图所示。
 
 :::center
   ![](../assets/observability.jpg)<br/>
- 图 9-3 Metrics，Tracing，Logging 三者之间的关系 [图片来源](https://peter.bourgon.org/blog/2017/02/21/metrics-tracing-and-logging.html)
+ 图 9-2 Metrics，Tracing，Logging 三者之间的关系 [图片来源](https://peter.bourgon.org/blog/2017/02/21/metrics-tracing-and-logging.html)
 :::
 
 现在，CNCF 发布的可观测性白皮书中[^1]，将这些系统输出的数据统一称为信号（Signals），主要的信号除了 指标、日志、链路追踪之外又增加了性能剖析（Profiling）和核心转储（Core dump）。

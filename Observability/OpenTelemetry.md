@@ -20,11 +20,11 @@ OpenTracing 推出不久之后，Google 和微软联合推出了 OpenCensus 项�
 OpenTelemetry 覆盖了各类可观测数据类型的规范定义、API 定义、规范实现以及数据的获取与传输。目标是解决的是可观测性数据统一的第一步：通过 API 和 SDK 来标准化可观测数据的采集和传输，之后，观测数据如何使用、存储、展示和告警，OpenTelemetry 本身并不涉及。这使得 OpenTelemetry 既不会因动了“数据的蛋糕”，引起生态抵制，也极大保存了精力，得以专注于实现兼容“所有的语言、所有的系统”的数据采集器（OpenTelemetry Collector）。
 
 
-如下图所示，应用只需要一种 SDK 就可以实现所有类型数据的统一产生；集群只需要部署一个 OpenTelemetry Collector 便可以实现所有类型数据的采集。而且 Metrics、Tracing、Logging 的具有相同的 Meta 信息（描述和标识数据的附加信息，如标签、时间戳、上下文信息等），可以做无缝关联。之后，你可以使用 Prometheus + Grafana 做指标的存储和展示，使用 Jaeger 做分布式跟踪的存储和展示。
+如图 9-17 所示，应用只需要一种 SDK 就可以实现所有类型数据的统一产生；集群只需要部署一个 OpenTelemetry Collector 便可以实现所有类型数据的采集。而且 Metrics、Tracing、Logging 的具有相同的 Meta 信息（描述和标识数据的附加信息，如标签、时间戳、上下文信息等），可以做无缝关联。之后，你可以使用 Prometheus + Grafana 做指标的存储和展示，使用 Jaeger 做分布式跟踪的存储和展示。
 
 :::center
   ![](../assets/otel-diagram.svg)<br/>
-  图 9-23 集成 OpenTelemetry 的可观测架构 [图片来源](https://opentelemetry.io/docs/)
+  图 9-17 集成 OpenTelemetry 的可观测架构 [图片来源](https://opentelemetry.io/docs/)
 :::
 
 

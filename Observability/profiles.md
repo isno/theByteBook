@@ -7,7 +7,7 @@ Profiles 数据一般表示成火焰图、堆栈图或内存分析图等形式�
 
 :::center
   ![](../assets/lua-cpu-flame-graph.webp)<br/>
-  图 9-20 Lua 级别的 CPU 火焰图
+  图 9-16 Lua 级别的 CPU 火焰图
 :::
 
 :::tip 火焰图分析说明

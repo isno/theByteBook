@@ -8,11 +8,11 @@
 
 在讨论如何实现一套完整的日志系统时，工程师们或多或少听说过以下几个名词：ELK、ELKB 或 Elastic Stack（为简化统一，本文将其统称为 Elastic Stack）。实际上，它们指的是同一套用于日志处理的开源组件。
 
-Elastic Stack 是由 Elastic 公司开发的一组开源工具，专门用于数据收集、搜索、分析和可视化。图 9-10 展示了一套基于 Elastic Stack 的完整日志处理方案。在这套方案中，Beats 组件部署在日志生成的节点上，用于收集原始数据。接着，使用 MQ 进行缓冲，以提高数据吞吐量。然后，数据被发送到 Logstash 组件进行清洗处理，最后存储在 Elasticsearch 集群中并生成索引。用户通过 Kibana 组件来进行可视化、检索和分析。如果需要，还可以通过 Nginx 实现访问控制。
+Elastic Stack 是由 Elastic 公司开发的一组开源工具，专门用于数据收集、搜索、分析和可视化。图 9-6 展示了一套基于 Elastic Stack 的完整日志处理方案。在这套方案中，Beats 组件部署在日志生成的节点上，用于收集原始数据。接着，使用 MQ 进行缓冲，以提高数据吞吐量。然后，数据被发送到 Logstash 组件进行清洗处理，最后存储在 Elasticsearch 集群中并生成索引。用户通过 Kibana 组件来进行可视化、检索和分析。如果需要，还可以通过 Nginx 实现访问控制。
 
 :::center
   ![](../assets/ELK.png)<br/>
-  图 9-10 整合了消息队列和 Nginx 的 Elastic 日志系统
+  图 9-6 整合了消息队列和 Nginx 的 Elastic 日志系统
 :::
 
 :::tip 额外知识
@@ -62,6 +62,7 @@ Loki 的主要组件包括 Promtail（日志代理）、Distributor（分发器�
 
 :::center
   ![](../assets/loki_architecture_components.svg)<br/>
+  图 9-7 Loki 架构
 :::
 
 Loki 最大的特点是仅为日志的元数据（如标签和时间戳）建立索引，而不是对原始日志数据进行全文索引。在 Loki 的存储模型中，主要有两种数据类型：块（Chunks）和索引（Indexes）。
@@ -84,7 +85,7 @@ ClickHouse 的关键特点有列式存储、向量化查询执行、高效压缩
 
 一个流行的观点认为：“提升查询速度的最简单有效方法是减少数据扫描范围和数据传输量”。减少数据扫描范围和数据传输量的核心，在于数据是如何被组织和存储的。先来看传统的行式数据库系统中，数据是如何存储的。如下所示，MySQL、Postgres 这类的数据库数据按如下顺序存储。
 
-<center >表 9-13 行式数据库存储结构</center>
+<center >表 9-2 行式数据库存储结构</center>
 
 |Row | ProductId |sales  |Title| GoodEvent |CreateTime|
 |:--|:--|:--|:--|:--|:--|
@@ -96,7 +97,7 @@ ClickHouse 的关键特点有列式存储、向量化查询执行、高效压缩
 
 行式数据库一张表中的一行内的所有数据在物理介质内是彼此相邻存储的。如果要执行下面的 SQL（统计某个产品的销售额）：
 
-```
+```SQL
 SELECT sum(sales) AS count FROM 表 WHERE  ProductId=90329509958
 ```
 
@@ -105,7 +106,7 @@ SELECT sum(sales) AS count FROM 表 WHERE  ProductId=90329509958
 
 在列式数据库系统中，数据的存储是按如下方式组织的：
 
-<center >表 9-14 列式数据库存储结构</center>
+<center >表 9-3 列式数据库存储结构</center>
 
 |Row:| #0 | #1 | #2 | #N|
 |:--|:--|:--|:--|:--|
@@ -121,7 +122,7 @@ SELECT sum(sales) AS count FROM 表 WHERE  ProductId=90329509958
 
 如下所示，创建一个 MergeTree 类型的 example 表。对 UInt64 列使用了 LZ4 算法（适合快速读取的大量数值数据），对 name 列使用 ZSTD 算法（适合较大的字符串），对 createTime 列使用了 Double-Delta（适合递增或相邻值差异较小的数据）等。
 
-```shell
+```SQL
 CREATE TABLE example (
     id UInt64 CODEC(ZSTD), -- 为整数列设置 LZ4 压缩
     name String CODEC(LZ4), -- 为字符串列设置 ZSTD 压缩
@@ -136,17 +137,17 @@ ORDER BY id;
 
 :::center
   ![](../assets/es-vs-clickhouse.png)<br/>
-  图 9-15 同一份日志在 Elasticsearch、ClickHouse 和 ClickHouse(zstd) 中的容量对比
+  图 9-8 同一份日志在 Elasticsearch、ClickHouse 和 ClickHouse(zstd) 中的容量对比
 :::
 
 ClickHouse 支持分片（Sharding），这是实现水平扩展和分布式并行查询的关键特性。通过增加更多的节点，Clickhouse 能实现处理数百亿到数万亿条记录，以及数 PB 级别的数据。
 
-根据 Yandex 的内部跑分结果来看（图 9-16），ClickHouse 比 Vertia（一款商业的 OLAP 分析软件）快约 5 倍、比 Hive 快 279 倍、比 InifniDB 快 31 倍。ClickHouse 表现的惊人的查询性能，当之无愧阐述 ClickHouse 介绍中“实时”（real-time）二字含义。
+根据 Yandex 的内部跑分结果来看（图 9-9），ClickHouse 比 Vertia（一款商业的 OLAP 分析软件）快约 5 倍、比 Hive 快 279 倍、比 InifniDB 快 31 倍。ClickHouse 表现的惊人的查询性能，当之无愧阐述 ClickHouse 介绍中“实时”（real-time）二字含义。
 
 
 :::center
   ![](../assets/ClickHouse-benchmark.jpeg)<br/>
-  图 9-16 ClickHouse 性能测试 [图片来源](http://clickhouse.yandex/benchmark.html)
+  图 9-9 ClickHouse 性能测试 [图片来源](http://clickhouse.yandex/benchmark.html)
 :::
 
 正如 ClickHouse 的宣传所言，其他的开源系统太慢，商用的又太贵。只有 ClickHouse 在存储成本与查询性能之间做到了良好平衡，不仅快且还开源。
