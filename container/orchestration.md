@@ -262,4 +262,4 @@ Pod 承担的另一个重要职责是作为调度的原子单位。
 
 本书第 8 章《服务网格技术》中，笔者将以代理型 Sidecar 为例，进一步阐述 Sidecar 容器设计模式。
 
-[^1]: 2000 年，Linux 内核 2.3 版本引入 pivot_root 技术来实现文件隔离，pivot_root 把整个系统切换到一个新的 root 目录中，避免了 chroot 的安全性问题。现如今的容器技术 LXC、Docker 等等都是使用 pivot_root 实现文件隔离的。
+[^1]: 在 2000 年，Linux 内核 2.3 版本引入 pivot_root 技术来实现更安全的文件隔离。现如今的容器技术 LXC、Docker 等等都是使用 pivot_root 来实现文件隔离的。
