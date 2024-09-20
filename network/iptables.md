@@ -35,7 +35,7 @@ iptables 把一些常用数据包管理操作总结成具体的动作，当数�
 
 :::center
   ![](../assets/Netfilter-packet-flow.svg)<br/>
-  图 3-2 数据包通过 Netfilter 时的流向过程 [图片来源](https://en.wikipedia.org/wiki/Netfilter)
+  图 3-6 数据包通过 Netfilter 时的流向过程 [图片来源](https://en.wikipedia.org/wiki/Netfilter)
 :::
 
 

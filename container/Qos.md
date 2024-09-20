@@ -52,7 +52,7 @@ Kubernetes 有 2 种驱逐策略，soft eviction（软驱逐）和 hard eviction
 和软驱逐相关的启动参数是：
 
 - --eviction-soft：软驱逐触发条件，比如 memory.available<1Gi
-- --eviction-sfot-grace-period：触发条件持续多久才开始驱逐，比如 memory.available=2m30s
+- --eviction-soft-grace-period：触发条件持续多久才开始驱逐，比如 memory.available=2m30s
 - --eviction-max-pod-grace-period：当满足软驱逐阈值并终止 pod 时允许的最大宽限期值，该时间留给 Pod 做一些清理工作。
 
 硬驱逐更加直接干脆，**kubelet 发现节点资源达到硬驱逐阈值后，立即开始驱逐程序，并且不会遵循 grace period**，会立即强制杀死 Pod。硬驱逐对应的配置参数只有一个 --evictio-hard。
