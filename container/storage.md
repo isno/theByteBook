@@ -53,7 +53,7 @@ my-aliyun-nas-volume
 docker run -d -v my-aliyun-nas-volume:/mnt/nas nginx:latest
 ```
 
-## 7.5.2 Kubernetes 的存储卷：Volume
+## 7.5.2 Kubernetes 的存储卷
 
 我们从 Docker 返回到 Kubernetes 中，同 Docker 类似的是：
 - Kubernetes 也抽象出了 Volume 的概念来解决持久化存储；
@@ -71,29 +71,30 @@ docker run -d -v my-aliyun-nas-volume:/mnt/nas nginx:latest
 
 - 普通的 Volume：用于临时数据存储，生命周期与 Pod 绑定，如 emptyDir、hostPath 等。这类 Volume 在 Pod 重启时数据会丢失，适用于无需持久化的数据场景。
 - 持久化的 Volume：通过 PersistentVolume（PV）和 PersistentVolumeClaim（PVC）机制来实现，支持长期存储且与 Pod 的生命周期解耦。常见的类型包括 NFS、云存储（如 AWS EBS、GCE PD）等，适用于数据库或需要持久化存储的应用。
-- 特殊的 Volume：如 Secret 和 ConfigMap，这些 Volume 实现了标准的 POSIX 接口，使得容器内部的应用能够像操作本地文件一样访问和操作 Kubernetes 集群的配置信息（例如环境变量、凭据）。
+- 特殊的 Volume：如 Secret 和 ConfigMap。使用此类的 Volume 容器内部的应用能够像操作本地文件一样访问和操作 Kubernetes 集群的配置信息（例如环境变量、凭据）。
 
-严格来讲，最后一类并不属于实际的存储类型，笔者后续就不再展开讨论了。
+严格来讲，最后一类 Volume 并不属于实际的存储类型，它们本质是实现了标准的 POSIX（Portable Operating System Interface，可移植操作系统接口）接口，方便操作 Kubernetes 集群内的配置信息，笔者后续就不再展开讨论了。
 
 ## 7.5.3 普通的 Volume
 
-Kubernetes 设计普通 Volume 的初衷并非为了持久化存储数据，而是为了实现容器间数据共享。以下是两种典型的普通 Volume 类型：
+Kubernetes 设计普通 Volume 的初衷并非为了持久化存储数据，而是为了实现容器间的数据共享。
 
+以下是两种典型的普通 Volume 类型：
 - EmptyDir：这种 Volume 类型常用于 Sidecar 模式，例如日志收集容器通过 EmptyDir 访问业务容器的日志文件。
 - HostPath：与 EmptyDir 不同，HostPath 使同一节点上的所有容器能够共享宿主机的本地存储。例如，在 Loki 日志系统中，通过设置 Pod 挂载宿主机的 HostPath Volume，Loki 能够收集并读取宿主机上所有 Pod 生成的日志。
 
-如图 7-26 所示，EmptyDir 类型的 Volume 被包含在 Pod 内，生命周期与挂载它的 Pod 是一致的，当 Pod 因某种原因被销毁时，这类 Volume 也会随之删除。如果是 HostPath，Pod 被调度到另外一台节点时，对 Pod 而言也相当 HostPath 内的数据被删除了。 
+如图 7-26 所示，EmptyDir 类型的 Volume 被包含在 Pod 内，其生命周期与挂载它的 Pod 一致。当 Pod 因某种原因被销毁时，这类 Volume 也会随之删除。如果是 HostPath，Pod 被调度到另外一台节点时，对 Pod 而言也相当于 HostPath 内的数据被删除了。
 
 :::center
   ![](../assets/volume.svg)<br/>
-  图 7-26 EmptyDir 类型的 Volume 不具备持久性
+  图 7-26 EmptyDir 类型的 Volume 的应用示例
 :::
 
 ## 7.5.4 持久化的 Volume
 
-由于 Pod 可能会根据 Kubernetes 的调度策略被迁移到不同的节点，如果需要实现数据的持久化存储，通常需要依赖网络存储解决方案。这就是引入 PV（PersistentVolume，持久卷）的原因。
+由于 Pod 随时会根据 Kubernetes 的调度策略被迁移到不同的节点，如果需要实现数据的持久化存储，通常需要依赖网络存储解决方案。这就是引入 PV（PersistentVolume，持久卷）的原因。
 
-如下，一个 PV 资源的 yaml 配置示例，其 spec 部分详细描述了存储容量（5Gi）、访问模式（ReadWriteOnce，即允许单个节点读写）、远程存储类型（如 NFS）、以及 PV 在被释放时的数据回收策略（Recycle，即在 PV 不再被使用时，自动清除其上的数据以供再次使用）等关键信息。
+如下所示，一个 PV 资源的 YAML 配置示例。其 spec 部分详细描述了以下关键信息：存储容量（5Gi）、访问模式（ReadWriteOnce，即允许单个节点读写）、远程存储类型（如 NFS），以及 PV 在被释放时的数据回收策略（Recycle，即在 PV 不再被使用时自动清除其上的数据以供再次使用）。
 
 ```yaml
 apiVersion: v1
@@ -112,11 +113,11 @@ spec:
     server: 172.17.0.2
 ```
 
-由于使用 PV 时，需要详细描述存储的配置信息，所以对应用开发者并不友好。应用开发者只想知道我有多大的空间、I/O 是否满足要求，并不关心存储底层的配置细节。
+直接使用 PV 时，需要详细描述存储的配置信息，这对业务工程师并不友好。业务工程师只想知道我有多大的空间、I/O 是否满足要求，肯定不想不关心存储底层的配置细节。为了简化存储的使用，Kubernetes 将存储服务再次抽象，把业务工程师关心的逻辑再抽象一层，这就是 PVC（Persistent Volume Claim，持久卷声明）。
 
-为了解决这个问题，Kubernetes 把存储服务再次抽象，把应用开发者关心的逻辑再抽象一层出来，这就是 PVC（Persistent Volume Claim，持久卷声明）。有了 PVC，应用开发者只需要跟 PVC “接口”打交道，而不必关心底层存储是怎么配置或者实现的。
+PVC 和 PV 的设计其实与“面向对象”的思想完全一致。PVC 可以理解为持久化存储的“接口”，它提供了对某种持久化存储的描述，但不提供具体的实现；而持久化存储的实现部分则由 PV 负责完成。这样做的好处是，作为应用开发者，我们只需要与 PVC 这个“接口”进行交互，而不必关心具体的实现是 NFS 还是 Ceph。
 
-如下，一个 PVC 资源的 yaml 配置示例，可以看到，里面没有任何与存储实现相关的细节。
+如下所示，一个 PVC 资源的 YAML 配置示例。可以看到，其中没有任何与存储实现相关的细节。
 
 ```yaml
 apiVersion: v1
@@ -132,12 +133,12 @@ spec:
       storage: 3Gi
 ```
 
-但这里还有一个问题“**PV 和 PVC 两者之间并没有明确相关的绑定参数，那它们是怎么绑定的？**”，它们的绑定实际是一个自动过程，这个过程主要依赖于以下几个关键因素：
+此刻，你应该还有个疑问：“PV 和 PVC 两者之间并没有明确相关的绑定参数，那么它们是如何绑定的？”。PV 和 PVC 的绑定实际上是一个自动过程，主要依赖于以下几个关键因素：
 
-- Spec 参数匹配：Kubernetes 会自动寻找与 PVC 声明的规格相匹配的 PV。这包括存储容量的大小、所需的访问模式（例如 ReadWriteOnce、ReadOnlyMany 或 ReadWriteMany），以及存储的类型（如文件系统或块存储）；
+- Spec 参数匹配：Kubernetes 会自动寻找与 PVC 声明的规格相匹配的 PV。这包括存储容量的大小、所需的访问模式（例如 ReadWriteOnce、ReadOnlyMany 或 ReadWriteMany），以及存储的类型（如文件系统或块存储）。
 - 存储类匹配：PV 和 PVC 必须具有相同的 storageClassName。这个类名定义了 PV 的存储类型和特性，确保 PVC 请求的存储资源与 PV 提供的存储资源在类别上一致。
 
-如下 yaml 配置所示，在 Pod 中使用 PVC，一旦 PVC 成功匹配到 PV，NFS 远程存储就会被挂载到 Pod 中的指定目录，例如 nginx 容器内的 /data 目录。这样，Pod 内部的应用就能够访问和使用这个远程存储资源，就像使用本地存储一样方便。
+如下所示的 YAML 配置，在 Pod 中使用 PVC 时，一旦 PVC 成功匹配到 PV，NFS 远程存储将被挂载到 Pod 中的指定目录，例如 nginx 容器内的 /data 目录。这样，Pod 内部的应用就能够像使用本地存储一样方便地访问和使用这个远程存储资源。
 
 ```yaml
 apiVersion: v1
@@ -158,23 +159,21 @@ spec:
       claimName: pv-claim
 ```
 
+
+
 ## 7.5.5 PV 的使用：从手动到自动
 
-在 Kubernetes 中，如果系统中没有合适的 PV 满足 PVC 的需求，PVC 将一直处于 Pending 状态，直到系统里产生了一个合适的 PV，这期间 Pod 将无法正常启动。
+在 Kubernetes 中，如果系统中没有合适的 PV 满足 PVC 的需求，PVC 将一直处于 Pending 状态，直到系统中产生一个合适的 PV。在此期间，Pod 将无法正常启动。对于小规模集群，可以预先创建多个 PV 来等待 PVC 匹配。然而，在一个大规模的 Kubernetes 集群中，可能有成千上万个 Pod，显然无法依靠人工方式提前创建出成千上万个 PV。
 
-如果是一个小规模的集群，可以预先创建多个 PV 等待 PVC 匹配即可。但一个大规模的 Kubernetes 集群里很可能有成千上万个 Pod，这肯定没办法靠人工的方式提前创建出成千上万个 PV。
+为此，Kubernetes 提供了一套自动创建 PV 的机制 —— 动态供给（Dynamic Provisioning）。相对而言，前面通过人工创建 PV 的方式被称为静态供给（Static Provisioning）。
 
-为此，Kubernetes 提供了一套可以自动创建 PV 的机制 —— Dynamic Provisioning（相对的，前面通过人工创建 PV 的方式叫作 Static Provisioning）。
+动态供给（Dynamic Provisioning）的核心在于 StorageClass 对象，它的作用是创建 PV 的模板，使 PV 可以自动生成。在声明 StorageClass 时，必须明确两类关键信息：
+- PV 的属性：定义了 PV 的特征，包括存储空间的大小、读写模式（如 ReadWriteOnce、ReadOnlyMany 或 ReadWriteMany），以及回收策略（如 Retain、Recycle 或 Delete）等。
+- Provisioner 的属性：确定存储供应商（也称为 Volume Plugin，存储插件）及其参数信息。Kubernetes 支持两种类型的存储插件：
+  - In-Tree 插件：这些插件是 Kubernetes 源码的一部分，通常以前缀“kubernetes.io”命名，如 kubernetes.io/aws、kubernetes.io/azure 等。它们直接集成在 Kubernetes 项目中，为特定的存储服务提供支持。
+  - Out-of-Tree 插件：这些插件根据 Kubernetes 提供的存储接口由第三方存储供应商实现，代码独立于 Kubernetes 核心代码。Out-of-Tree 插件允许更灵活地集成各种存储解决方案，以适应不同的存储需求。
 
-Dynamic Provisioning 核心在于 StorageClass 对象，它的作用其实就是创建 PV 的模板，使 PV 可以自动创建。StorageClass 对象在声明时，必须明确两类关键信息：
-- **PV 的属性**：定义了 PV 的特征，包括存储空间的大小、读写模式（如 ReadWriteOnce、ReadOnlyMany 或 ReadWriteMany）、以及回收策略（如 Retain、Recycle 或 Delete）等。
-- **Provisioner 的属性**：即确定存储供应商（也称 Volume Plugin，存储插件）及参数信息。Kubernetes 支持两种类型的存储插件：
-  - In-Tree 插件：这些插件是Kubernetes源码的一部分，通常以前缀“kubernetes.io”命名，如kubernetes.io/aws、kubernetes.io/azure等。它们直接集成在Kubernetes项目中，为特定的存储服务提供支持；
-  - Out-of-Tree 插件：这些插件是根据 Kubernetes 提供的存储接口由第三方存储供应商实现的，代码独立于 Kubernetes 核心代码。Out-of-Tree 插件允许更灵活地集成各种存储解决方案，以适应不同的存储需求。 
-
-以下是一个 Kubernetes StorageClass 资源的配置示例。该 StorageClass 指定了使用 AWS Elastic Block Store（aws-ebs）作为存储供应商。在存储参数设置中，定义了一个 type 属性，其值被设置为 gp2，这表示使用 AWS 的通用型 SSD 卷。
-
-此外，该 StorageClass 的回收策略被设置为 Retain，这意味着当 PV 被释放时，其上的数据将被保留，而不是被删除。
+以下是一个 Kubernetes StorageClass 资源的配置示例。该 StorageClass 指定使用 AWS Elastic Block Store（aws-ebs）作为存储供应商。在存储参数设置中，定义了一个 type 属性，其值被设置为 gp2，表示使用 AWS 的通用型 SSD 卷。
 
 ```yaml
 apiVersion: storage.k8s.io/v1
@@ -190,55 +189,107 @@ mountOptions:
   - debug
 volumeBindingMode: Immediate
 ```
-StorageClass 资源提交到 Kubernetes 集群后，Kubernetes 将根据 StorageClass 定义的模板和 PVC 的请求规格，自动创建一个新的 PV 实例。新创建的 PV 将被自动绑定到 PVC 上，使得 PVC 的状态从 Pending 变为 Bound，表示存储资源已经准备就绪。
-
-随后，Pod 就能够利用 PVC 声明的存储资源，无论是用于数据持久化还是其他存储需求。
+当 StorageClass 资源提交到 Kubernetes 集群后，Kubernetes 将根据 StorageClass 定义的模板和 PVC 的请求规格，自动创建一个新的 PV 实例。新创建的 PV 将自动绑定到 PVC，使得 PVC 的状态从 Pending 变为 Bound（表示存储资源已经准备就绪）。随后，Pod 就能够利用 PVC 声明的存储资源，无论是用于数据持久化还是其他存储需求。
 
 
 ## 7.5.6 Kuberneters 的存储系统设计
 
-相信大部分读者对于如何使用 Volume 没什么疑问了，接下来，我们继续探讨存储系统与 Kubernetes 的集成以及它们是如何与 Pod 相关联的。在进入这些高级主题之前，我们需要先掌握一些关于操作存储设备的基础知识。
+相信大部分读者对如何使用 Volume 已经没有疑问了。接下来，我们将继续探讨存储系统与 Kubernetes 的集成，以及它们是如何与 Pod 相关联的。在深入这个高级主题之前，我们需要先掌握一些关于操作存储设备的基础知识。
 
-Kubernetes 继承了操作系统接入外置存储的设计，将新增或者卸载存储设备分解为以下三个操作：
+Kubernetes 继承了操作系统接入外置存储的设计，将新增或卸载存储设备分解为以下三个操作：
 
-- 首先，得 Provision（准备）哪种设备，Provision 类似给操作系统准备一块新的硬盘，这一步确定了接入存储设备的类型、容量等基本参数。它的逆向操作是 delete（移除）设备。
-- 然后，将准备好的存储附加（Attach）到系统中，Attach 可类比为将存储设备接入操作系统，此时尽管设备还不能使用，但你已经可以用操作系统的 fdisk -l 命令查看到设备，这一步确定存储设备的名称、驱动方式等面向系统侧的信息，它的逆向操作是 Detach（分离）设备。
-- 最后，将附加好的存储挂载（Mount）到系统中，Mount 可类比为将设备挂载到系统的指定位置，也就是操作系统中 mount 命令的作用，它的逆向操作是 卸载（Unmount）存储设备。
+- 准备（Provision）：首先，需要确定哪种设备进行 Provision。这一步类似于给操作系统准备一块新的硬盘，确定接入存储设备的类型、容量等基本参数。其逆向操作为 delete（移除）设备。
+- 附加（Attach）：接下来，将准备好的存储附加到系统中。Attach 可类比为将存储设备接入操作系统，此时尽管设备还不能使用，但你可以用操作系统的 fdisk -l 命令查看到设备。这一步确定存储设备的名称、驱动方式等面向系统的信息，其逆向操作为 Detach（分离）设备。
+- 挂载（Mount）：最后，将附加好的存储挂载到系统中。Mount 可类比为将设备挂载到系统的指定位置，这就是操作系统中 mount 命令的作用，其逆向操作为卸载（Unmount）存储设备。
 
 :::tip <i/>
 如果 Pod 中使用的是 EmptyDir、HostPath 这类普通 Volume，并不会经历附着/分离的操作，它们只会被挂载/卸载到某一个 Pod 中。
 :::
 
-Kubernetes 中的 Volume 创建和管理主要由 VolumeManager（卷管理器）、AttachDetachController（挂载控制器）和 PVController（PV 生命周期管理器）负责。前面提到的 Provision、Delete、Attach、Detach、Mount 和 Unmount 操作由具体的 VolumePlugin（第三方存储插件）实现。
+Kubernetes 中的 Volume 创建和管理主要由 VolumeManager（卷管理器）、AttachDetachController（挂载控制器）和 PVController（PV 生命周期管理器）负责。前面提到的 Provision、Delete、Attach、Detach、Mount 和 Unmount 操作由具体的 VolumePlugin（第三方存储插件，也称 CSI 插件）实现。
 
 如图 7-27 所示，一个带有 PVC 的 Pod 创建过程。
+
+1. 首先，用户创建一个包含 PVC 的 Pod，该 PVC 要求使用动态存储卷。
+2. 默认调度器 kube-scheduler 根据 Pod 配置、节点状态、PV 配置等信息，将 Pod 调度到一个合适的节点中。
+3. PVController 会持续监测 ApiServer，当发现一个 PVC 已创建但仍处于未绑定状态时，它会尝试将一个 PV 与该 PVC 进行绑定。首先，PVController 会在集群内查找适合的 PV；如果找不到相应的 PV，它会调用 Volume Plugin 中的接口执行 Provision 操作。Provision 过程包括从远程存储介质创建一个 Volume，并在集群中创建一个 PV 对象，然后将此 PV 与 PVC 绑定。
+4. 如果一个 Pod 被调度到某个节点后，它所定义的 PV 还没有被挂载，AttachDetachController 就会调用 Volume Plugin 中的接口，把远端的 Volume 挂载到目标节点中的设备上（例如：/dev/vdb）。
+5. 在节点中，当 VolumeManager 发现一个 Pod 已调度到自己的节点上并且 Volume 已经完成挂载时，它会执行 mount 操作，将本地设备（即刚才得到的 /dev/vdb）挂载到 Pod 在节点上的一个子目录 `/var/lib/kubelet/pods/[pod uid]/volumes/kubernetes.io~iscsi/[PV name]`（以 iSCSI 类型的存储为例）。
+6. Kubelet 通过容器运行时（如 containerd）启动 Pod 的容器，并使用 bind mount 方式将已挂载到本地目录的卷映射到容器中。
 
 :::center
   ![](../assets/k8s-volume.svg)<br/>
   图 7-27 Pod 挂载持久化 Volume 的过程
 :::
 
-1. 首先，用户创建了一个包含 PVC 的 Pod，该 PVC 要求使用动态存储卷。
-2. 默认调度器 kube-scheduler 根据 Pod 配置、节点状态、PV 配置等信息，把 Pod 调度到一个合适的节点中。
-3. PVController 会持续监测 ApiServer，当发现一个 PVC 已创建但仍处于未绑定状态时，它会尝试将一个 PV 与该 PVC 进行绑定。首先，PVController 会在集群内查找适合的 PV 进行绑定；如果找不到相应的 PV，它会调用 Volume Plugin 进行 Provision。Provision 过程包括从远程存储介质创建一个 Volume，并在集群中创建一个 PV 对象，然后将此 PV 与 PVC 绑定；
+上述流程中第三方存储供应商实现 Volume Plugin 即 CSI（Container Storage Interface，容器存储接口）插件。CSI 插件是一个可执行的二进制文件，但它以 gRPC 的方式对外提供了三个主要的 gRPC 服务：Identity Service、Controller Service、Node Service 用于卷的管理、挂载和卸载等操作。
 
-4. 如果有一个 Pod 调度到某个节点之后，它所定义的 PV 还没有被挂载，ADController 就会调用 VolumePlugin，把远端的 Volume 挂载到目标节点中的设备上（如：/dev/vdb）。
+其中，Identity Service 用于对外暴露插件本身的信息，它的接口如下所示：
 
-5. 在节点中，当 VolumManager 发现一个 Pod 调度到自己的节点上并且 Volume 已经完成了挂载，它就会执行 mount 操作，将本地设备（也就是刚才得到的 /dev/vdb）挂载到 Pod 在节点上的一个子目录 `/var/lib/kubelet/pods/[pod uid]/volumes/kubernetes.io~iscsi/[PV name]（以 iscsi 为例）`。
-6. Kubelet 通过容器运行时（如 containerd）启动 Pod 的容器，并使用 bind mount 方式将已挂载到本地目录的卷映射到容器中。
+```protobuf
+service Identity {
+  // 返回插件的名称、版本和其他元数据。
+  rpc GetPluginInfo(GetPluginInfoRequest)
+    returns (GetPluginInfoResponse) {}
 
-上述流程的每个步骤都对应 CSI（容器存储接口）提供的标准接口。云存储厂商只需按此标准接口实现自己的云存储插件，即可无缝衔接 Kubernetes 底层编排系统，提供多样化的云存储、备份和快照等能力。
+  // 返回插件支持的功能，例如是否支持卷的快照等。
+  rpc GetPluginCapabilities(GetPluginCapabilitiesRequest)
+    returns (GetPluginCapabilitiesResponse) {}
+
+  rpc Probe (ProbeRequest)
+    returns (ProbeResponse) {}
+}
+```
+Controller Service 管理卷的生命周期，包括创建、删除和获取卷的信息，它的接口定义如下所示。可以看出，接口中定义的操作就是图 7-27 Master 节点中 准备（Provision）和 附加（Attach）的逻辑。
+
+```protobuf
+service Controller {
+  // 创建一个新卷，并返回该卷的详细信息。
+  rpc CreateVolume (CreateVolumeRequest)
+    returns (CreateVolumeResponse) {}
+  // 删除指定的卷。
+  rpc DeleteVolume (DeleteVolumeRequest)
+    returns (DeleteVolumeResponse) {}
+  // 将卷绑定到特定的节点，准备后续的挂载操作。
+  rpc ControllerPublishVolume (ControllerPublishVolumeRequest)
+    returns (ControllerPublishVolumeResponse) {}
+
+  // 从节点解绑卷，准备进行删除或其他操作。
+  rpc ControllerUnpublishVolume (ControllerUnpublishVolumeRequest)
+    returns (ControllerUnpublishVolumeResponse) {}
+  ...
+```
+
+Node Service 主要由 Kubelet 调用处理卷在节点上的挂载和卸载操作。它的接口定义如下所示：
+
+```protobuf
+service Node {
+  // 将卷挂载到节点的设备上，使其准备好被 Pod 使用。
+  rpc NodeStageVolume (NodeStageVolumeRequest)
+    returns (NodeStageVolumeResponse) {}
+  // 将卷从节点的设备中卸载。
+  rpc NodeUnstageVolume (NodeUnstageVolumeRequest)
+    returns (NodeUnstageVolumeResponse) {}
+  // 在指定的 Pod 中将卷挂载到容器的文件系统上。
+  rpc NodePublishVolume (NodePublishVolumeRequest)
+    returns (NodePublishVolumeResponse) {}
+  ...
+```
+
+CSI 插件机制为存储供应商和容器编排系统之间的交互提供了标准化的接口。云存储厂商只需根据这一标准接口实现自己的云存储插件，即可无缝衔接 Kubernetes 的底层编排系统，Kubernetes 也有了多样化的云存储、备份和快照等能力。
 
 ## 7.5.7 存储的类型
 
-得益 Kubernetes 的开放性设计，通过图 7-28 感受支持 CSI 的存储生态，基本上包含了市面上所有的存储供应商。
+得益 Kubernetes 的开放性设计，通过图 7-28 感受提供了 CSI 插件支持的存储生态，基本上包含了市面上所有的存储供应商。
 
 :::center
   ![](../assets/CSI.png)<br/>
   图 7-28 CNCF 下的 Kubernetes 存储生态
 :::
 
-上述众多的存储系统无法一一展开，但作为业务开发工程师而言，直面的问题是“业务开发中，我应该选择哪种存储类型？”。无论是内置的存储插件还是第三方存储插件，总结提供的存储类型就 3 种：块存储（Block Storage）、文件存储（File Storage）和对象存储（Object Storage）。这三种存储类型特点与区别，笔者介绍如下：
+上述众多的存储系统无法一一展开，但作为业务开发工程师而言，直面的问题是：“我应该选择哪种存储类型？”。
+
+无论是内置的存储插件还是第三方存储插件，总结提供的存储类型就 3 种：块存储（Block Storage）、文件存储（File Storage）和对象存储（Object Storage）。这三种存储类型特点与区别，笔者介绍如下：
 
 - **块存储**：块存储是最接近物理介质的一种存储方式，常见的硬盘就属于块设备。块存储不关心数据的组织方式和结构，只是简单地将所有数据按固定大小分块，每块赋予一个用于寻址的编号。数据的读写通过与块设备匹配的协议（如 SCSI、SATA、SAS、FCP、FCoE、iSCSI 等）进行。
 

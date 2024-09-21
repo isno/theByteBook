@@ -25,7 +25,7 @@ Kubernetes 从 1.5 版本开始，在遵循 OCI 的基础上，将对容器的�
 
 上述的接口，称为 CRI（Container Runtime Interface，容器运行时接口）。CRI 的实现上是一套通过 Protocol Buffer 定义的 API。笔者列举 CRI 接口中与操作容器相关的部分供你参考：
 
-```bash
+```protobuf
 // RuntimeService 定义了管理容器的 API
 service RuntimeService {
 
