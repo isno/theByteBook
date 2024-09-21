@@ -80,9 +80,11 @@ Google 推出 CRI-O 的意图明显，即直接削弱 Docker 在容器编排领�
 
 Docker 并没有“坐以待毙”，开始主动革新。
 
-回顾本书第一章 1.5.1 节关于 Docker 演进的介绍，Docker 从 1.1 版本起推动自身的重构，并拆分出 Containerd。早期，Containerd 单独开源，并没有捐赠给 CNCF。出于诸多原因，Docker 对外部开放的接口仍保持不变。在这个背景下，Kubernetes 中出现了以下两种调用链：
+回顾本书第一章 1.5.1 节关于 Docker 演进的介绍，Docker 从 1.1 版本起推动自身的重构，并拆分出 Containerd。早期，Containerd 单独开源，并没有捐赠给 CNCF，Containerd 还适配了其他容器编排系统，如 Swarm，因此并没有直接实现 CRI 接口。此外，出于诸多原因的考虑，Docker 对外部开放的接口仍保持不变。
+
+在上述两个背景下，Kubernetes 中出现了如图 7-18 所示的两种调用链：
 - CRI 接口通过适配器 dockershim 调用：dockershim 再调用 Docker，最后 Docker 调用 Containerd 操作容器；
-- CRI 接口通过适配器 cri-containerd 调用：cri-containerd 再调用 Containerd 操作容器（最初 Containerd 还适配了其他容器编排系统，如 Swarm，因此并没有直接实现 CRI 接口）。
+- CRI 接口通过适配器 CRI-containerd 调用：CRI-containerd 再调用 Containerd 操作容器。
 
 :::center
   ![](../assets//k8s-runtime-v2.png)<br/>
@@ -93,7 +95,9 @@ Docker 并没有“坐以待毙”，开始主动革新。
 
 2018 年，Docker 将 Containerd 捐赠给 CNCF，并在 CNCF 的精心孵化下发布了 1.1 版。与 1.0 版相比，1.1 版的最大区别在于它已完美支持 CRI 标准，这意味着原本用作 CRI 适配器的 CRI-Containerd 从此不再需要。
 
-Kubernetes v1.24 版本正式删除 dockershim，本质是废弃了内置的 dockershim 功能转而直接对接 Containerd。再观察 Kubernetes 到容器运行时的调用链，你会发现调用步骤相比通过 DockerShim、Docker Engine 与 Containerd 交互的步骤减少了两步。这时：
+Kubernetes v1.24 版本正式删除 dockershim，本质是废弃了内置的 dockershim 功能转而直接对接 Containerd。再观察 Kubernetes 到容器运行时的调用链，你会发现调用步骤相比通过 DockerShim、Docker Engine 与 Containerd 交互的步骤减少了两步。
+
+此时：
 - 用户只需抛弃 Docker 的情怀，容器编排至少可以省略一次调用，从而获得性能上的收益；
 - 从 Kubernetes 的角度来看，选择 Containerd 作为运行时组件，调用链更短、更稳定，占用节点资源也更少。
 

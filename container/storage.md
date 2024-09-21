@@ -6,43 +6,61 @@
 
 ## 7.5.1 Docker 的存储设计
 
-Docker 通过挂载宿主机目录到 Docker 容器内部的方式实现持久化存储。目前，Docker 支持 3 种挂载：bind mount、volume 和 tmpfs mount。
+Docker 通过将宿主机的目录挂载到容器内部，实现数据的持久化存储。目前，Docker 支持三种挂载方式：bind mount、volume 和 tmpfs mount。
 
 :::center
   ![](../assets/types-of-mounts-volume.webp)<br/>
   图 7-24 Docker 中持久存储的挂载种类
 :::
 
-bind mount 是 Docker 最早支持的挂载类型，只要用过 Docker，肯定熟悉下面挂载方式。该命令启动一个 Nginx 容器，并将宿主机的 /usr/share/nginx/html 目录，挂载到容器内 /data 目录。
+bind mount 是 Docker 最早支持的挂载类型，很多用户都熟悉这种挂载方式。以下命令启动一个 Nginx 容器，并将宿主机的 /usr/share/nginx/html 目录挂载到容器内的 /data 目录：
 ``` bash
 $ docker run -v /usr/share/nginx/html:/data nginx:lastest
 ```
-上述操作实际上就是利用 MS_BIND 类型的 mount 系统调用。
+这个操作实际上是利用 MS_BIND 类型的 mount 系统调用来实现的：
 
 ```c
 // 将宿主机中的 /usr/share/nginx/html 挂载到 rootfs 指定的挂载点 /data 上
 mount("/usr/share/nginx/html","rootfs/data", "none", MS_BIND, nulll)
 ```
-通过 mount 命令挂载宿主机目录实现的数据持久化存储，显然存在明显的缺陷：
-- **容器内的目录通过 mount 挂载到宿主机中的一个绝对路径，这就跟操作系统强相关**。这也意味着 bind mount 的方式无法写在 dockerfile 中，不然镜像在其他环境可能无法启动。其次，宿主机中被挂载的目录明面上看不出和 Docker 的关系，操作系统内其他进程有可能误写，存在安全隐患。
-- 容器被广泛使用后，**容器存储的需求绝对不是挂载到某个目录就能搞定**。存储位置不限于宿主机（有可能是网络存储）、存储的介质不限于磁盘（可能是 tmpfs）、存储的类型也不仅仅是文件系统（还有可能是块设备或者对象存储）。
+通过 mount 命令挂载宿主机目录来实现数据持久化存储，显然存在明显的缺陷：
+- 与操作系统的强耦合：容器内的目录通过 mount 挂载到宿主机的绝对路径，这使得容器的运行环境与操作系统紧密绑定。这意味着 bind mount 方式无法写在 Dockerfile 中，否则镜像在其他环境可能无法启动。此外，宿主机中被挂载的目录与 Docker 没有明显关联，其他进程可能会误写，存在潜在的安全隐患。
+- 无法应对存储需求的复杂性：容器被广泛使用后，容器存储的需求绝对不是挂载到某个目录就能搞定。存储位置不再仅限于宿主机（可能需要挂载网络存储），存储介质不仅局限于磁盘（也可能是 tmpfs），存储类型也不仅是文件系统（还可能是块设备或对象存储）。
 
-此外，如果是网络存储那也没必要先挂载到操作系统，再挂载到容器内某个目录。Docker 完全可以实现类似 iSCSI 存储协议、NFS 存储协议越过操作系统，直接对接网络存储。
+此外，对于网络存储，没必要先将其挂载到操作系统再挂载到容器内的目录。Docker 完全可以直接对接网络存储协议（如 iSCSI、NFS 等）越过操作系统，减少系统资源占用和延迟。为此，Docker 从 1.7 版本起提供全新的挂载类型 Volume（存储卷）：
 
-为此，Docker 从 1.7 版本起提供全新的挂载类型 Volume（存储卷）：
-- 它首先在宿主机开辟了一块属于 Docker 空间（Linux 中该目录是 /var/lib/docker/volumes/），这样就解决了 bind mount 映射宿主机绝对路径的问题；
-- 考虑存储的类型众多，仅靠 Docker 自己实现并不现实，Docker 1.10 版本中又设计了 Volume Driver，借助社区力量丰富 Docker 的存储驱动种类。
+- 首先，Volume 会在宿主机中开辟一个专属于 Docker 的空间（通常在 Linux 中为 /var/lib/docker/volumes/ 目录），这样就解决了 bind mount 依赖于宿主机绝对路径的局限性。
+- 考虑存储类型非常多样，仅靠 Docker 自己实现并不现实，因此 Docker 在 1.10 版本中引入了 Volume Driver 机制，借助社区的力量来扩展和丰富其存储驱动，支持更多的存储系统和协议。
 
-经过一系列的设计，现在 Docker 用户只要通过 docker plugin install 安装额外的第三方卷驱动，就能使用想要的网络存储或者各类云厂商提供的存储。
+经过一系列的设计，现在 Docker 用户只要通过 docker plugin install 安装额外的第三方卷驱动，就能使用想要的网络存储或者各类云厂商提供的存储。笔者举个具体的例子供你参考，以下是一个使用阿里云文件存储（NAS）的示例：
+
+1. 首先安装阿里云 NAS Volume 插件：
+```bash
+docker plugin install aliyun/aliyun-volume-plugin:latest --alias aliyun-nas --grant-all-permissions
+```
+2. 接着，使用 docker volume create 命令创建一个挂载到阿里云 NAS 的存储卷，指定 NAS 文件系统的地址：
+
+```bash
+docker volume create \
+--driver aliyun-nas \
+--opt nasAddr=<Your_NAS_Address> \
+--opt mountDir=/myvolume \
+my-aliyun-nas-volume
+```
+3. 最后，启动容器时，将创建的阿里云 NAS 卷挂载到容器中的目录：
+
+```bash
+docker run -d -v my-aliyun-nas-volume:/mnt/nas nginx:latest
+```
 
 ## 7.5.2 Kubernetes 的存储卷：Volume
 
 我们从 Docker 返回到 Kubernetes 中，同 Docker 类似的是：
-- Kubernetes 也抽象出了 Volume 来解决持久化存储；
-- 也开辟了属于 Kubernetes 的空间（该目录是 /var/lib/kubelet/pods/[pod uid]/volumes）；
-- 也设计了存储驱动（Volume Plugin）扩展支持出众多的存储类型。
+- Kubernetes 也抽象出了 Volume 的概念来解决持久化存储；
+- 在宿主机中，也开辟了属于 Kubernetes 的空间（该目录是 /var/lib/kubelet/pods/[pod uid]/volumes）；
+- 也设计了存储驱动（Volume Plugin）扩展支持出众多的存储类型，如本地存储、网络存储（如 NFS、iSCSI）、云厂商的存储服务（如 AWS EBS、GCE PD、阿里云 NAS 等）。
 
-不同的是，作为一个工业级的容器编排系统，Kubernetes Volume 要比 Docker 复杂那么一点以及类型多出一丢丢。
+不同的是，作为一个工业级的容器编排系统，Kubernetes 的 Volume 机制相较于 Docker 更复杂，并且支持的存储类型也更加丰富。Kubernetes 支持的存储类型，如图 7-25 所示。
 
 :::center
   ![](../assets/volume-list.png)<br/>
@@ -51,9 +69,11 @@ mount("/usr/share/nginx/html","rootfs/data", "none", MS_BIND, nulll)
 
 乍一看，这么多 Volume 类型实在难以下手。然而，总结起来就 3 类：
 
-- 普通的 Volume；
-- 持久化的 Volume；
-- 特殊的 Volume（例如 Secret、Configmap，它们将 Kubernetes 集群的配置信息以 Volume 方式挂载到 Pod 中，这些 Volume 实现了标准的 POSIX 接口，使得容器内部的应用能够像操作本地文件一样访问和操作这些配置信息。严格讲此类 Volume 并不属于存储，笔者就不再展开讨论了）。
+- 普通的 Volume：用于临时数据存储，生命周期与 Pod 绑定，如 emptyDir、hostPath 等。这类 Volume 在 Pod 重启时数据会丢失，适用于无需持久化的数据场景。
+- 持久化的 Volume：通过 PersistentVolume（PV）和 PersistentVolumeClaim（PVC）机制来实现，支持长期存储且与 Pod 的生命周期解耦。常见的类型包括 NFS、云存储（如 AWS EBS、GCE PD）等，适用于数据库或需要持久化存储的应用。
+- 特殊的 Volume：如 Secret 和 ConfigMap，这些 Volume 实现了标准的 POSIX 接口，使得容器内部的应用能够像操作本地文件一样访问和操作 Kubernetes 集群的配置信息（例如环境变量、凭据）。
+
+严格来讲，最后一类并不属于实际的存储类型，笔者后续就不再展开讨论了。
 
 ## 7.5.3 普通的 Volume
 
