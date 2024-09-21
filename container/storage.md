@@ -222,7 +222,9 @@ Kubernetes 中的 Volume 创建和管理主要由 VolumeManager（卷管理器�
   图 7-27 Pod 挂载持久化 Volume 的过程
 :::
 
-上述流程中第三方存储供应商实现 Volume Plugin 即 CSI（Container Storage Interface，容器存储接口）插件。CSI 插件是一个可执行的二进制文件，但它以 gRPC 的方式对外提供了三个主要的 gRPC 服务：Identity Service、Controller Service、Node Service 用于卷的管理、挂载和卸载等操作。
+上述流程中第三方存储供应商实现 Volume Plugin 即 CSI（Container Storage Interface，容器存储接口）插件。CSI 是一个开放性的标准，目标是位容器编排系统（不仅仅是 Kubernetes，还包括 Docker Swarm 和 Mesos 等）提供统一的存储接口。
+
+CSI 插件在实现上是一个可执行的二进制文件，它以 gRPC 的方式对外提供了三个主要的 gRPC 服务：Identity Service、Controller Service、Node Service 用于卷的管理、挂载和卸载等操作。笔者介绍如下：
 
 其中，Identity Service 用于对外暴露插件本身的信息，它的接口如下所示：
 
@@ -276,9 +278,9 @@ service Node {
   ...
 ```
 
-CSI 插件机制为存储供应商和容器编排系统之间的交互提供了标准化的接口。云存储厂商只需根据这一标准接口实现自己的云存储插件，即可无缝衔接 Kubernetes 的底层编排系统，Kubernetes 也有了多样化的云存储、备份和快照等能力。
+CSI 插件机制为存储供应商和容器编排系统之间的交互提供了标准化的接口。云存储厂商只需根据这一标准接口实现自己的云存储插件，即可无缝衔接 Kubernetes 的底层编排系统，Kubernetes 也由此具备了多样化的云存储、备份和快照等能力。
 
-## 7.5.7 存储的类型
+## 7.5.7 存储的分类介绍
 
 得益 Kubernetes 的开放性设计，通过图 7-28 感受提供了 CSI 插件支持的存储生态，基本上包含了市面上所有的存储供应商。
 
@@ -307,4 +309,4 @@ CSI 插件机制为存储供应商和容器编排系统之间的交互提供了�
 
   对象存储中的“对象”可以理解为元数据与逻辑数据块的组合。元数据提供了对象的上下文信息，如数据类型、大小、权限、创建人、创建时间等，而数据块则存储了对象的具体内容。对象存储中，所有数据都在同一个层次中，通过唯一地址标识来识别和查找数据。由于设计初衷（一般基于哈希环等技术），因此对象存储可以非常简单地扩展到超大规模，非常适合处理数据量大、增速快的非结构化数据（如视频、图像等）。
 
-  著名的对象存储服务有 AWS S3，此外，你还可以通过开源产品如 Ceph、Minio 和 Swift 自建对象存储服务。
+  著名的对象存储服务有 AWS S3。此外，你还可以通过开源产品如 Ceph、Minio 或 Swift 自建对象存储服务。

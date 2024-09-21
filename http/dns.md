@@ -6,7 +6,7 @@ DNS（Domain Name System，域名系统）是互联网中最重要的基础设�
 - 7 月22 日，技术服务商 Aakamai 的 Edge DNS 服务故障，造成 PlayStation Network、HBO、UPS、Airbnb、Salesforce 等众多知名网站宕机[^1]；
 - 不久之后的 10 月 4 日，社交网络平台 Facebook 及旗下服务 Messenger、Instagram、WhatsApp、Mapillary 与 Oculus 发生全球性宕机[^2]。
 
-接下来，我们来了解域名解析的基本原理，并学习在域名解析故障时如何排查问题。
+接下来，我们将先了解域名解析的基本原理，然后学习在域名解析故障时如何排查问题。
 
 ## 2.3.1 域名解析的原理
 

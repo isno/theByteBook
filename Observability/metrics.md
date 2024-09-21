@@ -1,6 +1,6 @@
 # 9.3.1 指标数据的处理
 
-指标（Metrics）是监控系统的核心。提到监控系统，Prometheus 是绕不开的关键话题。本节将通过解析 Prometheus 系统，讲解指标的收集、存储和处理流程。
+指标（Metrics）是监控系统的核心。提到监控系统，Prometheus 是绕不开的关键话题。本节将通过解析 Prometheus 系统，详细介绍指标的收集、存储和处理逻辑。
 
 Prometheus 项目的灵感来自 Google 内部的 Borg 监控系统（Brogmon），由前 Google 工程师在 SoundCloud 公司发起并将其开源。2016 年 5 月，Prometheus 继 Kubernetes 之后，成为云原生计算基金会（CNCF）的第二个正式项目。经过多年的发展，Prometheus 已成为云原生系统中指标监控的事实标准。
 
