@@ -4,37 +4,39 @@
 
 要理解容器网络的工作原理，一定要从 Flannel 项目入手。Flannel 是 CoreOS 推出的容器网络解决方案，业界公认是“最简单”的容器网络解决方案。它支持两种工作模式：VXLAN 和 host-gw，分别对应容器跨主机通信的 Overlay（覆盖网络）和三层路由方式。
 
-接下来，笔者将以 Flannel 为例，详细介绍容器间 Overla 和三层路由通信逻辑的原理。
+接下来，笔者将以 Flannel 为例，详细介绍容器间 Overlay 和三层路由通信逻辑的原理。
 
 
 ## 7.6.1 Overlay 覆盖网络模式
 
-本书第三章 5.4 节已经详细介绍过 Overlay 网络的设计思想：即在现有的三层网络之上“覆盖”一层虚拟的、由内核 VXLAN 模块负责维护的二层网络。
+本书第三章 5.4 节已详细介绍了 Overlay 网络的设计思想，一言蔽之：即在现有三层网络之上“覆盖”一层由内核 VXLAN 模块维护的虚拟二层网络。
 
-为了能够在宿主机网络之上，构建二层网络通信的“隧道”，VXLAN 会在宿主机上设置一个特殊网络设备作为“隧道”的端点，这个设备就是 VTEP（VXLAN Tunnel Endpoints，VXLAN 隧道端点），VTEP 实际上是一个虚拟的网络设备，因此在 Linux 系统中你会看到它既有 IP 地址也有 MAC 地址。VTEP 设备根据 VXLAN 通信规范对 VXLAN 二层网络之内的“主机”（容器或者虚拟机）的数据包进行封装/解封。这样，这些“主机”就可以像在一个局域网内通信。实际上，这些“主机”可能分布在不同的节点、不同的子网，甚至不再一个物理机房内。
+为了在宿主机网络之上构建虚拟的二层通信网络（即建立一条隧道网络），VXLAN 模块会在通信双方配置一个特殊的网络设备作为隧道端点，称为 VTEP（VXLAN Tunnel Endpoints，VXLAN 隧道端点）。VTEP 实际上是一个虚拟网络设备，因此它既有 IP 地址，也有 MAC 地址。VTEP 设备根据 VXLAN 通信规范，对 VXLAN 二层网络中的“主机”（如容器或虚拟机）进行数据包的封装和解封。通过这种方式，这些“主机”可以像在同一局域网内通信。实际上，这些“主机”可能分布在不同的节点、子网，甚至位于不同的物理机房内。
 
-上述基于 VTEP 设备构建“隧道”通信的流程可总结为图 7-29。
+上述基于 VTEP 设备构建“隧道”通信的流程，可以总结为图 7-29 所示。
 
 :::center
   ![](../assets/flannel-vxlan.svg) <br/>
-
   图 7-29 Flannel VXLAN 模式通信逻辑
 :::
 
-从图 7-29 可以看到，宿主机内的容器通过 veth-pair（虚拟网卡）桥接到一个名称为 cni0 的 Linux Bridge。每个宿主机内都有一个 flannel.1 设备，它们充当 VXLAN 所需的 VTEP 设备，当容器收到或发送数据包时，会通过 flannel.1 设备进行封装/解封。
+从图 7-29 可以看到，宿主机内的容器通过 veth-pair（虚拟网卡）桥接到一个名为 cni0 的 Linux Bridge。每个宿主机内都有一个名为 flannel.1 的设备，它充当 VXLAN 所需的 VTEP 设备。当容器收到或发送数据包时，会通过 flannel.1 设备进行封装和解封。
 
-VXLAN 规范的数据包由两层构成：内层帧（Inner Ethernet Header）属于 VXLAN 逻辑网络；外层帧属于宿主机网络（Out Ethernet Header
-）。可以看出，VXLAN 实际是基于 IP 网络、采用“MAC in UDP” 封装形式的二层 VPN 技术。
+VXLAN 规范中的数据包由两层组成：
+- 内层帧（Inner Ethernet Header）属于 VXLAN 逻辑网络；
+- 而外层帧（Out Ethernet Header）则属于宿主机网络。
 
-当主机加入 Flannel 网络后，Flannel 会在主机内运行一个驻守程序 flanneld ，flanneld 为主机内的容器分配子网、同步 Kubernetes 集群内的网络配置信息。
+可以看出，VXLAN 实际上是一种基于 IP 网络的二层 VPN 技术，采用“MAC in UDP”封装形式来传输二层流量。
+
+当 Kubernetes 的节点加入 Flannel 网络后，Flannel 会在节点内运行一个驻守程序 flanneld。flanneld 负责为节点内的容器分配子网，并同步 Kubernetes 集群内的网络配置信息，以确保各节点之间的网络连通性和一致性。
 
 现在，我们看看当 Node1 中的 Container-1 与 Node2 中的 Container-2 通信时，Flannel 是如何封包/解包的。
 
-首先，Container-1 发出请求之后，目的地是 100.10.2.3 的 IP 包会进入 cni0 Linux 网桥。因为目的地地址不在 cni0 网桥的转发范围内，所以该数据包被送进 Linux 内核。
+首先，当 Container-1 发出请求，目标地址为 100.10.2.3 的 IP 数据包会进入 cni0 Linux 网桥。由于目标地址不在 cni0 网桥的转发范围内，因此数据包会被送入 Linux 内核协议栈中进行进一步处理（其实，就是将数据包路由到 flannel.1 设备处理）。
 
-flanneld 启动后，会在 Node1 中添加如下路由规则（其他节点也会添加类似的规则）。
+flanneld 启动后，会在 Node1 中添加如下路由规则（当然，其他节点也会添加类似的路由规则）。
 ```bash
-[node1]# route -n
+[root@Node1 ~]# route -n
 Kernel IP routing table
 Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 100.10.1.0      0.0.0.0         255.255.255.0   U     0      0        0 cni0
@@ -44,58 +46,61 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 - 凡是发往 100.10.1.0/24 网段的 IP 报文，都需要经过接口 cni0。
 - 凡是发往 100.10.2.0/24 网段的 IP 报文，都需要经过接口 flannel.1，并且最后一跳的网关地址是 10.224.1.0（也就是 Node2 中 VTEP 的设备）。
 
-根据上面的路由规则，Container-1 的发出的数据包交由 flannel.1 接口处理，也就是说数据包进入了隧道的“起始端点”。
+根据上面的路由规则，Container-1 的发出的数据包交由 flannel.1 接口处理，也就是说数据包进入了隧道的“起始端点”。因此，当“起始端点”收到“原始的 IP 包”后，它需要构造 VXLAN 网络的内层以太网帧，然后将其发送给隧道网络的“目的地端点”，即 Node2 中的 VTEP 设备。这样，就能成功构建虚拟的二层网络，实现跨节点的容器通信。
 
-所以，当“起始端点”收到“原始的 IP 包”之后，就得想办法构造出 VXLAN 网络内层以太网帧，然后发给隧道网络“目的地端点”，也就是 Node2 中的 VTEP 设备。这样，才能构建出虚拟的二层网络。
+进行下一步需要解决的问题是，Node1 节点的 flannel.1 设备需要知道 Node2 中 flannel.1 设备的 IP 地址和 MAC 地址。目前，我们已经通过 Node1 的路由表获得了 VTEP 设备的 IP 地址（100.10.2.0）。那么，flannel.1 设备的 MAC 地址该如何获取呢？
 
-现在，需要解决的问题是 Node1 节点中的 flannel.1 设备得知道 Node2 中 flannel.1 设备的 IP 地址和 MAC 地址。此时，我们已经根据 Node1 的路由表知道了 VTEP 设备的 IP 地址（也就是 100.10.2.0）。那 flannel.1 设备的 MAC 地址从哪里获取？
-
-实际上，Node2 中 VTEP 设备的 MAC 地址也已经由 fanneld 自动添加到 Node1 ARP 表中了，在 Node1 中通过 ip 命令查看。
+实际上，Node2 中 VTEP 设备的 MAC 地址已由 flanneld 自动添加到 Node1 的 ARP 表中，可以通过在 Node1 中使用 ip 命令查看。
 ```bash
 [root@Node1 ~]# ip n | grep flannel.1
 100.10.2.0  dev flannel.1 lladdr ba:74:f9:db:69:c1 PERMANENT # PERMANENT 表示永不过期
 ```
-上面记录的意思是，IP 地址 10.10.2.0（也就是 Node2 flannel.1 设备的 IP）对应的 MAC 地址是 ba:74:f9:db:69:c1。
+上面记录的意思是：IP 地址 10.10.2.0（也就是 Node2 flannel.1 设备的 IP）对应的 MAC 地址是 ba:74:f9:db:69:c1。
 
 :::tip 注意
 这里 ARP 表记录并不是通过 ARP 协议学习得到的，而是 flanneld 预先为每个节点设置好的，没有过期时间。
 :::
 
-现在，隧道网络的内层数据帧已经封装好了。接下来 Linux 内核还要把内层数据帧再封装到宿主机网络中的数据帧中。然后通过搭便车方式，通过宿主机 eth0 网卡发送出去。
+现在，隧道网络的内层数据帧已封装完成。接下来，Linux 内核将把内层数据帧进一步封装到宿主机网络的数据帧中。然后，通过宿主机的 eth0 网卡，以“搭便车”的方式将其发送出去。
 
-为了实现“搭便车”的机制，Linux 内核会在内层数据帧前面塞一个特殊的 VXLAN Header，表示“乘客”实际是 Linux 内核中 VXLAN 模块要使用的数据。
 
-VXLAN header 里面有个重要的标志 VNI，这是 VETP 设备判断是否属于自己要处理的依据。Flannel VXLAN 工作模式中，所有节点中的 VNI 默认为 1，这也是 VTEP 设备为什么叫 flannel.1 的原因。
+为了实现“搭便车”机制，Linux 内核会在内层数据帧前添加一个特殊的 VXLAN Header，以指示“乘客”实际上是 Linux 内核中 VXLAN 模块需要使用的数据。VXLAN Header 中有一个重要的标志 —— VNI（VXLAN Network Identifier），这是 VTEP 设备判断数据包是否属于自己处理的依据。在 Flannel 的 VXLAN 工作模式中，所有节点的 VNI 默认为 1，这也是 VTEP 设备为什么命名为 flannel.1 的原因。
 
-接着，Linux 内核会把上面的二层数据帧封装进一个 UDP 报文。要进行 UDP 报文封装，就要知道四元组信息：源IP、源端口、目的IP、目的端口。
-- Linux 内核中默认为 VXLAN 分配的 UDP 监听端口为 8472。
-- 目的 IP 则通过 fdb（forwarding database，网桥设备转发表）转发表获得。当然，fdb表中的数据也是由 Flannel 提前设置好的。
+接下来，Linux 内核会将上述二层数据帧封装进宿主机的 UDP 报文内。
 
-使用 bridge fdb show 命令查看 fdb 表的记录。
+进行 UDP 封装时，需要确定四元组信息，也就是要知道 UDP 报文中的目的 IP 和目的端口。
 
+- Linux 内核中默认为 VXLAN 分配的 UDP 监听端口为 8472。因此目的地端口即 8472。
+- 目的 IP 则通过转发表（forwarding database，fdb）获取，fdb 表中的数据是由 Flannel 预先设置的。
+
+在宿主机中使用如下命令查看 fdb 表的记录。该命令会列出当前桥接设备的转发表（FDB），显示各个 MAC 地址及其对应的端口信息。
 ```bash
 [root@Node1 ~]# bridge fdb show | grep flannel.1
 ba:74:f9:db:69:c1 dev flannel.1 dst 192.168.50.3 self permanent
 ```
-上面记录的意思是，目的 MAC 地址为 92:8d:c4:85:16:ad（ Node2 VTEP 设备的 MAC 地址）的数据帧封装后，应该发往哪个目的IP（宿主机网络中节点的 IP）。根据上面的记录可以看出，UDP 包的目的 IP 应该为 192.168.2.103，也就是 Node2 节点的 IP。
+上面记录的意思是，目的 MAC 地址为 92:8d:c4:85:16:ad（ Node2 VTEP 设备的 MAC 地址）的数据帧封装后，应该发往哪个目的IP（宿主机网络中节点的 IP）。根据上面的记录可以看出，Node1 中 UDP 包的目的 IP 应该为 192.168.2.103，也就是 Node2 节点的 IP。
 
-至此，VTEP 设备已经得到了封包所需的所有信息，然后调用宿主机网络 UDP 协议的发包函数发送出去。后面的过程就和本机的 UDP 程序发包没什么区别了。
+至此，VTEP 设备已获得封装所需的所有信息，然后调用宿主机网络的 UDP 协议发包函数将数据包发送出去。接下来的过程与本机的 UDP 程序发送数据包没有太大区别。
 
-我们接着看 Node2 收到这个数据包后是如何处理的，当数据包到达 Node2 的 8472 端口后：
-- 内核中的 VXLAN 模块比较 VXLAN Header 中的 VNI 和本机的 VXLAN 网络的 VNI 是否一致；
-- 再比较内层数据帧中目的 MAC 地址与本机的 flannel.1 设备的 MAC 地址是否一致。
+我们接着来看 Node2 收到数据包后的处理流程。
 
-两个判断匹配后，则去掉数据包的 VXLAN Header 和内层帧 Header，得到原始的 container-1 发出的数据包。
+当数据包到达 Node2 的 8472 端口时，内核中的 VXLAN 模块会执行以下步骤：
+- VNI 比较：VXLAN 模块会检查 VXLAN Header 中的 VNI 是否与本机的 VXLAN 网络的 VNI 一致。
+- MAC 地址比较：接着，模块会比较内层数据帧中的目的 MAC 地址与本机的 flannel.1 设备的 MAC 地址是否匹配。
 
-然后，根据 Node2 节中的路由规则（也是由 Flannel 维护），目的地属于 100.10.2.0/24 网段的数据包交由 cni0 接口处理。后面就是 Linux 网桥的处理过程了。
+上述两个条件都满足的情况下，数据包被进一步处理。
+
+也就是说，去掉数据包的 VXLAN Header 和内层帧 Header 后，恢复出原始的 Container-1 发出的数据包。接着，根据 Node2 节点中的路由规则（由 Flannel 维护）处理，路由规则如下所示：
 
 ```bash
-[root@peng03 ~]# route -n
+[root@Node2 ~]# route -n
 Kernel IP routing table
 Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 ...
 100.10.2.0      0.0.0.0         255.255.255.0   U     0      0        0 cni0
 ```
+
+可以看出，目的地属于 100.10.2.0/24 网段的数据包会交由 cni0 接口处理。随后，数据包将按照 Linux 网桥的处理流程继续进行转发。
 
 以上，就是整个 Flannel VXLAN 模式的工作原理。
 
