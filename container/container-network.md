@@ -88,9 +88,7 @@ ba:74:f9:db:69:c1 dev flannel.1 dst 192.168.50.3 self permanent
 - VNI 比较：VXLAN 模块会检查 VXLAN Header 中的 VNI 是否与本机的 VXLAN 网络的 VNI 一致。
 - MAC 地址比较：接着，模块会比较内层数据帧中的目的 MAC 地址与本机的 flannel.1 设备的 MAC 地址是否匹配。
 
-上述两个条件都满足的情况下，数据包被进一步处理。
-
-也就是说，去掉数据包的 VXLAN Header 和内层帧 Header 后，恢复出原始的 Container-1 发出的数据包。接着，根据 Node2 节点中的路由规则（由 Flannel 维护）处理，路由规则如下所示：
+上述两个条件都满足的情况下，数据包被进一步处理。也就是，去掉数据包的 VXLAN Header 和内层帧 Header 后，恢复出原始的 Container-1 发出的数据包。接着，根据 Node2 节点中的路由规则（由 Flannel 维护）处理，路由规则如下所示：
 
 ```bash
 [root@Node2 ~]# route -n
@@ -106,67 +104,70 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 
 ## 7.6.2 三层路由模式
 
-Flannel 的 host-gw 模式是 host gateway 的缩写，从它的名字可以看出，host-gw 工作模式是通过主机的路由表来实现容器间的通信的。
+Flannel 的 host-gw 模式是“host gateway”的缩写。从名称可以看出，host-gw 工作模式通过主机的路由表实现容器间的通信。
 
-Flannel 的 host-gw 模式的工作原理非常简单，如图 7-30 所示。
+Flannel 的 host-gw 模式的工作原理相当直观，如图 7-30 所示。
 
 :::center
   ![](../assets/flannel-route.svg) <br/>
   图 7-30 Flannel 的 host-gw 模式
 :::
 
-现在，我们假设 Node1 中的 container-1 向 Node2 中的 container-2 发起请求。
+现在，我们假设 Node1 中的 container-1 向 Node2 中的 container-2 发起请求，观察  host-gw 模式是如何工作的。
 
-首先，当节点加入 Flannel 网络后，flanneld 会在宿主机上创建如下的路由规则。
+首先，当节点加入 Flannel 网络后，flanneld 会在宿主机上创建以下路由规则。
 
 ```bash
 $ ip route
 100.96.2.0/24 via 10.244.1.0 dev eth0
 ```
-这条路由的意思是，凡是目的地属于 100.96.2.0/24 IP 包，应该通过 eth0 接口发出，并且它的下一跳地址是 10.244.1.0 （via 10.244.1.0 ）。
+这条路由的含义是，目的地为 100.96.2.0/24 的 IP 包应通过 eth0 接口发送，其下一跳地址为 10.244.1.0（via 10.244.1.0）。
 
-:::tip 下一跳
-所谓下一跳，就是 IP 数据包发送时，需要经过某个路由设备的中转，下一跳的地址就是中转路由设备的 IP 地址。例如你个人电脑中配置网关地址 192.168.0.1，意思就是本机发出去的所有 IP 包，都要经过 192.168.0.1 中转。
+:::tip 什么是下一跳
+所谓“下一跳”是指 IP 数据包发送时需要经过某个路由设备的中转，下一跳的地址就是该中转路由设备的 IP 地址。例如，如果你个人电脑中配置的网关地址为 192.168.0.1，那么本机发出的所有 IP 包都需要经过 192.168.0.1 进行中转。
 :::
 
-知道了下一跳地址，接下来 IP 包被封装为二层数据帧，并顺利到达下一跳地址，也就是 Node2 上。
+知道了下一跳地址，接下来容器发出的 IP 包被宿主机网络路由至下一跳地址的主机内，也就是 Node2 节点中。
 
-同样的，Node2 中也有 flanneld 提前创建好的路由规则。
+同样，Node2 中也有 flanneld 提前创建的路由规则。如下所示：
 ```bash
 $ ip route
 100.10.0.0/24 dev cni0 proto kernel scope link src 100.10.0.1
 ```
-这条路由规则的意思是，凡是目的地目属于 10.244.1.3/24 网段 IP 包，应该被送往 cni0 网桥。
+这条路由规则的含义是，目的地属于 10.244.1.3/24 网段的 IP 包应被送往 cni0 网桥。接下来的处理过程笔者就不再赘述了。
 
-由此可见，Flannel 的 host-gw 模式其实就是将每个容器子网（例如 Node1 中的 100.10.1.0/24）下一跳设置成了对应的宿主机的 IP 地址，借助宿主机的路由功能，充当容器间通信的“路由网关”，这也是 “host-gw” 名字的由来。
+由此可见，Flannel 的 host-gw 模式实际上是将每个容器子网（例如 Node1 中的 100.10.1.0/24）下一跳设置为目标主机的 IP 地址，借助宿主机的路由功能充当容器间通信的“路由网关”，这也是“host-gw”名称的由来。
 
-**由于没有封包/解包的额外消耗，这种直接通过宿主机路由的方式性能肯定要好于前面介绍的 Overlay 模式。但也由于 host-gw 通过下一跳路由，那么肯定无法再被路由网关内，因此不可能再跨越子网通信。**
+由于没有封包/解包的额外消耗，这种通过宿主机路由的方式在性能上肯定优于前面介绍的 Overlay 模式。然而，由于 host-gw 使用下一跳路由，因此无法在路由网关内实现跨越子网的通信。
 
-三层路由模式除了 Flannel 的 host-gw 模式外，还有一个更具代表性的项目 Calico。Calico 和 Flannel 的原理都是直接利用宿主机的路由功能实现容器间通信，但不同的是“**Calico 通过 BGP 协议实现对路由规则自动化分发**”，因此灵活性更强、更适合大规模容器组网。
+三层路由模式除了 Flannel 的 host-gw 模式外，还有一个更具代表性的项目 —— Calico。
+
+Calico 和 Flannel 的原理都是直接利用宿主机的路由功能实现容器间通信，但不同之处在于**Calico 通过 BGP 协议实现路由规则的自动化分发**。因此 Calico 的灵活性更强，更适合大规模容器组网。
 
 :::tip 什么是 BGP
-BGP（Border Gateway Protocol，边界网关协议）使用 TCP 作为传输层的路由协议，用来交互 AS 之间的路由规则。每个 BGP 服务的实例一般称 BGP Router，与 BGP Router 连接的对端叫 BGP Peer。每个 BGP Router 收到了 Peer 传来的路由信息后，经过校验判断之后，就会存储在路由表中。
+BGP（Border Gateway Protocol，边界网关协议）使用 TCP 作为传输层的路由协议，用于交互 AS（Autonomous System，自治域）之间的路由规则。每个 BGP 服务实例一般称为 BGP Router，与 BGP Router 连接的对端称为 BGP Peer。每个 BGP Router 在收到 Peer 传来的路由信息后，经过校验判断后，将其存储在路由表中。
 :::
 
-了解 BGP 之后，再看 Calico 的架构（图 7-31 ），就能理解它组件的作用了：
-- Felix，负责在宿主机上插入路由规则，相当于 BGP Router。
-- BGP Client，BGP 的客户端，负责在集群内分发路由规则，相当于 BGP Peer。
+了解 BGP 协议之后，再看 Calico 的架构（图 7-31 ），就能理解它各个组件的作用了：
+- Felix：负责在宿主机上插入路由规则，相当于 BGP Router；
+- BGP Client：BGP 的客户端，负责在集群内分发路由规则，相当于 BGP Peer。
 
 :::center
   ![](../assets/calico-bgp.svg) <br/>
   图 7-31 Calico BGP 路由模式
 :::
 
-除了对路由信息的维护外，Calico 与 Flannel 的另外一个不同之处是它不会设置任何虚拟网桥设备。
+除了对路由信息的维护的区别外，Calico 与 Flannel 的另一个不同之处在于，它不会设置任何虚拟网桥设备。
 
-从上图可以看到，Calico 并没有创建 Linux Bridge，而是把每个 Veth-Pair 设备的另一端放置在宿主机中（名字以 cali 为前缀），然后根据路由规则转发。例如 Node2 中 container-1 的路由规则如下。
+观察图 7-31，Calico 并未创建 Linux Bridge，而是将每个 Veth-Pair 设备的另一端放置在宿主机中（名称以 cali 为前缀），然后根据路由规则进行转发。例如，Node2 中 container-1 的路由规则如下。
 ```bash
 $ ip route
 10.223.2.3 dev cali2u3d scope link
 ```
-这条路由的规则的意思是，发往 10.223.2.3 的数据包，应该进入与 container-1 连接的 cali2u3d 设备。
+这条路由规则的含义是，发往 10.223.2.3 的数据包应进入与 container-1 连接的 cali2u3d 设备（也就是 Veth-Pair 设备的另一端）。
 
-由此可见，Calico 实际上将集群的每一个节点的容器作为一个 AS，并把节点当做边界路由器，节点之间相互交互路由规则，从而构建了容器间三层路由连接网络。
+由此可见，Calico 实际上将集群中每个节点的容器视为一个 AS（Autonomous System，自治域），并将节点视为边界路由器，节点之间相互交互路由规则，从而构建了容器间的三层路由连接网络。
+
 
 ## 7.6.3 Underlay 底层网络模式
 
