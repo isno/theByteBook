@@ -28,7 +28,7 @@ VXLAN 规范中的数据包由两层组成：
 
 可以看出，VXLAN 实际上是一种基于 IP 网络的二层 VPN 技术，采用“MAC in UDP”封装形式来传输二层流量。
 
-当 Kubernetes 的节点加入 Flannel 网络后，Flannel 会在节点内运行一个驻守程序 flanneld。flanneld 负责为节点内的容器分配子网，并同步 Kubernetes 集群内的网络配置信息，以确保各节点之间的网络连通性和一致性。
+当 Kubernetes 的节点加入 Flannel 网络后，Flannel 会开启一个服务（名为 flanneld）作为 DaemonSet 在 Kubernetes 集群中运行。flanneld 负责为节点内的容器分配子网，并同步 Kubernetes 集群内的网络配置信息，以确保各节点之间的网络连通性和一致性。
 
 现在，我们看看当 Node1 中的 Container-1 与 Node2 中的 Container-2 通信时，Flannel 是如何封包/解包的。
 
@@ -171,37 +171,95 @@ $ ip route
 
 ## 7.6.3 Underlay 底层网络模式
 
-Underlay 就是 2 层互通的底层网络，传统网络大多数属于这种类型。这种模式，一般使用 MACVLAN 技术，使配置的容器网络同主机网络在同一个 LAN 里面，因此就具备了和主机一样的网络能力。
+Underlay 底层网络模式的本质是利用宿主机的 2 层互通网络。容器使用 Underlay 模式组网时，通常需要依赖 MACVLAN 技术。
 
-由于没有 Linux Bridge 以及封装/解包的负担。因此，Underlay 模式能最大限度的利用硬件的能力，有着**最优先的性能表现**，但也由于它直接依赖硬件和底层网络环境限制，必须根据软硬件情况部署，没有 Overlay 那样开箱即用的灵活性。
+MAC 地址原本是网卡接口的“身份证”，应该严格保持一对一关系。而 MACVLAN 打破了这一关系，它借鉴了 VLAN 子接口的思路，在物理设备之上、内核网络栈之下生成多个“虚拟以太网卡”，每个“虚拟以太网卡”都有一个独立的 MAC 地址。
+
+通过 MACVLAN 技术虚拟出的副本网卡在功能上与真实网卡完全对等。在接收到数据包后，实际的物理网卡承担类似交换机的职责。物理网卡会根据目标 MAC 地址判断该数据包应转发至哪块副本网卡处理（如图 7-32 所示）。
+
+:::center
+  ![](../assets/macvlan.svg) <br/>
+  图 7-32 MACVLAN 工作原理
+:::
+
+
+由于同一块物理网卡虚拟出的副本网卡天然处于同一个 VLAN 中，因此可以直接在宿主机中的二层网络中直接通信。Underlay 底层网络模式能最大限度的利用硬件的能力，有着最优秀的性能表现，但也由于它直接依赖硬件和底层网络环境限制，必须根据软硬件情况部署，没有 Overlay 覆盖网络那样开箱即用的灵活性。
 
 
 ## 7.6.4 CNI 插件以及生态
 
-容器网络配置是一个很复杂的过程，Kubernetes 本身并不实现集群内的网络模型，而是通过 CNI 接口把网络变成外部可扩展的功能。
+设计一个容器网络模型是一个很复杂的过程，Kubernetes 本身并不实现网络模型，而是通过 CNI（Container Network Interface，容器网络接口）把网络变成外部可扩展的功能。
 
-CNI 接口最初由 CoreOS 为 rkt 容器创建，现在已经成为容器网络事实标准，大部分容器平台（Kubernetes、Mesos）都采用 CNI 标准。
- 注意 CNI 的接口并不是指 gRPC 这样的接口，而是指对可执行程序的调用（exec），这些可执行的程序称为 CNI 插件。
+CNI 接口最初由 CoreOS 为 rkt 容器创建，现在已成为容器网络的事实标准，许多容器平台（如 Kubernetes、Mesos 和 OpenShift 等）都采用了 CNI 标准。需要注意的是，CNI 接口并不是指类似 CSI、CRI 那样的 gRPC 接口，而是指对符合 CNI 规范可执行程序的调用（exec），这些可执行程序被称为 CNI 插件。
 
-以 Kubernetes 为例，Kubernetes 节点默认的 CNI 插件路径为 /opt/cni/bin，在 Kubernetes 节点上查看该目录，看到可供使用的 CNI 插件。
-
+以 Kubernetes 为例，Kubernetes 节点默认的 CNI 插件路径为 /opt/cni/bin。在该路径下查看时，可以看到可供使用的 CNI 插件。
 ```bash
 $ ls /opt/cni/bin/
 bandwidth  bridge  dhcp  firewall  flannel calico-ipam cilium...
 ```
-当需要设置容器网络时，由容器运行时根据 CNI 的配置规范（【例如设置 VXLAN 网络，设置各个节点容器子网范围等）通过标准输入（stdin）向 CNI 插件传递网络配置信息，CNI 插件配置完网络后，再通过标准输出（stdout）向容器运行时返回执行结果。
 
-如此，需要接入什么样的网络，设计一个对应的网络插件即可。这样一来节省了开发资源可以集中精力到 Kubernetes 本身，二来可以利用开源社区的力量打造一整个丰富的生态。
+CNI 插件工作的流程大致如图 7-33 所示。当需要设置容器网络时，由容器运行时根据 CNI 的配置规范（例如设置 VXLAN 网络、设置各个节点容器子网范围等）通过标准输入（stdin）向 CNI 插件传递网络配置信息。等待 CNI 插件配置完网络后，再通过标准输出（stdout）向容器运行时返回执行结果。
 
-现如今，支持 CNI 的插件多达二十几种，如下图所示。
+:::center
+  ![](../assets/CNI.webp) <br/>
+  图 7-33 CNI 插件工作原理
+:::
+
+笔者举一个具体的例子（使用 flannel 配置 VXLAN 网络），帮助你理解 CNI 插件使用的流程。
+
+首先，当在宿主机安装 flanneld 时，flanneld 启动会在每台宿主机生成对应的 CNI 配置文件，告诉 Kubernetes：该集群使用 flannel 容器网络方案。 CNI 配置文件通常位于 /etc/cni/net.d/ 目录下。以下是一个示例配置文件 10-flannel.conflist：
+
+```json
+{
+  "cniVersion": "0.4.0",
+  "name": "container-cni-list",
+  "plugins": [
+    {
+      "type": "flannel",
+      "delegate": {
+        "isDefaultGateway": true,
+        "hairpinMode": true,
+        "ipMasq": true,
+        "kubeconfig": "/etc/kube-flannel/kubeconfig"
+      }
+    }
+  ]
+}
+```
+接下来，容器运行时（如 CRI-O 或 containerd）加载上述 CNI 配置文件，并列表里的第一个插件（flannel）设置为默认插件。
+
+当 Kubelet 组件在启动容器之前（也就是创建 Infra 容器时），调用 CNI 插件为 Infra 容器配置网络。这里的 CNI 插件就是可执行文件 /opt/cni/bin/flannel。调用该插件时，容器运行时通过标准输入将所需参数传递给插件。调用 CNI 插件的参数分为两个部分：
+
+- Pod 信息：如容器的唯一标识符、Pod 所在的命名空间、Pod 的名称等，这些信息一般组织称 JSON 对象传递给 CNI 插件；
+- CNI 插件执行的方法：如 add 和 del。
+	- add 操作的含义是：执行分配 IP，创建 veth pair 设备等操作，将新创建的容器添加 flannel 网络中；
+	- del 操作的含义是：清除容器的网络配置，将容器从 flannel 网络中删除。
+```bash
+echo '{
+  "cniVersion": "0.4.0",
+  "name": "flannel",
+  "type": "flannel",
+  "containerID": "abc123def456",
+  "namespace": "default",
+  "podName": "my-pod",
+  "netns": "/var/run/netns/abc123def456",
+  "ifname": "eth0",
+  "args": {
+    "isDefaultGateway": true
+  }
+}' | /opt/cni/bin/flannel add abc123def456
+```
+后面就是 CNI 插件的一些具体操作，笔者就不再扩展了。最后，当 CNI 插件执行结束之后，会把容器的 IP 地址等信息返回给容器运行时，然后被 kubelet 添加到 Pod status 字段中。
+
+如此，需要接入什么样的网络，设计一个对应的网络插件即可。这样一来节省了开发资源可以集中精力到 Kubernetes 本身，二来可以利用开源社区的力量打造一整个丰富的生态。现如今，支持 CNI 规范的网络插件多达二十几种，如图 7-32 所示。
 
 :::center
   ![](../assets/cni-plugin.png) <br/>
   图 7-32 CNI 网络插件 [图片来源](https://landscape.cncf.io/guide#runtime--cloud-native-network)
 :::
 
-上述几十种网络插件笔者不可能逐一解释，但就实现的容器通信模式而言，总结就上面三种：Overlay 网络、三层路由模式、Underlay 模式。
+上述几十种网络插件笔者无法逐一解释，但就实现的容器通信模式而言，总结其实就上面三种类型：Overlay 覆盖网络模式、三层路由模式 和 Underlay 底层网络模式。
 
-最后，考虑对于容器编排系统来说，网络并非孤立的功能模块，最好还要能提供各类的网络访问策略能力支持，例如用来限制 Pod 出入站规则网络策略，以及对网络流量数据进行分析监控等额外功能。上述需求明显不属于 CNI 范畴，因此并不是每个 CNI 插件都会支持这些额外的功能。
+最后，对于容器编排系统而言，考虑网络并非孤立的功能模块，最好还要配套各类的网络访问策略能力支持。例如用来限制 Pod 出入站规则网络策略，对网络流量数据进行分析监控等等额外功能。上述需求明显不属于 CNI 规范内的范畴，因此并不是每个 CNI 插件都会支持这些额外的功能。
 
 
