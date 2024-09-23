@@ -4,7 +4,7 @@
 
 Prometheus 项目的灵感来自 Google 内部的 Borg 监控系统（Brogmon），由前 Google 工程师在 SoundCloud 公司发起并将其开源。2016 年 5 月，Prometheus 继 Kubernetes 之后，成为云原生计算基金会（CNCF）的第二个正式项目。经过多年的发展，Prometheus 已成为云原生系统中指标监控的事实标准。
 
-如图 9-3 所示，Prometheus 是一个模块化系统，由多个独立组件组成，每个组件承担特定任务。服务发现（Service Discovery）负责自动发现监控目标，Exporter 将监控目标的指标数据转换为 Prometheus 可理解的格式，Pushgateway 处理短期任务的监控数据，Prometheus 服务器负责数据的收集、存储和查询，而 Alertmanager 处理告警通知。
+如图 9-3 所示，Prometheus 是一个模块化系统，由多个独立组件组成，每个组件承担特定功能。其中，服务发现（Service Discovery）负责自动发现监控目标；Exporter 将监控目标的指标数据转换为 Prometheus 可理解的格式；Pushgateway 处理短期任务的监控数据；Prometheus 服务器负责数据的收集、存储和查询；而 Alertmanager 处理告警通知。
 
 :::center
   ![](../assets/prometheus-arch.png)<br/>
@@ -93,7 +93,7 @@ http_request_total 5
 
 时序数据库并不是一个新概念。最早的专用时序数据库之一是 1999 年问世的 RRDtool。自 2015 年以来，随着对实时数据监控、性能管理和预测分析需求的增加，时序数据库逐渐受到广泛关注，现已成为 DB-engines 排行网站上最受欢迎的数据库类型。
 
-与常规数据库（如关系型数据库或 NoSQL 数据库）相比，时序数据库在设计和用途上存在显著区别。笔者从数据结构、数据保留策略方面的差异供你参考：
+与常规数据库（如关系型数据库或 NoSQL 数据库）相比，时序数据库在设计和用途上存在显著区别。笔者介绍数据结构、数据保留策略方面的差异供你参考：
 
 - 数据结构：时序数据库使用 LSM-Tree（Log-Structured Merge-Tree）来替代常规数据库中的 B+Tree。在时序数据库中，所有写入操作首先写入内存存储区（MemTable，通常为跳表或平衡树）。当 MemTable 满时，数据会被批量写入磁盘文件中。虽然磁盘写入延迟较高，但由于批量操作，时序数据库在写入吞吐量上通常优于传统关系数据库（使用 B+Tree）。
 - 数据保留策略：时序数据通常有明确的生命周期，例如监控数据可能只需保留几天或几个月。时序数据库通常具有自动化的数据保留策略（data retention），以防止存储空间无限膨胀。例如，可以设置基于时间的保留策略，保留最近 30 天的数据，超过 30 天的数据将自动删除。
