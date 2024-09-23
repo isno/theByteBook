@@ -14,13 +14,13 @@
 3. 应用封装：Kustomize、Helm。
 4. 持续集成：Gitlab、Tekton。
 5. 持续部署：ArgoCD、FluxCD。
-6. 容器编排：Kubernetes、Koordinator、Volcano。
+6. 容器编排：Kubernetes。
 7. 服务网格: Istio、Envoy、Linkerd。
 7. 网关：Ingress-Nginx、Kong、APISIX。
 8. 日志：Grafana Loki、Elastic Stack、ClickHouse。
 9. 监控：Prometheus、Grafana。
 10. 可观测：OpenTelemetry。
-10. 机器学习/混合部署：volcano、Koordinator...。
+10. 机器学习/离在线业务混合部署：Volcano、Koordinator...。
 
 以上方案或相似或不同，适应什么场景、解决了什么问题、方案设计如何权衡，待笔者在本书后续章节一一道来。
 
