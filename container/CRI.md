@@ -120,7 +120,7 @@ Kubernetes v1.24 版本正式删除 dockershim，本质是废弃了内置的 doc
 
 出于对传统容器安全性的担忧，Intel 在 2015 年启动了基于虚拟机的容器技术：Clear Container。Clear Container 依赖 Intel VT 的硬件虚拟化技术，以及高度定制的 QEMU-KVM（qemu-lite）来提供高性能的虚拟机容器。2017 年，Clear Container 项目与 Hyper RunV 合并，后者是一个基于 hypervisor 的 OCI 运行时。最终，这些项目合并为如今广为人知的 Kata Containers 项目。
 
-Kata Containers 本质上是通过虚拟化技术模拟出一台“微型虚拟机”，并在这台虚拟机中运行一个精简的 Linux 内核，从而实现强隔离。Kata Containers 虚拟机内有一个特殊的 init 进程，负责管理虚拟机内的所有进程。由于虚拟机内的进程天然共享各个命名空间，这使得 Kata Containers 天生具备 Pod 的概念。 
+Kata Containers 本质上是通过虚拟化技术模拟出一台“微型虚拟机”，并在这台虚拟机中运行一个精简的 Linux 内核，从而实现强隔离。Kata Containers 虚拟机内有一个特殊的 init 进程，负责管理虚拟机内的所有进程。由于虚拟机内的进程天然共享各个命名空间，这使得 Kata Containers 天生和 Pod 具有等同的概念。 
 
 :::center
   ![](../assets/kata-container.jpeg)<br/>

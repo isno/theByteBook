@@ -1,7 +1,7 @@
 # 6.3 Raft 算法
 
 :::tip 额外知识
-Raft 是由 Re{liable|plicated|dundant} And Fault-Tolerant（可靠、复制、冗余和容错）组合起来的单词。组合起来的单词在英文有“筏”的含义，隐喻 Raft 是一艘可以帮助你逃离 Paxos 小岛的救生筏。
+Raft 是由 Re{liable|plicated|dundant} And Fault-Tolerant 组合起来的单词，原义是可靠、复制、冗余和容错。同时，组合起来的单词在英文又有“筏”的含义，隐喻着 Raft 是一艘可以帮助你逃离 Paxos 小岛的救生筏。
 :::
 
 不可否认，Paxos 是一个划时代的共识算法。Raft 出现之前，绝大多数共识算法的实现都是基于 Paxos 或者受其影响，同时 Paxos 也成为了教学领域里讲解共识问题时的示例。

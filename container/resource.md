@@ -3,7 +3,7 @@
 
 在 JAVA 的世界中一切皆对象，而在 Kubernetes 的世界中一切皆资源。
 
-在 Kubernetes 中，“资源”是一个定义相当广泛的概念，下到物理资源（CPU、内存、磁盘空间），API 资源（Node、Pod、Service、Volume），以及 API 资源的属性或动作，如标签（Label）、命名空间（Namespace）、部署（Depoyment）、HPA 等等。yaml 文件用层级、调用关系
+在 Kubernetes 中，“资源”是一个定义相当广泛的概念，下到物理资源（CPU、内存、磁盘空间），API 资源（Node、Pod、Service、Volume），以及 API 资源的属性或动作，如标签（Label）、命名空间（Namespace）、部署（Depoyment）、HPA 等等。然后使用 yaml 文件（也成资源清单）组织资源层级、调用关系。
 
 在本节的“资源”指狭义上的物理资源，它们与调度有密切的关系。
 

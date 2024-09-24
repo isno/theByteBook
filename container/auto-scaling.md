@@ -4,7 +4,7 @@
 - 促销的时候访问量会增加，应该自动增加服务运算能力来应对；
 - 当促销结束后，又需要自动降低服务的运算能力防止浪费。
 
-运算能力的增减有两种方式：增减 Pod 的数量以及改变单个 Pod 的资源，这两种方式分别对应了 Kubernetes 的 HPA 和 VPA 组件。
+运算能力的增减有两种方式：增减 Pod 的数量以及改变单个 Pod 可用资源，这两种方式分别对应了 Kubernetes 的 Pod 水平自动扩缩（Horizontal Pod Autoscaler，HPA）和 Pod 垂直自动扩缩（Vertical Pod Autoscaler，VPA）组件。
 
 ## 7.8.1 Pod 水平自动伸缩
 
