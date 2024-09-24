@@ -7,7 +7,7 @@
   图 9-10 Uber 使用 Jaeger 生成的追踪链路拓扑 [图片来源](https://www.uber.com/en-IN/blog/microservice-architecture/)
 :::
 
-上述各个子服务可能由不同团队开发、使用不同编程语言实现，并部署在数千台服务器上，横跨多个数据中心。因此，理解复杂系统行为并分析性能问题的需求变得尤为迫切。
+上述各个子服务可能由不同团队、使用不同编程语言开发，可能部署在数千台服务器上，甚至横跨多个数据中心。因此，理解复杂系统行为并分析性能问题的需求变得尤为迫切。
 
 2010 年 4 月，Google 的工程师们总结了他们治理复杂分布式系统的经验，发表了论文《Dapper, a Large-Scale Distributed Systems Tracing Infrastructure》[^1]。论文中详细阐述了 Google 治理复杂分布式系统的经验，以及它们内部分布式链路追踪系统 Dapper 的设计理念。
 

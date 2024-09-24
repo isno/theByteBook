@@ -6,9 +6,9 @@
 
 ## 1. 全文索引方案 Elastic Stack
 
-在讨论如何实现一套完整的日志系统时，工程师们或多或少听说过以下几个名词：ELK、ELKB 或 Elastic Stack（为简化统一，本文将其统称为 Elastic Stack）。实际上，它们指的是同一套用于日志处理的开源组件。
+在讨论如何实现一套完整的日志系统时，工程师们或多或少听说过以下几个名词：ELK、ELKB 或 Elastic Stack。实际上，它们指的是同一套用于日志处理的开源组件。
 
-Elastic Stack 是由 Elastic 公司开发的一组开源工具，专门用于数据收集、搜索、分析和可视化。图 9-6 展示了一套基于 Elastic Stack 的完整日志处理方案。在这套方案中，Beats 组件部署在日志生成的节点上，用于收集原始数据。接着，使用 MQ 进行缓冲，以提高数据吞吐量。然后，数据被发送到 Logstash 组件进行清洗处理，最后存储在 Elasticsearch 集群中并生成索引。用户通过 Kibana 组件来进行可视化、检索和分析。如果需要，还可以通过 Nginx 实现访问控制。
+Elastic Stack（为明确统一，本文统称 Elastic Stack）是由 Elastic 公司开发的一组开源工具，专门用于数据收集、搜索、分析和可视化。图 9-6 展示了一套基于 Elastic Stack 的完整日志处理方案。在这套方案中，Beats 组件部署在日志生成的节点上，用于收集原始数据。接着，使用 MQ 进行缓冲，以提高数据吞吐量。然后，数据被发送到 Logstash 组件进行清洗处理，最后存储在 Elasticsearch 集群中并生成索引。用户通过 Kibana 组件来进行可视化、检索和分析。如果需要，还可以通过 Nginx 实现访问控制。
 
 :::center
   ![](../assets/ELK.png)<br/>

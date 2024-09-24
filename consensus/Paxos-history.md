@@ -2,7 +2,7 @@
 
 Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文为“兼职议会”。该篇论文的开头描述了一个虚构的古希腊岛屿考古发现故事。
 
-:::tip The Part-Time Parliament
+:::tip 《The Part-Time Parliament》
 
 最近的考古发现表明，在 Paxos 小岛上，尽管兼职议会成员都有逍遥癖，但议会模式仍然起作用。他们依旧保持了一致的会议记录，尽管他们频繁的进出会议室并且他们的信使还很健忘。Paxon 议会协议提供了一种新方法去实现设计分布式系统的状态机。
 ...
@@ -28,7 +28,9 @@ Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文�
 :::
 《The Part-Time Parliament》[^2] 最终在 1998 年公开发表。
 
-《The Part-Time Parliament》论文发表之后，还是有很多人抱怨这篇论文看不懂，人们只记住了那个奇怪的故事，而不是 Paxos 算法。Lamport 走到哪都要被人抱怨一通，于是他忍无可忍，2001 年使用计算机领域的概念重新描述了一遍算法，并发表了论文 《Paxos Made Simple》[^3]。这是一篇很短的论文，摘要只有一句话“The Paxos algorithm, when presented in plain English, is very simple.”！语气完全无法掩盖作者对 Paxos 的策略没有奏效的失望。
+《The Part-Time Parliament》论文发表之后，还是有很多人抱怨这篇论文看不懂，人们只记住了那个奇怪的故事，而不是 Paxos 算法。Lamport 走到哪都要被人抱怨一通，于是他忍无可忍，2001 年使用计算机领域的概念重新描述了一遍算法，并发表了论文 《Paxos Made Simple》[^3]。
+
+这是一篇很短的论文，摘要只有一句话“The Paxos algorithm, when presented in plain English, is very simple.”！语气完全无法掩盖作者对 Paxos 的策略没有奏效的失望。
 
 :::center
   ![](../assets/paxos.png) <br/>
@@ -37,14 +39,14 @@ Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文�
 
 然而，这篇论文还是非常难以理解，引用 Diego Ongaro 和 John Ousterhout 在设计 Raft 时发表的论文[^4]中对 Paxos 的描述：
 
-:::tip Paxos 一点也不 simple
+:::tip 《In Search of an Understandable Consensus Algorithm》
 
 Unfortunately, Paxos has two significant drawbacks. The first drawback is that Paxos is exceptionally difficult to understand ...
 
 we were not able to understand the complete protocol until after reading several simplified explanations and designing our own alternative protocol, a process that took almost a year.
 :::
 
-上面大致含义说“Paxos 真的太难懂了...”，连斯坦福的教授和博士都感觉难以理解，所以他们的论文取名《In Search of an Understandable Consensus Algorithm》，“寻找一种易懂的共识算法”意思是还在寻找中，根本不像 Lamport 说的那么简单。
+上面大致含义说“Paxos 真的太难懂了...”，连斯坦福的教授和博士都感觉难以理解，所以他们的论文取名《In Search of an Understandable Consensus Algorithm》，意思是“易懂的共识算法还在寻找中”，根本不像 Lamport 说的那么简单。
 
 注意 Raft 这篇文章发表于 2013 年，而《Paxos Made Simple》是 2001年 发表的，也就是说 Paxos 已经被研究了十几年，直到 Google 的 Chubby 横空出世，使用 Paxos 解决了现实中的分布式共识的问题，并将其整理成正式的论文发表之后，得益于 Google 的行业影响力，辅以 Chubby 作者 Mike Burrows 那略显夸张但足够吸引眼球的评价推波助澜，Paxos 开始从理论界进入工业实践，并逐渐被大家熟知和认可。
 
