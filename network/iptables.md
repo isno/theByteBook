@@ -31,11 +31,11 @@ iptables 把一些常用数据包管理操作总结成具体的动作，当数�
 - security 表：安全增强，一般用于 SELinux 中，其他情况并不常用。
 
 
-一个链上可以关联的表可以有多个，所以这 5 张表在一个链上执行的时候得有个顺序：raw --> mangle --> nat --> filter --> security，即先去连接追踪，再改数据包，然后做源或目标地址转换，最后是过滤和安全。数据包具体经过的表、链的关系和顺序如图 3-6 所示。
+一个链上可以关联的表可以有多个，所以这 5 张表在一个链上执行的时候得有个顺序：raw --> mangle --> nat --> filter --> security，即先去连接追踪，再改数据包，然后做源或目标地址转换，最后是过滤和安全。数据包具体经过的表、链的关系和顺序如图 3-3 所示。
 
 :::center
   ![](../assets/Netfilter-packet-flow.svg)<br/>
-  图 3-6 数据包通过 Netfilter 时的流向过程 [图片来源](https://en.wikipedia.org/wiki/Netfilter)
+  图 3-3 数据包通过 Netfilter 时的流向过程 [图片来源](https://en.wikipedia.org/wiki/Netfilter)
 :::
 
 
@@ -75,11 +75,11 @@ iptables 把一些常用数据包管理操作总结成具体的动作，当数�
 
 为解决 iptables 模式的性能问题，kube-proxy 新增了 IPVS 模式，该模式使用 Linux 内核四层负载均衡模块 IPVS 实现容器间请求和负载均衡，性能和 Service 规模无关。不过需要注意的是，内核中的 IPVS 模块只负责上述的负载均衡和代理功能。而一个完整的 Service 流程正常工作所需要的包过滤、SNAT 等操作，还是要靠 iptables 来实现。只不过，这些辅助性的 iptables 规则数量有限，不会随着 Pod 数量的增加而增加。
 
-如图 3-9 展示了 iptables 与 IPVS 两种模式的性能对比。可以看出，当 Kubernetes 集群有 1,000 个 Service（10,000 个 Pod）时，两者的性能表现开始出现明显差异。
+如图 3-4 展示了 iptables 与 IPVS 两种模式的性能对比。可以看出，当 Kubernetes 集群有 1,000 个 Service（10,000 个 Pod）时，两者的性能表现开始出现明显差异。
 
 :::center
   ![](../assets/iptables-vs-ipvs.png)<br/>
-  图 3-9 iptables 与 IPVS 的性能差异 [图片来源](https://www.tigera.io/blog/comparing-kube-proxy-modes-iptables-or-ipvs/)
+  图 3-4 iptables 与 IPVS 的性能差异 [图片来源](https://www.tigera.io/blog/comparing-kube-proxy-modes-iptables-or-ipvs/)
 :::
 
 所以，当 Kubernetes 集群的规模较大时，应该避免使用 iptables 模式。如果容器间通信解决方案使用的是 Cilium，还可以创建没有 kube-proxy 组件的 Kubernetes 集群，利用笔者稍后介绍的“内核旁路”技术越过 iptables 影响，全方位提升容器网络性能。 

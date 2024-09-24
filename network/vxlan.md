@@ -6,7 +6,7 @@ SDN 的核心思想是在现有的物理网络之上再新增一层虚拟网络�
 
 :::center
   ![](../assets/overlay-network.png)<br/>
-  图 3-24 SDN 网络中 Overlay 与 Underlay 网络模型
+  图 3-16 SDN 网络中 Overlay 与 Underlay 网络模型
 :::
 
 SDN 的发展要早于云原生十余年，发展过程中出现多种 Overlay 网络的具体实现，如 Geneve（Generic Network Virtualization Encapsulation）、VXLAN（Virtual Extensible LAN）、STT（Stateless Transport Tunneling）等等。这些技术本质上是一种隧道技术，也就是将数据包封装在另一个数据包中，在现有物理网络之上创建一个虚拟网络。虚拟网络中的容器不需要关心底层物理网络的路由规则等细节，物理网络也不需要针对容器 IP 进行专门路由配置。因此以 VXLAN 为代表的 Overlay 网络作为一种无需调底层网络实现的容器组网技术，快速在容器领域铺开了。
@@ -29,7 +29,7 @@ VLAN 划分子网具体方法是在以太帧的报文头中加入 VLAN Tag，让
 
 :::center
   ![](../assets/vlan-router.svg)<br/>
-  图 3-24 VLAN 单臂路由原理
+  图 3-17 VLAN 单臂路由原理
 :::
 
 
@@ -43,7 +43,7 @@ VLAN 固然通过划分子网的形式解决广播风暴，但它的缺陷也非
 
 VXLAN 属于 NVO3（Network Virtualization over Layer 3，三层虚拟化网络）的标准技术规范之一。它实际是一种隧道封装技术，它使用 TCP/IP 协议栈的惯用手法“封装/解封装技术”，将 L2（链路层）以太网帧封装成 L4（传输层）的 UDP 报文，然后在 L3（网络层）网络中传输，效果就像一个普通以太网帧在一个广播域中传输一样。
 
-从图 3-25 我们可以看到 VXLAN 报文对原始以太网帧（Original Layer2 Frame）进行了包装：
+从图 3-18 我们可以看到 VXLAN 报文对原始以太网帧（Original Layer2 Frame）进行了包装：
 
 - VXLAN Header：其中包含 24 Byte 的 VNI 字段，用来定义 VXLAN 网络中不同的租户，可以存储 1677 万个不同的取值。
 - UDP Header：其中 VXLAN 头和原始以太帧一起作为 UDP 的数据，头中目的端口号（VXLAN Port）固定为 4789，源端口按流随机分配（通过 MAC、IP 和四层端口号进行 hash 操作）。
@@ -52,7 +52,7 @@ VXLAN 属于 NVO3（Network Virtualization over Layer 3，三层虚拟化网络�
 
 :::center
   ![](../assets/vxlan-data.png)<br/>
-  图 3-25 VXLAN 报文结构
+  图 3-18 VXLAN 报文结构
 :::
 
 在 VXLAN 隧道网络中，负责“封装/解封”的设备称为 VTEP 设备（VXLAN Tunnel Endpoints，VXLAN 隧道端点），它在 Linux 系统中实际上是一个虚拟 VXLAN 网络接口。当源服务器内的容器发出原始数据帧后，首先在隧道的起点（VTEP 设备）被封装成 VXLAN 格式的报文，然后通过主机 IP 网络传递到隧道的终点（也就是目标服务器中的 VTEP 设备）。目标服务器 VETP 设备解封 VXLAN 报文，得到原始的数据帧，最后转发至目标服务器内的某一个容器。
@@ -77,7 +77,7 @@ $ ip link set up dev vxlan100
 
 :::center
   ![](../assets/linux-vxlan.svg)<br/>
-  图 3-26 VXLAN 通信概览
+  图 3-19 VXLAN 通信概览
 :::
 
 从上述，我们看到 VXLAN 完美地弥补了 VLAN 的不足：

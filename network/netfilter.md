@@ -12,7 +12,7 @@ Netfilter 干预 Linux 网络通信的方式，是围绕网络协议栈（主要
 
 :::center
   ![](../assets/netfilter-hook.svg)<br/>
-  图 3-2 
+  图 3-2 Netfilter 的 5 个钩子
 :::
 
 

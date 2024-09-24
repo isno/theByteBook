@@ -12,11 +12,11 @@ Linux bridge 作为一个虚拟的交换机，和物理交换机有相似的功�
 	- 如找到记录，则将数据帧转发到对应的接口。
 
 
-笔者举一个具体的例子帮你加深理解：使用 Linux bridge 将两个命名空间接入到同一个二层网络。该例子的网络拓扑结构如图 3-23 所示。
+笔者举一个具体的例子帮你加深理解：使用 Linux bridge 将两个命名空间接入到同一个二层网络。该例子的网络拓扑结构如图 3-15 所示。
 
 :::center
   ![](../assets/linux-bridge.svg)<br/>
- 图 3-23 veth 网卡与 Linux Bridge
+ 图 3-15 veth 网卡与 Linux Bridge
 :::
 
 创建 Linux bridge 与创建其他虚拟网络设备类似，只需要指定 type 参数为 bridge。

@@ -27,7 +27,7 @@ DPDK 技术是完全绕过内核，直接将数据包传递到用户空间进行
 
 :::center
   ![](../assets/xdp.png)<br/>
- 图 3-13 XDP 钩子在 Linux 系统的位置与 5 个动作
+ 图 3-8 XDP 钩子在 Linux 系统的位置与 5 个动作
 :::
 
 假设我们已经清楚 eBPF 程序逻辑的编写，那么它是如何被加载、验证并执行的呢？请看下面的步骤：
@@ -39,7 +39,7 @@ DPDK 技术是完全绕过内核，直接将数据包传递到用户空间进行
 
 :::center
   ![](../assets/ebpf-go.webp)<br/>
- 图 3-13 eBPF 的技术架构
+ 图 3-9 eBPF 的技术架构
 :::
 
 正是由于这些突出的特性，eBPF 可以附加到各种内核子系统，包括网络、跟踪和 Linux 安全模块（LSM）。比如 Facebook 开源的高性能网络负载均衡器 Katran，内核跟踪排错工具 BCC 和 bpftrace，以及 Isovalent 开源的容器网络方案 Cilium 等等都是利用 eBPF 技术实现的。以 Cilium 为例，它在 eBPF 和 XDP 钩子（也有其他的钩子）基础上，实现了一套全新的 conntrack 和 NAT 机制。并以此为基础，构建出如 L3/L4 负载均衡、网络策略、观测和安全认证等各类高级功能。
