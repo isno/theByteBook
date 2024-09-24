@@ -14,9 +14,10 @@ Google 内部第一代容器管理系统叫 Borg。Borg 的架构如图 7-1 所�
   图 7-1 Borg 架构图 [图片来源](https://research.google/pubs/large-scale-cluster-management-at-google-with-borg/)
 :::
 
-开发 Borg 的过程中，Google 的工程师为 Borg 设计了两种工作负载（workload）[^1]：
+开发 Borg 的过程中，Google 的工程师为 Borg 设计了两种工作负载（Workload）[^1]：
 - **长期运行的服务（Long-Running Service）**：通常是对请求延迟敏感的在线业务，例如 Gmail、Google Docs 和 Web 搜索以及内部基础设施服务；
 - **批处理任务（Batch Job）**：通常用于一次性地、按批次处理一大批数据或执行一系列任务，涉及大量数据处理，需要较长的运行时间和较多的计算资源。典型的 Batch Job 为 Apache Hadoop 或 Spark 等框架进行的各类离线计算任务。
+
 
 区分 2 种不同类型工作负载的原因在于：
 
@@ -100,5 +101,4 @@ Google 开发的第三套容器管理系统是 Kubernetes，其背景如下：
 1. 开发者和运维团队无需再关心机器、操作系统等底层细节；
 2. 基础设施团队引入新硬件和升级操作系统更加灵活，最大限度减少对线上应用和应用开发者的影响；
 3. 将收集到的各类关键性能指标（如 CPU 使用率、内存用量、每秒查询率 QPS 等）与应用程序而非物理机器关联起来，显著提高了应用监控的精确度和可观测性，尤其是在系统垂直扩容、 机器故障或主动运维等场景。这直接促使软件可观测性领域应运而生。
-
-[^1]: 工作负载（Workload），云计算环境中，工作负载是指消耗云资源的任何服务、应用程序或功能。
+源的任何服务、应用程序或功能。在 Kubernetes 中的 Workload 资源包括多种类型，例如 Deployment、StatefulSet、DaemonSet、ReplicaSet 等等
