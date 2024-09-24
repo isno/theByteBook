@@ -35,22 +35,25 @@
 
 ## 7.8.3 基于事件驱动的弹性伸缩
 
-HPA 虽然能基于外部指标实现弹性伸缩，但缺点是仅与 Prometheus 指标关联。
+HPA 虽然能基于外部指标实现弹性伸缩，但缺点指标有限且粒度太粗。为了根据外部事件实现更细粒度的自动扩展，微软和红帽联合开发一种基于事件触发的 Kubernetes 自动伸缩器 KEDA（Kubernetes Event-driven Autoscaling）。
 
-为了更好地降低资源成本，微软和红帽联合开发一种基于事件触发的 Kubernetes 自动伸缩器 KEDA（Kubernetes Event-driven Autoscaling）。KEDA 的出现并非取代 HPA，它们实际上是一种组合配合关系。KEDA 通过内置几十种常见的 Scaler 或者用户自定义的 Scaler，来增强 HPA 的功能。例如，KEDA 可以根据消息队列的排队深度、每秒请求数、调度的 Cron 作业数等事件指标，驱动 HPA 动态调整工作负载，从 0 扩展到 1，或从 1 缩减到 0。
-
-KEDA 的工作原理如图 7-35 所示，核心的组件如下：
-
-- Scaler：连接到外部组件（如 Prometheus、RabbitMQ）以获取相关指标（如待处理消息队列的大小）。这些指标用于判断是否需要进行扩缩容操作。
-- Metrics Adapter：将 Scaler 获取到的指标转化为 HPA（Horizontal Pod Autoscaler）能够使用的格式，并将这些指标传递给 HPA，使其能够基于这些数据进行自动扩缩容。
-- Controller：负责创建和维护 HPA 对象资源，同时管理 HPA 的激活和停止。在没有事件触发时，Controller 会将副本数降低为 0（如果 minReplicaCount 未设置的话），以节省资源。
+KEDA 的出现并非取代 HPA，它们实际上是一种组合配合关系。KEDA 的工作原理如图 7-35 所示，用户通过配置 ScaledObject（缩放对象）来定义 Scaler 的工作方式，Scaler（KEDA 内部的组件）持续从外部系统获取实时数据，并将这些数据与配置的扩展条件进行比较。当条件满足时，Scaler 将触发扩展操作，调用 Kubernetes 的 Horizontal Pod Autoscaler（HPA）调整对应工作负载的 Pod 副本数。
 
 :::center
   ![](../assets/keda-arch.png)<br/>
   图 7-35 KADA 架构图
 :::
 
-以下是一个 Kafka 的伸缩配置示例。minReplicaCount 和 maxReplicaCount 分别定义了伸缩对象的最小和最大副本数量。其中，minReplicaCount 可以设置为 0，这意味着在没有新消息的情况下，Kafka 的副本数量可以缩减至 0，实现完全缩容。当 Kafka 队列中有新消息到达时，KEDA 会自动触发扩容操作，确保系统能够及时处理消息负载。
+KEDA 通过内置几十种常见的 Scaler 用来处理特定的事件源或指标源，笔者列举常见的 Scaler 供你参考：
+
+- 消息队列 Scaler：如 Kafka、RabbitMQ、Azure Queue、AWS SQS 等消息队列的消息数量。
+- 数据库 Scaler：如 SQL 数据库的连接数、数据库查询延迟等。
+- HTTP 请求 Scaler：基于 Web API 的请求数量或响应时间。
+- Prometheus Scaler：通过 Prometheus 获取的自定义指标来触发扩展，如队列长度、CPU 使用率等业务特定指标。
+- 时间 Scaler：根据特定的时间段触发扩展逻辑，例如每日的高峰期或夜间低峰期。
+
+
+以下是一个 Kafka Scaler 配置示例，它监控某个 Kafka 主题中的消息数量。当消息数量超过设定的阈值时，它会触发 Kubernetes 集群中的工作负载自动扩展以处理更多的消息；当消息处理完毕，消息队列变空时，Scaler 会触发缩减操作，减少 Pod 的副本数（可以缩减至 0，minReplicaCount）。
 
 ```yaml
 apiVersion: keda.sh/v1alpha1
@@ -76,9 +79,9 @@ spec:
         offsetResetPolicy: latest
 ```
 
-## 7.8.4 集群节点自动伸缩
+## 7.8.4 节点自动伸缩
 
-随着业务的发展，应用数量和资源需求都会逐渐增加，最终可能导致集群资源不足。动态伸缩的范畴应该扩展到整个集群范围，也就是说能根据资源利用率情况自动增/减节点。
+随着业务的增长（也有可能萎缩），应用数量和资源需求相应的变化，可能导致集群资源不足或者资源过度冗余。为了有效控制成本，动态伸缩的范畴应该扩展到整个集群范围，也就是说能根据资源利用率情况自动增/减节点。
 
 在 Kubernetes 中，Cluster AutoScaler 是专门用于自动扩展和缩减集群节点的组件。它的主要功能如下：
 - 自动扩展（Scale Up）：当集群中的节点资源不足以满足当前的 Pod 请求时，Cluster AutoScaler 会自动向云服务提供商（如 GCE、GKE、Azure、AKS、AWS 等）请求创建新的节点，从而扩展集群容量，确保应用能够获得所需的资源。

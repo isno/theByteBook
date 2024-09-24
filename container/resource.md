@@ -1,15 +1,8 @@
 # 7.7.1 资源模型
 
-
-在 JAVA 的世界中一切皆对象，而在 Kubernetes 的世界中一切皆资源。
-
-在 Kubernetes 中，“资源”是一个定义相当广泛的概念，下到物理资源（CPU、内存、磁盘空间），API 资源（Node、Pod、Service、Volume），以及 API 资源的属性或动作，如标签（Label）、命名空间（Namespace）、部署（Depoyment）、HPA 等等。然后使用 yaml 文件（也成资源清单）组织资源层级、调用关系。
-
-在本节的“资源”指狭义上的物理资源，它们与调度有密切的关系。
-
 ## 1. 资源的分类
 
-根据资源不足时应用表现的差异，Kubernetes 物理资源又可分为两类：
+根据物理资源不足时应用表现的差异，Kubernetes 物理资源又可分为两类：
 
 - **可压缩的资源**：此类资源匮乏时，容器内的进程会被限制，应用表现变得卡顿，业务延迟明显增加，但**容器进程不会被杀掉**。可压缩的资源典型代表是 CPU，CPU 资源其实准确来讲，指的是 CPU 时间。它的基本单位为 millicores，1 个核等于 1000 millicores。也代表了 kubernetes 可以将单位 CPU 时间细分为 1000 份。
 
@@ -23,9 +16,11 @@
 
 ## 2. 资源扩展
 
-Kubernetes 在 Pod 中并没有专门为 GPU 设置一个专门的资源类型，而是使用了一个特殊字段（Extended Resource），来负责传递 GPU 资源。
+在 Kubernetes 中，标准资源（如 CPU、内存、存储等）是由 Kubelet 自动报告的。但在某些情况下，节点可能会有一些特定的资源（如 GPU、FPGA、某些硬件加速器），Kubernetes 本身并没有识别和管理。
 
-为了能让调度器知道这个扩展资源在每台节点的可用量信息，节点本身就要通过 APIServer 汇报自身的资源情况。如下所示，通过发送 PATCH 请求，为节点增加自定义的资源类型。
+为了解决这个问题，Kubernetes 使用了一个特殊的机制（Extended Resource，扩展资源），用于让集群管理员声明、管理和使用除标准资源（如 CPU 和内存）之外的自定义资源。
+
+为在一个节点上发布一种新的扩展资源，需要发送一个 HTTP PATCH 请求到 Kubernetes API server。例如：假设你的一个节点上带有四个 gpu 资源。下面是一个 PATCH 请求的示例，该请求为`/<your-node-name>`节点发布 4 个 gpu 资源。
 
 ```bash
 PATCH /api/v1/nodes/<your-node-name>/status HTTP/1.1
@@ -41,8 +36,9 @@ Host: k8s-master:8080
   }
 ]
 ```
+需要注意的是，Kubernetes 并不了解 gpu 资源的含义和用途。前面的 PATCH 请求只是告诉 Kubernetes `<your-node-name>`节点拥有 4 个称之为 gpu 的东西。
 
-输出展示了刚才扩展的 nvidia.com/gpu 资源：
+然后，使用 kubectl describe node 命令查看节点资源配置情况。可以看到命令输出了刚才扩展的 nvidia.com/gpu 资源容量（capacity）为 4。
 
 ```bash
 $ kubectl describe node <your-node-name>
@@ -54,7 +50,7 @@ Capacity:
 ...
 ```
 
-接下来就可以在 Pod 中使用扩展资源了，比如下面这个例子。
+在定义 Pod 时，可以像请求标准资源（如 CPU 和内存）一样，请求这些自定义的 Extended Resource。以下是一个示例 Pod 的配置。
 
 ```yaml
 apiVersion: v1
@@ -69,8 +65,7 @@ spec:
         limits:
           nvidia.com/gpu: 1
 ```
-
-可以看到，上面 Pod resources 中，GPU 的资源名称为 nvidia.com/gpu。也就是说这个 Pod 声明了要使用 nvidia 类型的 GPU。容器启动的时候，再通过挂载宿主机的 GPU 驱动，就能直接使用 GPU 资源了。
+可以看到，上面 Pod resources 中，GPU 的资源名称为 nvidia.com/gpu，并且限制了它只能使用 1 个该资源。这意味着调度器会将这个 Pod 分配到一个有足够 nvidia.com/gpu 资源的节点上。当容器启动时，再通过挂载宿主机的 GPU 驱动，就能直接使用 GPU 资源了。
 
 在 Kubernetes 支持的 GPU 方案中，你并不需要去操作上述 Extended Resource 的逻辑，Kubernetes 中，所有的硬件加速设备的管理都通过 Device Plugin 插件来支持，也包括对该硬件的 Extended Resource 进行汇报的逻辑。
 
