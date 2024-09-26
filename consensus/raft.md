@@ -1,7 +1,7 @@
 # 6.3 Raft 算法
 
 :::tip 额外知识
-Raft 是由 Re{liable|plicated|dundant} And Fault-Tolerant 组合起来的单词，原义是可靠、复制、冗余和容错。同时，组合起来的单词在英文又有“筏”的含义，隐喻着 Raft 是一艘可以帮助你逃离 Paxos 小岛的救生筏。
+Raft 是由 Re{liable|plicated|dundant} And Fault-Tolerant 组合起来的单词，意思是可靠、复制、冗余和容错。同时，组合起来的单词在英文又有“筏”的含义，也隐喻 Raft 是一艘可以帮助你逃离 Paxos 小岛的救生筏。
 :::
 
 不可否认，Paxos 是一个划时代的共识算法。Raft 出现之前，绝大多数共识算法的实现都是基于 Paxos 或者受其影响，同时 Paxos 也成为了教学领域里讲解共识问题时的示例。
@@ -16,7 +16,7 @@ Paxos 算法描述与工程实现之间存在巨大的鸿沟，最终实现的�
 
 考虑到共识问题在大规模分布式系统的重要性，同时也为了提供一种更易于理解的教学方法，斯坦福大学的学者们决定重新设计一个完全可以替代 Paxos 的共识算法，该算法的首要目的是能够被多数人理解，当然，也必须满足容错和高效这两个关键要求。
 
-2013 年，斯坦福的 Diego Ongaro 和 John Ousterhout 发表了论文 《In Search of an Understandable Consensus Algorithm》[^1]，论文中提出了 Raft 算法，Raft 论文开篇第一句就描述了 Raft 的证明和 Paxos 等价，并给出了详细的实现细节，也就是说 Raft 天生就是 Paxos 协议的工程化。此后 Raft 算法成为分布式容错系统开发的首选共识算法。
+2013 年，斯坦福学者 Diego Ongaro 和 John Ousterhout 发表了论文 《In Search of an Understandable Consensus Algorithm》[^1]，提出了 Raft 算法。Raft 论文开篇第一句描述了 Raft 的证明和 Paxos 等价，然后详细描述了算法如何实现，也就是说 Raft 天生就是 Paxos 算法的工程化。此后 Raft 算法成为分布式容错系统开发的首选共识算法。
 
 :::tip 《In Search of an Understandable Consensus Algorithm》开篇
 Raft is a consensus algorithm for managing a replicated log. It produces a result equivalent to (multi-)Paxos, and it is as efficient as Paxos, but its structure is different from Paxos;
