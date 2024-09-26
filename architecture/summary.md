@@ -19,4 +19,4 @@
   图 1-0 本章内容导读
 :::
 
-[^1]: Tobias Lütke 是 Shopify 的联合创始人兼首席执行官。他是 Ruby on Rails 框架核心团队的一员，并创建了 Active Merchant 等开源库。截至 2022 年，他是加拿大第 11 位富豪。
+[^1]: Tobias Lütke 是业内著名的技术创业者。他在 2006 年创建的 Shopify 已成为全球最大的电子商务平台之一。
