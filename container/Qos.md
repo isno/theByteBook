@@ -35,7 +35,7 @@ Kubernetes 基于每个 Pod 中容器的资源请求（requests）和限制（li
 
 ## 3. 驱逐
 
-当节点不可压缩类型的资源不足时，如可用内存（memory.available）、宿主机磁盘空间（nodefs.available）、镜像存储空间（imagefs.available）不足时，保证节点可用的手段是驱逐（eviction）那些不太重要的 Pod，使之重新被调度。
+当节点内不可压缩类型的资源，如可用内存（memory.available）、宿主机磁盘空间（nodefs.available）、镜像存储空间（imagefs.available）不足时，保证节点稳定的手段是驱逐（eviction）那些不太重要的 Pod，使之重新调度到其他节点。
 
 Kubernetes 中有 2 种驱逐，笔者介绍如下：
 
