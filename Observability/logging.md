@@ -140,9 +140,9 @@ ORDER BY id;
   图 9-8 同一份日志在 Elasticsearch、ClickHouse 和 ClickHouse(zstd) 中的容量对比
 :::
 
-ClickHouse 支持分片（Sharding），这是实现水平扩展和分布式并行查询的关键特性。通过增加更多的节点，Clickhouse 能实现处理数百亿到数万亿条记录，以及数 PB 级别的数据。
+ClickHouse 支持分片（Sharding），也就是支持分布式并行计算。通过增加更多的节点，Clickhouse 能实现处理数百亿到数万亿条记录，以及数 PB 级别的数据。
 
-根据 Yandex 的内部跑分结果来看（图 9-9），ClickHouse 比 Vertia（一款商业的 OLAP 分析软件）快约 5 倍、比 Hive 快 279 倍、比 InifniDB 快 31 倍。ClickHouse 表现的惊人的查询性能，当之无愧阐述 ClickHouse 介绍中“实时”（real-time）二字含义。
+根据 Yandex 的内部跑分结果来看（图 9-9），在一亿条记录的规模上，ClickHouse 比 Vertia（一款商业的 OLAP 分析软件）快约 5 倍、比 Hive 快 279 倍、比 InifniDB 快 31 倍。ClickHouse 表现的惊人的查询性能，当之无愧阐述 ClickHouse 介绍中“实时”（real-time）二字含义。
 
 
 :::center

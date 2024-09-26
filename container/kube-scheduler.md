@@ -20,13 +20,19 @@ Omega 的论文中提出了一种基于共享状态（图 7-1 中的 Scheduler C
 Kubernetes 默认调度器（kube-scheduler）双循环架构如下所示。
 
 :::center
-  ![](../assets/kube-scheduler.png)<br/>
+  ![](../assets/kube-scheduler.svg)<br/>
   图 7-37 kube-scheduler 双循环架构设计
 :::
 
 - 第一个控制循环称之为 Informer Path，它主要目的是启动一系列 Informer 监听（Watch）Etcd 中 Pod、Node、Service 等与调度相关的 API 对象的变化。譬如一个待调度 Pod 被创建后，调度器就会通过 Pod Informer 的 Handler 将这个待调度 Pod 添加进调度队列。Kubernetes 的调度器还要负责对调度器缓存（即 Scheduler Cache）进行更新，缓存的目的主要是对调度部分进行性能优化，将集群信息 cache 化，以便提升 Predicate 和 Priority 调度算法的执行效率。
 
-- 第二个控制循环是调度器负责 Pod 调度的主循环，被称之为 Scheduling Path。Scheduling Path 主要逻辑是不断地从调度队列里出队一个 Pod。然后调用 Predicates 算法对所有的 Node 进行“过滤”。“过滤”得到的一组可以运行这个 Pod 的 Node 列表。当然，Predicates 算法需要的 Node 信息，也都是 Scheduler Cache 里直接拿到的，这是调度器保证算法执行效率的主要手段之一。接下来，调度器就会再调用 Priorities 算法为上述列表里的 Node 打分，得分最高的 Node 就会作为这次调度的结果。
+第二个控制循环称为 Scheduling Path ，是负责 Pod 调度的主循环。Scheduling Path 主要逻辑是不断地从调度队列里出队一个 Pod。
+
+- 预选（predicates）就是从集群的所有节点中根据调度算法筛选出所有可以运行该 pod 的节点集合
+- 优选（priority）则是按照算法对预选出来的节点进行打分，找到分值最高的节点作为调度节点.
+
+
+然后调用 Predicates 算法对所有的 Node 进行“过滤”。“过滤”得到的一组可以运行这个 Pod 的 Node 列表。当然，Predicates 算法需要的 Node 信息，也都是 Scheduler Cache 里直接拿到的，这是调度器保证算法执行效率的主要手段之一。接下来，调度器就会再调用 Priorities 算法为上述列表里的 Node 打分，得分最高的 Node 就会作为这次调度的结果。
 
 	调度算法执行完成后，调度器就需要将 Pod 对象的 nodeName 字段的值，修改为上述 Node 的名字，这个过程在 Kubernetes 里面被称作 Bind。为了不在关键调度路径里远程访问 API Server，Kubernetes 默认调度器在 Bind 阶段只会更新 Scheduler Cache 里的 Pod 和 Node 的信息。这种基于“乐观”假设的 API 对象更新方式，在 Kubernetes 里被称作 Assume。Assume 之后，调度器才会创建一个 Goroutine 异步地向 API Server 发起更新 Pod 的请求，完成真正 Bind 操作。
 
