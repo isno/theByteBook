@@ -198,7 +198,7 @@ $ ls /opt/cni/bin/
 bandwidth  bridge  dhcp  firewall  flannel calico-ipam cilium...
 ```
 
-CNI 插件工作的流程大致如图 7-33 所示。当需要设置容器网络时，由容器运行时根据 CNI 的配置规范（例如设置 VXLAN 网络、设置各个节点容器子网范围等）通过标准输入（stdin）向 CNI 插件传递网络配置信息。等待 CNI 插件配置完网络后，再通过标准输出（stdout）向容器运行时返回执行结果。
+CNI 插件工作的流程大致如图 7-33 所示。当创建 Pod 设置容器网络时，由容器运行时根据 CNI 的配置规范（例如设置 VXLAN 网络、设置各个节点容器子网范围等）通过标准输入（stdin）向 CNI 插件传递网络配置信息。等待 CNI 插件配置完网络后，再通过标准输出（stdout）向容器运行时返回执行结果。
 
 :::center
   ![](../assets/CNI.webp) <br/>

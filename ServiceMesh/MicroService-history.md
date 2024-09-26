@@ -94,10 +94,10 @@ TCP/IP 协议出现之后，机器之间的网络通信不再是一个难题，�
 
 早期的 Linkerd 借鉴了 Twtter 开源的 Finagle 项目，并重用了大量的 Finagle 代码：
 
-- 设计思路上，Linkerd 将分布式服务的通信逻辑抽象为单独一层，在这一层中实现负载均衡、服务发现、认证授权、监控追踪、流量控制等必要功能；
-- 具体实现上， Linkerd 作为和服务对等的代理服务（Sidecar）和服务部署在一起，接管服务的流量。
+- 设计思路上：Linkerd 将分布式服务的通信逻辑抽象为单独一层，在这一层中实现负载均衡、服务发现、认证授权、监控追踪、流量控制等必要功能；
+- 具体实现上：Linkerd 作为和服务对等的代理服务（Sidecar）和服务部署在一起，接管服务的流量。
 
-Linkerd 开创先河的不绑定任何基础架构或某类体系，实现了通用性，成为业界第一个服务网格项目。同期的服务网格代表产品还有 Lyft（和 Uber 类似的打车软件）公司的 Envoy（Envoy 是 CNCF 内继 Kubernetes、Prometheus 第三个孵化成熟的项目）。
+Linkerd 开创先河的不绑定任何基础架构或某类技术体系，实现了通用性，成为业界第一个服务网格项目。同期的服务网格代表产品还有 Lyft（和 Uber 类似的打车软件）公司的 Envoy（Envoy 是 CNCF 内继 Kubernetes、Prometheus 第三个孵化成熟的项目）。
 
 :::center
   ![](../assets/linkerd-envoy.png)<br/>

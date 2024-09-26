@@ -36,9 +36,9 @@ Kubernetes 默认调度器（kube-scheduler）双循环架构如下所示。
 - 节点过滤策略：与宿主机节点相关的策略。例如检查 Pod 是否能容忍节点的污点；确保 Pod 调度到符合亲和性条件的节点；
 - 拓扑和亲和性策略：该策略主要处理 Pod 之间的亲和性规则，还有确保 Pod 在不同节点间均匀分布。
 
-在过滤之后，得出一个节点列表，里面包含了所有可调度节点；通常情况下，这个节点列表包含不止一个节点。如果这个列表是空的，代表这个 Pod 不可调度。过滤阶段结束之后，接着进入打分阶段。
+在过滤之后，得出一个节点列表，里面包含了所有可调度节点；通常情况下，这个节点列表包含不止一个节点。如果这个列表是空的，代表这个 Pod 不可调度。过滤阶段至此结束，接着进入打分阶段。
 
-在打分阶段，调度器会为 Pod 从所有可调度节点中选取一个最合适的节点。根据当前启用调度插件的打分策略，调度器会给每一个可调度节点进行打分。得分最高的 Node 就会作为这次调度的结果。如果存在多个得分最高的节点，kube-scheduler 会从中随机选取一个。
+在打分阶段，调度器会为 Pod 从所有可调度节点中选取一个最合适的节点。根据当前启用调度插件的打分策略，为每一个可调度节点进行打分。得分最高的 Node 就会作为这次调度的结果。如果存在多个得分最高的节点，kube-scheduler 会从中随机选取一个。
 
 在上述两个阶段结束之后，调度器 kube-scheduler 会将就需要将 Pod 对象的 nodeName 字段的值，修改为选中 Node 的名字，这个过程在 Kubernetes 里面被称作 Bind。为了不在关键调度路径里远程访问 API Server，Kubernetes 默认调度器在 Bind 阶段只会更新 Scheduler Cache 里的 Pod 和 Node 的信息。这种基于“乐观”假设的 API 对象更新方式，在 Kubernetes 里被称作 Assume。Assume 之后，调度器才会创建一个 Goroutine 异步地向 API Server 发起更新 Pod 的请求，kubelet 完成真正调度操作。
 
@@ -50,12 +50,11 @@ Kubernetes 从 v1.15 版本起，为 kube-scheduler 设计了可插拔的扩展�
    图 7-38 Pod 的调度上下文以及调度框架公开的扩展点
 :::
 
-有了 Scheduling Framework，在保持调度“核心”简单且可维护的同时，用户可以编写自己的调度插件注册到 Scheduling Framework 的扩展点来实现自己想要的调度逻辑。
-
+有了 Scheduling Framework，在保持调度“核心”简单且可维护的同时，用户只要编写自己的调度插件注册到 Scheduling Framework 的扩展点就能实现自己想要的调度逻辑。
 
 值得注意的是，Scheduling Framework 属于 Kubernetes 内部扩展机制，需要按照规范编写 Golang 代码。
 
-例如下面一个插件，实现 Filter 和 Score 扩展
+例如，实现 Filter（筛选有 GPU 节点资源）和 Score 扩展点一个插件，供你参考。
 
 ```go
 package main
