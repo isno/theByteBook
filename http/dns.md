@@ -2,11 +2,11 @@
 
 DNS（Domain Name System，域名系统）是互联网中最重要的基础设施，它的主要职责是实现域名的解析，也就是将域名转换为 IP 地址。
 
-2021 年期间互联网发生了几起影响颇大的服务宕机事件，故障的原因均与 DNS 系统有关：
+2021 年，互联网发生了几起影响颇大的服务宕机事件，故障的原因均与 DNS 系统有直接关系：
 - 7 月22 日，技术服务商 Aakamai 的 Edge DNS 服务故障，造成 PlayStation Network、HBO、UPS、Airbnb、Salesforce 等众多知名网站宕机[^1]；
 - 不久之后的 10 月 4 日，社交网络平台 Facebook 及旗下服务 Messenger、Instagram、WhatsApp、Mapillary 与 Oculus 发生全球性宕机[^2]。
 
-接下来，我们将先了解域名解析的基本原理，然后学习在域名解析故障时如何排查问题。
+接下来，我们将了解域名解析的基本原理，学习在域名解析故障时如何排查问题。
 
 ## 2.3.1 域名解析的原理
 
@@ -106,7 +106,7 @@ Facebook 2021 年 10 月发生了一起重大的宕机故障，当时使用 dig 
 ..
 ```
 
-接下来，笔者以 Facebook 2021 年的宕机事件为例，说明当“权威域名服务器”出现故障时会产生什么影响。
+接下来，笔者将以“2021 年 Facebook宕机事件”为例，说明当“权威域名服务器”出现故障时会产生什么影响。
 
 [^1]: 参见 https://www.akamai.com/blog/news/akamai-summarizes-service-disruption-resolved
 [^2]: 参见 https://en.wikipedia.org/wiki/2021_Facebook_outage
