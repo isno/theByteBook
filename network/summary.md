@@ -17,4 +17,4 @@
   图 3-0 本章内容导读
 :::
 
-[^1]: Linus Torvalds，最著名的程序员之一。Linus Torvalds 是 Linux 内核的最早作者，被称为“Linux 之父”。他还开发了代码版本管理工具 Git，因此也被戏称为程序员的祖师爷。
+[^1]: Linus Torvalds，业内知名度最高的程序员之一。Linus Torvalds 是 Linux 内核的最早作者，被称为“Linux 之父”。他还开发了代码版本管理工具 Git，因此也被戏称为程序员的祖师爷。

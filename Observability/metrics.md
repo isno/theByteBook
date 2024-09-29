@@ -4,7 +4,7 @@
 
 Prometheus 项目的灵感来自 Google 内部的 Borg 监控系统（Brogmon），由前 Google 工程师在 SoundCloud 公司发起并将其开源。2016 年 5 月，Prometheus 继 Kubernetes 之后，成为云原生计算基金会（CNCF）的第二个正式项目。经过多年的发展，Prometheus 已成为云原生系统中指标监控的事实标准。
 
-如图 9-3 所示，Prometheus 是一个模块化系统，由多个独立组件组成，每个组件承担特定功能。其中，服务发现（Service Discovery）负责自动发现监控目标；Exporter 将监控目标的指标数据转换为 Prometheus 可理解的格式；Pushgateway 处理短期任务的监控数据；Prometheus 服务器负责数据的收集、存储和查询；而 Alertmanager 处理告警通知。
+如图 9-3 所示，Prometheus 是一个模块化系统，由多个独立组件组成，每个组件承担特定功能。其中，服务发现（Service Discovery）负责自动发现监控目标；Exporter 将监控目标的指标转换为 Prometheus 可理解的格式；Pushgateway 处理短期任务的指标；Prometheus 服务器负责指标存储和查询；而 Alertmanager 负责度量指标，触发告警动作。
 
 :::center
   ![](../assets/prometheus-arch.png)<br/>
@@ -27,15 +27,17 @@ Prometheus 项目的灵感来自 Google 内部的 Borg 监控系统（Brogmon）
 
 ## 2. 通过 Exporter 收集指标
 
-定义完指标类型后，接下来的任务是从监控目标中收集这些指标。采集指标看似简单，但现实情况复杂得多，许多现有的服务、系统，甚至硬件设备，并不会直接暴露 Prometheus 格式的指标。例如：
+定义完指标类型后，接下来的任务是从监控目标中收集这些指标。
 
-- Linux 的许多指标信息以文件形式记录在 /proc 目录下，如 /proc/meminfo 提供内存信息，/proc/stat 提供 CPU 信息；
+采集指标看似简单，但现实情况复杂得多，许多现有的服务、系统，甚至硬件设备，并不会直接暴露 Prometheus 格式的指标。例如：
+
+- Linux 的许多指标信息以文件形式记录在 /proc 目录下。如 /proc/meminfo 提供内存信息，/proc/stat 提供 CPU 信息；
 - Redis 的监控信息需要通过 INFO 命令获取；
 - 路由器等硬件设备的监控数据通常通过 SNMP 协议获取。
 
 为了解决这个问题，Prometheus 通过 Exporter 实现了数据收集与监控系统的解耦。Exporter 作为连接监控系统与被监控目标的桥梁，负责理解不同来源的监控数据，并将其转换为 Prometheus 支持的格式。并通过 HTTP（通常暴露在 /metrics 端点）将指标提供给 Prometheus 进行抓取。
 
-如下所示，Prometheus 可以通过轮询的方式，从暴露指标的 /metrics 接口获取类型为 Counter 的 Exporter 实例。Prometheus 定期轮询这些监控目标，获取最新的指标数据，从而实现对系统状态的实时监控。
+如下所示，Prometheus 可以从暴露指标的 /metrics 接口获取名为 http_request_total，类型为 Counter 的指标数据。Prometheus 定期轮询这些监控目标，获取最新的指标数据，实现了对系统状态的实时监控。
 
 ```bash
 $ curl http://127.0.0.1:8080/metrics | grep http_request_total
