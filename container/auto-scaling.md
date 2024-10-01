@@ -1,11 +1,11 @@
 # 7.8 资源弹性伸缩
 
-为了平衡服务负载的巨大波动及资源预估与实际使用之间的差距，Kubernetes 提供了三种资源自动伸缩（autoscaling）解决方案：HPA、VPA 以及节点自动伸缩（Cluster Autoscaler）组件。
+为了平衡服务负载的巨大波动及资源预估与实际使用之间的差距，Kubernetes 提供了三种资源自动扩缩（autoscaling）解决方案：HPA、VPA 以及节点自动伸缩（Cluster Autoscaler）组件。
 ## 7.8.1 Pod 水平自动伸缩
 
 HPA，全称是 Horizontal Pod Autoscaler（Pod 水平自动扩缩），是 Kubernetes 中对工作负载（如 Deployment）Pod 副本数进行自动水平扩缩的机制，也是 Kubernetes 中最广泛使用的自动扩缩功能。
 
-HPA 的实现思路很简单，即通过监控业务的繁忙程度来做出相应的调整。当业务负载较高时，增加工作负载的 Pod 副本数量；当业务负载减少时，Pod 副本数也会相应缩减。所以，实现扩缩容的关键问题之一是：“如何准确识别业务的忙闲程度？”
+HPA 的实现思路很简单：即通过监控业务的繁忙程度来做出相应的调整。当负载较高时，增加工作负载的 Pod 副本数量；当负载减少时，Pod 副本数也会相应缩减。所以，实现扩缩容的关键问题之一是：“如何准确识别业务的忙闲程度？”
 
 Kubernetes 提供了一种标准的 Metrics 接口（Metrics API），能够提供关于节点和 Pod 资源使用情况的信息。如下所示，在 minikube 节点上一个 Metrics 接口响应示例。
 
