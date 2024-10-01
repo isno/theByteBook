@@ -64,7 +64,7 @@ $ sudo mount -t overlay overlay \
 
 至此，相信你已经理解了联合文件系统是什么，以及它的作用。
 
-再来看 Docker 镜像利用联合文件系统的分层设计，如图 7-9 所示，该容器从下往上由 6 个层构成：
+再来看 Docker 镜像利用联合文件系统的分层设计，如图 7-8 所示，该容器从下往上由 6 个层构成：
 
 - 最下层是基础镜像 Debian Stretch，该层相当于“base rootfs”，所有的容器都可以共享这一层；
 - 往上 3 层是在 Dockerfile 通过指令 ADD、ENV、CMD 等命令生成的只读层；
@@ -74,7 +74,7 @@ $ sudo mount -t overlay overlay \
 
 :::center
   ![](../assets/docker-file-system.png)<br/>
-  图 7-9 Docker 容器镜像分层设计概览
+  图 7-8 Docker 容器镜像分层设计概览
 :::
 
 最终，这 6 个层被联合挂载到 /var/lib/docker/overlay/mnt 目录中。容器系统通过系统调用 chroot 和 pivot_root 切换进程的根目录，使得运行在该目录内的进程就像独享一个带有 JAVA 环境的 Debian 操作系统一样。
@@ -131,7 +131,7 @@ alpine                    nginx           ca338a969cf7   17 seconds ago   23.4MB
 
 一个有效的方式是使用基于 P2P 网络的加速技术。Dragonfly 就是一个基于 P2P 网络实现的容器镜像分发加速系统。它提供了一种无侵入的镜像下载加速方案，用户无需修改容器或镜像仓库的配置即可享受加速服务。
 
-Dragonfly 的工作流程如图 7-10 所示。首先，Dragonfly 会在多个节点中启动 Peer 服务（类似 P2P 的节点）。当容器系统下载一个镜像时，下载请求会通过 Peer 转发到 Scheduler（类似 P2P 调度器），Scheduler 会判断该镜像是否为首次下载：
+图 7-9 展示了 Dragonfly 的工作流程。首先，Dragonfly 会在多个节点中启动 Peer 服务（类似 P2P 的节点）。当容器系统下载一个镜像时，下载请求会通过 Peer 转发到 Scheduler（类似 P2P 调度器），Scheduler 会判断该镜像是否为首次下载：
 
 - 如果是首次下载，Scheduler 会触发回源动作，即从源服务器获取镜像文件。在此过程中，Dragonfly 会将镜像文件切分为多个小块（称为 Piece）。每个小块被缓存在不同的节点上，相关信息将被上报给 Scheduler，以优化后续的调度决策；
 - 如果不是首次下载，Scheduler 则根据已有的信息，提供所有镜像块的下载调度指令。
@@ -140,7 +140,7 @@ Dragonfly 的工作流程如图 7-10 所示。首先，Dragonfly 会在多个节
 
 :::center
   ![](../assets/dragonfly.png)<br/>
-  图 7-10 Dragonfly 是怎么工作的 [图片来源](https://d7y.io/zh/docs/)
+  图 7-9 Dragonfly 是怎么工作的 [图片来源](https://d7y.io/zh/docs/)
 :::
 
 ## 7.3.5 加速容器镜像启动
@@ -153,14 +153,14 @@ Nydus 主要通过优化镜像层（layer）的设计结构来提升效率。它
 
 :::center
   ![](../assets/nydus.png)<br/>
-  图 7-11 Nydus 是怎么工作的 [图片来源](https://d7y.io/zh/blog/2022/06/06/evolution-of-nydus/)
+  图 7-10 Nydus 是怎么工作的 [图片来源](https://d7y.io/zh/blog/2022/06/06/evolution-of-nydus/)
 :::
 
-如图 7-12 所示，在 OCIv1（默认镜像格式）与 Nydus 镜像格式启动时间的对比中，Nydus 能将常见应用镜像的启动时间从数分钟缩短到仅数秒钟。
+如图 7-11 所示，在 OCIv1（默认镜像格式）与 Nydus 镜像格式启动时间的对比中，Nydus 能将常见应用镜像的启动时间从数分钟缩短到仅数秒钟。
 
 :::center
   ![](../assets/nydus-performance.png)<br/>
-  图 7-12 OCIv1 与 Nydus 镜像启动时间对比
+  图 7-11 OCIv1 与 Nydus 镜像启动时间对比
 :::
 
 总结镜像的应用：首先，在编译阶段生成足够小的镜像，然后通过 P2P 方式加速镜像下载，利用分布式节点和智能调度提升下载速度，减少网络带宽消耗。接着，利用 Nydus 技术实现镜像层的按需加载。

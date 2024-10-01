@@ -10,7 +10,7 @@ Docker 通过将宿主机的目录挂载到容器内部，实现数据的持久�
 
 :::center
   ![](../assets/types-of-mounts-volume.webp)<br/>
-  图 7-24 Docker 中持久存储的挂载种类
+  图 7-21 Docker 中持久存储的挂载种类
 :::
 
 bind mount 是 Docker 最早支持的挂载类型，很多用户都熟悉这种挂载方式。以下命令启动一个 Nginx 容器，并将宿主机的 /usr/share/nginx/html 目录挂载到容器内的 /data 目录：
@@ -60,11 +60,11 @@ docker run -d -v my-aliyun-nas-volume:/mnt/nas nginx:latest
 - 在宿主机中，也开辟了属于 Kubernetes 的空间（该目录是 /var/lib/kubelet/pods/[pod uid]/volumes）；
 - 也设计了存储驱动（Volume Plugin）扩展支持出众多的存储类型，如本地存储、网络存储（如 NFS、iSCSI）、云厂商的存储服务（如 AWS EBS、GCE PD、阿里云 NAS 等）。
 
-不同的是，作为一个工业级的容器编排系统，Kubernetes 的 Volume 机制相较于 Docker 更复杂，并且支持的存储类型也更加丰富。Kubernetes 支持的存储类型，如图 7-25 所示。
+不同的是，作为一个工业级的容器编排系统，Kubernetes 的 Volume 机制相较于 Docker 更复杂，并且支持的存储类型也更加丰富。Kubernetes 支持的存储类型，如图 7-22 所示。
 
 :::center
   ![](../assets/volume-list.png)<br/>
-   图 7-25 Kubernetes 中的 Volume 分类
+   图 7-22 Kubernetes 中的 Volume 分类
 :::
 
 乍一看，这么多 Volume 类型实在难以下手。然而，总结起来就 3 类：
@@ -83,11 +83,11 @@ Kubernetes 设计普通 Volume 的初衷并非为了持久化存储数据，而�
 - EmptyDir：这种 Volume 类型常用于 Sidecar 模式，例如日志收集容器通过 EmptyDir 访问业务容器的日志文件。
 - HostPath：与 EmptyDir 不同，HostPath 使同一节点上的所有容器能够共享宿主机的本地存储。例如，在 Loki 日志系统中，通过设置 Pod 挂载宿主机的 HostPath Volume，Loki 能够收集并读取宿主机上所有 Pod 生成的日志。
 
-如图 7-26 所示，EmptyDir 类型的 Volume 被包含在 Pod 内，其生命周期与挂载它的 Pod 一致。当 Pod 因某种原因被销毁时，这类 Volume 也会随之删除。如果是 HostPath，Pod 被调度到另外一台节点时，对 Pod 而言也相当于 HostPath 内的数据被删除了。
+如图 7-23 所示，EmptyDir 类型的 Volume 被包含在 Pod 内，其生命周期与挂载它的 Pod 一致。当 Pod 因某种原因被销毁时，这类 Volume 也会随之删除。如果是 HostPath，Pod 被调度到另外一台节点时，对 Pod 而言也相当于 HostPath 内的数据被删除了。
 
 :::center
   ![](../assets/volume.svg)<br/>
-  图 7-26 EmptyDir 类型的 Volume 的应用示例
+  图 7-23 EmptyDir 类型的 Volume 的应用示例
 :::
 
 ## 7.5.4 持久化的 Volume
@@ -208,7 +208,7 @@ Kubernetes 继承了操作系统接入外置存储的设计，将新增或卸载
 
 Kubernetes 中的 Volume 创建和管理主要由 VolumeManager（卷管理器）、AttachDetachController（挂载控制器）和 PVController（PV 生命周期管理器）负责。前面提到的 Provision、Delete、Attach、Detach、Mount 和 Unmount 操作由具体的 VolumePlugin（第三方存储插件，也称 CSI 插件）实现。
 
-如图 7-27 所示，一个带有 PVC 的 Pod 创建过程。
+图 7-24 展示了一个带有 PVC 的 Pod 创建过程。
 
 1. 首先，用户创建一个包含 PVC 的 Pod，该 PVC 要求使用动态存储卷。
 2. 默认调度器 kube-scheduler 根据 Pod 配置、节点状态、PV 配置等信息，将 Pod 调度到一个合适的节点中。
@@ -219,7 +219,7 @@ Kubernetes 中的 Volume 创建和管理主要由 VolumeManager（卷管理器�
 
 :::center
   ![](../assets/k8s-volume.svg)<br/>
-  图 7-27 Pod 挂载持久化 Volume 的过程
+  图 7-24 Pod 挂载持久化 Volume 的过程
 :::
 
 上述流程中第三方存储供应商实现 Volume Plugin 即 CSI（Container Storage Interface，容器存储接口）插件。CSI 是一个开放性的标准，目标是位容器编排系统（不仅仅是 Kubernetes，还包括 Docker Swarm 和 Mesos 等）提供统一的存储接口。
@@ -282,11 +282,11 @@ CSI 插件机制为存储供应商和容器编排系统之间的交互提供了�
 
 ## 7.5.7 存储的分类介绍
 
-得益 Kubernetes 的开放性设计，通过图 7-28 感受提供了 CSI 插件支持的存储生态，基本上包含了市面上所有的存储供应商。
+得益 Kubernetes 的开放性设计，通过图 7-25 感受提供了 CSI 插件支持的存储生态，基本上包含了市面上所有的存储供应商。
 
 :::center
   ![](../assets/CSI.png)<br/>
-  图 7-28 CNCF 下的 Kubernetes 存储生态
+  图 7-25 CNCF 下的 Kubernetes 存储生态
 :::
 
 上述众多的存储系统无法一一展开，但作为业务开发工程师而言，直面的问题是：“我应该选择哪种存储类型？”。

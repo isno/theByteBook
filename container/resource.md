@@ -1,13 +1,12 @@
 # 7.7.1 资源模型
 
-## 1. 资源的分类
 
-根据物理资源不足时应用表现的差异，Kubernetes 物理资源又可分为两类：
+当节点中的物理资源匮乏时，根据应用表现的差异，Kubernetes 物理资源可分为两类：
 
-- **可压缩的资源**：此类资源匮乏时，容器内的进程会被限制，应用表现变得卡顿，业务延迟明显增加，但**容器进程不会被杀掉**。可压缩的资源典型代表是 CPU，CPU 资源其实准确来讲，指的是 CPU 时间。它的基本单位为 millicores，1 个核等于 1000 millicores。也代表了 kubernetes 可以将单位 CPU 时间细分为 1000 份。
+- **可压缩的资源**：此类资源匮乏时，容器内的进程会被限制，应用表现变得卡顿，业务延迟明显增加，但**容器进程不会被杀掉**。可压缩的资源典型代表是 CPU。CPU 资源准确来讲，指的是 CPU 时间，它的基本单位为 millicores，1 个核等于 1000 millicores。也代表了 kubernetes 可以将单位 CPU 时间细分为 1000 份。
 
-- **不可压缩的资源**：此类资源容器之间无法共享，完全独占。这也就意味着资源一旦耗尽或者不足，容器内的进程一定因资源不足出现运行问题，并最终触发驱逐操作（稍后介绍）。
-  不可压缩资源典型的是内存，内存基本单位是字节，计量方式有多种写法。如使用 M（Megabyte）、Mi（Mebibyte）以及不带单位的数字，以下表达式所代表的是相同的值。
+- **不可压缩的资源**：此类资源容器之间无法共享，完全独占。这意味着不可压缩资源一旦耗尽，容器内的进程一定因资源不足出现运行问题，并最终触发驱逐操作（稍后介绍）。
+  不可压缩资源典型代表是内存。内存基本单位是字节，计量方式有多种写法，如使用 M（Megabyte）、Mi（Mebibyte）以及不带单位的数字，以下表达式所代表的是相同的值。
 
   ```plain
   128974848, 129e6, 129M, 123Mi
@@ -83,16 +82,14 @@ Pod 只能过"nvidia.com/gpu:2" 这种简单的“计数形式”，来申请 2 
 
 ## 3. 节点资源管理
 
-由于每台节点上都运行着 kubelet、docker 或 containerd 等 Kubernetes 基础服务，因此在进行资源管理和调度时，需要为此类基础服务预留资源。预留之后的剩余资源才是 Pod 真正可以使用的。
+由于每台节点上都运行着 kubelet、docker 或 containerd 等基础服务，Kubernetes 进行资源管理和调度时，需要为此类基础服务预留资源。预留之后的剩余资源才是 Pod 真正可以使用的。
 
-为节点上的基础服务预留多少资源，我们可以使用如下 kubelet 预留的参数来控制：
+为节点上的基础服务预留多少资源，可以使用如下 kubelet 预留的参数来控制：
 
 - --kube-reserved=[cpu=100m][,][memory=100Mi][,][ephemeral-storage=1Gi]：预留给 kubernetes 组件 CPU、内存和存储资源。
 - --system-reserved=[cpu=100mi][,][memory=100Mi][,][ephemeral-storage=1Gi]：预留给操作系统的 CPU、内存和存储资源。
 
-需要注意的是，考虑到 Kubernetes 驱逐机制的存在，kubelet 会确保节点上的资源使用率不会达到 100%，因此 Pod 实际可用的资源会再少一些。
-
-最终，一个节点资源分配如图 7-33 所示。节点可分配资源（Node Allocatable Resource）= 节点所有资源（Node Capacity） -（ Kubernetes 组件预留资源（Kube Reserved）-系统预留资源（System Reserved）- 为驱逐预留的资源（Eviction-Threshold）。
+需要注意的是，考虑到 Kubernetes 驱逐机制的存在，kubelet 会确保节点上的资源使用率不会达到 100%，因此 Pod 实际可用的资源会再少一些。最终，一个节点资源分配如图 7-33 所示。节点可分配资源（Node Allocatable Resource）= 节点所有资源（Node Capacity） -（ Kubernetes 组件预留资源（Kube Reserved）-系统预留资源（System Reserved）- 为驱逐预留的资源（Eviction-Threshold）。
 
 :::center
   ![](../assets/k8s-resource.svg)<br/>

@@ -13,14 +13,14 @@
 
 为了在宿主机网络之上构建虚拟的二层通信网络（即建立一条隧道网络），VXLAN 模块会在通信双方配置一个特殊的网络设备作为隧道端点，称为 VTEP（VXLAN Tunnel Endpoints，VXLAN 隧道端点）。VTEP 实际上是一个虚拟网络设备，因此它既有 IP 地址，也有 MAC 地址。VTEP 设备根据 VXLAN 通信规范，对 VXLAN 二层网络中的“主机”（如容器或虚拟机）进行数据包的封装和解封。通过这种方式，这些“主机”可以像在同一局域网内通信。实际上，这些“主机”可能分布在不同的节点、子网，甚至位于不同的物理机房内。
 
-上述基于 VTEP 设备构建“隧道”通信的流程，可以总结为图 7-29 所示。
+上述基于 VTEP 设备构建“隧道”通信的流程，可以总结为图 7-26 所示。
 
 :::center
   ![](../assets/flannel-vxlan.svg) <br/>
-  图 7-29 Flannel VXLAN 模式通信逻辑
+  图 7-26 Flannel VXLAN 模式通信逻辑
 :::
 
-从图 7-29 可以看到，宿主机内的容器通过 veth-pair（虚拟网卡）桥接到一个名为 cni0 的 Linux Bridge。每个宿主机内都有一个名为 flannel.1 的设备，它充当 VXLAN 所需的 VTEP 设备。当容器收到或发送数据包时，会通过 flannel.1 设备进行封装和解封。
+从图 7-26 可以看到，宿主机内的容器通过 veth-pair（虚拟网卡）桥接到一个名为 cni0 的 Linux Bridge。每个宿主机内都有一个名为 flannel.1 的设备，它充当 VXLAN 所需的 VTEP 设备。当容器收到或发送数据包时，会通过 flannel.1 设备进行封装和解封。
 
 VXLAN 规范中的数据包由两层组成：
 - 内层帧（Inner Ethernet Header）属于 VXLAN 逻辑网络；
@@ -106,11 +106,11 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 
 Flannel 的 host-gw 模式是“host gateway”的缩写。从名称可以看出，host-gw 工作模式通过主机的路由表实现容器间的通信。
 
-Flannel 的 host-gw 模式的工作原理相当直观，如图 7-30 所示。
+Flannel 的 host-gw 模式的工作原理相当直观，如图 7-27 所示。
 
 :::center
   ![](../assets/flannel-route.svg) <br/>
-  图 7-30 Flannel 的 host-gw 模式
+  图 7-27 Flannel 的 host-gw 模式
 :::
 
 现在，我们假设 Node1 中的 container-1 向 Node2 中的 container-2 发起请求，观察  host-gw 模式是如何工作的。
@@ -148,18 +148,18 @@ Calico 和 Flannel 的原理都是直接利用宿主机的路由功能实现容�
 BGP（Border Gateway Protocol，边界网关协议）使用 TCP 作为传输层的路由协议，用于交互 AS（Autonomous System，自治域）之间的路由规则。每个 BGP 服务实例一般称为 BGP Router，与 BGP Router 连接的对端称为 BGP Peer。每个 BGP Router 在收到 Peer 传来的路由信息后，经过校验判断后，将其存储在路由表中。
 :::
 
-了解 BGP 协议之后，再看 Calico 的架构（图 7-31 ），就能理解它各个组件的作用了：
+了解 BGP 协议之后，再看 Calico 的架构（图 7-28 ），就能理解它各个组件的作用了：
 - Felix：负责在宿主机上插入路由规则，相当于 BGP Router；
 - BGP Client：BGP 的客户端，负责在集群内分发路由规则，相当于 BGP Peer。
 
 :::center
   ![](../assets/calico-bgp.svg) <br/>
-  图 7-31 Calico BGP 路由模式
+  图 7-28 Calico BGP 路由模式
 :::
 
 除了对路由信息的维护的区别外，Calico 与 Flannel 的另一个不同之处在于，它不会设置任何虚拟网桥设备。
 
-观察图 7-31，Calico 并未创建 Linux Bridge，而是将每个 Veth-Pair 设备的另一端放置在宿主机中（名称以 cali 为前缀），然后根据路由规则进行转发。例如，Node2 中 container-1 的路由规则如下。
+观察图 7-28，Calico 并未创建 Linux Bridge，而是将每个 Veth-Pair 设备的另一端放置在宿主机中（名称以 cali 为前缀），然后根据路由规则进行转发。例如，Node2 中 container-1 的路由规则如下。
 ```bash
 $ ip route
 10.223.2.3 dev cali2u3d scope link
@@ -175,11 +175,11 @@ Underlay 底层网络模式的本质是利用宿主机的 2 层互通网络。�
 
 MAC 地址原本是网卡接口的“身份证”，应该严格保持一对一关系。而 MACVLAN 打破了这一关系，它借鉴了 VLAN 子接口的思路，在物理设备之上、内核网络栈之下生成多个“虚拟以太网卡”，每个“虚拟以太网卡”都有一个独立的 MAC 地址。
 
-通过 MACVLAN 技术虚拟出的副本网卡在功能上与真实网卡完全对等。在接收到数据包后，实际的物理网卡承担类似交换机的职责。物理网卡会根据目标 MAC 地址判断该数据包应转发至哪块副本网卡处理（如图 7-32 所示）。
+通过 MACVLAN 技术虚拟出的副本网卡在功能上与真实网卡完全对等。在接收到数据包后，实际的物理网卡承担类似交换机的职责。物理网卡会根据目标 MAC 地址判断该数据包应转发至哪块副本网卡处理（如图 7-29 所示）。
 
 :::center
   ![](../assets/macvlan.svg) <br/>
-  图 7-32 MACVLAN 工作原理
+  图 7-29 MACVLAN 工作原理
 :::
 
 
@@ -198,14 +198,14 @@ $ ls /opt/cni/bin/
 bandwidth  bridge  dhcp  firewall  flannel calico-ipam cilium...
 ```
 
-CNI 插件工作的流程大致如图 7-33 所示。当创建 Pod 设置容器网络时，由容器运行时根据 CNI 的配置规范（例如设置 VXLAN 网络、设置各个节点容器子网范围等）通过标准输入（stdin）向 CNI 插件传递网络配置信息。等待 CNI 插件配置完网络后，再通过标准输出（stdout）向容器运行时返回执行结果。
+图 7-30 展示了 CNI 插件的大致工作流程。当创建 Pod 设置容器网络时，由容器运行时根据 CNI 的配置规范（例如设置 VXLAN 网络、设置各个节点容器子网范围等）通过标准输入（stdin）向 CNI 插件传递网络配置信息。等待 CNI 插件配置完网络后，再通过标准输出（stdout）向容器运行时返回执行结果。
 
 :::center
   ![](../assets/CNI.webp) <br/>
-  图 7-33 CNI 插件工作原理
+  图 7-30 CNI 插件工作原理
 :::
 
-笔者举一个具体的例子（使用 flannel 配置 VXLAN 网络），帮助你理解 CNI 插件使用的流程。
+举一个具体的例子：使用 flannel 配置 VXLAN 网络，帮助你理解 CNI 插件使用的流程。
 
 首先，当在宿主机安装 flanneld 时，flanneld 启动会在每台宿主机生成对应的 CNI 配置文件，告诉 Kubernetes：该集群使用 flannel 容器网络方案。 CNI 配置文件通常位于 /etc/cni/net.d/ 目录下。以下是一个示例配置文件 10-flannel.conflist：
 
@@ -252,15 +252,15 @@ echo '{
 ```
 最后，当 CNI 插件执行结束之后，会把容器的 IP 地址等信息返回给容器运行时，然后被 kubelet 添加到 Pod status 字段中，整个容器网络配置就宣告解决了。
 
-有了类似容器运行时接口（CRI）、持久化存储接口（CSI）这种开放性的设计，需要接入什么样的网络，设计一个对应的网络插件即可。这样一来节省了开发资源可以集中精力到 Kubernetes 本身，二来可以利用开源社区的力量打造一整个丰富的生态。现如今，支持 CNI 规范的网络插件多达二十几种，如图 7-32 所示。
+有了类似容器运行时接口（CRI）、持久化存储接口（CSI）这种开放性的设计，需要接入什么样的网络，设计一个对应的网络插件即可。这样一来节省了开发资源可以集中精力到 Kubernetes 本身，二来可以利用开源社区的力量打造一整个丰富的生态。现如今，支持 CNI 规范的网络插件多达二十几种，如图 7-31 所示。
 
 :::center
   ![](../assets/cni-plugin.png) <br/>
-  图 7-32 CNI 网络插件 [图片来源](https://landscape.cncf.io/guide#runtime--cloud-native-network)
+  图 7-31 CNI 网络插件 [图片来源](https://landscape.cncf.io/guide#runtime--cloud-native-network)
 :::
 
 上述几十种网络插件笔者无法逐一解释，但就实现的容器通信模式而言，总结其实就上面三种类型：Overlay 覆盖网络模式、三层路由模式 和 Underlay 底层网络模式。
 
-最后，对于容器编排系统而言，考虑网络并非孤立的功能模块，最好还要配套各类的网络访问策略能力支持。例如用来限制 Pod 出入站规则网络策略（NetworkPolicy），对网络流量数据进行分析监控等等额外功能。上述需求明显不属于 CNI 规范内的范畴，因此并不是每个 CNI 插件都会支持这些额外的功能。例如，如果选择 Flannel 且需要启用网络策略，就必须额外配合其他插件（如 Calico 或 Cilium）来实现。因此，有这方面需求的，应该考虑功能更全面的网络插件。
+最后，对于容器编排系统而言，考虑网络并非孤立的功能模块，最好还要配套各类的网络访问策略能力支持。例如用来限制 Pod 出入站规则网络策略（NetworkPolicy），对网络流量数据进行分析监控等等额外功能。上述需求明显不属于 CNI 规范内的范畴，因此并不是每个 CNI 插件都会支持这些额外的功能。例如，如果选择 Flannel 且需要启用网络策略，必须额外配合其他插件（如 Calico 或 Cilium）来实现。因此，有这方面需求的，应该考虑功能更全面的网络插件。
 
 

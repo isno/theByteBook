@@ -21,7 +21,7 @@ Requests 和 limits 的配置除了表明资源情况和限制资源使用之外
 
 Kubernetes 基于每个 Pod 中容器的资源请求（requests）和限制（limits）为 Pod 设置服务质量（Quality of Service，QoS）类。不同的 QoS 类决定了当节点资源不足时 Kubernetes 如何处理节点上的 Pod。
 
-在 Kubernetes 中，Pod 的 requests 和 limits 对应到三个 QoS（服务质量）等级，分别为：
+Pod 中 requests 和 limits 与 QoS 类的对应关系如图所示：
 
 - **Guaranteed**：优先级最高，可以考虑数据库应用或者一些重要的业务应用。除非 Pod 使用超过了它们的 limits，或者节点的内存压力很大而且没有 QoS 更低的 Pod，否则不会被杀死。
 - **Burstable**：这种类型的 Pod 可以多于自己请求的资源（上限由 limit 指定，如果 limit 没有配置，则可以使用宿主机中的任意可用资源），但是重要性认为比较低，可以是一般性的应用或者批处理任务。
