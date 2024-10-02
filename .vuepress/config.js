@@ -9,7 +9,7 @@ import { containerPlugin } from '@vuepress/plugin-container'
 
 export default defineUserConfig({
     lang: 'zh-CN',
-    title: '深入高可用架构原理与实践',
+    title: '深入高可用系统原理与设计',
     description: '构建大规模高可用的分布式系统',
     head: [
         ['link', { rel: "shortcut icon", href: "/assets/favicon.ico" }],
