@@ -46,9 +46,9 @@ Unfortunately, Paxos has two significant drawbacks. The first drawback is that P
 we were not able to understand the complete protocol until after reading several simplified explanations and designing our own alternative protocol, a process that took almost a year.
 :::
 
-上面大致含义说“Paxos 真的太难懂了...”，连斯坦福的教授和博士都感觉难以理解，所以他们的论文取名《In Search of an Understandable Consensus Algorithm》，意思是“易懂的共识算法还在寻找中”，根本不像 Lamport 说的那么简单。
+上面大致含义说“Paxos 真的太难懂了...”，连斯坦福的教授和博士都感觉难以理解。所以他们的论文取名《In Search of an Understandable Consensus Algorithm》，意思是“易懂的共识算法还在寻找中”，根本不像 Lamport 说的那么简单。
 
-注意 Raft 论文发表于 2013 年，而《Paxos Made Simple》是 2001年 发表的，也就是说 Paxos 算法已经被研究了十几年，直到 Google 的 Chubby 横空出世，使用 Paxos 算法解决了数据的一致性和可用性，即使在面临节点故障或其他网络问题时也能保证服务的稳定性。
+注意 Raft 论文发表于 2013 年，而论文《Paxos Made Simple》是 2001 年发表的，也就是说 Paxos 算法已经被研究了十几年，直到 Google 的 Chubby 横空出世，使用 Paxos 算法解决了数据的一致性和可用性，即使在面临节点故障或其他网络问题时也能保证服务的稳定性。
 
 得益于 Google 的行业影响力，辅以 Chubby 作者 Mike Burrows 那略显夸张但足够吸引眼球的评价推波助澜，Paxos 算法开始从理论界进入工业实践，逐渐被大家熟知和认可。最终 Lamport 凭借他在分布式领域的贡献，于 2013 年获得图灵奖。
 
