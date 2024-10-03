@@ -140,6 +140,6 @@ profiles:
 
 经过预选筛选，优选的打分之后，调度器已选择出调度的最终目标节点。最后一步是通知目标节点中的 Kubelet 创建 Pod 了。调度器并不会直接与 Kubelet 通信，而是将 Pod 对象的 nodeName 字段的值，修改为上述选中 Node 的名字即可。Kubelet 会持续监控 Etcd 中 Pod 信息的变化，然后执行一个称为 Admin 的本地操作，确认资源是否可用、端口是否冲突，实际上就是通用过滤策略再执行一遍，再次确认 Pod 是否能在该节点运行。
 
-不过，从调度器更新 Etcd 中的 Nodename，到 Kueblet 检测到变化，以及二次确认是否可调度。这一系列的过程，可能会持续一段不等的时间。如果等到一切工作都完成，才宣告调度结束，那势必影响调度的效率。调度器采用了名为乐观绑定（Optimistic Binding）的策略来解决这个问题。首先，调度器同步更新 Scheduler Cache 里的 Pod 的 nodeName 的信息，并发起异步更新 Pod 的 nodeName 信息，该步骤在调度生命周期中称 Bind 步骤。如果调度成功了，那 Scheduler Cache 和 Etcd 中的信息势必一致。如果调度失败了（也就是异步更新失败），也没有太大关系，Informer 会持续监控 Pod 的变化，将调度成功却没有创建成功的 Pod 清空 nodeName 字段，并重新同步至调度队列。
+不过，从调度器更新 Etcd 中的 nodeName，到 Kueblet 检测到变化，再到二次确认是否可调度。这一系列的过程，会持续一段不等的时间。如果等到一切工作都完成，才宣告调度结束，那势必影响整体调度的效率。调度器采用了乐观绑定（Optimistic Binding）的策略来解决上述问题。首先，调度器同步更新 Scheduler Cache 里的 Pod 的 nodeName 的信息，并发起异步请求 Etcd 更新 Pod 的 nodeName 信息，该步骤在调度生命周期中称 Bind 步骤。如果调度成功了，那 Scheduler Cache 和 Etcd 中的信息势必一致。如果调度失败了（也就是异步更新失败），也没有太大关系，Informer 会持续监控 Pod 的变化，将调度成功却没有创建成功的 Pod 清空 nodeName 字段，并重新同步至调度队列。
 
 至此，整个 Pod 调度生命周期宣告结束。

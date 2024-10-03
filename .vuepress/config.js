@@ -271,7 +271,7 @@ export default defineUserConfig({
                         link: '/container/Resource-scheduling.md',
                         children: [
                             "/container/resource.md",
-                            "/container/Qos.md",
+                            "/container/Extended-Resource.md",
                             "/container/kube-scheduler.md"
                         ]
                     },
