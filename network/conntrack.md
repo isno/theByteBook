@@ -4,9 +4,12 @@ conntrack 是 connection track（连接跟踪）的缩写。顾名思义，Linux
 
 当 Linux 系统收到一个数据包时，内核中的 conntrack 模块会为每一个经过网络协议栈的数据包，生成一个连接记录（又称连接条目）。此后，所有属于此连接记录的数据包都被分配给这个连接，并标识连接的状态（如 NEW、ESTABLISHED 等）。当连接状态变化时，conntrack 会更新连接记录反映这些变化。
 
-笔者用 TCP 的三次握手例子帮助你理解。首先，客户端向服务器发送一个 TCP SYN 包，请求建立连接。当 Linux 系统收到这个 SYN 包时，内核中的 conntrack 模块会为其创建一个新的连接记录，并标记状态为 NEW。之后，服务器回复 SYN-ACK，并等待客户端的 ACK 报文，一旦握手完成，状态将转为 ESTABLISHED。
+笔者用 TCP 的三次握手例子帮助你理解：
+- 首先，客户端向服务器发送一个 TCP SYN 包，请求建立连接；
+- 当 Linux 系统收到 TCP SYN 包时，内核中的 conntrack 模块会为其创建一个新的连接记录，并标记状态为 NEW；
+- 之后，服务器回复 SYN-ACK，并等待客户端的 ACK 报文。一旦 TCP 握手完成，连接记录中的状态将转为 ESTABLISHED。
 
-通过命令 cat /proc/net/nf_conntrack 命令查看连接记录，如下所示的是一条类型为 TCP、状态为 ESTABLISHED 的连接记录。
+通过命令 cat /proc/net/nf_conntrack 查看连接记录，如下所示的是一条类型为 TCP、状态为 ESTABLISHED 的连接记录。
 
 ```bash
 $ cat /proc/net/nf_conntrack

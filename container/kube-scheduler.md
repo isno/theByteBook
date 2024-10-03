@@ -30,36 +30,116 @@ Kubernetes 默认调度器（kube-scheduler）双循环调度机制如图 7-31 �
 
 第二个控制循环称为 Scheduling 循环。该循环主要逻辑是不断地从调度队列（PriorityQueue）中出队一个 Pod。然后，触发两个最核心的调度阶段：过滤阶段（也称为预选阶段，图 7-31 中的 Predicates）和打分阶段（也称为优选阶段，图 7-31 中的 Priority）。
 
-- 过滤阶段：该阶段主要是调用过滤插件（稍后介绍）筛选出符合 Pod 要求的 Node 节点集合。当然，该阶段所有的信息都是从 Scheduler Cache 获取的。 Kubernetes 的调度器内置了一批过滤插件，总结它们的过滤策略如下：
-  - 资源过滤策略：检查节点资源是否满足 Pod 请求（request），在节点之间平衡资源分配。
-  - 节点过滤策略：与宿主机节点相关的策略。例如检查 Pod 是否能容忍节点的污点；确保 Pod 调度到符合亲和性条件的节点；
-  - 拓扑和亲和性策略：该策略主要处理 Pod 之间的亲和性规则，还有确保 Pod 在不同节点间均匀分布。
-
-过滤阶段执行完毕之后，得到一个可供 Pod 调度的所有节点列表。如果这个列表是空的，代表这个 Pod 不可调度。过滤阶段至此结束，接着进入打分阶段。
-
-打分阶段的目的是对过滤阶段接到的节点进行排序，选择最佳节点来运行 Pod。打分逻辑由一系列的评分插件（Score Plugins）组成，这些插件根据预定的规则为每个节点分配一个分数。调度器最终会选择分数最高的节点来调度 Pod。如果存在多个节点分数相同，调度器会随机选择其中一个。
-
-
-
-Kubernetes 从 v1.15 版本起，为默认调度器（kube-scheduler）设计了可扩展的机制 —— Scheduling Framework。这个设计的主要目的，是在调度器生命周期的关键点上（图中绿色矩形箭头框），向用户暴露可以扩展和实现自定义调度逻辑的接口。
+Kubernetes 从 v1.15 版本起，为默认调度器（kube-scheduler）设计了可扩展的机制 —— Scheduling Framework。这个设计的主要目的，是在调度器生命周期的关键点上（图中绿色矩形箭头框），向外暴露可以扩展和实现自定义调度逻辑的接口。
 
 :::center
   ![](../assets/scheduling-framework-extensions.svg)<br/>
    图 7-38 Pod 的调度上下文以及调度框架公开的扩展点
 :::
 
-有了 Scheduling Framework，在保持调度“核心”简单且可维护的同时，用户只要编写自己的调度插件注册到 Scheduling Framework 的扩展点就能实现自己想要的调度逻辑。笔者列举部分扩展点，供你参考：
+值得一提的是，“**默认**调度器”，这里强调的是，本文中的调度逻辑是 Kubernetes 内置一批插件完成的。你也可以编写自己的调度插件注册到 Scheduling Framework 的扩展点实现自己想要的调度逻辑。
 
-- sort：这些插件对调度队列中的悬决的 Pod 排序。一次只能启用一个队列排序插件。
-- preFilter：这些插件用于在过滤之前预处理或检查 Pod 或集群的信息。它们可以将 Pod 标记为不可调度。
-- filter：这些插件相当于调度策略中的断言（Predicates），用于过滤不能运行 Pod 的节点。 过滤器的调用顺序是可配置的。 如果没有一个节点通过所有过滤器的筛选，Pod 将会被标记为不可调度。
-- postFilter：当无法为 Pod 找到可用节点时，按照这些插件的配置顺序调用他们。 如果任何 postFilter 插件将 Pod 标记为可调度，则不会调用其余插件。
-- preScore：这是一个信息扩展点，可用于预打分工作。
-- score：这些插件给通过筛选阶段的节点打分。调度器会选择得分最高的节点。
+先来看优选阶段。该阶段主要在调度器生命周期的 PreFilter 和 Filter 阶段，调用相关的过滤插件筛选出符合 Pod 要求的 Node 节点集合。Kubernetes 默认调度器中内置的一批筛选插件，如下所示。
+```go
+// k8s.io/kubernetes/pkg/scheduler/algorithmprovider/registry.go
+func getDefaultConfig() *schedulerapi.Plugins {
+  ...
+  Filter: &schedulerapi.PluginSet{
+      Enabled: []schedulerapi.Plugin{
+        {Name: nodeunschedulable.Name},
+        {Name: noderesources.FitName},
+        {Name: nodename.Name},
+        {Name: nodeports.Name},
+        {Name: nodeaffinity.Name},
+        {Name: volumerestrictions.Name},
+        {Name: tainttoleration.Name},
+        {Name: nodevolumelimits.EBSName},
+        {Name: nodevolumelimits.GCEPDName},
+        {Name: nodevolumelimits.CSIName},
+        {Name: nodevolumelimits.AzureDiskName},
+        {Name: volumebinding.Name},
+        {Name: volumezone.Name},
+        {Name: interpodaffinity.Name},
+      },
+    },
+}
+```
 
+上述插件本质上是按照 Scheduling Framework 的规范实现 Filter 方法，按照方法内预设的策略来筛选节点。上述插件的筛选策略，可以总结以下三类：
 
+  - **通用过滤策略**：负责最基础的筛选策略。例如，检查节点可用资源是否满足 Pod 请求（request），检查 Pod 申请的宿主机端口号（spec.nodeport）是否跟节点中端口号冲突。对应的插件有 noderesources、nodeports 等。
+  - **节点相关的过滤策略**：与节点相关的筛选策略。例如，检查 Pod 中污点容忍度（tolerations）是否匹配节点的污点（taints）；检查待调度 Pod 节点亲和性设置（nodeAffinity）是否和节点匹配；检查待调度 Pod 与节点中已有 Pod 之间亲和性（Affinity）和反亲和性（Anti-Affinity）的关系。对应的插件有 tainttoleration、interpodaffinity、nodeunschedulable 等。
+  - **Volume 相关的过滤策略**：例如，检查 Pod 挂载的 PV 是否冲突（AWS EBS 类型的 Volume 不允许被两个 Pod 同时使用）。或者是检查一个节点上某个类型的 PV 是否超过了一定数目。对应的插件 nodevolumelimits、volumerestrictions 等。
 
+过滤阶段执行完毕之后，得到一个可供 Pod 调度的所有节点列表。如果这个列表是空的，代表这个 Pod 不可调度。至此，预选阶段宣告结束，接着进入优选阶段。
 
-值得注意的是，Scheduling Framework 属于 Kubernetes 内部扩展机制，需要按照规范编写 Golang 代码。
+优选阶段设计和预选阶段基本一致，即调用相关的打分插件，对预选阶段得到的节点进行排序，选择出一个评分最高的节点来运行 Pod。不过，打分插件与预选插件稍有不同，它多一个权重属性。默认调度器内置的打分插件以及权重如下所示：
 
-在上述两个阶段结束之后，调度器 kube-scheduler 会将就需要将 Pod 对象的 nodeName 字段的值，修改为选中 Node 的名字，这个过程在 Kubernetes 里面被称作 Bind。为了不在关键调度路径里远程访问 API Server，Kubernetes 默认调度器在 Bind 阶段只会更新 Scheduler Cache 里的 Pod 和 Node 的信息。这种基于“乐观”假设的 API 对象更新方式，在 Kubernetes 里被称作 Assume。Assume 之后，调度器才会创建一个 Goroutine 异步地向 API Server 发起更新 Pod 的请求，kubelet 完成真正调度操作。
+```go
+// k8s.io/kubernetes/pkg/scheduler/algorithmprovider/registry.go
+func getDefaultConfig() *schedulerapi.Plugins {
+  ...
+  Score: &schedulerapi.PluginSet{
+      Enabled: []schedulerapi.Plugin{
+        {Name: noderesources.BalancedAllocationName, Weight: 1},
+        {Name: imagelocality.Name, Weight: 1},
+        {Name: interpodaffinity.Name, Weight: 1},
+        {Name: noderesources.LeastAllocatedName, Weight: 1},
+        {Name: nodeaffinity.Name, Weight: 1},
+        {Name: nodepreferavoidpods.Name, Weight: 10000},
+        {Name: defaultpodtopologyspread.Name, Weight: 1},
+        {Name: tainttoleration.Name, Weight: 1},
+      },
+    }
+    ...
+}
+```
+
+优选阶段最重要的打分策略是 NodeResources.LeastAllocated，它的计算公式大致如下：
+
+$
+\text{score} = \frac{\frac{\left( \text{capacity}_{\text{cpu}} - \sum_{\text{pods}}\text{requested}_{\text{cpu}} \right) \times 10 }{\text{capacity}_{\text{cpu}}}  +  {\frac{ \left( \text{capacity}_{\text{memeory}} - \sum_{\text{pods}}(\text{requested}_{\text{memeory}})\right) \times 10 }{\text{capacity}_{\text{memeory}}}   }}{2}
+$
+
+可以看到，上述公式实际上是根据节点中 CPU 和内存资源剩余量来打分，使得 Pod 倾向于被调度到资源使用较少的节点，避免某些节点资源过载而其他节点资源闲置。
+
+与 NodeResources.LeastAllocated 一起搭配的，还有 NodeResources.BalancedAllocation 策略，它的计算公式如下。
+
+$
+\text{score} = 10 - \text{variance}(\text{cpuFraction}, \text{memoryFraction}, \text{volumeFraction}) \times 10
+$
+
+这里的 Fraction 指的是资源的利用比例。笔者以 cpuFraction 为例，它的计算公式是：
+
+$
+\text{cpuFraction} =  \frac{\text{ Pod 的 CPU 请求}}{\text{节点中 CPU 总量}}
+$
+
+memoryFraction、volumeFraction 也是类似的概念。Fraction 算法的主要作用是：计算资源使用比例的方差，来评估节点的资源（CPU、内存、volume）分配均衡程度，避免出现 CPU 被大量分配，但内存大量剩余的情况。方差越小，说明资源分配越均衡，因此得分越高。
+
+除了上述两种优选策略外，还有 InterPodAffinity（根据 Pod 之间的亲和性和反亲和性规则来打分）、Nodeaffinity（根据节点的亲和性规则来打分）、ImageLocality（根据节点中是否缓存容器镜像打分）、NodePreferAvoidPods（基于节点的注解信息打分）等等，笔者就不再一一解释了。
+
+值得一提的是，上述打分插件的权重可以在调度器配置文件中设置，重新调整它们在调度决策中的影响力。例如，如果你希望更重视 NodePreferAvoidPods 插件的打分结果，可以为该插件设置更高的权重。如下所示：
+
+```yaml
+apiVersion: kubescheduler.config.k8s.io/v1
+kind: KubeSchedulerConfiguration
+profiles:
+- schedulerName: default-scheduler
+  plugins:
+    score:
+      enabled:
+      - name: NodePreferAvoidPods
+        weight: 10000
+      - name: InterPodAffinity
+        weight: 1
+      ...
+```
+
+经过打分阶段之后，调度器根据预定的规则为每个节点分配一个分数，最终会选择分数最高的节点来调度 Pod。如果存在多个节点分数相同，调度器会随机选择其中一个。
+
+经过预选筛选，优选的打分之后，调度器已选择出调度的最终目标节点。最后一步是通知目标节点中的 Kubelet 创建 Pod 了。调度器并不会直接与 Kubelet 通信，而是将 Pod 对象的 nodeName 字段的值，修改为上述选中 Node 的名字即可。Kubelet 会持续监控 Etcd 中 Pod 信息的变化，然后执行一个称为 Admin 的本地操作，确认资源是否可用、端口是否冲突，实际上就是通用过滤策略再执行一遍，再次确认 Pod 是否能在该节点运行。
+
+不过，从调度器更新 Etcd 中的 Nodename，到 Kueblet 检测到变化，以及二次确认是否可调度。这一系列的过程，可能会持续一段不等的时间。如果等到一切工作都完成，才宣告调度结束，那势必影响调度的效率。调度器采用了名为乐观绑定（Optimistic Binding）的策略来解决这个问题。首先，调度器同步更新 Scheduler Cache 里的 Pod 的 nodeName 的信息，并发起异步更新 Pod 的 nodeName 信息，该步骤在调度生命周期中称 Bind 步骤。如果调度成功了，那 Scheduler Cache 和 Etcd 中的信息势必一致。如果调度失败了（也就是异步更新失败），也没有太大关系，Informer 会持续监控 Pod 的变化，将调度成功却没有创建成功的 Pod 清空 nodeName 字段，并重新同步至调度队列。
+
+至此，整个 Pod 调度生命周期宣告结束。

@@ -222,7 +222,7 @@ Kubernetes 中的 Volume 创建和管理主要由 VolumeManager（卷管理器�
   图 7-24 Pod 挂载持久化 Volume 的过程
 :::
 
-上述流程中第三方存储供应商实现 Volume Plugin 即 CSI（Container Storage Interface，容器存储接口）插件。CSI 是一个开放性的标准，目标是位容器编排系统（不仅仅是 Kubernetes，还包括 Docker Swarm 和 Mesos 等）提供统一的存储接口。
+上述流程中第三方存储供应商实现 Volume Plugin 即 CSI（Container Storage Interface，容器存储接口）插件。CSI 是一个开放性的标准，目标是为容器编排系统（不仅仅是 Kubernetes，还包括 Docker Swarm 和 Mesos 等）提供统一的存储接口。
 
 CSI 插件在实现上是一个可执行的二进制文件，它以 gRPC 的方式对外提供了三个主要的 gRPC 服务：Identity Service、Controller Service、Node Service 用于卷的管理、挂载和卸载等操作。笔者介绍如下：
 
