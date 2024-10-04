@@ -38,7 +38,7 @@ kubectl autoscale deployment foo --cpu-percent=70 --min=1 --max=10
 
 :::center
   ![](../assets/HPA.svg)<br/>
-  图 7-34 HPA 扩缩容的原理
+  图 7-38 HPA 扩缩容的原理
 :::
 
 ## 7.8.2 Pod 垂直自动伸缩
@@ -93,11 +93,11 @@ Recommendation:
 
 KEDA 的出现并非为了取代 HPA，而是与其形成互补关系。
 
-KEDA 的工作原理如图 7-35 所示：用户通过配置 ScaledObject（缩放对象）来定义 Scaler（KEDA 的内部组件）的工作方式，Scaler 持续从外部系统获取状态数据，并将这些数据与配置的扩缩条件进行比较。当条件满足时，Scaler 触发扩缩操作，调用 Kubernetes 的 HPA 组件调整工作负载 Pod 副本数。
+KEDA 的工作原理如图 7-39 所示：用户通过配置 ScaledObject（缩放对象）来定义 Scaler（KEDA 的内部组件）的工作方式，Scaler 持续从外部系统获取状态数据，并将这些数据与配置的扩缩条件进行比较。当条件满足时，Scaler 触发扩缩操作，调用 Kubernetes 的 HPA 组件调整工作负载 Pod 副本数。
 
 :::center
   ![](../assets/keda-arch.png)<br/>
-  图 7-35 KADA 架构图
+  图 7-39 KADA 架构图
 :::
 
 KEDA 内置了几十种常见的 Scaler，用于处理特定的事件源或指标源。笔者列举一些常见的 Scaler 供参考：
@@ -145,7 +145,7 @@ spec:
 
 :::center
   ![](../assets/Cluster-AutoScaler.png)<br/>
-  图 7-36 Cluster AutoScaler 自动缩减（Scale Down）的原理
+  图 7-40 Cluster AutoScaler 自动缩减（Scale Down）的原理
 :::
 
 Cluster Autoscaler 虽然是 Kubernetes 官方标准，但是由于他深度依赖公有云厂商，因此具体使用方法、功能以及限制以公有云厂商具体实现为准。笔者就不再过多介绍了。

@@ -15,11 +15,11 @@
 
 Omega 论文中提出了一种基于共享状态（图 7-1 中的 Scheduler Cache）的双循环调度机制，用来解决大规模集群的调度效率问题。双循环的调度机制不仅应用在 Google 的 Omega 系统中，也被 Kubernetes 继承下来。
 
-Kubernetes 默认调度器（kube-scheduler）双循环调度机制如图 7-31 所示。
+Kubernetes 默认调度器（kube-scheduler）双循环调度机制如图 7-36 所示。
 
 :::center
   ![](../assets/kube-scheduler.svg)<br/>
-  图 7-37 默认调度器 kube-scheduler 的双循环调度机制
+  图 7-36 默认调度器 kube-scheduler 的双循环调度机制
 :::
 
 从图 7-37 可以看出，Kubernetes 调度的核心就是两个互相独立的控制循环。
@@ -30,11 +30,11 @@ Kubernetes 默认调度器（kube-scheduler）双循环调度机制如图 7-31 �
 
 第二个控制循环称为 Scheduling 循环。该循环主要逻辑是不断地从调度队列（PriorityQueue）中出队一个 Pod。然后，触发两个最核心的调度阶段：过滤阶段（也称为预选阶段，图 7-31 中的 Predicates）和打分阶段（也称为优选阶段，图 7-31 中的 Priority）。
 
-Kubernetes 从 v1.15 版本起，为默认调度器（kube-scheduler）设计了可扩展的机制 —— Scheduling Framework。这个设计的主要目的，是在调度器生命周期的关键点上（图中绿色矩形箭头框），向外暴露可以扩展和实现自定义调度逻辑的接口。
+Kubernetes 从 v1.15 版本起，为默认调度器（kube-scheduler）设计了可扩展的机制 —— Scheduling Framework。这个设计的主要目的，是在调度器生命周期的关键点上（图7-37 中绿色矩形箭头框），向外暴露可以扩展和实现自定义调度逻辑的接口。
 
 :::center
   ![](../assets/scheduling-framework-extensions.svg)<br/>
-   图 7-38 Pod 的调度上下文以及调度框架公开的扩展点
+   图 7-37 Pod 的调度上下文以及调度框架公开的扩展点
 :::
 
 值得一提的是，“**默认**调度器”，这里强调的是，本文中的调度逻辑是 Kubernetes 内置一批插件完成的。你也可以编写自己的调度插件注册到 Scheduling Framework 的扩展点实现自己想要的调度逻辑。

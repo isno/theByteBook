@@ -77,11 +77,11 @@ service DevicePlugin {
 	rpc PreStartContainer(PreStartContainerRequest) returns (PreStartContainerResponse) {}
 }
 ```
-目前，Kubernetes 社区中已经出现了许多 Device Plugin，例如 NVIDIA GPU、Intel GPU、AMD GPU、FPGA 和 RDMA 等。图 3-7 展示了一个 GPU Device Plugin 的工作原理。
+目前，Kubernetes 社区中已经出现了许多 Device Plugin，例如 NVIDIA GPU、Intel GPU、AMD GPU、FPGA 和 RDMA 等。图 7-35 展示了一个 GPU Device Plugin 的工作原理。
 
 :::center
   ![](../assets/DevicePlugin.svg)<br/>
-  图 7-33 Device Plugin 工作原理
+  图 7-35 Device Plugin 工作原理
 :::
 
 首先，Device Plugin（例如，NVIDIA GPU device plugin）作为一个独立进程（以 DaemonSet 方式）运行在 Kubernetes 集群中的各个节点上。
