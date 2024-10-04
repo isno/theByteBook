@@ -61,7 +61,7 @@ Google 开发的第三套容器管理系统是 Kubernetes，其背景如下：
 
 - Master 系统由多个分布式组件构成，包括 API Server、Scheduler、Controller Manager 和 Cloud Controller Manager；
 - Kubernetes 的最小运行单元 Pod，其原型是 Borg 系统中的 Alloc（资源分配的缩写）；
-- 工作节点上的 Kublet 管理容器，其设计来源于 Borg 系统中的 Borglet 组件；
+- 工作节点上的 kubelet 组件，其设计来源于 Borg 系统中的 Borglet 组件；
 - 基于 Raft 算法实现的分布式一致性键值存储 Etcd，对应 Omega 系统中基于 Paxos 算法实现的 Store。
 
 :::center

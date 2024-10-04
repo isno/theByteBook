@@ -7,7 +7,7 @@ HPA，全称是 Horizontal Pod Autoscaler（Pod 水平自动扩缩），是 Kube
 
 HPA 的实现思路很简单：即通过监控业务的繁忙程度来做出相应的调整。当负载较高时，增加工作负载的 Pod 副本数量；当负载减少时，Pod 副本数也会相应缩减。所以，实现扩缩容的关键问题之一是：“如何准确识别业务的忙闲程度？”
 
-Kubernetes 提供了一种标准的 Metrics 接口（Metrics API），能够提供关于节点和 Pod 资源使用情况的信息。如下所示，在 minikube 节点上一个 Metrics 接口响应示例。
+Kubernetes 提供了一种标准的 Metrics API，能够提供关于节点和 Pod 资源使用情况的信息。如下所示，在 minikube 节点上一个 Metrics API 响应示例。
 
 ```bash
 $ kubectl get --raw "/apis/metrics.k8s.io/v1beta1/nodes/minikube" | jq '.'
@@ -27,14 +27,14 @@ $ kubectl get --raw "/apis/metrics.k8s.io/v1beta1/nodes/minikube" | jq '.'
   }
 }
 ```
-最初，Metrics 接口仅支持 CPU 和内存的使用指标。随着需求的增加，Metrics API 开始扩展，支持用户自定义的指标（Custom Metrics）。对于这些自定义的指标，用户需要自行开发 Custom Metrics Server，并调用其他服务（如 Prometheus）来获取相关数据。
+最初，Metrics API 仅支持 CPU 和内存的使用指标。随着需求的增加，Metrics API 开始支持用户自定义指标（Custom Metrics）。对于自定义指标，用户需要自行开发 Custom Metrics Server，调用其他服务（如 Prometheus）来获取相关数据。
 
-有了 Metrics 接口，Kubernetes 便能够识别业务的繁忙程度。接下来，如图 7-34 所示，使用 kubectl autoscale 命令创建 HPA，并设置监控的指标类型（如 cpu-percent）、期望的目标值（70%）以及 Pod 副本数量的范围（最少 1 个，最多 10 个）。
+有了 Metrics API，Kubernetes 便能够识别业务的繁忙程度。接下来，如图 7-38 所示，通过命令 kubectl autoscale 创建 HPA，并设置监控的指标类型（如 cpu-percent）、期望的目标值（70%）以及 Pod 副本数量的范围（最少 1 个，最多 10 个）。
 
 ```bash
 kubectl autoscale deployment foo --cpu-percent=70 --min=1 --max=10
 ```
-随后，HPA 组件会定期实时获取 Metrics 数据，并将其与设定的目标值进行比较，以决定是否需要进行扩缩。如果需要扩缩，HPA 会调用 Deployment 的 Scale 接口来调整当前的副本数量，最终实现将 Deployment 下每个 Pod 的指标维持在用户期望的水平。
+随后，HPA 定期实时获取 Metrics 数据，并将其与设定的目标值进行比较，以决定是否进行扩缩。如果需要扩缩，HPA 调用 Deployment 的 Scale 接口调整当前的副本数量，最终实现将 Deployment 下每个 Pod 的负荷维持在用户期望的水平。
 
 :::center
   ![](../assets/HPA.svg)<br/>
