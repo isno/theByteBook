@@ -26,11 +26,12 @@ mount("/usr/share/nginx/html","rootfs/data", "none", MS_BIND, nulll)
 通过 mount 命令挂载宿主机目录来实现数据持久化存储，显然存在明显的缺陷：
 - 与操作系统的强耦合：容器内的目录通过 mount 挂载到宿主机的绝对路径，这使得容器的运行环境与操作系统紧密绑定。这意味着 bind mount 方式无法写在 Dockerfile 中，否则镜像在其他环境可能无法启动。此外，宿主机中被挂载的目录与 Docker 没有明显关联，其他进程可能会误写，存在潜在的安全隐患。
 - 无法应对存储需求的复杂性：容器被广泛使用后，容器存储的需求绝对不是挂载到某个目录就能搞定。存储位置不再仅限于宿主机（可能需要挂载网络存储），存储介质不仅局限于磁盘（也可能是 tmpfs），存储类型也不仅是文件系统（还可能是块设备或对象存储）。
+- 此外，对于网络类型的存储，实在没必要先将其挂载到操作系统再挂载到容器内的目录。Docker 完全可以直接对接网络存储协议（如 iSCSI、NFS 等）越过操作系统，减少系统资源占用和延迟。
 
-此外，对于网络存储，没必要先将其挂载到操作系统再挂载到容器内的目录。Docker 完全可以直接对接网络存储协议（如 iSCSI、NFS 等）越过操作系统，减少系统资源占用和延迟。为此，Docker 从 1.7 版本起提供全新的挂载类型 Volume（存储卷）：
+为此，Docker 从 1.7 版本起提供全新的挂载类型 Volume（存储卷）：
 
 - 首先，Volume 会在宿主机中开辟一个专属于 Docker 的空间（通常在 Linux 中为 /var/lib/docker/volumes/ 目录），这样就解决了 bind mount 依赖于宿主机绝对路径的局限性。
-- 考虑存储类型非常多样，仅靠 Docker 自己实现并不现实，因此 Docker 在 1.10 版本中引入了 Volume Driver 机制，借助社区的力量来扩展和丰富其存储驱动，支持更多的存储系统和协议。
+- 考虑存储类型非常多样，仅靠 Docker 自己实现并不现实。因此，Docker 在 1.10 版本中引入了 Volume Driver 机制，借助社区的力量来扩展和丰富其存储驱动，支持更多的存储系统和协议。
 
 经过一系列的设计，现在 Docker 用户只要通过 docker plugin install 安装额外的第三方卷驱动，就能使用想要的网络存储或者各类云厂商提供的存储。笔者举个具体的例子供你参考，以下是一个使用阿里云文件存储（NAS）的示例：
 
@@ -58,7 +59,7 @@ docker run -d -v my-aliyun-nas-volume:/mnt/nas nginx:latest
 我们从 Docker 返回到 Kubernetes 中，同 Docker 类似的是：
 - Kubernetes 也抽象出了 Volume 的概念来解决持久化存储；
 - 在宿主机中，也开辟了属于 Kubernetes 的空间（该目录是 /var/lib/kubelet/pods/[pod uid]/volumes）；
-- 也设计了存储驱动（Volume Plugin）扩展支持出众多的存储类型，如本地存储、网络存储（如 NFS、iSCSI）、云厂商的存储服务（如 AWS EBS、GCE PD、阿里云 NAS 等）。
+- 也设计了存储驱动（在 Kubernetes 中称 Volume Plugin）扩展支持出众多的存储类型，如本地存储、网络存储（如 NFS、iSCSI）、云厂商的存储服务（如 AWS EBS、GCE PD、阿里云 NAS 等）。
 
 不同的是，作为一个工业级的容器编排系统，Kubernetes 的 Volume 机制相较于 Docker 更复杂，并且支持的存储类型也更加丰富。Kubernetes 支持的存储类型，如图 7-22 所示。
 
