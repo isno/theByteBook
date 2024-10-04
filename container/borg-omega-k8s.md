@@ -55,7 +55,7 @@ Google 开发的第三套容器管理系统是 Kubernetes，其背景如下：
 - 全球越来越多的开发者开始对 Linux 容器产生兴趣（尽管 Linux 容器是 Google 的技术基础，但开发者们首先想到的是 Docker，Google 并没有吃到红利）。
 - 同时，Google 已将公有云基础设施作为业务重点并实现持续增长（虽然 Google 提出了云计算的概念，但市场领先者已被 AWS 和阿里云占据，Google 起了大早赶了个晚集）。
 
-2013 年夏，Google 工程师们开始讨论如何借鉴 Borg 的经验开发容器编排系统，并希望通过十几年的技术积累重新影响云计算市场格局。Kubernetes 项目获批后，Google 于 2014 年 6 月的 DockerCon 大会上正式宣布将其开源。
+2013 年夏，Google 的工程师们开始讨论如何借鉴 Borg 的经验开发新一代容器编排系统。并希望通过十几年的技术积累影响云计算市场格局。Kubernetes 项目获批后，Google 于 2014 年 6 月的 DockerCon 大会上正式宣布将其开源。
 
 通过图 7-3 观察 Kubernetes 架构，能看出大量设计来源于 Borg/Omega 系统：
 

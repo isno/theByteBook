@@ -1,8 +1,8 @@
 # 6.2.1 Paxos 起源
 
-Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文为“兼职议会”。
+Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文为“兼职议会”。该篇论文的开头描述了一个虚构的古希腊岛屿考古发现故事。
 
-该篇论文的开头描述了一个虚构的古希腊岛屿考古发现故事。如果不事先说明，或许你根本不会意识到下面是一篇关于分布式的论文。
+如果不事先说明，或许你根本不会意识到下面是一篇关于分布式的论文。
 :::tip 《The Part-Time Parliament》
 
 最近的考古发现表明，在 Paxos 小岛上，尽管兼职议会成员都有逍遥癖，但议会模式仍然起作用。他们依旧保持了一致的会议记录，尽管他们频繁的进出会议室并且他们的信使还很健忘。Paxon 议会协议提供了一种新方法去实现设计分布式系统的状态机...
@@ -41,16 +41,18 @@ Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文�
 
 :::tip 《In Search of an Understandable Consensus Algorithm》节选
 
-Unfortunately, Paxos has two significant drawbacks. The first drawback is that Paxos is exceptionally difficult to understand ...
+Unfortunately, Paxos has two significant drawbacks. The first drawback is that **Paxos is exceptionally difficult to understand**...
 
 we were not able to understand the complete protocol until after reading several simplified explanations and designing our own alternative protocol, a process that took almost a year.
 :::
 
-上面大致含义说“Paxos 真的太难懂了...”，连斯坦福的教授和博士都感觉难以理解。所以他们的论文取名《In Search of an Understandable Consensus Algorithm》，意思是“易懂的共识算法还在寻找中”，根本不像 Lamport 说的那么简单。
+上面大致含义说“Paxos 真的太难懂了...”，连斯坦福的教授和博士都感觉难以理解。所以，他们的论文取名《In Search of an Understandable Consensus Algorithm》，意思是“易懂的共识算法还在寻找中”，根本不像 Lamport 说的那么简单。
 
 注意 Raft 论文发表于 2013 年，而论文《Paxos Made Simple》是 2001 年发表的，也就是说 Paxos 算法已经被研究了十几年，直到 Google 的 Chubby 横空出世，使用 Paxos 算法解决了数据的一致性和可用性，即使在面临节点故障或其他网络问题时也能保证服务的稳定性。
 
-得益于 Google 的行业影响力，辅以 Chubby 作者 Mike Burrows 那略显夸张但足够吸引眼球的评价推波助澜，Paxos 算法开始从理论界进入工业实践，逐渐被大家熟知和认可。最终 Lamport 凭借他在分布式领域的贡献，于 2013 年获得图灵奖。
+得益于 Google 的行业影响力，辅以 Chubby 作者 Mike Burrows 那略显夸张但足够吸引眼球的评价推波助澜，Paxos 算法开始从理论界进入工业实践，逐渐被大家熟知和认可。
+
+最终，Lamport 凭借他在分布式领域的贡献，于 2013 年获得图灵奖。
 
 [^1]: 参见 https://lamport.azurewebsites.net/pubs/pubs.html#lamport-paxos
 [^2]: 参见 https://lamport.azurewebsites.net/pubs/lamport-paxos.pdf

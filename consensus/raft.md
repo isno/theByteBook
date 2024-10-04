@@ -24,6 +24,6 @@ Raft is a consensus algorithm for managing a replicated log. It produces a resul
 
 此后，Raft 算法成为分布式容错系统开发的首选共识算法。
 
-接下来的内容将以领导者选举、日志复制和集群成员动态变更为例，讲解在 Paxos 难以落地的问题，Raft 算法是如何设计和妥善解决的。
+众所周知，当问题比较复杂时，可以把问题分解为几个小问题来处理。Raft 也使用分而治之的思想，把算法分为三个子问题：选举（Leader election）、日志复制（Log replication）、安全性（Safety）。接下来，笔者以这三个子问题为例，讲解在 Paxos 难以落地的问题，Raft 算法是如何设计和妥善解决的。
 
 [^1]: 论文参见 https://raft.github.io/raft.pdf
