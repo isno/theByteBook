@@ -1,20 +1,9 @@
 # 7.9 小结
 
-从 Google 的 Brog 到如今的 Kubernetes，容器化技术的最大益处早就超越了单纯的提高硬件资源使用率的范畴。
+本章，我们以 Google 内部容器系统演进作为开篇，深入讨论了 Kubernetes 网络、计算、存储、调度等方面的设计原理和应用。希望能让读者在 Kubernetes 这个复杂而庞大的项目中抓到主线，领悟到操作 YAML 文件背后的设计理念。
 
-Kubernetes 通过无数的扩展/接口，变成外部可扩展的功能：通过 CNI 插件，实现容器间通信；通过 CSI，所有的存储生态；通过 Device Plugin 机制把资源的支持扩展到 GPU、FPGA 以及各类硬件加速器等异构设备。正是这种开放性的设计，让 Kubernetes 在短短几年间内，成为生态丰富、应用广泛的技术底座。
+Kubernetes 的核心设计理念在于，从 API 到容器运行时的每一层，都为开发者暴露可供扩展的插件机制。通过 CNI 插件，把网络功能解耦，让外部参与容器网络的实现；通过 CSI 插件机制，建立了一套庞大的存储生态；通过 Device Plugin（设备插件）把资源的支持扩展到 GPU、FPGA、RDMA 等各类异构设备。依托这种开放性的设计，Kubernetes 社区出现了成千上万的插件，让工程师可以轻松构建出各个各样的技术平台。
 
-最关键的是，Kubernetes 以统一的方式抽象以上资源/基础设施的能力，并将这些抽象以声明式 API 的方式对外暴露，用户无需关注底层的基础设施哪来的、如何实现、如何配置，只需要关心应用的最终状态。屏蔽底层细节，为用户提供一种简单/一致/跨平台的方式来管理和部署应用，正是 Kubernetes 设计哲学的精髓所在。
+至关重要的是，Kubernetes 将所有接触的方方面面统一抽象为“资源”。所有的“资源”使用 YAML 文件描述，一个 YAML 文件即可表达出一个复杂基础设施的最终状态，并且自动地对应用进行运维和管理。这种设计隐藏了底层细节，为工程师提供了一种友好、一致且跨平台的管理和部署应用的方式。让云原生技术产生真正价值，正是 Kubernetes 设计哲学的精髓所在。
 
-本章参考内容： 
-
-- Kubernetes 官方文档， https://kubernetes.io/zh-cn/docs/
-- 张磊,《深入剖析 Kubernetes》
-- 《Kubernetes 存储架构及插件使用》https://www.alibabacloud.com/blog/596307
-- 《k8s 基于 cgroup 的资源限额》，https://arthurchiao.art/blog/k8s-cgroup-zh
-- 《容器镜像格式二十年的螺旋进化之路》，https://linux.cn/article-12442-1.html
-- 《从风口浪尖到十字路口，写在 Kubernetes 两周年之际》，https://mp.weixin.qq.com/s/hrgXzt7YKVf6ZCFzJ-WTFA
-- 《 500 行的 Linux 容器》，https://blog.lizzie.io/linux-containers-in-500-loc.html
-- 《Borg、Omega、K8s：Google 十年三代容器管理系统的设计与思考》，https://queue.acm.org/detail.cfm?id=2898444
-- 《How containers work: overlayfs》，https://jvns.ca/blog/2019/11/18/how-containers-work--overlayfs/
--《Large-scale cluster management at Google with Borg》，https://research.google/pubs/large-scale-cluster-management-at-google-with-borg/
+接下来，笔者将继续介绍基于“容器设计模式”的二次创新，也就是近几年热度极高的服务网格（ServiceMesh）。
