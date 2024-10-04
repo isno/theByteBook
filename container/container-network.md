@@ -166,7 +166,7 @@ $ ip route
 ```
 这条路由规则的含义是，发往 10.223.2.3 的数据包应进入与 container-1 连接的 cali2u3d 设备（也就是 Veth-Pair 设备的另一端）。
 
-由此可见，Calico 实际上将集群中每个节点的容器视为一个 AS（Autonomous System，自治域），并将节点视为边界路由器，节点之间相互交互路由规则，从而构建了容器间的三层路由连接网络。
+由此可见，Calico 实际上将集群中每个节点的容器视为一个 AS（Autonomous System，自治域），并将节点视为边界路由器，节点之间相互交互路由规则，从而构建出容器间的三层路由模式的网络。
 
 
 ## 7.6.3 Underlay 底层网络模式
@@ -181,7 +181,6 @@ MAC 地址原本是网卡接口的“身份证”，应该严格保持一对一�
   ![](../assets/macvlan.svg) <br/>
   图 7-29 MACVLAN 工作原理
 :::
-
 
 由于同一块物理网卡虚拟出的副本网卡天然处于同一个 VLAN 中，因此可以直接在宿主机中的二层网络中直接通信。Underlay 底层网络模式能最大限度的利用硬件的能力，有着最优秀的性能表现，但也由于它直接依赖硬件和底层网络环境限制，必须根据软硬件情况部署，没有 Overlay 覆盖网络那样开箱即用的灵活性。
 
@@ -228,9 +227,9 @@ bandwidth  bridge  dhcp  firewall  flannel calico-ipam cilium...
 ```
 接下来，容器运行时（如 CRI-O 或 containerd）加载上述 CNI 配置文件，将 plugins 列表里的第一个插件（flannel）设置为默认插件。
 
-当 Kubelet 组件在启动容器之前（也就是创建 Infra 容器时），调用 CNI 插件为 Infra 容器配置网络。这里的 CNI 插件就是可执行文件 /opt/cni/bin/flannel。调用 CNI 插件的参数分为两个部分：
+当 Kubelet 组件在启动容器之前（也就是创建 Infra 容器时），调用 CNI 插件为 Infra 容器配置网络。这里的 CNI 插件就是可执行文件 /opt/cni/bin/flannel。调用 CNI 插件时，传入的参数分为两个部分：
 - Pod 信息：如容器的唯一标识符、Pod 所在的命名空间、Pod 的名称等，这些信息一般组织成 JSON 对象；
-- CNI 插件执行的方法：如 add 和 del。
+- CNI 插件执行的方法，如 add 和 del。
 	- add 操作的含义是：执行分配 IP，创建 veth pair 设备等操作，将新创建的容器添加 flannel 网络中；
 	- del 操作的含义是：清除容器的网络配置，将容器从 flannel 网络中删除。
 
