@@ -8,9 +8,7 @@ Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文�
 最近的考古发现表明，在 Paxos 小岛上，尽管兼职议会成员都有逍遥癖，但议会模式仍然起作用。他们依旧保持了一致的会议记录，尽管他们频繁的进出会议室并且他们的信使还很健忘。Paxon 议会协议提供了一种新方法去实现设计分布式系统的状态机...
 :::
 
-为了说明 Paxos 算法并增强演讲效果，Lamport 演讲中多次扮演《夺宝奇兵》中的主角印第安纳·琼斯。
-
-遗憾的是，Paxos 论文中采用的希腊民主议会的比喻显然不太成功。Lamport 像写小说一样，把一个复杂的数学问题写成了一篇带有考古色彩的历史小说，听众没有记住 Paxos 算法，仅仅记住了印第安纳·琼斯。
+为了说明 Paxos 算法并增强演讲效果，Lamport 演讲中多次扮演《夺宝奇兵》中的主角印第安纳·琼斯。遗憾的是，Paxos 论文中采用的希腊民主议会的比喻显然不太成功。Lamport 像写小说一样，把一个复杂的数学问题写成了一篇带有考古色彩的历史小说，听众没有记住 Paxos 算法，仅仅记住了印第安纳·琼斯。
 
 1990 年，Lamport 将《The Part-Time Parliament》论文提交给 TOCS（美国计算机协会旗下的一本学术期刊）。根据 Lamport 博文中的描述[^1]，TOCS 的三位审稿人在阅读后认为“该论文虽然不怎么重要，但还有些意思”，但建议删掉所有与 Paxos 相关的故事背景。Lamport 对这些缺乏幽默感的审稿人颇为不爽，拒绝对论文进行任何修改，最终论文的发表被搁置。
 
@@ -46,7 +44,7 @@ Unfortunately, Paxos has two significant drawbacks. The first drawback is that *
 we were not able to understand the complete protocol until after reading several simplified explanations and designing our own alternative protocol, a process that took almost a year.
 :::
 
-上面大致含义说“Paxos 真的太难懂了...”，连斯坦福的教授和博士都感觉难以理解。所以，他们的论文取名《In Search of an Understandable Consensus Algorithm》，意思是“易懂的共识算法还在寻找中”，根本不像 Lamport 说的那么简单。
+上面大致的含义是，“Paxos 真的太难懂了...”。连斯坦福的教授和博士都感觉难以理解。所以，他们的论文取名《In Search of an Understandable Consensus Algorithm》，意思是“易懂的共识算法还在寻找中”，根本不像 Lamport 说的那么简单。
 
 注意 Raft 论文发表于 2013 年，而论文《Paxos Made Simple》是 2001 年发表的，也就是说 Paxos 算法已经被研究了十几年，直到 Google 的 Chubby 横空出世，使用 Paxos 算法解决了数据的一致性和可用性，即使在面临节点故障或其他网络问题时也能保证服务的稳定性。
 

@@ -55,7 +55,7 @@ spec:
 
 ## 2. Device Plugin
 
-在生产环境中，用户通常不需要手动操作扩展资源，除非有特殊情况。在 Kubernetes 中，管理各类异构资源的操作由一种称为 Device Plugin（设备插件）的机制负责。
+当然，除非有特殊情况，通常不需用手动的方式扩展异构资源。在 Kubernetes 中，管理各类异构资源的操作由一种称为 Device Plugin（设备插件）的机制负责。
 
 Device Plugin 核心就是提供了多个 gRPC 接口，硬件供应商根据接口规范为特定硬件编写插件。kubelet 通过 gRPC 接口与设备插件交互，实现设备发现、状态更新、资源上报等。最后，Pod 通过 request、limit 显示声明，即可使用各类异构资源，如同 CPU、内存一样。
 
@@ -86,15 +86,13 @@ service DevicePlugin {
 
 首先，Device Plugin（例如，NVIDIA GPU device plugin）作为一个独立进程（以 DaemonSet 方式）运行在 Kubernetes 集群中的各个节点上。
 
-当节点启动时，Device Plugin 会向 Kubernetes 的 kubelet 组件注册自己，告知 kubelet 该节点上有哪些特殊硬件资源可用。注册信息通常包括资源名称、资源数量和设备健康状态等。例如，一个 GPU Device Plugin 可能会注册资源名称为“nvidia.com/gpu”，并告知 kubelet 该节点上可用的 GPU 数量。
+当节点启动时，Device Plugin 向 kubelet 组件注册自己，告知 kubelet 该节点上有哪些特殊硬件资源可用。注册信息通常包括资源名称、资源数量和设备健康状态等。例如，一个 GPU Device Plugin 可能会注册资源名称为“nvidia.com/gpu”，并告知 kubelet 该节点上可用的 GPU 数量。
 
-
-随后，Device Plugin 会持续监测节点上的特殊硬件资源状态（图中的 ListAndWatch 接口）。当资源数量发生变化（如硬件故障、热插拔等）或资源健康状态发生改变时，它会及时向 kubelet 发送更新信息。
+随后，Device Plugin 持续监测节点上的特殊硬件资源状态（图中的 ListAndWatch 接口）。当资源数量发生变化（如硬件故障、热插拔等）或资源健康状态发生改变时，它会及时向 kubelet 发送更新信息。
 
 当用户创建一个 Pod 并请求特殊硬件资源时，Kubernetes 调度器根据节点上的资源状态和 Pod 的资源需求进行调度决策。一旦 Pod 被调度到某个节点并分配了特殊硬件资源，kubelet 会调用 Device Plugin 的 Allocate 接口获取设备相应的配置信息（如设备路径、驱动目录）。
 
-接下来，kubelet 会将这些信息追加到对应的容器创建请求中（CRI 请求）。最后，具体的容器运行时（如 Docker、Containerd 等）会将硬件驱动目录挂载到容器内部，容器内的应用程序便能够直接访问这些设备了。
-
+接下来，kubelet 会将这些信息追加到对应的容器创建请求中（CRI 请求）。最后，具体的容器运行时（如 Docker、Containerd 等）将硬件驱动目录挂载到容器内部，容器内的应用程序便能够直接访问这些设备了。
 
 :::tip 问题
 
