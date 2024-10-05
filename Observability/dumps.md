@@ -12,7 +12,9 @@ A small number of signals which cause abnormal termination of a process
 ...
 ```
 
-核心转储（Core dump）中的 “core” 代表程序的关键运行状态，“dump” 意为导出或快照。Linux 系统中，当程序异常终止时，Linux 系统会将程序的关键运行状态保存到一个 core dump 文件中。这个文件中包含寄存器信息（如程序指针、栈指针）、内存管理信息以及其他处理器和操作系统的状态数据。
+核心转储（Core dump）中的 “core” 代表程序的关键运行状态，“dump” 意为导出或快照。
+
+在Linux 系统中，当程序异常终止时，Linux 系统会将程序的关键运行状态保存到一个 core dump 文件中。这个文件中包含寄存器信息（如程序指针、栈指针）、内存管理信息以及其他处理器和操作系统的状态数据。
 
 使用 Linux 系统下的程序调试工具 gdb，能从 core dump 文件中分析出具体哪一行代码引发了程序崩溃。
 
@@ -25,4 +27,4 @@ A small number of signals which cause abnormal termination of a process
 
 此外，CNCF 发布的可观测性白皮书中仅提及了 core dump。实际上，dumps 范围应该扩展到包括 Heap dump（Java 堆栈在特定时刻的快照）和 Thread dump（特定时刻的 Java 线程快照）、Memory dump（内存快照）等等。
 
-最后，虽然 CNCF 将 dumps 纳入可观测性体系，但由于容器应用与系统全局配置的冲突、数据持久化的挑战（如在 Pod 重启前需要将 core dump 文件写入持久卷）等众多技术挑战，导致 dumps 尚未像性能剖析形成改进后的处理方案。目前，处理及分析 dumps 数据仍然得用传统的手段。
+最后，虽然 CNCF 将 dumps 纳入可观测性体系，但由于容器应用与系统全局配置的冲突、数据持久化的挑战（如在 Pod 重启前需要将 core dump 文件写入持久卷）等众多技术挑战，导致 dumps 领域尚未像性能剖析形成改进后的处理方案。目前，处理及分析 dumps 数据仍然得用传统的手段。
