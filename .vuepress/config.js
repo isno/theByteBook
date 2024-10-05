@@ -324,6 +324,7 @@ export default defineUserConfig({
                 children: [
                     '/GitOps/background.md',
                     '/GitOps/what-is-GitOps.md',
+                    '/GitOps/IaC.md',
                     '/GitOps/secrets-management.md',
                      {
                         text: "10.4 使用 Tekton 进行持续集成",
