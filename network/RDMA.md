@@ -21,7 +21,7 @@ InfiniBand 贸易协会）在 2000 年提出，因其极致的性能（能够实
 
 	尽管存在上述缺陷，但 Infiniband 因其卓越的性能仍然是某些领域是首选。例如，全球流行的人工智能应用 ChatGPT 背后的分布式机器学习系统就是基于 Infiniband 网络构建的。
 
-- iWRAP（Internet Wide Area RDMA Protocol，互联网广域 RDMA 协议），这是一种将 RDMA 封装在 TCP/IP 协议内的技术。RDMA 技术为了高性能而生，而 TCP/IP 协议是为了可靠性而生，它的三次握手、拥塞控制等机制让 iWRAP 失去了绝大部分 RDMA 技术的优势。所以，iWRAP 已经逐渐被业界抛弃。
+- iWRAP（Internet Wide Area RDMA Protocol，互联网广域 RDMA 协议），这是一种将 RDMA 封装在 TCP/IP 协议内的技术。RDMA 网络为了高性能而生，而 TCP/IP 协议为了可靠性而生，它的三次握手、拥塞控制等机制让 iWRAP 失去了绝大部分 RDMA 技术的优势。所以，先天设计缺陷让 iWRAP 逐渐被业界抛弃。
 
 - 为了降低 RDMA 使用成本，以及使 RDMA 技术走向通用数据中心领域。2010 年，IBTA 发布了 RoCE（RDMA over Converged Ethernet，融合以太网的远程直接内存访问）技术，将 Infiniband 的四层传输协议 RDMA“移植”到以太网。这样，只要有支持 RoCE 的特殊网卡 + 普通的以太网交换机就能享受 RDMA 高性能。如图 3-11 所示，RoCE 发展过程中出现了两个版本 RoCEv1 和 RoCEv2：
 	- RoCEv1 是一种链路层协议，仅支持在二层网络内一个广播域内互通；
