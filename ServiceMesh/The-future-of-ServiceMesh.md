@@ -52,9 +52,9 @@ Cilium Sidecarless 模式的服务网格工作原理如图 8-20 所示。Cilium 
  图 8-22 Cilium Sidecarless 模式与 Istio Sidecar 模式的性能测试 [图片来源](https://isovalent.com/blog/post/2022-05-03-servicemesh-security/)
 :::
 
-回过头看，Cilium Sidecarless 模式设计思路上其实和 Proxyless 如出一辙。即用一种非 Sidecar 的方式实现流量控制能力。两者的区别是，一个基于通信协议类库；另外一个基于共享代理，通过 eBPF 对内核扩展实现。
+回过头看，Cilium Sidecarless 模式设计思路上其实和 Proxyless 如出一辙。即用一种非 Sidecar 的方式实现流量控制能力。两者的区别是，一个基于通信协议类库；另外一个基于共享代理，通过 eBPF 的 Linux 内核扩展技术实现。
 
-但同样，软件领域没有银弹，eBPF 不是万能钥匙，它存在内核版本要求高、编写难度大和容易造成系统安全隐患等问题。
+但同样，软件领域没有银弹，eBPF 不是万能钥匙，它存在 Linux 内核版本要求高、代码编写难度大和容易造成系统安全隐患等问题。
 
 ## 8.5.3 Ambient Mesh 模式
 

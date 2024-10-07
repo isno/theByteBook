@@ -135,7 +135,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第三章：深入 Linux 内核网络技术',
+                text: '第三章：Linux 内核网络技术',
                 collapsable: true,
                 link: '/network/summary.md',
                 sidebarDepth: 2,
@@ -175,38 +175,8 @@ export default defineUserConfig({
                     '/network/conclusion.md',
                 ]
             },
-            
             {
-                text: '第四章：负载均衡技术',
-                link: '/balance/summary.md',
-                collapsable: false,
-                sidebarDepth: 1,
-                children: [
-                '/balance/balance.md',
-                '/balance/balance-topology.md',
-                {
-                    text: "4.3 四层负载均衡",
-                    link: '/balance/balance4.md',
-                    children: [
-                        '/balance/balance4-principle.md',
-                        '/balance/balance4-ha.md',
-                        '/balance/balance4-conclusion.md',    
-                    ]
-                },
-                {
-                    text: "4.4 七层负载均衡",
-                    link: '/balance/balance7.md',
-                    children: [
-                        '/balance/nginx-conf.md',
-                        '/balance/balancer7-feature.md',
-                    ]
-                },
-                '/balance/balance-algorithm.md',
-                '/balance/conclusion.md',
-                ]
-            },
-            {
-                text: "第五章：数据一致性与分布式事务模型",
+                text: "第五章：数据一致性与分布式事务",
                 link: '/distributed-transaction/summary.md',
                 children: [
                     '/distributed-transaction/ACID.md',
@@ -250,6 +220,35 @@ export default defineUserConfig({
                         ]
                     },
                     '/consensus/conclusion.md',
+                ]
+            },
+            {
+                text: '第四章：负载均衡',
+                link: '/balance/summary.md',
+                collapsable: false,
+                sidebarDepth: 1,
+                children: [
+                '/balance/balance.md',
+                '/balance/balance-topology.md',
+                {
+                    text: "4.3 四层负载均衡",
+                    link: '/balance/balance4.md',
+                    children: [
+                        '/balance/balance4-principle.md',
+                        '/balance/balance4-ha.md',
+                        '/balance/balance4-conclusion.md',    
+                    ]
+                },
+                {
+                    text: "4.4 七层负载均衡",
+                    link: '/balance/balance7.md',
+                    children: [
+                        '/balance/nginx-conf.md',
+                        '/balance/balancer7-feature.md',
+                    ]
+                },
+                '/balance/balance-algorithm.md',
+                '/balance/conclusion.md',
                 ]
             },
             {
