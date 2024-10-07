@@ -21,16 +21,14 @@ function getBooks() {
 ```
 命令式语言告诉计算机以特定的顺序执行某些操作，实现最终目标必须完全推理整个过程。
 
-如果使用声明式的查询语言（例如 SQL）是怎么处理的呢？使用 SQL，只需要指定所需的数据模式，结果满足什么条件，以及如何转换数据（例如，排序、分组和聚合）。数据库会直接返回我们想要的结果，这远比自行编写处理过程去获取数据容易的多。
+再来看使用声明式的查询语言（例如 SQL）是怎么处理的呢？如使用 SQL，只需要指定所需的数据模式，结果满足什么条件，以及如何转换数据（例如，排序、分组和聚合）。数据库会直接返回我们想要的结果，这远比自行编写处理过程去获取数据容易的多。
 ```sql
 SELECT * FROM users WHERE gender = boy AND name LIKE '深入高可用原理与设计%';
 ```
 
 接下来看以声明式设计为核心的 Kubernetes。
 
-在 Kubernetes 中，所有你能够接触到的方方面面，都被抽象为资源，例如表示工作负荷的资源（Pod、Deployment），表示存储的资源（Volume、PersistenVolume），表示属性的资源（label、namespace） 等等。所有的资源通过 YAML 文件描述，用不同层级描述依赖关系，再基于标准的 RESTful API 对资源进行增删查改。这是 Kubernetes 最重要的设计思想。
-
-下面的 YAML 文件中定义了一个名为 nginx-deployment 的 Deployment 资源，spec 部分定义了部署的具体配置，如运行后的副本数（replicas=3）。该 YAML 文件提交给 Kubernetes 之后，Kubernetes 会创建具有三个副本的 nginx 服务实例，并将持续保证我们所期望的状态。
+下面的 YAML 文件中定义了一个名为 nginx-deployment 的 Deployment 资源，spec 部分**声明**了部署后的具体状态。如运行后的副本数（replicas=3）。该 YAML 文件提交给 Kubernetes 之后，Kubernetes 会创建具有三个副本的 nginx 服务实例，并将持续保证我们所期望的状态。
 
 ```yaml
 apiVersion: apps/v1

@@ -13,14 +13,14 @@
 
 Proxyless 模式的设计理念是，服务间通信总是要选择一种协议进行，那么将协议的类库（SDK）扩展，使其具有流量控制的能力，不就能代替 Sidecar 代理了吗？且 SDK 和应用同属于一个进程，必然有更优秀的性能表现，Sidecar 为人诟病的延迟问题将迎刃而解。
 
-2021 年 Istio 官方博客发表了一篇文章 《基于 gRPC 的无代理服务网格》[^1]，文中介绍了一种基于 gRPC 框架实现的 Proxyless 模式的服务网格。Proxyless 模式的工作原理如图 8-18 所示，服务之间的流控能力不再依赖 Sidecar，而是被集成在 gRPC 库中。但这种方案额外需要一个代理（图中的 Istio Agent）通过 xDS 协议与控制平面交互，负责告知 gRPC 库如何连接到 istiod、如何获取证书、如何配置规则等。
+2021 年 Istio 官方博客发表了一篇文章 《基于 gRPC 的无代理服务网格》[^1]，文中介绍了一种基于 gRPC 框架实现的 Proxyless 模式的服务网格。Proxyless 模式的工作原理如图 8-18 所示，服务间通信治理不再依赖 Sidecar，而是采用原始的方式，也就是在 gRPC 库中实现。此外，这种方案额外需要一个代理（图中的 Istio Agent）通过 xDS 协议与控制平面交互，负责告知 gRPC 库如何连接到 istiod、如何获取证书、如何配置规则等。
 
 :::center
   ![](../assets/proxyless.svg)<br/>
  图 8-18 Proxyless 模式
 :::
 
-相比 Sidecar 实现的服务间通信治理，Proxyless 模式实现的服务间通信治理具有性能、稳定性、资源消耗低等明显的优势。根据官方博客的性能测试报告来看：gRPC Proxyless 模式下的延迟情况接近基准测试，资源消耗也相对较低。
+相比 Sidecar，Proxyless 模式在性能、稳定性、资源消耗低等方面具有明显的优势。根据官方博客的性能测试报告来看：gRPC Proxyless 模式下的延迟情况接近基准测试，资源消耗也相对较低。
 
 :::center
   ![](../assets/latencies_p50.svg)<br/>
@@ -34,25 +34,27 @@ Proxyless 模式的设计理念是，服务间通信总是要选择一种协议�
 
 ## 8.5.2 Sidecarless 模式
 
-有了 Proxyless，也不妨再多个 Sidecarless。2022 年 7 月，专注于容器网络领域的开源软件 Cilium 发布了 v1.12 版本。该版本最大的一个亮点是实现了一种 Sidecarless（无 Sidecar）模式的服务网格。
+有了 Proxyless，也不妨再多个 Sidecarless。
 
-Cilium Sidecarless 模式的服务网格工作原理如图 8-20 所示。Cilium 通过在节点中运行一个 Enovy 实例，作为所有容器的共享代理，这样不需要在每个 Pod 内放置一个 Sidecar 了。然后，再借助 Cilium CNI 底层网络能力，当业务容器的数据包经过内核时，与节点中的共享代理打通，从而构建出一种新形态的服务网格。
+2022 年 7 月，专注于容器网络领域的开源软件 Cilium 发布了 v1.12 版本。该版本最大的一个亮点是实现了一种 Sidecarless（无 Sidecar）模式的服务网格。
+
+Cilium Sidecarless 模式的服务网格工作原理如图 8-20 所示。Cilium 在节点中运行一个 Enovy 实例，作为所有容器的共享代理，这样不需要在每个 Pod 内放置一个 Sidecar 了。然后，再借助 Cilium CNI 底层网络能力，当业务容器的数据包经过内核时，与节点中的共享代理打通，从而构建出一种新形态的服务网格。
 
 :::center
   ![](../assets/sidecarless.svg)<br/>
  图 8-20 经过 eBPF 加速的服务网格和传统服务网格的区别
 :::
 
-传统的服务网格 Linkerd、Istio 几乎都是借助 Linux 内核网络协议栈处理请求，而 Cilium Sidecarless 模式基于 eBPF 技术在内核层面扩展，因此有着天生的网络加速效果。根据图 8-22 所示的性能测试来看，基于 eBPF 加速的 Envoy，比默认没有任何加速 Istio 要好很多。
+传统的服务网格 Linkerd、Istio 等几乎都是借助 Linux 内核网络协议栈处理请求，而 Cilium Sidecarless 模式基于 eBPF 技术在内核层面扩展，因此有着天然的网络加速效果。根据图 8-22 所示的性能测试来看，基于 eBPF 加速的 Envoy，比默认没有任何加速 Istio 要好很多。
 
 :::center
   ![](../assets/cilium-istio-benchmark.webp)<br/>
  图 8-22 Cilium Sidecarless 模式与 Istio Sidecar 模式的性能测试 [图片来源](https://isovalent.com/blog/post/2022-05-03-servicemesh-security/)
 :::
 
-Cilium Sidecarless 模式设计思路上其实和 Proxyless 如出一辙，即用一种非 Sidecar 的方式实现流量控制能力，区别是一个基于通信协议类库，另外一个基于共享代理，通过 eBPF 对内核扩展实现。
+回过头看，Cilium Sidecarless 模式设计思路上其实和 Proxyless 如出一辙。即用一种非 Sidecar 的方式实现流量控制能力。两者的区别是，一个基于通信协议类库；另外一个基于共享代理，通过 eBPF 对内核扩展实现。
 
-但同样，软件领域没有银弹，eBPF 并不是万能钥匙，它存在内核版本要求高、编写难度大和容易造成系统安全隐患等问题。
+但同样，软件领域没有银弹，eBPF 不是万能钥匙，它存在内核版本要求高、编写难度大和容易造成系统安全隐患等问题。
 
 ## 8.5.3 Ambient Mesh 模式
 
