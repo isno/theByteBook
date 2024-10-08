@@ -4,7 +4,7 @@ Docker 完全没有预料到，在它诞生的十多年后，仍然能够再次�
 
 事件的起因是 Kubernetes 宣布进入废弃 dockershim 支持的倒计时，随后讹传讹被人误以为 Docker 不能再用了。虽说此次事件有众多标题党的推波助澜，但也侧面说明了 Kubernetes 与 Docker 的关系十分微妙。
 
-本节，我们把握这两者关系的变化，从中理解各类容器运行时和 Kubernetes CRI（容器运行时接口）关系的演变。
+本节，我们把握这两者关系的变化，从中理解各类容器运行时和 Kubernetes 关系的演变。
 
 ## 7.4.1 Docker 与 Kubernetes 
 
