@@ -10,9 +10,9 @@
 
 随着容器化和微服务架构的普及，管理大量容器实例和微服务变得异常复杂。为了自动化容器的管理、调度、扩展和故障恢复，容器编排系统应运而生。
 
-过去十年间，Kubernetes 逐渐发展成为容器编排系统的事实标准，并成为大数据分析、机器学习以及在线服务等领域广泛认可的最佳技术底座。然而，Kubernetes 在解决复杂问题的同时，本身也逐渐演变成当今最复杂的软件系统之一。
+过去十年间，Kubernetes 逐渐发展成为容器编排系统的事实标准，并成为大数据分析、机器学习以及在线服务等领域广泛认可的最佳技术底座。然而，Kubernetes 在解决复杂问题的同时，本身也演变成当今最复杂的软件系统之一。
 
-目前，包括官方文档在内的大多数 Kubernetes 资料都聚焦于“怎么做”，鲜有对“为什么这么做”进行解释。自 2015 年起，Google 陆续发布了《Borg, Omega, and Kubernetes》及《Large-scale cluster management at Google with Borg》等论文，分享了开发和运维 Borg、Omega 和 Kubernetes 系统的经验与教训。本章，笔者将从这几篇论文着手，介绍 Google 内部容器系统是怎么演变的。汲取背后的设计思想后，再来深入理解 Kubernetes 关于资源模型、网络通信、持久化存储、编排调度等方面的设计原理和应用。本章内容安排如图 7-0 所示。
+目前，包括官方文档在内的大多数 Kubernetes 资料都聚焦于“怎么做”，鲜有对“为什么这么做”进行解释。自 2015 年起，Google 陆续发布了《Borg, Omega, and Kubernetes》及《Large-scale cluster management at Google with Borg》等论文，分享了开发和运维 Borg、Omega 和 Kubernetes 系统的经验与教训。本章，笔者将从这几篇论文着手，介绍 Google 内部容器系统是怎么演变的。汲取背后的设计思想后，再来深入理解 Kubernetes 中 关于容器设计模式、网络通信、持久化存储、资源模型和编排调度等方面的设计和应用。本章内容安排如图 7-0 所示。
 
 :::center
   ![](../assets/container-summary.png)<br/>

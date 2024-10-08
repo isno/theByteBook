@@ -1,12 +1,16 @@
 # 3.3.2 数据包过滤工具 iptables
 
-Netfilter 的钩子回调固然强大，但得通过程序编码才能使用，并不适合系统管理员日常运维。为此，基于 Netfilter 框架开发的应用便出现了，典型的就是 Xtables 系列，包括 iptables，nftables，ebtables，arptables，ip6tables 等。
+Netfilter 的钩子回调固然强大，但得通过程序编码才能使用，并不适合系统管理员日常运维。
+
+为此，基于 Netfilter 框架开发的应用便出现了，典型的就是 Xtables 系列，包括 iptables、nftables、ebtables、arptables、ip6tables 等。
 
 用过 Linux 系统的工程师多多少少都使用过 iptables，它常被称为 Linux 系统“自带的防火墙”。严谨地讲，iptables 能做的事情其实远超防火墙的范畴，它的定位应是能够代替 Netfilter 多数常规功能的 IP 包过滤工具。
 
 ## 1. iptables 表和链
 
-Netfilter 中的钩子，在 iptables 的术语里叫做“链”（chain）。iptables 默认有五条链：PREROUTING、INPUT、FORWARD、OUTPUT、POSTROUTING，从名字上看，它们分别对应 Netfilter 的 5 个钩子。
+Netfilter 中的钩子，在 iptables 的术语里叫做“链”（chain）。
+
+iptables 默认有五条链：PREROUTING、INPUT、FORWARD、OUTPUT、POSTROUTING。从名字上看，它们分别对应 Netfilter 的 5 个钩子。
 
 iptables 把一些常用数据包管理操作总结成具体的动作，当数据包经过内核协议栈的钩子时（在 iptables 称为链），判断经过此链的数据包是否匹配 iptables 规则。iptables 规则包括匹配 IP 数据包的源地址、目的地址、传输层协议（TCP/UDP/ICMP/..）以及应用层协议（HTTP/FTP/SMTP/..）等。
 
@@ -22,9 +26,9 @@ iptables 把一些常用数据包管理操作总结成具体的动作，当数�
 - MASQUERADE：地址伪装，可以理解为动态的 SNAT。通过它可以将源地址绑定到某个网卡上，因为这个网卡的 IP 可能是动态变化的，此时用 SNAT 就不好实现；
 - LOG：内核对数据包进行日志记录。
 
-不同的链上能处理的事情有区别，而相同的动作放在一起也便于管理，比如数据包过滤的动作（ACCEPT，DROP，RETURN，REJECT 等）可以合并到一处，数据包的修改动作（DNAT、SNAT）可以合并到另外一处，这便有了规则表的概念。
+不同的链上能处理的事情有区别，而相同的动作放在一起也便于管理。如数据包过滤的动作（ACCEPT，DROP，RETURN，REJECT 等）可以合并到一处，数据包的修改动作（DNAT、SNAT）可以合并到另外一处，这便有了规则表的概念。将规则表与链进行关联，而不是规则本身与链关联，通过一个中间层解耦了链与具体的某条规则，原先复杂的对应关系就变得简单了。
 
-将规则表与链进行关联，而不是规则本身与链关联，通过一个中间层解耦了链与具体的某条规则，原先复杂的对应关系就变得简单了。iptables 的 5 张规则表为：
+iptables 共有 5 规则表，它们的名称与含义如下：
  
 - raw 表：配置该表主要用于去除数据包上的连接追踪机制。默认情况下，连接会被跟踪，所以配置该表后，可以加速数据包穿越防火墙，提高性能。
 - mangle 表：修改数据包内容，常用于数据包报文头的修改，比如服务类型（Type of Service, ToS），生存周期（Time to Live, TTL），Mark 标记等。
@@ -33,17 +37,18 @@ iptables 把一些常用数据包管理操作总结成具体的动作，当数�
 - security 表：安全增强，一般用于 SELinux 中，其他情况并不常用。
 
 
-一个链上可以关联的表可以有多个，所以这 5 张表在一个链上执行的时候得有个顺序：raw --> mangle --> nat --> filter --> security，即先去连接追踪，再改数据包，然后做源或目标地址转换，最后是过滤和安全。数据包具体经过的表、链的关系和顺序如图 3-3 所示。
+一个链上可以关联的表可以有多个，所以这 5 张表在一个链上执行的时候得有个顺序：raw --> mangle --> nat --> filter --> security，即先去连接追踪，再改数据包，然后做源或目标地址转换，最后是过滤和安全。
+
+数据包具体经过的表、链的关系和顺序如图 3-3 所示。
 
 :::center
   ![](../assets/Netfilter-packet-flow.svg)<br/>
   图 3-3 数据包通过 Netfilter 时的流向过程 [图片来源](https://en.wikipedia.org/wiki/Netfilter)
 :::
 
-
 ## 2. iptables 自定义链与应用
 
-除了 5 个内置链外，iptables 支持管理员创建用于实现某些管理目的自定义链。向自定义链添加规则和向内置链规则的方式是一样的。不同的地方在于，自定义链只能通过从另一个规则跳转（jump）到它。
+除了 5 个内置链外，iptables 支持管理员创建用于实现某些管理目的自定义链。
 
 自定义链可以看作是对调用它的链的扩展。例如，自定义链结束的时候，可以返回内置链，也可以再继续跳转到其他自定义链。自定义链的设计使 iptables 不仅仅只是一个 IP 包过滤工具，还在容器网络中也扮演了重要的角色。如 Kubernetes 的核心组件 kube-proxy，利用自定义链实现了 Service 功能。
 
@@ -77,7 +82,7 @@ iptables 把一些常用数据包管理操作总结成具体的动作，当数�
 
 iptables 模式完全使用 iptables 规则处理容器间请求和负载均衡，因此它的性能也受 iptables 直接影响。问题是 Service 非常多的时候产生太多的 iptables 规则，非增量式更新会引入一定的时延，大规模情况下有明显的性能问题。
 
-为解决 iptables 模式的性能问题，kube-proxy 新增了 IPVS 模式，该模式使用 Linux 内核四层负载均衡模块 IPVS 实现容器间请求和负载均衡，性能和 Service 规模无关。不过需要注意的是，内核中的 IPVS 模块只负责上述的负载均衡和代理功能。而一个完整的 Service 流程正常工作所需要的包过滤、SNAT 等操作，还是要靠 iptables 来实现。只不过，这些辅助性的 iptables 规则数量有限，不会随着 Pod 数量的增加而增加。
+为解决 iptables 模式的性能问题，kube-proxy 新增了 IPVS 模式，该模式使用 Linux 内核四层负载均衡模块 IPVS 实现容器间请求和负载均衡，性能和 Service 规模无关。需要注意的是，内核中的 IPVS 模块只负责上述的负载均衡和代理功能。而一个完整的 Service 流程正常工作所需要的包过滤、SNAT 等操作，还是要靠 iptables 来实现。只不过，这些辅助性的 iptables 规则数量有限，不会随着 Pod 数量的增加而增加。
 
 如图 3-4 展示了 iptables 与 IPVS 两种模式的性能对比。可以看出，当 Kubernetes 集群有 1,000 个 Service（10,000 个 Pod）时，两者的性能表现开始出现明显差异。
 
