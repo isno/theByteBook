@@ -2,9 +2,9 @@
 
 由于 DPDK 完全基于“内核旁路”的思想，它天然无法与 Linux 内核生态很好地结合。
 
-2016 年，在 Linux Netdev 会议上，Linux 内核开发领域的知名人物 David S. Miller[^1] 喊出了“DPDK is not Linux”的口号。同年，随着 eBPF 技术的成熟，Linux 内核终于迎来了属于自己的“高速公路” —— XDP（eXpress Data Path，快速数据路径）。XDP 具有媲美 DPDK 的性能，并且背靠 Linux 内核，具备无需第三方代码库和许可、无需专用 CPU 等多种独特优势。
+2016 年，在 Linux Netdev 会议上，Linux 内核开发领域的知名人物 David S. Miller[^1] 喊出了“DPDK is not Linux”的口号。同年，随着 eBPF 技术的成熟，Linux 内核终于迎来了属于自己的“高速公路” —— XDP（eXpress Data Path，快速数据路径）。XDP 因其媲美 DPDK 的性能、背靠 Linux 内核，无需第三方代码库和许可、无需专用 CPU 等多种独特优势，一经推出便备受青睐。
 
-DPDK 技术是完全绕过内核，直接将数据包传递到用户空间进行处理。而 XDP 则正好相反，它选择在内核空间中执行我们定义的程序来处理数据包。那么，如何在内核中执行用户空间定义的程序呢？这就需要用到 BPF（Berkeley Packet Filter，伯克利包过滤器）技术 —— 一种允许在内核空间运行经过安全验证的代码的机制。
+DPDK 技术完全绕过内核，直接将数据包传递到用户空间进行处理。而 XDP 则正好相反，它选择在内核空间中执行我们定义的程序来处理数据包。那么，如何在内核中执行用户空间定义的程序呢？这就需要用到 BPF（Berkeley Packet Filter，伯克利包过滤器）技术 —— 一种允许在内核空间运行经过安全验证的代码的机制。
 
 自 Linux 内核 2.5 版本起，Linux 系统就开始在支持 BPF 技术了，但早期的 BPF 主要用于网络数据包的捕获和过滤。到了 Linux 内核 3.18 版本，开发者推出了一套全新的 BPF 架构，也就是我们今天所说的 eBPF（Extended Berkeley Packet Filter）。与早期的 BPF 相比，eBPF 的功能不再局限于网络分析，它几乎可以访问 Linux 内核所有关联的资源，并逐渐发展成为一个多功能的通用执行引擎。
 
@@ -17,7 +17,9 @@ DPDK 技术是完全绕过内核，直接将数据包传递到用户空间进行
 - Tracepoints 钩子：Tracepoints 是内核代码中的静态探测钩子，分布在内核的各个子系统中。主要用于内核的性能分析、故障排查、监控等。例如，可以在调度器、文件系统操作、内存管理等处进行监控。
 - LSM（Linux Security Modules）钩子：位于 Linux 安全模块框架中，允许在内核执行某些安全相关操作（如文件访问、网络访问等）时触发 eBPF 程序。主要用于实现安全策略和访问控制。例如，可以编写 eBPF 程序来强制执行自定义的安全规则或监控系统的安全事件。
 
-从上述钩子可知，XDP 本质就是 Linux 系统在网络路径上埋下的钩子，该钩子位于网卡驱动层内，也就是数据包进入网络协议栈之前。如果 XDP 钩子挂载了 eBPF 程序，就能在 Linux 收包早期阶段，对传入的数据包进行任意修改和快速决策，从而避免数据包“循规蹈矩”的进入内核，带来的额外开销。XDP 处的钩子执行完 eBPF 逻辑之后，用“返回码”作为输出，它代表对数据包应该做什么样的最终裁决。XDP 支持的 5 种返回码名称及含义如下：
+从上述钩子可知，XDP 本质就是 Linux 系统在网络路径上埋下的钩子，该钩子位于网卡驱动层内，也就是数据包进入网络协议栈之前。如果 XDP 钩子挂载了 eBPF 程序，就能在 Linux 收包早期阶段，对传入的数据包进行任意修改和快速决策，从而避免数据包“循规蹈矩”的进入内核，带来的额外开销。
+
+XDP 执行完 eBPF 逻辑之后，用“返回码”作为输出，它代表对数据包应该做什么样的最终裁决。XDP 支持的 5 种返回码名称及含义如下：
 
 - XDP_ABORTED：表示 XDP 程序处理数据包时遇到错误或异常。
 - XDP_DROP：会在网卡驱动层直接将该数据包丢掉，这个操作通常用于过滤无效或不需要的数据包，例如在实现 DDoS 防护时，丢弃恶意数据包。
@@ -42,9 +44,11 @@ DPDK 技术是完全绕过内核，直接将数据包传递到用户空间进行
  图 3-9 eBPF 的技术架构
 :::
 
-正是由于这些突出的特性，eBPF 可以附加到各种内核子系统，包括网络、跟踪和 Linux 安全模块（LSM）。比如 Facebook 开源的高性能网络负载均衡器 Katran，内核跟踪排错工具 BCC 和 bpftrace，以及 Isovalent 开源的容器网络方案 Cilium 等等都是利用 eBPF 技术实现的。以 Cilium 为例，它在 eBPF 和 XDP 钩子（也有其他的钩子）基础上，实现了一套全新的 conntrack 和 NAT 机制。并以此为基础，构建出如 L3/L4 负载均衡、网络策略、观测和安全认证等各类高级功能。
+正是由于这些突出的特性，eBPF 可以附加到各种内核子系统，包括网络、跟踪和 Linux 安全模块（LSM）。如 Facebook 开源的高性能网络负载均衡器 Katran，内核跟踪排错工具 BCC 和 bpftrace，以及 Isovalent 开源的容器网络方案 Cilium 等等都是利用 eBPF 技术实现的。
 
-由于 Cilium 实现的底层网络功能现独立于 Netfilter，因此它的 conntrack 条目和 NAT 信息不会存储在 Linux 内核默认的 conntrack 表和 NAT 表中。常规的 Linux 命令 conntrack、netstat、ss 和 lsof 等，都无法查看 NAT 和 conntrack 数据。得使用 Cilium 提供的查询命令才行，例如：
+以 Cilium 为例，它在 eBPF 和 XDP 钩子（也有其他的钩子）基础上，实现了一套全新的 conntrack 和 NAT 机制。并以此为基础，构建出如 L3/L4 负载均衡、网络策略、观测和安全认证等各类高级功能。
+
+由于 Cilium 实现的底层网络功能现独立于 Netfilter，因此它的 conntrack 连接记录和 NAT 信息不会存储在 Linux 内核默认的 conntrack 表和 NAT 表中。常规的 Linux 命令 conntrack、netstat、ss 和 lsof 等，都无法查看 NAT 和 conntrack 数据。得使用 Cilium 提供的查询命令才行，例如：
 
 ```bash
 $ cilium bpf nat list
