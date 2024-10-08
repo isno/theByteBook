@@ -6,14 +6,18 @@
 
 ## 7.5.1 Docker 的存储设计
 
-Docker 通过将宿主机的目录挂载到容器内部，实现数据的持久化存储。目前，Docker 支持三种挂载方式：bind mount、volume 和 tmpfs mount。
+Docker 通过挂载宿主机的目录到容器内部的方式，实现数据的持久化存储。
+
+目前，Docker 支持三种挂载方式：bind mount、volume 和 tmpfs mount。
 
 :::center
   ![](../assets/types-of-mounts-volume.webp)<br/>
   图 7-21 Docker 中持久存储的挂载种类
 :::
 
-bind mount 是 Docker 最早支持的挂载类型，很多用户都熟悉这种挂载方式。以下命令启动一个 Nginx 容器，并将宿主机的 /usr/share/nginx/html 目录挂载到容器内的 /data 目录：
+bind mount 是 Docker 最早支持的挂载类型，很多用户都熟悉这种挂载方式。
+
+以下命令启动一个 Nginx 容器，并将宿主机的 /usr/share/nginx/html 目录挂载到容器内的 /data 目录：
 ``` bash
 $ docker run -v /usr/share/nginx/html:/data nginx:lastest
 ```
@@ -23,7 +27,7 @@ $ docker run -v /usr/share/nginx/html:/data nginx:lastest
 // 将宿主机中的 /usr/share/nginx/html 挂载到 rootfs 指定的挂载点 /data 上
 mount("/usr/share/nginx/html","rootfs/data", "none", MS_BIND, nulll)
 ```
-通过 mount 命令挂载宿主机目录来实现数据持久化存储，显然存在明显的缺陷：
+直接通过 mount 命令挂载宿主机目录来实现数据持久化存储，显然存在明显的缺陷：
 - 与操作系统的强耦合：容器内的目录通过 mount 挂载到宿主机的绝对路径，这使得容器的运行环境与操作系统紧密绑定。这意味着 bind mount 方式无法写在 Dockerfile 中，否则镜像在其他环境可能无法启动。此外，宿主机中被挂载的目录与 Docker 没有明显关联，其他进程可能会误写，存在潜在的安全隐患。
 - 无法应对存储需求的复杂性：容器被广泛使用后，容器存储的需求绝对不是挂载到某个目录就能搞定。存储位置不再仅限于宿主机（可能需要挂载网络存储），存储介质不仅局限于磁盘（也可能是 tmpfs），存储类型也不仅是文件系统（还可能是块设备或对象存储）。
 - 此外，对于网络类型的存储，实在没必要先将其挂载到操作系统再挂载到容器内的目录。Docker 完全可以直接对接网络存储协议（如 iSCSI、NFS 等）越过操作系统，减少系统资源占用和延迟。
@@ -33,7 +37,9 @@ mount("/usr/share/nginx/html","rootfs/data", "none", MS_BIND, nulll)
 - 首先，Volume 会在宿主机中开辟一个专属于 Docker 的空间（通常在 Linux 中为 /var/lib/docker/volumes/ 目录），这样就解决了 bind mount 依赖于宿主机绝对路径的局限性。
 - 考虑存储类型非常多样，仅靠 Docker 自己实现并不现实。因此，Docker 在 1.10 版本中引入了 Volume Driver 机制，借助社区的力量来扩展和丰富其存储驱动，支持更多的存储系统和协议。
 
-经过一系列的设计，现在 Docker 用户只要通过 docker plugin install 安装额外的第三方卷驱动，就能使用想要的网络存储或者各类云厂商提供的存储。笔者举个具体的例子供你参考，以下是一个使用阿里云文件存储（NAS）的示例：
+经过一系列的设计，现在 Docker 用户只要通过 docker plugin install 安装额外的第三方卷驱动，就能使用想要的网络存储或者各类云厂商提供的存储。
+
+举个具体的例子，以下是一个使用阿里云文件存储（NAS）的示例：
 
 1. 首先安装阿里云 NAS Volume 插件：
 ```bash
