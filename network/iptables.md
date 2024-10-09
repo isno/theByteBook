@@ -80,9 +80,9 @@ iptables 共有 5 规则表，它们的名称与含义如下：
 
 上述实现负载均衡的方式在 kube-proxy 中称 iptables 模式。
 
-iptables 模式完全使用 iptables 规则处理容器间请求和负载均衡，因此它的性能也受 iptables 直接影响。问题是 Service 非常多的时候产生太多的 iptables 规则，非增量式更新会引入一定的时延，大规模情况下有明显的性能问题。
+iptables 模式完全使用 iptables 规则处理容器间请求和负载均衡，因此它的性能也受 iptables 直接影响。随着 Service 数量增加，iptables 的规则数量也随着暴涨。此外，iptables 的非增量式更新机制存在一定的时延，大规模集群中有明显的性能问题。
 
-为解决 iptables 模式的性能问题，kube-proxy 新增了 IPVS 模式，该模式使用 Linux 内核四层负载均衡模块 IPVS 实现容器间请求和负载均衡，性能和 Service 规模无关。需要注意的是，内核中的 IPVS 模块只负责上述的负载均衡和代理功能。而一个完整的 Service 流程正常工作所需要的包过滤、SNAT 等操作，还是要靠 iptables 来实现。只不过，这些辅助性的 iptables 规则数量有限，不会随着 Pod 数量的增加而增加。
+为解决 iptables 模式的性能问题，kube-proxy 新增了 IPVS 模式，该模式使用 Linux 内核四层负载均衡模块 IPVS 实现容器间请求和负载均衡，性能和 Service 规模无关。需要注意的是，内核中的 IPVS 模块只负责上述的负载均衡和代理功能。而一个完整的 Service 流程正常工作所需要的初始流量捕获、过滤等操作，还是要靠 iptables 来实现。只不过，这些辅助性的 iptables 规则数量有限，不会随着 Service 数量增加而失控。
 
 如图 3-4 展示了 iptables 与 IPVS 两种模式的性能对比。可以看出，当 Kubernetes 集群有 1,000 个 Service（10,000 个 Pod）时，两者的性能表现开始出现明显差异。
 
