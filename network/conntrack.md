@@ -2,7 +2,7 @@
 
 conntrack 是 connection track（连接跟踪）的缩写。
 
-顾名思义，conntrack 模块用来跟踪连接的。需要注意的是，conntrack 中的“连接”指的是通信双方之间的数据传输连接，不仅可以跟踪 TCP 连接，还可以跟踪 UDP、ICMP 这样的“连接”。
+顾名思义，Linux 内核中的 conntrack 模块是用来跟踪“连接”的。需要注意的是，conntrack 中的“连接”指的是通信双方之间的数据传输连接，不仅可以跟踪 TCP 连接，还可以跟踪 UDP、ICMP 这样的“连接”。
 
 当 Linux 系统收到一个数据包时，内核中的 conntrack 模块会为每一个经过网络协议栈的数据包，生成一个连接记录（又称连接条目），并标识连接的状态（如 NEW、ESTABLISHED 等）。当连接状态变化时，conntrack 模块会更新连接记录反映这些变化。
 
