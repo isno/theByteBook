@@ -85,15 +85,15 @@ Docker 并没有“坐以待毙”，开始主动革新。
 回顾本书第一章 1.5.1 节关于 Docker 演进的介绍，Docker 从 1.1 版本起推动自身的重构，并拆分出 Containerd。早期，Containerd 单独开源，并没有捐赠给 CNCF，Containerd 还适配了其他容器编排系统，如 Swarm，因此并没有直接实现 CRI 接口。此外，出于诸多原因的考虑，Docker 对外部开放的接口仍保持不变。
 
 在上述两个背景下，Kubernetes 中出现了两种调用链（图 7-15 所示）：
-- CRI 接口通过适配器 dockershim 调用：dockershim 再调用 Docker，最后 Docker 调用 Containerd 操作容器；
-- CRI 接口通过适配器 CRI-containerd 调用：CRI-containerd 再调用 Containerd 操作容器。
+- 通过适配器 dockershim 调用：首先 dockershim 调用 Docker；接着，Docker 调用 Containerd；最后，Containerd 操作容器；
+- 通过适配器 CRI-containerd 调用：首先，CRI-containerd 调用 Containerd；接着，Containerd 操作容器。
 
 :::center
   ![](../assets//k8s-runtime-v2.png)<br/>
   图 7-15  Containerd 与 Docker 都不支持直接与 CRI 交互
 :::
 
-在这个阶段，Kubelet 的代码和 dockershim 的代码都放在一个仓库内，这意味着 dockershim 需要由 Kubernetes 进行组织、开发和维护。然而，Docker 版本的更新则超出了 Kubernetes 的控制和管理。因此，每当 Docker 发布新版本时，Kubernetes 都必须集中精力快速更新和维护 dockershim。同时，Docker 仅作为容器运行时显得过于庞大，Kubernetes 弃用 dockershim 拥有了充分的理由和动力。
+在这个阶段，Kubelet 的代码和 dockershim 的代码都放在一个仓库内，这意味着 dockershim 需要由 Kubernetes 进行组织、开发和维护。因此，每当 Docker 发布新版本时，Kubernetes 都必须集中精力快速更新和维护 dockershim。同时，Docker 仅作为容器运行时显得过于庞大，Kubernetes 弃用 dockershim 拥有了充分的理由和动力。
 
 2018 年，Docker 将 Containerd 捐赠给 CNCF，并在 CNCF 的精心孵化下发布了 1.1 版。与 1.0 版相比，1.1 版的最大区别在于它已完美支持 CRI 标准，这意味着原本用作 CRI 适配器的 CRI-Containerd 从此不再需要。
 
