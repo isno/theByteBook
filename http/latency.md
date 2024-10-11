@@ -6,9 +6,9 @@
 
 一个完整、未复用连接的 HTTPS 请求需要经过以下 5 个阶段：**DNS 域名解析、TCP 握手、SSL 握手、服务器处理、内容传输**。
 
-如图 2-1 请求阶段分析所示，这些阶段共需要 5 个 RTT（Round-Trip Time，往返时间）[^2] = 1 RTT（DNS Lookup，域名解析）+ 1 RTT（TCP Handshark，TCP 握手）+ 2 RTT（SSL Handshark，SSL 握手）+ 1 RTT（Data Transfer，HTTP 内容请求传输）。
+如图 2-1 请求阶段分析所示，这些阶段共需要 5 个 RTT（Round-Trip Time，往返时间）[^2] = 1 RTT（DNS Lookup，域名解析）+ 1 RTT（TCP Handshake，TCP 握手）+ 2 RTT（SSL Handshake，SSL 握手）+ 1 RTT（Data Transfer，HTTP 内容请求传输）。
 
-:::center
+:::center 
   ![](../assets/http-process.png)<br/>
   图 2-1 HTTPS（使用 TLS1.2 协议）请求阶段分析 [图片来源](https://blog.cloudflare.com/a-question-of-timing)
 :::

@@ -7,6 +7,7 @@ Paxos 以及 Raft 算法属于故障容错（Crash Fault Tolerance，CFT）算�
 限于篇幅以及笔者的精力，这部分内容就不再展开讨论，有兴趣的读者就自行探索吧。
 
 参考文档：
+- https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying
 - raft 动画，https://raft.github.io/raftscope/index.html
 - 《In Search of an Understandable Consensus Algorithm》，https://raft.github.io/raft.pdf
 - 《Raft 分布式系统一致性协议探讨》，https://zhuanlan.zhihu.com/p/510220698

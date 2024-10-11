@@ -230,6 +230,7 @@ export default defineUserConfig({
                 sidebarDepth: 2,
                 children: [
                     '/consensus/consensus.md',
+                    '/consensus/Replicated-State-Machine.md',
                     {
                         text: "6.2 Paxos 算法",
                         link: '/consensus/Paxos.md',
