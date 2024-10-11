@@ -53,28 +53,29 @@ Linkerd2 的架构如图 8-12 所示，增加了控制平面，但整体简单�
 
 ## 8.3.4 Istio 与 Linkerd2 性能对比
 
-2019 年，云原生技术公司 Kinvolk 发布了 Linkerd2 与 Istio 性能对比报告，测试数据显示 Linkerd 比 Istio 明显更快、更轻。这项测试工作还诞生服务网格基准测试工具 service-mesh-benchmark[^2]，以便任何人都可以复核结果。
+2019 年，云原生技术公司 Kinvolk 发布了一份 Linkerd2 与 Istio 的性能对比报告。测试数据显示，Linkerd 在延迟和资源消耗方面明显优于 Istio[^2]。
 
 两年之后，Linkerd 与 Istio 都发布了多个更成熟的版本，两者的性能表现如何？笔者引用 William Morgan 文章《Benchmarking Linkerd and Istio》[^3]中的数据，向读者介绍 Linkerd v2.11.1、Istio v1.12.0 两个项目之间延迟与资源消耗的表现。
 
-首先是网络延迟的表现，如图 8-13 所示，中位数（P50）延迟的表现 Linkerd 在 6ms 的基准延迟上增加了 6ms 额外延迟，而 Istio 的额外延迟为 15ms。值得注意的是，P90 以后两者开始出现显著差异，最极端的 Max 数据表现上，Linkerd 在 25ms 的基准延迟上增加了 25 ms 额外延迟，而 Istio 则增大了 5 倍，高达 253 ms 的额外延迟。
+首先是网络延迟的对比。如图 8-13 所示，中位数（P50）延迟的表现 Linkerd 在 6ms 的基准延迟上增加了 6ms 额外延迟，而 Istio 的额外延迟为 15ms。值得注意的是，P90 以后两者开始出现显著差异，最极端的 Max 数据表现上，Linkerd 在 25ms 的基准延迟上增加了 25 ms 额外延迟，而 Istio 则增大了 5 倍，高达 253 ms 的额外延迟。
 
 :::center
   ![](../assets/latency-200rps.png)<br/>
   图 8-13 Linkerd 与 Istio 的延迟对比
 :::
 
-继续看两者在资源消耗方面的表现。如图 8-14 所示，Linkerd 代理消耗的内存最大 26 Mb，Istio 的 Envoy 代理消耗的内存最大 156.2 Mb，是 Linkerd 的 6倍。同样，Linkerd 的最大代理 CPU 时间记录为 36ms，而 Istio 的代理 CPU 时间记录为 67ms，比前者多出 85%。
+继续资源消耗方面对比。如图 8-14 所示，Linkerd 代理消耗的内存最大 26 Mb，Istio 的 Envoy 代理消耗的内存最大 156.2 Mb，是 Linkerd 的 6倍。同样，Linkerd 的最大代理 CPU 时间记录为 36ms，而 Istio 的代理 CPU 时间记录为 67ms，比前者多出 85%。
 
 :::center
   ![](../assets/linkerd-resource.png)<br/>
   图 8-14 Istio 与 Linkerd 资源消耗对比 
 :::
 
-总结 Linkerd 和 Istio 性能和资源成本上的巨大差异主要归结于 Linkerd2-proxy，该代理为 Linkerd 的整个数据平面提供动力，所以这个基准测试很大程度上反映了 Linkerd2-proxy 和 Envoy 的性能和资源消耗对比。
 
-虽然 Linkerd2-proxy 性能卓越，但语言过于小众，导致开源社区的贡献者数量稀少，截止 2024 年 6 月，Linkerd2-proxy 的贡献者只有 53 人，Envoy 则有 1,104 人。此外，Linkerd2-proxy 不支持服务网格控制协议 xDS，它的未来的发展也只能取决于 Linkerd 发展如何。
+Linkerd 和 Istio 在性能和资源成本上的显著差异，主要归因于 Linkerd2-proxy。这一代理为 Linkerd 的整个数据平面提供动力，因此该基准测试在很大程度上反映了 Linkerd2-proxy 与 Envoy 之间的性能和资源消耗对比。
+
+虽然 Linkerd2-proxy 性能卓越，但由于其使用的语言（rust）相对小众，开源社区的贡献者数量稀少。截至 2024 年 6 月，Linkerd2-proxy 的贡献者仅有 53 人，而 Envoy 的贡献者则多达 1,104 人。此外，Linkerd2-proxy 不支持服务网格领域的 xDS 控制协议，其未来发展将高度依赖于 Linkerd 本身的进展。
 
 [^1]: 参见 https://github.com/linkerd/linkerd2
-[^2]: 参见 https://github.com/kinvolk/service-mesh-benchmark
+[^2]: 这项测试工作还诞生服务网格基准测试工具 service-mesh-benchmark，以便任何人都可以复核结果。https://github.com/kinvolk/service-mesh-benchmark，以便任何人都可以复核结果。
 [^3]: 基于 Kinvolk 模仿现实场景，延迟数据从客户端的角度测量，而不是内部的代理时间。详见 https://linkerd.io/2021/05/27/linkerd-vs-istio-benchmarks/
