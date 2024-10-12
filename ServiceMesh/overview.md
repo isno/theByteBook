@@ -40,11 +40,11 @@ Linkerd2 的架构如图 8-12 所示，增加了控制平面，但整体简单�
 
 除了头部的 Linkerd2、Istio 玩家外，明显能影响微服务格局的新兴领域，又怎少得了传统的 Proxy 玩家。
 
-先是远古玩家 Nginx 祭出自己新一代的产品 Nginx ServiceMesh，理念是简化版的服务网格，F5 Networks 公司顺势推出商业化产品 Aspen Mesh，定位企业级服务网格项目，API 网关独角兽 Kong 推出了 Kuma，主打通用型的服务网格，有意思的是 Kong 选择了 Envoy 作为数据平面，而非它自己的核心内核 OpenResty，接着 APISIX 推出了 Amesh...。
+先是远古玩家 Nginx 祭出自己新一代的产品 Nginx ServiceMesh，理念是简化版的服务网格。接着，F5 Networks 公司顺势推出商业化产品 Aspen Mesh，定位企业级服务网格项目。随后，API 网关独角兽 Kong 推出了 Kuma，主打通用型的服务网格。有意思的是，Kong 选择了 Envoy 作为数据平面，而非它自己的核心内核 OpenResty。
 
-与 William Morgan 死磕 Istio 策略不同，绝大部分在 Proxy 领域根基深厚玩家，从一开始就没有想过做一套完整服务网格方案，而是选择实现 xDS 协议或基于 Istio 扩展，兼容 Istio，作为 Istio 的数据平面出现。
+与 William Morgan 死磕 Istio 策略不同，绝大部分在 Proxy 领域根基深厚玩家，从一开始就没有想过做一套完整服务网格方案，而是选择实现 xDS 协议或基于 Istio 扩展，作为 Istio 的数据平面出现。
 
-至 2023 年，服务网格经过 8 年的发展，产品生态如图 8-12 所示，虽然有众多的选手，但就社区活跃度而言，Istio 和 Linkerd 还是牢牢占据了头部地位。
+至 2023 年，服务网格经过 8 年的发展，产品生态如图 8-12 所示。虽然有众多的选手，但就社区活跃度而言，Istio 和 Linkerd 还是牢牢占据了头部地位。
 
 :::center
   ![](../assets/service-mesh-overview.png)<br/>
