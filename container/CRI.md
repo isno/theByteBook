@@ -82,7 +82,9 @@ Google 推出 CRI-O 的意图明显，即直接削弱 Docker 在容器编排领�
 
 Docker 并没有“坐以待毙”，开始主动革新。
 
-回顾本书第一章 1.5.1 节关于 Docker 演进的介绍，Docker 从 1.1 版本起推动自身的重构，并拆分出 Containerd。早期，Containerd 单独开源，并没有捐赠给 CNCF，Containerd 还适配了其他容器编排系统，如 Swarm，因此并没有直接实现 CRI 接口。此外，出于诸多原因的考虑，Docker 对外部开放的接口仍保持不变。
+回顾本书第一章 1.5.1 节关于 Docker 演进的介绍，Docker 从 1.1 版本起推动自身的重构，并拆分出 Containerd。
+
+早期，Containerd 单独开源，并没有捐赠给 CNCF，Containerd 还适配了其他容器编排系统，如 Swarm，因此并没有直接实现 CRI 接口。此外，出于诸多原因的考虑，Docker 对外部开放的接口仍保持不变。
 
 在上述两个背景下，Kubernetes 中出现了两种调用链（图 7-15 所示）：
 - 通过适配器 dockershim 调用：首先 dockershim 调用 Docker；接着，Docker 调用 Containerd；最后，Containerd 操作容器；
