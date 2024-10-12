@@ -14,10 +14,10 @@ iptables 默认有五条链：PREROUTING、INPUT、FORWARD、OUTPUT、POSTROUTIN
 
 iptables 把一些常用数据包管理操作总结成具体的动作，当数据包经过内核协议栈的钩子时（在 iptables 称为链），判断经过此链的数据包是否匹配 iptables 规则。iptables 规则包括匹配 IP 数据包的源地址、目的地址、传输层协议（TCP/UDP/ICMP/..）以及应用层协议（HTTP/FTP/SMTP/..）等。
 
-如果数据包匹配规则，则执行定义好的动作。如下为部分常见的动作及说明：
+如果数据包匹配规则，则触发定义好的动作。如下为部分常见的动作及说明：
 
 - ACCEPT：允许数据包通过，继续执行后续的规则。
-- DROP：直接丢弃数据包；
+- DROP：直接丢弃数据包。
 - RETURN：跳出当前规则“链”（Chain，稍后解释），继续执行前一个调用链的后续规则。
 - DNAT：修改数据包的目标网络地址。
 - SNAT：修改数据包的源网络地址。
@@ -39,7 +39,7 @@ iptables 共有 5 规则表，它们的名称与含义如下：
 
 一个链上可以关联的表可以有多个，所以这 5 张表在一个链上执行的时候得有个顺序：raw --> mangle --> nat --> filter --> security，即先去连接追踪，再改数据包，然后做源或目标地址转换，最后是过滤和安全。
 
-数据包具体经过的表、链的关系和顺序如图 3-3 所示。
+数据包具体经过的表、链顺序如图 3-3 所示。
 
 :::center
   ![](../assets/Netfilter-packet-flow.svg)<br/>
@@ -50,7 +50,7 @@ iptables 共有 5 规则表，它们的名称与含义如下：
 
 除了 5 个内置链外，iptables 支持管理员创建用于实现某些管理目的自定义链。
 
-自定义链可以看作是对调用它的链的扩展。例如，自定义链结束的时候，可以返回内置链，也可以再继续跳转到其他自定义链。自定义链的设计使 iptables 不仅仅只是一个 IP 包过滤工具，还在容器网络中也扮演了重要的角色。如 Kubernetes 的核心组件 kube-proxy，利用自定义链实现了 Service 功能。
+自定义链可以看作是对调用它的链的扩展。例如，自定义链结束的时候，可以返回内置链，也可以再继续跳转到其他自定义链。**自定义链的设计使 iptables 不仅仅只是一个 IP 包过滤工具，还在容器网络中也扮演了重要的角色**。如 Kubernetes 的核心组件 kube-proxy，利用自定义链实现了 Service 功能。
 
 一旦创建一个 Service，Kubernetes 会在主机添加这样一条 iptable 规则。
 
@@ -78,11 +78,11 @@ iptables 共有 5 规则表，它们的名称与含义如下：
 
 这样，访问 Service VIP 的 IP 包经过上述 iptables 处理之后，就已经变成了访问具体某一个后端 Pod 的 IP 包了。
 
-上述实现负载均衡的方式在 kube-proxy 中称 iptables 模式。
+上述实现负载均衡的方式在 kube-proxy 中称 iptables 模式。iptables 模式完全使用 iptables 规则处理容器间请求和负载均衡，因此它的性能也受 iptables 直接影响。随着 Service 数量增加，iptables 的规则数量也随着暴涨。此外，iptables 的非增量式更新机制存在一定的时延，大规模集群中有明显的性能问题。
 
-iptables 模式完全使用 iptables 规则处理容器间请求和负载均衡，因此它的性能也受 iptables 直接影响。随着 Service 数量增加，iptables 的规则数量也随着暴涨。此外，iptables 的非增量式更新机制存在一定的时延，大规模集群中有明显的性能问题。
+为解决 iptables 模式的性能问题，kube-proxy 新增了 IPVS 模式。**该模式使用 Linux 内核四层负载均衡模块 IPVS 实现容器间请求和负载均衡，性能和 Service 规模无关**。
 
-为解决 iptables 模式的性能问题，kube-proxy 新增了 IPVS 模式，该模式使用 Linux 内核四层负载均衡模块 IPVS 实现容器间请求和负载均衡，性能和 Service 规模无关。需要注意的是，内核中的 IPVS 模块只负责上述的负载均衡和代理功能。而一个完整的 Service 流程正常工作所需要的初始流量捕获、过滤等操作，还是要靠 iptables 来实现。只不过，这些辅助性的 iptables 规则数量有限，不会随着 Service 数量增加而失控。
+需要注意的是，内核中的 IPVS 模块只负责上述的负载均衡和代理功能。而一个完整的 Service 流程正常工作所需要的初始流量捕获、过滤等操作，还是要靠 iptables 来实现。只不过，这些辅助性的 iptables 规则数量有限，不会随着 Service 数量增加而失控。
 
 如图 3-4 展示了 iptables 与 IPVS 两种模式的性能对比。可以看出，当 Kubernetes 集群有 1,000 个 Service（10,000 个 Pod）时，两者的性能表现开始出现明显差异。
 
