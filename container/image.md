@@ -30,7 +30,7 @@ $ docker run 镜像名称
 
 例如，当应用升级或运行环境发生改动时，是否需要重新制作一次 rootfs？如果整个 rootfs 以粗暴的方式打包在一起，不仅无法复用，还会占用大量存储空间。举例来说，笔者基于 CentOS ISO 制作了一个 rootfs，并配置好了 Java 运行环境。那么，笔者的同事发布 Java 应用时，肯定想复用之前安装过 Java 运行环境的 rootfs，而不是重新制作一个。此外，如果每个人都重新制作 rootfs，考虑到一台主机通常运行几十个容器，将会占用巨大的存储空间。
 
-分析上述 Java 应用对 rootfs 的需求，会发现底层的 rootfs（例如 CentOS + JDK）其实是固定的。那么，是否可以通过增量修改的方式来支持不同应用的依赖？比如，维护一个共同的“基础 rootfs”，然后根据应用的不同依赖制作不同的镜像。例如，CentOS + JDK + app-1、CentOS + JDK + app-2 和 CentOS + Python + app-3 等等。
+分析上述 Java 应用对 rootfs 的需求，发现底层的 rootfs（例如 CentOS + JDK）其实是固定的。那么，是否可以通过增量修改的方式来支持不同应用的依赖？比如，维护一个共同的“基础 rootfs”，然后根据应用的不同依赖制作不同的镜像。例如，**CentOS + JDK** + app-1、**CentOS + JDK** + app-2 和 **CentOS** + Python + app-3 等等。
 
 增量修改的想法当然可行，这正是 Docker 设计的精髓所在。Docker 没有沿用传统的 rootfs 制作流程，而是在镜像设计中引入了层（layer）的概念。也就是说，每次制作镜像的操作都会生成一个层，也就是一个增量的 rootfs。
 
