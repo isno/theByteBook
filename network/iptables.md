@@ -12,9 +12,9 @@ Netfilter 中的钩子，在 iptables 的术语里叫做“链”（chain）。
 
 iptables 默认有五条链：PREROUTING、INPUT、FORWARD、OUTPUT、POSTROUTING。从名字上看，它们分别对应 Netfilter 的 5 个钩子。
 
-iptables 把一些常用数据包管理操作总结成具体的动作，当数据包经过内核协议栈的钩子时（在 iptables 称为链），判断经过此链的数据包是否匹配 iptables 规则。iptables 规则包括匹配 IP 数据包的源地址、目的地址、传输层协议（TCP/UDP/ICMP/..）以及应用层协议（HTTP/FTP/SMTP/..）等。
+iptables 把一些常用数据包管理操作总结成具体的动作，当数据包经过内核协议栈的钩子时（也就是 iptables 的链），判断经过此链的数据包是否匹配 iptables 规则。iptables 规则包括匹配 IP 数据包的源地址、目的地址、传输层协议（TCP/UDP/ICMP/..）以及应用层协议（HTTP/FTP/SMTP/..）等。如果数据包匹配规则，则触发定义好的动作。
 
-如果数据包匹配规则，则触发定义好的动作。如下为部分常见的动作及说明：
+如下为部分常见的动作及说明：
 
 - ACCEPT：允许数据包通过，继续执行后续的规则。
 - DROP：直接丢弃数据包。
