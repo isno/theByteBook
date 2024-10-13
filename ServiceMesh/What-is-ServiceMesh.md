@@ -2,7 +2,7 @@
 
 2016 年，离开 Twiiter 的工程师 William Morgan 和 Oliver Gould 组建了一个小型的技术公司 Buoyant，不久之后他们在 Github 上发布了创业项目 Linkerd，业界第一款服务网格项目诞生。
 
-那么，什么是服务网格？服务网格的概念最早出自于 William Morgan 的博文《What’s a service mesh？And why do I need one?》，William Morgan 作为服务网格的创造者和布道师，引用他的定义自然是最官方和最权威的。
+那么，服务网格到底是什么？这一概念最早由 William Morgan 在其博文《What’s a service mesh? And why do I need one?》中提出。作为服务网格的创造者和推广者，引用他的定义无疑是最官方和权威的。
 
 :::tip 服务网格的定义
 
@@ -12,10 +12,10 @@
  —— What’s a service mesh？And why do I need one?，William Morgan
 :::
 
-感受服务网格从无到有，被社区接受，巨头入局，众人皆捧的发展历程：
+通过下述时间点，感受服务网格从无到有，被社区接受，巨头入局，众人皆捧的发展历程：
 
-- 2016 年 9 月，在 SF MicroServices 大会上，术语“ServiceMesh”第一次在公开场合使用，这标志着服务网格的概念从 Buoyant 公司内部走向社区，并开始被广泛接受以及推崇。
-- 2017 年 1 月，Linkerd 加入 CNCF，项目被归类到 CNCF 为其单独开辟的“ServiceMesh”分类，这代表着服务网格的设计理念被主流社区认同。
-- 2017 年 4 月，Linkerd 发布 1.0 版本。这标志着服务网格实现了最重要的里程碑“被客户接受并在生产线上被大规模应用”，服务网格从理念开始走向生产实践。
-- 2017 年 5 月，Google、IBM 和 Lyft 联合发布 Istio 0.1 版本，以 Istio 为代表的第二代服务网格开始登场。
-- 2018 年 7 月，CNCF 发布了最新的云原生定义，定义中服务网格和微服务、容器、不可变基础设施等技术并列，服务网格被放在前所未有的高度。
+- **2016 年 9 月**：在 SF MicroServices 大会上，术语“Service Mesh”首次在公开场合提出，标志着服务网格的概念从 Buoyant 公司走向社区，并逐渐获得广泛认可和推崇。
+- **2017 年 1 月**：Linkerd 加入 CNCF，并被归类到 CNCF 新设立的“Service Mesh”分类，表明服务网格的设计理念得到了主流社区的认可。
+- **2017 年 4 月**：Linkerd 发布 1.0 版本，标志着服务网格实现了关键里程碑——被客户接受并在生产环境中大规模应用，服务网格从“虚”转“实”。
+- **2017 年 5 月**：Google、IBM 和 Lyft 联合发布 Istio 0.1 版本，以 Istio 为代表的第二代服务网格开始登场。
+- **2018 年 7 月**：CNCF 发布了最新的云原生定义，将服务网格与微服务、容器、不可变基础设施等技术并列，服务网格的地位空前提升。
