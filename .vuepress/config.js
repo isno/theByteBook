@@ -192,14 +192,7 @@ export default defineUserConfig({
                         '/balance/balance4-conclusion.md',    
                     ]
                 },
-                {
-                    text: "4.4 七层负载均衡",
-                    link: '/balance/balance7.md',
-                    children: [
-                        '/balance/nginx-conf.md',
-                        '/balance/balancer7-feature.md',
-                    ]
-                },
+                '/balance/balance7.md',
                 '/balance/balance-algorithm.md',
                 '/balance/conclusion.md',
                 ]
