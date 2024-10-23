@@ -2,7 +2,9 @@
 
 2016 年，离开 Twiiter 的工程师 William Morgan 和 Oliver Gould 组建了一个小型的技术公司 Buoyant，不久之后他们在 Github 上发布了创业项目 Linkerd，业界第一款服务网格项目诞生。
 
-那么，服务网格到底是什么？这一概念最早由 William Morgan 在其博文《What’s a service mesh? And why do I need one?》中提出。作为服务网格的创造者和推广者，引用他的定义无疑是最官方和权威的。
+那么，服务网格到底是什么？
+
+服务网格概念最早由 William Morgan 在其博文《What’s a service mesh? And why do I need one?》中提出。作为服务网格的创造者和推广者，引用他的定义无疑是最官方和权威的。
 
 :::tip 服务网格的定义
 
