@@ -120,9 +120,15 @@ spec:
     server: 172.17.0.2
 ```
 
-直接使用 PV 时，需要详细描述存储的配置信息，这对业务工程师并不友好。业务工程师只想知道我有多大的空间、I/O 是否满足要求，肯定不想不关心存储底层的配置细节。为了简化存储的使用，Kubernetes 将存储服务再次抽象，把业务工程师关心的逻辑再抽象一层，这就是 PVC（Persistent Volume Claim，持久卷声明）。
+直接使用 PV 时，需要详细描述存储的配置信息，这对业务工程师并不友好。
 
-PVC 和 PV 的设计其实与“面向对象”的思想完全一致。PVC 可以理解为持久化存储的“接口”，它提供了对某种持久化存储的描述，但不提供具体的实现；而持久化存储的实现部分则由 PV 负责完成。这样做的好处是，作为应用开发者，我们只需要与 PVC 这个“接口”进行交互，而不必关心具体的实现是 NFS 还是 Ceph。
+业务工程师只想知道我有多大的空间、I/O 是否满足要求，肯定不想不关心存储底层的配置细节。为了简化存储的使用，Kubernetes 将存储服务再次抽象，把业务工程师关心的逻辑再抽象一层，于是有了 PVC（Persistent Volume Claim，持久卷声明）。
+
+PVC 和 PV 的设计其实与“面向对象”的思想完全一致：
+- PVC 可以理解为持久化存储的“接口”，它提供了对某种持久化存储的描述，但不提供具体的实现；
+- 而持久化存储的实现部分则由 PV 负责完成。
+
+这样做的好处是，作为业务开发者，我们只需要与 PVC 这个“接口”进行交互，而不必关心存储的具体的实现是 NFS 还是 Ceph。
 
 如下所示，一个 PVC 资源的 YAML 配置示例。可以看到，其中没有任何与存储实现相关的细节。
 
@@ -140,10 +146,12 @@ spec:
       storage: 3Gi
 ```
 
-此刻，你应该还有个疑问：“PV 和 PVC 两者之间并没有明确相关的绑定参数，那么它们是如何绑定的？”。PV 和 PVC 的绑定实际上是一个自动过程，主要依赖于以下几个关键因素：
+此刻，你应该还有个疑问：“PV 和 PVC 两者之间并没有明确相关的绑定参数，那么它们是如何绑定的？”。
 
-- Spec 参数匹配：Kubernetes 会自动寻找与 PVC 声明的规格相匹配的 PV。这包括存储容量的大小、所需的访问模式（例如 ReadWriteOnce、ReadOnlyMany 或 ReadWriteMany），以及存储的类型（如文件系统或块存储）。
-- 存储类匹配：PV 和 PVC 必须具有相同的 storageClassName。这个类名定义了 PV 的存储类型和特性，确保 PVC 请求的存储资源与 PV 提供的存储资源在类别上一致。
+PV 和 PVC 的绑定实际上是一个自动过程，且依赖以下两类匹配因素：
+
+- **Spec 参数匹配**：Kubernetes 会自动寻找与 PVC 声明的规格相匹配的 PV。这包括存储容量的大小、所需的访问模式（例如 ReadWriteOnce、ReadOnlyMany 或 ReadWriteMany），以及存储的类型（如文件系统或块存储）。
+- **存储类匹配**：PV 和 PVC 必须具有相同的 storageClassName。这个类名定义了 PV 的存储类型和特性，确保 PVC 请求的存储资源与 PV 提供的存储资源在类别上一致。
 
 如下所示的 YAML 配置，在 Pod 中使用 PVC 时，一旦 PVC 成功匹配到 PV，NFS 远程存储将被挂载到 Pod 中的指定目录，例如 nginx 容器内的 /data 目录。这样，Pod 内部的应用就能够像使用本地存储一样方便地访问和使用这个远程存储资源。
 
@@ -170,17 +178,19 @@ spec:
 
 ## 7.5.5 PV 的使用：从手动到自动
 
-在 Kubernetes 中，如果系统中没有合适的 PV 满足 PVC 的需求，PVC 将一直处于 Pending 状态，直到系统中产生一个合适的 PV。在此期间，Pod 将无法正常启动。对于小规模集群，可以预先创建多个 PV 来等待 PVC 匹配。然而，在一个大规模的 Kubernetes 集群中，可能有成千上万个 Pod，显然无法依靠人工方式提前创建出成千上万个 PV。
+在 Kubernetes 中，如果没有适合的 PV 满足 PVC 的需求，PVC 将保持在 Pending 状态，直到有合适的 PV 可用。在此期间，Pod 无法正常启动。对于小规模集群，可以预先创建多个 PV 来匹配 PVC。但在大规模 Kubernetes 集群中，Pod 的数量可能达到成千上万，显然无法依靠人工方式提前创建如此多的 PV。
 
 为此，Kubernetes 提供了一套自动创建 PV 的机制 —— 动态供给（Dynamic Provisioning）。相对而言，前面通过人工创建 PV 的方式被称为静态供给（Static Provisioning）。
 
-动态供给（Dynamic Provisioning）的核心在于 StorageClass 对象，它的作用是创建 PV 的模板，使 PV 可以自动生成。在声明 StorageClass 时，必须明确两类关键信息：
-- PV 的属性：定义了 PV 的特征，包括存储空间的大小、读写模式（如 ReadWriteOnce、ReadOnlyMany 或 ReadWriteMany），以及回收策略（如 Retain、Recycle 或 Delete）等。
-- Provisioner 的属性：确定存储供应商（也称为 Volume Plugin，存储插件）及其参数信息。Kubernetes 支持两种类型的存储插件：
-  - In-Tree 插件：这些插件是 Kubernetes 源码的一部分，通常以前缀“kubernetes.io”命名，如 kubernetes.io/aws、kubernetes.io/azure 等。它们直接集成在 Kubernetes 项目中，为特定的存储服务提供支持。
-  - Out-of-Tree 插件：这些插件根据 Kubernetes 提供的存储接口由第三方存储供应商实现，代码独立于 Kubernetes 核心代码。Out-of-Tree 插件允许更灵活地集成各种存储解决方案，以适应不同的存储需求。
+动态供给机制的核心在于 StorageClass 对象，它的作用是创建 PV 的模板，使 PV 可以自动生成。
 
-以下是一个 Kubernetes StorageClass 资源的配置示例。该 StorageClass 指定使用 AWS Elastic Block Store（aws-ebs）作为存储供应商。在存储参数设置中，定义了一个 type 属性，其值被设置为 gp2，表示使用 AWS 的通用型 SSD 卷。
+声明 StorageClass 时，必须明确两类关键信息：
+- **PV 的属性**：定义了 PV 的特征，包括存储空间的大小、读写模式（如 ReadWriteOnce、ReadOnlyMany 或 ReadWriteMany），以及回收策略（如 Retain、Recycle 或 Delete）等。
+- **Provisioner 的属性**：确定存储供应商（也称为 Volume Plugin，存储插件）及其参数信息。Kubernetes 有两种类型的存储插件：
+  - **In-Tree 插件**：这些插件是 Kubernetes 源码的一部分，通常以前缀“kubernetes.io”命名，如 kubernetes.io/aws、kubernetes.io/azure 等。它们直接集成在 Kubernetes 项目中，为特定的存储服务提供支持。
+  - **Out-of-Tree 插件**：这些插件根据 Kubernetes 提供的存储接口由第三方存储供应商实现，代码独立于 Kubernetes 核心代码。Out-of-Tree 插件允许更灵活地集成各种存储解决方案，以适应不同的存储需求。
+
+以下是一个 Kubernetes StorageClass 资源的配置示例。该 StorageClass 指定使用 AWS Elastic Block Store（aws-ebs）作为存储供应商。存储参数设置中，定义了一个 type 属性，其值被设置为 gp2，表示使用 AWS 的通用型 SSD 卷。
 
 ```yaml
 apiVersion: storage.k8s.io/v1
@@ -296,9 +306,9 @@ CSI 插件机制为存储供应商和容器编排系统之间的交互提供了�
   图 7-25 CNCF 下的 Kubernetes 存储生态
 :::
 
-上述众多的存储系统无法一一展开，但作为业务开发工程师而言，直面的问题是：“我应该选择哪种存储类型？”。
+上述众多的存储系统无法一一展开，但作为业务开发工程师而言，直面的问题是：“我应该选择哪种存储类型？”。无论是内置的存储插件还是第三方的 CSI 存储插件，总结提供的存储服务类型就 3 种：块存储（Block Storage）、文件存储（File Storage）和对象存储（Object Storage）。
 
-无论是内置的存储插件还是第三方的 CSI 存储插件，总结提供的存储服务类型就 3 种：块存储（Block Storage）、文件存储（File Storage）和对象存储（Object Storage）。这三种存储类型特点与区别，笔者介绍如下：
+上述三种存储类型特点与区别，笔者介绍如下：
 
 - **块存储**：块存储是最接近物理介质的一种存储方式，常见的硬盘就属于块设备。块存储不关心数据的组织方式和结构，只是简单地将所有数据按固定大小分块，每块赋予一个用于寻址的编号。数据的读写通过与块设备匹配的协议（如 SCSI、SATA、SAS、FCP、FCoE、iSCSI 等）进行。
 

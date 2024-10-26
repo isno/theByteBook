@@ -13,7 +13,7 @@
 
 Proxyless 模式的设计理念是，服务间通信总是要选择一种协议进行，那么将协议的类库（SDK）扩展，使其具有流量控制的能力，不就能代替 Sidecar 代理了吗？且 SDK 和应用同属于一个进程，必然有更优秀的性能表现，Sidecar 为人诟病的延迟问题将迎刃而解。
 
-2021 年 Istio 官方博客发表了一篇文章 《基于 gRPC 的无代理服务网格》[^1]，文中介绍了一种基于 gRPC 框架实现的 Proxyless 模式的服务网格。Proxyless 模式的工作原理如图 8-18 所示，服务间通信治理不再依赖 Sidecar，而是采用原始的方式，也就是在 gRPC 库中实现。此外，这种方案额外需要一个代理（图中的 Istio Agent）通过 xDS 协议与控制平面交互，负责告知 gRPC 库如何连接到 istiod、如何获取证书、如何配置规则等。
+2021 年，Istio 官方博客发表了一篇文章 《基于 gRPC 的无代理服务网格》[^1]，文中介绍了一种基于 gRPC 框架实现的 Proxyless 模式的服务网格。该模式的工作原理如图 8-18 所示，服务间通信治理不再依赖 Sidecar，而是采用原始的方式，也就是在 gRPC 库中实现。此外，该模式需要额外一个代理（图中的 Istio Agent）通过 xDS 协议与控制平面交互，负责告知 gRPC 库如何连接到 istiod、如何获取证书、处理流量的策略等。
 
 :::center
   ![](../assets/proxyless.svg)<br/>
@@ -28,17 +28,15 @@ Proxyless 模式的设计理念是，服务间通信总是要选择一种协议�
 :::
 
 
-不过，回过头再看，所谓 Proxyless 其实和传统的 SDK 并无二致，只是将流控能力内嵌到负责通信协议的类库中，因此它具有和传统 SDK 服务框架相同的缺点。
-
-所以，业内很多人认为 Proxyless 模式本质上是一种倒退，是回归到传统的方式去解决服务间通信的问题。
+不过，回过头再看，所谓 Proxyless 模式其实和传统的 SDK 并无二致，只是将流控能力内嵌到负责通信协议的类库中，因此它具有和传统 SDK 服务框架相同的缺点。所以，业内很多人认为 Proxyless 模式本质上是一种倒退，是回归到传统的方式去解决服务间通信的问题。
 
 ## 8.5.2 Sidecarless 模式
 
 有了 Proxyless，也不妨再多个 Sidecarless。
 
-2022 年 7 月，专注于容器网络领域的开源软件 Cilium 发布了 v1.12 版本。该版本最大的一个亮点是实现了一种 Sidecarless（无 Sidecar）模式的服务网格。
+2022 年 7 月，专注于容器网络领域的开源软件 Cilium 发布了 v1.12 版本。该版本最大的亮点是实现了一种 Sidecarless（无 Sidecar）模式的服务网格。
 
-Cilium Sidecarless 模式的服务网格工作原理如图 8-20 所示。Cilium 在节点中运行一个 Enovy 实例，作为所有容器的共享代理，这样不需要在每个 Pod 内放置一个 Sidecar 了。然后，再借助 Cilium CNI 底层网络能力，当业务容器的数据包经过内核时，与节点中的共享代理打通，从而构建出一种新形态的服务网格。
+Cilium Sidecarless 模式的服务网格工作原理如图 8-20 所示。首先，Cilium 在节点中运行一个 Enovy 实例，作为所有容器的共享代理，这样每个 Pod 内就不需要放置一个 Sidecar 了。然后，借助 Cilium CNI 底层网络能力，当业务容器的数据包经过内核时，与节点中的共享代理打通，从而构建出一种全新形态的服务网格。
 
 :::center
   ![](../assets/sidecarless.svg)<br/>
@@ -52,7 +50,9 @@ Cilium Sidecarless 模式的服务网格工作原理如图 8-20 所示。Cilium 
  图 8-22 Cilium Sidecarless 模式与 Istio Sidecar 模式的性能测试 [图片来源](https://isovalent.com/blog/post/2022-05-03-servicemesh-security/)
 :::
 
-回过头看，Cilium Sidecarless 模式设计思路上其实和 Proxyless 如出一辙。即用一种非 Sidecar 的方式实现流量控制能力。两者的区别是，一个基于通信协议类库；另外一个基于共享代理，通过 eBPF 的 Linux 内核扩展技术实现。
+回过头看，Cilium Sidecarless 模式设计思路上其实和 Proxyless 如出一辙。即用一种非 Sidecar 的方式实现流量控制能力。两者的区别是：
+- 一个基于通信协议类库；
+- 另外一个基于共享代理，通过 eBPF 的 Linux 内核扩展技术实现。
 
 但同样，软件领域没有银弹，eBPF 不是万能钥匙，它存在 Linux 内核版本要求高、代码编写难度大和容易造成系统安全隐患等问题。
 
@@ -73,7 +73,9 @@ Cilium Sidecarless 模式的服务网格工作原理如图 8-20 所示。Cilium 
 
 根据官方的博客信息，Istio 一直在推进 Ambient Mesh 的开发，并在 2023 年 2 月将其合并到了 Istio 的主代码分支。这也从一定程度上说明 Ambient Mesh 不是什么实验性质的“玩具”，而是 Istio 的未来发展方向之一。
 
-最后，无论是 Sidecarless 还是 Ambient Mesh，它们的设计思路本质是用中心化的代理，替代位于应用容器旁边的 Sidecar 代理。这在一定程度上解决了传统 Sidecar 模式带来的资源消耗、网络延迟问题。但反面是，服务网格的设计理念本来就很抽象，引入 Proxyless、Sidecarless、Ambient Mesh 模式，让服务网格愈加抽象。笔者相信，大部分业务工程师直面这些抽象概念时，一定感觉头皮阵阵发麻。
+无论是 Sidecarless 还是 Ambient Mesh，它们的设计思路本质是用中心化的代理，替代位于应用容器旁边的 Sidecar 代理。这在一定程度上解决了传统 Sidecar 模式带来的资源消耗、网络延迟问题。
+
+但反面是，服务网格的设计理念本来就很抽象，引入 Proxyless、Sidecarless、Ambient Mesh 模式，让服务网格愈加抽象。笔者相信，大部分业务工程师直面这些抽象概念时，一定感觉脑袋发晕。
 
 
 [^1]: 参见 https://istio.io/latest/zh/blog/2021/proxyless-grpc/
