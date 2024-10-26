@@ -1,23 +1,18 @@
 # 10.4.4 构建镜像以及创建 Pipeline
 
-Tekton 的任务是在 Pod 只执行，如果在再使用 docker build 的方式编译镜像，就不合适了：
-- 现在容器运行时大部分是 Containerd，不太可能再为构建镜像安装 Docker。
-- 就算容器运行时是 Docker，Pod 内也得用特权模式访问 docker.sock ，因此产生安全问题。
+Tekton 任务在 Pod 内执行，使用 docker build 编译镜像已不再合适：
 
-那么，是否有一种能脱离 Docker，实现完全在容器内构建镜像的方式？当然有，这就是 Kaniko。
+- 目前大多数容器运行时已切换为 Containerd，几乎不可能为了构建镜像额外安装 Docker。
+- 即使容器运行时使用的是 Docker，Pod 需要通过特权模式访问 Docker 的守护进程 (docker.sock)，这显然增加了潜在的安全风险。
 
-:::tip Kaniko 是什么
+为容器镜像的构建提供一个安全、无依赖 Docker 守护进程的解决方案，Google Cloud 的工程师们开发了 Kaniko。
 
-Kaniko 是谷歌开源的一款构建容器镜像的工具。Kaniko 并不依赖于 Docker 守护进程，完全在用户空间根据 Dockerfile 的内容逐行执行命令来构建镜像，这就使得在一些无法获取 docker 守护 进程的环境下也能够构建镜像。
-
-:::
+图 10-7 展示了 Kaniko 构建镜像的过程。Kaniko 从提供的 Dockerfile 开始，解析其中的每一条指令（如 FROM、RUN、COPY 等），并根据这些指令构建镜像。在执行每条 Dockerfile 指令时，Kaniko 会创建当前文件系统的快照，确保每个层只包含指令所生成的文件变更。构建完成后，Kaniko 将生成的镜像推送到指定的容器镜像注册中心（如 Docker Hub、Google Container Registry 等）。
 
 :::center
   ![](../assets/kaniko.png)<br/>
   图 10-7 Kaniko 如何工作
 :::
-
-Kaniko 解析指定的 Dockerfile，先拉取基础镜像，然后按顺序执行 Dockerfile 中的每条指令（如 RUN、COPY、ADD），并将更改应用到镜像层中。构建完成后，Kaniko 将最终镜像推送到指定的远端镜像仓库。
 
 定义了一个构建镜像的 Task，资源文件（build-and-push.yaml ）内容如下所示
 

@@ -13,6 +13,3 @@ Paxos 算法是 Leslie Lamport 在 1990 提出的一种**基于消息传递且�
 
 Paxos 算法因复杂而著名，围绕着该算法曾经发生过非常有趣的事情，这些已成为人们津津乐道的一段轶事。直接切入 Paxos 算法本身未免望文生畏，我们从这段轶事开始学习 Paxos 算法之旅。
 
-:::tip <a/>
-Paxos 以及 Raft 部分论证内容及配图来源于 《Implementing Replicated Logs with Paxos》以及《In Search of an Understandable Consensus Algorithm》这两篇论文，在此统一注明，后面不再单独列出。
-:::
