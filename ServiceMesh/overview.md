@@ -23,9 +23,9 @@ Istio 最大的创新在于它为服务网格带来前所未有的控制力：
 
 ## 8.3.2 Linkerd 2.0 出击
 
-Istio 被争相追捧的同时，作为服务网格概念的创造者 William Morgan 自然不甘心出局，公司生死存亡之际，瞄准 Istio 的缺陷（过于复杂）并借鉴 Istio 的设计理念（新增控制平面），开始重新设计它们的服务网格，主打轻量化，目标是世界上最轻、最简单、最安全的 Kubernetes 专用服务网格。
+Istio 被争相追捧的同时，作为服务网格概念的创造者 William Morgan 自然不甘心出局，公司生死存亡之际，瞄准 Istio 的缺陷（过于复杂）并借鉴 Istio 的设计理念（新增控制平面），开始重新设计它们的服务网格。
 
-Buoyant 公司的第二代服务网格使用 Rust 构建数据平面 linkerd2-proxy ，再使用 Go 开发了控制平面 Conduit。该项目最初以 Conduit 命名，在 Conduit 加入 CNCF 后不久，宣布与原有的 Linkerd 项目合并，被重新命名为 Linkerd 2[^1]，
+Buoyant 公司的第二代服务网格使用 Rust 构建数据平面 linkerd2-proxy ，使用 Go 开发了控制平面 Conduit，主打轻量化，目标是世界上最轻、最简单、最安全的 Kubernetes 专用服务网格。该项目最初以 Conduit 命名，在 Conduit 加入 CNCF 后不久，宣布与原有的 Linkerd 项目合并，被重新命名为 Linkerd 2[^1]，
 
 Linkerd2 的架构如图 8-12 所示，增加了控制平面，但整体简单：
 - 控制层面组件只有 destination（类似 Istio 中的 Pilot 组件）、identity（类似 Istio 中的 Citadel）和 proxy injector（代理注入器，自动将 Linkerd 代理作为 Sidecar 容器注入到匹配的 Pod 中，无需手动修改应用程序的部署配置）。
@@ -53,18 +53,18 @@ Linkerd2 的架构如图 8-12 所示，增加了控制平面，但整体简单�
 
 ## 8.3.4 Istio 与 Linkerd2 性能对比
 
-2019 年，云原生技术公司 Kinvolk 发布了一份 Linkerd2 与 Istio 的性能对比报告。测试数据显示，Linkerd 在延迟和资源消耗方面明显优于 Istio[^2]。
+2019 年，云原生技术公司 Kinvolk 发布了一份 Linkerd2 与 Istio 的性能对比报告。报告显示，Linkerd 在延迟和资源消耗方面明显优于 Istio[^2]。
 
 两年之后，Linkerd 与 Istio 都发布了多个更成熟的版本，两者的性能表现如何？笔者引用 William Morgan 文章《Benchmarking Linkerd and Istio》[^3]中的数据，向读者介绍 Linkerd v2.11.1、Istio v1.12.0 两个项目之间延迟与资源消耗的表现。
 
-首先是网络延迟的对比。如图 8-13 所示，中位数（P50）延迟的表现 Linkerd 在 6ms 的基准延迟上增加了 6ms 额外延迟，而 Istio 的额外延迟为 15ms。值得注意的是，P90 以后两者开始出现显著差异，最极端的 Max 数据表现上，Linkerd 在 25ms 的基准延迟上增加了 25 ms 额外延迟，而 Istio 则增大了 5 倍，高达 253 ms 的额外延迟。
+首先是网络延迟层面的对比。如图 8-13 所示，中位数（P50）延迟的表现 Linkerd 在 6ms 的基准延迟上增加了 6ms 额外延迟，而 Istio 的额外延迟为 15ms。值得注意的是，P90 以后两者开始出现显著差异，最极端的 Max 数据表现上，Linkerd 在 25ms 的基准延迟上增加了 25 ms 额外延迟，而 Istio 则增大了 5 倍，高达 253 ms 的额外延迟。
 
 :::center
   ![](../assets/latency-200rps.png)<br/>
   图 8-13 Linkerd 与 Istio 的延迟对比
 :::
 
-继续资源消耗方面对比。如图 8-14 所示，Linkerd 代理消耗的内存最大 26 Mb，Istio 的 Envoy 代理消耗的内存最大 156.2 Mb，是 Linkerd 的 6倍。同样，Linkerd 的最大代理 CPU 时间记录为 36ms，而 Istio 的代理 CPU 时间记录为 67ms，比前者多出 85%。
+接着是资源消耗层面的对比。如图 8-14 所示，Linkerd 代理消耗的内存最大 26 Mb，Istio 的 Envoy 代理消耗的内存最大 156.2 Mb，是 Linkerd 的 6倍。同样，Linkerd 的最大代理 CPU 时间记录为 36ms，而 Istio 的代理 CPU 时间记录为 67ms，比前者多出 85%。
 
 :::center
   ![](../assets/linkerd-resource.png)<br/>
@@ -72,7 +72,7 @@ Linkerd2 的架构如图 8-12 所示，增加了控制平面，但整体简单�
 :::
 
 
-Linkerd 和 Istio 在性能和资源成本上的显著差异，主要归因于 Linkerd2-proxy。这一代理为 Linkerd 的整个数据平面提供动力，因此该基准测试在很大程度上反映了 Linkerd2-proxy 与 Envoy 之间的性能和资源消耗对比。
+Linkerd 和 Istio 在性能和资源成本上的显著差异，主要归因于 Linkerd2-proxy。该代理为 Linkerd 的整个数据平面提供动力，因此该基准测试在很大程度上反映了 Linkerd2-proxy 与 Envoy 之间的性能和资源消耗对比。
 
 虽然 Linkerd2-proxy 性能卓越，但由于其使用的语言（rust）相对小众，开源社区的贡献者数量稀少。截至 2024 年 6 月，Linkerd2-proxy 的贡献者仅有 53 人，而 Envoy 的贡献者则多达 1,104 人。此外，Linkerd2-proxy 不支持服务网格领域的 xDS 控制协议，其未来发展将高度依赖于 Linkerd 本身的进展。
 
