@@ -11,16 +11,14 @@ conntrack 是 connection track（连接跟踪）的缩写。
 - 当 Linux 系统收到 TCP SYN 包时，内核中的 conntrack 模块会为其创建一个新的连接记录，并将状态标记为 NEW。
 - 随后，服务器回复一个 SYN-ACK，等待客户端的 ACK 报文。一旦 TCP 握手完成，连接记录中的状态将变为 ESTABLISHED。
 
-你可以通过命令 cat /proc/net/nf_conntrack 查看连接记录，以下是一个类型为 TCP、状态为 ESTABLISHED 的连接记录示例。
+通过命令 cat /proc/net/nf_conntrack 查看连接记录，以下是一个类型为 TCP、状态为 ESTABLISHED 的连接记录示例。
 
 ```bash
 $ cat /proc/net/nf_conntrack
 ipv4     2 tcp      6 88 ESTABLISHED src=10.0.12.12 dst=10.0.12.14 sport=48318 dport=27017 src=10.0.12.14 dst=10.0.12.12 sport=27017 dport=48318 [ASSURED] mark=0 zone=0 use=2
 ```
 
-conntrack 连接记录是 iptables 连接状态匹配的基础，也是实现 SNAT 和 DNAT 的前提。
-
-在 Linux 系统进行 NAT 时，conntrack 跟踪每个连接的源地址和目标地址的映射关系，以确保返回流量能够正确重定向到原始请求的主机。
+conntrack 连接记录是 iptables 连接状态匹配的基础，也是实现 SNAT 和 DNAT 的前提。在 Linux 系统进行 NAT 时，conntrack 跟踪每个连接的源地址和目标地址的映射关系，以确保返回流量能够正确重定向到原始请求的主机。
 
 我们知道 Kubernetes 的核心组件 kube-proxy，作用是负责处理集群中的服务（Service）网络流量。它实现的本质其实是个反向代理（也就是 NAT）。当外部请求访问 Service 时，请求被 DNAT 成 PodIP:Port，响应时再经过 SNAT。
 

@@ -176,7 +176,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第四章：负载均衡',
+                text: '第四章：负载均衡技术',
                 link: '/balance/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
