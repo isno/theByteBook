@@ -12,9 +12,11 @@ Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文�
 
 1990 年，Lamport 将《The Part-Time Parliament》论文提交给 TOCS（美国计算机协会旗下的一本学术期刊）。根据 Lamport 博文中的描述[^1]，TOCS 的三位审稿人在阅读后认为“该论文虽然不怎么重要，但还有些意思”，但建议删掉所有与 Paxos 相关的故事背景。Lamport 对这些缺乏幽默感的审稿人颇为不爽，拒绝对论文进行任何修改，最终论文的发表被搁置。
 
-虽然论文没有发表，但并不代表没有人关注这个算法，Bulter W.Lampson（1991 年图灵奖获得者）认识到这个算法的重要性，在他的论文《How to Build a Highly Availability System using Consensus》对 Paxos 进行了讲述。此后，De Prisco、Lynch 和 Lampson 几人又联合在《理论计算机科学》期刊发表了一篇论文《Revisiting the PAXOS algorithm》对 Paxos 算法进行了详细地描述和证明。经过 Lampson 等人的大力宣传，Paxos 算法逐渐被理论研究界的学者重视。
+虽然论文没有发表，但并不代表没有人关注这个算法，Bulter W.Lampson（1991 年图灵奖获得者）认识到这个算法的重要性，在他的论文《How to Build a Highly Availability System using Consensus》对 Paxos 进行了讲述。后来，De Prisco、Lynch 和 Lampson 几人又联合在《理论计算机科学》期刊发表了一篇论文《Revisiting the PAXOS algorithm》对 Paxos 算法进行了详细地描述和证明。经过 Lampson 等人的大力宣传，Paxos 算法逐渐被理论研究界的学者重视。
 
-另一方面，这些介绍 Paxos 论文的发表使 Lamport 觉得《The Part-Time Parliament》重新发表的时间到了。或许作为一种玩笑的延续，或许为保留原有的工作，更直白的说法是 Lamport 本人认为论文内容的描述和证明足够清晰，根本不需要任何修改。这次发布仅增加了一段编辑注解，有意思的是编辑也在注解上也风趣了一把。
+另一方面，这些介绍 Paxos 论文的发表使 Lamport 觉得《The Part-Time Parliament》重新发表的时间到了。
+
+或许作为一种玩笑的延续，或许为保留原有的工作，更直白的说法是 Lamport 本人认为论文内容的描述和证明足够清晰，根本不需要任何修改。这次发布仅增加了一段编辑注解，有意思的是编辑也在注解上也风趣了一把。
 
 :::tip <span></span>
 
@@ -24,9 +26,9 @@ Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文�
 —— TOCS 编辑 Keith Marzullo 的注解
 
 :::
-《The Part-Time Parliament》[^2] 最终在 1998 年公开发表。
+《The Part-Time Parliament》[^2] 论文最终在 1998 年公开发表。
 
-《The Part-Time Parliament》论文发表之后，还是有很多人抱怨这篇论文看不懂，人们只记住了那个奇怪的故事，而不是 Paxos 算法。Lamport 走到哪都要被人抱怨一通，于是他忍无可忍，在 2001 年使用计算机领域的概念重新描述了一遍算法，并发表了论文 《Paxos Made Simple》[^3]。
+《The Part-Time Parliament》论文发表之后，还是有很多人抱怨这篇论文看不懂，人们只记住了那个奇怪的故事，而不是 Paxos 算法。Lamport 走到哪都要被人抱怨一通，于是他忍无可忍，在 2001 年使用计算机领域的概念重新描述了一遍算法，发表了论文 《Paxos Made Simple》[^3]。
 
 这是一篇很短的论文，摘要只有一句话：“The Paxos algorithm, when presented in plain English, is very simple.”！语气完全无法掩盖作者对 Paxos 的策略没有奏效的失望。
 
