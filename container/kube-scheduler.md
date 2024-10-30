@@ -1,8 +1,8 @@
-# 7.7.3 调度器及扩展设计
+# 7.7.3 调度器与扩展设计
 
-如果集群只有几十个节点，为新创建的 Pod 找到最合适的节点并不困难，但当节点规模达到几千甚至更大时，情况就复杂得多。
+如果集群只有几十个节点，为新创建的 Pod 找到最合适的节点并不困难，但当节点规模达到几千台甚至更多时，问题就复杂了。
 
-首先，Pod 的创建/更新和节点资源无时无刻不在发生变化，如果每次调度都需要进行数千次远程请求以获取相关信息，会因耗时过长，导致调度失败。其次，调度器频繁的网络请求会使其成为集群的性能瓶颈。
+首先，Pod 的创建/更新和节点资源无时无刻不在发生变化，如果每次调度都需要数千次远程请求获取相关信息，势必因耗时过长，导致调度失败率过高。其次，调度器频繁的网络请求会使其成为集群的性能瓶颈。
 
 :::tip <a/>
 为了充分利用硬件资源，通常会将各种类型(CPU 密集、IO 密集、批量处理、低延迟作业)的 workloads 运行在同一台机器上，这种方式减少了硬件上的投入，但也使调度问题更加复杂。
@@ -22,26 +22,30 @@ Kubernetes 默认调度器（kube-scheduler）双循环调度机制如图 7-36 �
   图 7-36 默认调度器 kube-scheduler 的双循环调度机制
 :::
 
-从图 7-37 可以看出，Kubernetes 调度的核心就是两个互相独立的控制循环。
+根据图 7-37 可以看出，Kubernetes 调度的核心在于两个互相独立的控制循环。
 
 第一个控制循环称为 Informer 循环。该循环的主要逻辑是启动一系列 Informer 监听（Watch）API 资源（主要是 Pod 和 Node）状态的变化。当 API 资源变化时，触发 Informer 回调函数进一步处理。例如，一个待调度 Pod 被创建后，触发 Pod Informer 回调函数，该回调函数将 Pod 入队到调度队列中（PriorityQueue），待下一阶段处理。
 
-此外，当 API 资源变化时，Informer 的回调函数还承担对调度器缓存（即 Scheduler Cache）更新的责任，该操作的目的是尽可能将 Pod、Node 的信息缓存化，以便提升后续阶段调度算法的执行效率。
+当 API 资源变化时，Informer 的回调函数还承担对调度器缓存（即 Scheduler Cache）更新的职责，该操作的目的是尽可能将 Pod、Node 的信息缓存化，以便提升后续阶段调度算法的执行效率。
 
 第二个控制循环称为 Scheduling 循环。该循环主要逻辑是不断地从调度队列（PriorityQueue）中出队一个 Pod。然后，触发两个最核心的调度阶段：预选阶段（图 7-31 中的 Predicates）和优选阶段（图 7-31 中的 Priority）。
 
 这里有必要补充调度器的扩展机制。Kubernetes 从 v1.15 版本起，为默认调度器（kube-scheduler）设计了可扩展的机制 —— Scheduling Framework。这个设计的主要目的，是在调度器生命周期的关键点上（图7-37 中绿色矩形箭头框），向外暴露可以扩展和实现自定义调度逻辑的接口。
 
+:::tip <a/>
 需要注意的是，上述可扩展的机制是使用标准 Go 语言插件机制实现的，需要按照规范编写 Go 代码，通过静态编译集成进去。它的通用性和前文提到的 CNI、CSI 或者 CRI 无法相提并论。
+:::
 
 :::center
   ![](../assets/scheduling-framework-extensions.svg)<br/>
    图 7-37 Pod 的调度上下文以及调度框架公开的扩展点
 :::
 
-此外，还要注意，本文一直强调“**默认**调度器”，这里指的是调度逻辑是 Kubernetes 内置一批插件完成的。如果你编写自己的调度插件注册到 Scheduling Framework 的扩展点，也就跟默认调度逻辑没有关系了。
+本文一直强调“**默认**调度器”，指的是本文所阐述的调度逻辑由 Kubernetes 内置一批插件完成。如果你编写自己的调度插件注册到 Scheduling Framework 的扩展点，也就跟默认调度逻辑没有关系了。
 
-我们回到调度处理逻辑中，先来看预选阶段的处理。该阶段主要在调度器生命周期的 PreFilter 和 Filter 阶段，调用相关的过滤插件筛选出符合 Pod 要求的 Node 节点集合。
+我们回到调度处理逻辑中，先来看预选阶段的处理。
+
+预选阶段的主要逻辑是在调度器生命周期的 PreFilter 和 Filter 阶段，调用相关的过滤插件筛选出符合 Pod 要求的 Node 节点集合。
 
 Kubernetes 默认调度器中内置的一批筛选插件，如下所示。
 ```go
@@ -69,7 +73,9 @@ func getDefaultConfig() *schedulerapi.Plugins {
 }
 ```
 
-上述插件本质上是按照 Scheduling Framework 的规范实现 Filter 方法，按照方法内预设的策略来筛选节点。上述插件的筛选策略，可以总结以下三类：
+上述插件本质上是按照 Scheduling Framework 规范实现 Filter 方法，根据方法内预设的策略筛选节点。
+
+内置筛选插件的筛选策略，可总结为下述三类：
 
   - **通用过滤策略**：负责最基础的筛选策略。例如，检查节点可用资源是否满足 Pod 请求（request），检查 Pod 申请的宿主机端口号（spec.nodeport）是否跟节点中端口号冲突。对应的插件有 noderesources、nodeports 等。
   - **节点相关的过滤策略**：与节点相关的筛选策略。例如，检查 Pod 中污点容忍度（tolerations）是否匹配节点的污点（taints）；检查待调度 Pod 节点亲和性设置（nodeAffinity）是否和节点匹配；检查待调度 Pod 与节点中已有 Pod 之间亲和性（Affinity）和反亲和性（Anti-Affinity）的关系。对应的插件有 tainttoleration、interpodaffinity、nodeunschedulable 等。
@@ -148,6 +154,8 @@ profiles:
 
 这一阶段，调度器并不会直接与 Kubelet 通信，而是将 Pod 对象的 nodeName 字段的值，修改为上述选中 Node 的名字即可。Kubelet 会持续监控 Etcd 中 Pod 信息的变化，然后执行一个称为 Admin 的本地操作，确认资源是否可用、端口是否冲突，实际上就是通用过滤策略再执行一遍，再次确认 Pod 是否能在该节点运行。
 
-不过，从调度器更新 Etcd 中的 nodeName，到 Kueblet 检测到变化，再到二次确认是否可调度。这一系列的过程，会持续一段不等的时间。如果等到一切工作都完成，才宣告调度结束，那势必影响整体调度的效率。调度器采用了乐观绑定（Optimistic Binding）的策略来解决上述问题。首先，调度器同步更新 Scheduler Cache 里的 Pod 的 nodeName 的信息，并发起异步请求 Etcd 更新 Pod 的 nodeName 信息，该步骤在调度生命周期中称 Bind 步骤。如果调度成功了，那 Scheduler Cache 和 Etcd 中的信息势必一致。如果调度失败了（也就是异步更新失败），也没有太大关系，Informer 会持续监控 Pod 的变化，将调度成功却没有创建成功的 Pod 清空 nodeName 字段，并重新同步至调度队列。
+不过，从调度器更新 Etcd 中的 nodeName，到 Kueblet 检测到变化，再到二次确认是否可调度。这一系列的过程，会持续一段不等的时间。如果等到一切工作都完成，才宣告调度结束，那势必影响整体调度的效率。
+
+调度器采用了乐观绑定（Optimistic Binding）的策略来解决上述问题。首先，调度器同步更新 Scheduler Cache 里的 Pod 的 nodeName 的信息，并发起异步请求 Etcd 更新 Pod 的 nodeName 信息，该步骤在调度生命周期中称 Bind 步骤。如果调度成功了，那 Scheduler Cache 和 Etcd 中的信息势必一致。如果调度失败了（也就是异步更新失败），也没有太大关系，Informer 会持续监控 Pod 的变化，将调度成功却没有创建成功的 Pod 清空 nodeName 字段，并重新同步至调度队列。
 
 至此，整个 Pod 调度生命周期宣告结束。
