@@ -80,13 +80,13 @@ Google 推出 CRI-O 的意图明显，即直接削弱 Docker 在容器编排领�
 
 ## 7.4.4 Containerd 与 CRI 的关系演进
 
-Docker 并没有“坐以待毙”，开始主动革新。
+Docker 没有“坐以待毙”，开始主动革新。
 
 回顾本书第一章 1.5.1 节关于 Docker 演进的介绍，Docker 从 1.1 版本起推动自身的重构，并拆分出 Containerd。
 
-早期，Containerd 单独开源，并没有捐赠给 CNCF，Containerd 还适配了其他容器编排系统，如 Swarm，因此并没有直接实现 CRI 接口。此外，出于诸多原因的考虑，Docker 对外部开放的接口仍保持不变。
+早期，Containerd 单独开源，并没有捐赠给 CNCF，Containerd 还适配了其他容器编排系统，如 Swarm，因此并没有直接实现 CRI 接口。出于诸多原因的考虑，Docker 对外部开放的接口也仍保持不变。
 
-在上述两个背景下，Kubernetes 中出现了两种调用链（图 7-15 所示）：
+上述两个背景下，Kubernetes 中出现了两种调用链（图 7-15 所示）：
 - 通过适配器 dockershim 调用：首先 dockershim 调用 Docker；接着，Docker 调用 Containerd；最后，Containerd 操作容器；
 - 通过适配器 CRI-containerd 调用：首先，CRI-containerd 调用 Containerd；接着，Containerd 操作容器。
 
@@ -95,21 +95,18 @@ Docker 并没有“坐以待毙”，开始主动革新。
   图 7-15  Containerd 与 Docker 都不支持直接与 CRI 交互
 :::
 
-在这个阶段，Kubelet 的代码和 dockershim 的代码都放在一个仓库内，这意味着 dockershim 需要由 Kubernetes 进行组织、开发和维护。因此，每当 Docker 发布新版本时，Kubernetes 都必须集中精力快速更新和维护 dockershim。同时，Docker 仅作为容器运行时显得过于庞大，Kubernetes 弃用 dockershim 拥有了充分的理由和动力。
+在这个阶段，Kubelet 的代码和 dockershim 的代码都放在一个仓库内，这意味着 dockershim 由 Kubernetes 进行组织、开发和维护。因此，每当 Docker 发布新版本时，Kubernetes 必须集中精力快速更新和维护 dockershim。同时，Docker 仅作为容器运行时显得过于庞大，Kubernetes 弃用 dockershim 拥有了充分的理由和动力。
 
-2018 年，Docker 将 Containerd 捐赠给 CNCF，并在 CNCF 的精心孵化下发布了 1.1 版。与 1.0 版相比，1.1 版的最大区别在于它已完美支持 CRI 标准，这意味着原本用作 CRI 适配器的 CRI-Containerd 从此不再需要。
+2018 年，Docker 将 Containerd 捐赠给 CNCF，并在 CNCF 的精心孵化下发布了 1.1 版。与 1.0 版相比，1.1 版的最大区别在于完美支持 CRI 标准，这意味着原本用作 CRI 适配器的 CRI-Containerd 可以抛弃了。
 
-Kubernetes v1.24 版本正式删除 dockershim，本质是废弃了内置的 dockershim 功能转而直接对接 Containerd。再观察 Kubernetes 到容器运行时的调用链，你会发现调用步骤相比通过 DockerShim、Docker Engine 与 Containerd 交互的步骤减少了两步。
-
-此时：
-- 用户只需抛弃 Docker 的情怀，容器编排至少可以省略一次调用，从而获得性能上的收益；
+Kubernetes v1.24 版本正式删除 dockershim，本质是废弃了内置的 dockershim 功能转而直接对接 Containerd。再观察 Kubernetes 与容器运行时之间的调用链，你会发现调用步骤相比 DockerShim、CRI-containerd 交互的步骤最多减少了两步。此时：
+- 用户只需抛弃 Docker 的情怀，容器编排至少可以省略一次调用，获得性能上的收益；
 - 从 Kubernetes 的角度来看，选择 Containerd 作为运行时组件，调用链更短、更稳定，占用节点资源也更少。
 
 :::center
   ![](../assets//k8s-runtime-v3.png)<br/>
   图 7-16  Containerd 1.1 起，开始完美支持 CRI 
 :::
-
 
 根据 Kubernetes 官方提供的性能测试数据[^2]，Containerd 1.1 相比 Docker 18.03：Pod 的启动延迟降低了大约 20%；CPU 使用率降低了 68%；内存使用率降低了 12%。这是一个相当显著的性能改善。
 
@@ -120,25 +117,25 @@ Kubernetes v1.24 版本正式删除 dockershim，本质是废弃了内置的 doc
 
 ## 7.4.5 安全容器运行时
 
-尽管容器具备许多技术优势，但以 runc 为代表的基于共享内核的“软隔离”技术仍存在一定风险。如果某个恶意程序利用系统漏洞从容器中逃逸，可能对主机造成严重威胁，尤其是在公有云环境中，安全风险可能会影响到其他用户的数据和业务。
+尽管容器具备许多技术优势，但以 runc 为代表的基于共享内核的“软隔离”技术仍存在一定风险。如果某个恶意程序利用系统漏洞从容器中逃逸，可能对主机造成严重威胁，尤其公有云环境中，安全风险可能会影响到其他用户的数据和业务。
 
 出于对传统容器安全性的担忧，Intel 在 2015 年启动了基于虚拟机的容器技术：Clear Container。Clear Container 依赖 Intel VT 的硬件虚拟化技术，以及高度定制的 QEMU-KVM（qemu-lite）来提供高性能的虚拟机容器。2017 年，Clear Container 项目与 Hyper RunV 合并，后者是一个基于 hypervisor 的 OCI 运行时。最终，这些项目合并为如今广为人知的 Kata Containers 项目。
 
-Kata Containers 本质上是通过虚拟化技术模拟出一台“微型虚拟机”，并在这台虚拟机中运行一个精简的 Linux 内核，从而实现强隔离。Kata Containers 虚拟机内有一个特殊的 init 进程，负责管理虚拟机内的所有进程。由于虚拟机内的进程天然共享各个命名空间，这使得 Kata Containers 天生和 Pod 具有等同的概念。 
+Kata Containers 本质上是通过虚拟化技术模拟出一台“微型虚拟机”，虚拟机中运行一个精简的 Linux 内核，实现强隔离。此外，该虚拟机内有一个特殊的 init 进程，负责管理虚拟机内的所有进程，进程天然共享各个命名空间。因此，Kata Containers 天生和 Pod 具有等同的概念。 
 
 :::center
   ![](../assets/kata-container.jpeg)<br/>
   图 7-18 Kata Containers 与传统容器技术的对比 [图片来源](https://katacontainers.io/learn/)
 :::
 
-此外，为了与上层的容器编排系统对接并融入容器生态，Kata Containers 运行时遵循 OCI 规范，并兼容 Kubernetes 的 CRI。Kata Containers 与 Kubernetes 的集成关系如图 7-19 所示。
+为了与上层的容器编排系统对接并融入容器生态，Kata Containers 运行时遵循 OCI 规范，并兼容 Kubernetes 的 CRI。Kata Containers 与 Kubernetes 的集成关系如图 7-19 所示。
 
 :::center
   ![](../assets/kata-container.jpg)<br/>
   图 7-19 CRI 和 Kata Containers 的集成 [图片来源](https://github.com/kata-containers/documentation/blob/master/design/architecture.md)
 :::
 
-除了 Kata Containers，AWS 在 2018 年末发布了安全容器项目 Firecracker，该项目的核心其实是一个用 Rust 语言编写的，配合 KVM 使用的 VMM（Virtual Machine Manager，虚拟机管理程序），因此 Firecracker 还必须配合上 containerd 才能融入当今的容器生态。所以 AWS 又开源了 firecracker-containerd 项目，用于对接 Kubernetes 生态。
+除了 Kata Containers，2018 年末，AWS 发布了安全容器项目 Firecracker。该项目的核心其实是一个用 Rust 语言编写的，配合 KVM 使用的 VMM（Virtual Machine Manager，虚拟机管理程序）。Firecracker 必须配合 containerd 才能融入当今的容器生态。所以 AWS 又开源了 firecracker-containerd 项目，用于对接 Kubernetes 生态。
 
 本质上 Firecracker-containerd 是另外一个私有化、定制化的 Kata containers，整体架构和 Kata containers 类似，只是放弃了一些兼容性换取更简化的实现，其细节笔者就不再赘述了。
 
