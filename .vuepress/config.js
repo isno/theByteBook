@@ -182,19 +182,18 @@ export default defineUserConfig({
                 sidebarDepth: 1,
                 children: [
                 '/balance/balance.md',
+                '/balance/balance-features.md',
+                '/balance/balance-topology.md',
                
                 {
-                    text: "4.2 四层负载均衡",
+                    text: "4.4 四层负载均衡技术",
                     link: '/balance/balance4.md',
                     children: [
                         '/balance/balance4-principle.md',
-                        '/balance/balance4-ha.md',
-                        '/balance/balance4-conclusion.md',    
+                        '/balance/balance4-ha.md' 
                     ]
                 },
                 '/balance/balance7.md',
-                '/balance/balance-algorithm.md',
-                '/balance/balance-topology.md',
                 '/balance/conclusion.md',
                 ]
             },

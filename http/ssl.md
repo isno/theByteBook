@@ -1,6 +1,6 @@
 # 2.5.2 HTTPS 优化实践
 
-众所周知，HTTPS 的延迟较高。未进行任何优化的情况下，HTTPS 的延迟比 HTTP 高出几百毫秒。在本节中，将介绍通过升级 TLS 协议、选择合适的密码套件以及开启 OCSP Stapling 的方式降低 HTTPS 请求延迟。
+众所周知，HTTPS 出了名的慢。未进行任何优化的情况下，HTTPS 的延迟比 HTTP 高出几百毫秒。在本节中，将介绍通过升级 TLS 协议、选择合适的密码套件以及开启 OCSP Stapling 的方式降低 HTTPS 请求延迟。
 
 ## 1. 使用 TLS1.3 协议 
 
@@ -108,7 +108,7 @@ server {
 ``` 
 要注意的是，如果你的 CA 提供的 OCSP 需要验证的话，必须用 ssl_trusted_certificate 指定 CA 的中级证书和根证书（PEM 格式，放在一个文件中）的位置，否则会报错 ：[error] 17105#17105: OCSP_basic_verify() failed。
 
-配置完成之后，使用 openssl 命名测试服务端是否已开启 OCSP Stapling 功能。
+配置完成之后，使用 openssl 测试服务端是否已开启 OCSP Stapling 功能。
 
 ```bash 
 $ openssl s_client -connect thebyte.com.cn:443 -servername thebyte.com.cn -status -tlsextdebug < /dev/null 2>&1 | grep "OCSP" 
