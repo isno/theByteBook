@@ -8,7 +8,7 @@ DevOps 的核心理念是解决软件开发生命周期中的管理问题，笔�
 
 早在 1970 年，Winston Royce 发表《Managing the development of large software systems》文章内就提出了瀑布模型，该模型下整个软件开发流程严格遵循需求分析、设计、开发、测试、部署和维护 6 个阶段。
 
-如图 1-27 所示，瀑布模型下，只有上一个阶段完成后，才会开启下一阶段的工作。项目开发的进程如瀑布流水一般，由一个阶段“流动”到下一个阶段，因而被称为瀑布模型（Waterfall Model）。
+如图 1-27 所示，该模型下，只有上一个阶段完成后，才能开启下一阶段的工作。软件开发流程如瀑布流水一般，由一个阶段“流动”到下一个阶段，因而被称为瀑布模型（Waterfall Model）。
 
 :::center
   ![](../assets/waterfall-model.svg)<br/>
