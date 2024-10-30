@@ -1,20 +1,18 @@
 # 3.3.2 数据包过滤工具 iptables
 
-Netfilter 的钩子回调固然强大，但得通过程序编码才能使用，并不适合系统管理员日常运维。
-
-为此，基于 Netfilter 框架开发的应用便出现了，典型的就是 Xtables 系列，包括 iptables、nftables、ebtables、arptables、ip6tables 等。
+Netfilter 的钩子回调固然强大，但得通过程序编码才能使用，并不适合系统管理员日常运维。为此，基于 Netfilter 框架开发的应用便出现了，如 iptables。
 
 用过 Linux 系统的工程师多多少少都使用过 iptables，它常被称为 Linux 系统“自带的防火墙”。严谨地讲，iptables 能做的事情其实远超防火墙的范畴，它的定位应是能够代替 Netfilter 多数常规功能的 IP 包过滤工具。
 
 ## 1. iptables 表和链
 
-Netfilter 中的钩子，在 iptables 的术语里叫做“链”（chain）。
+Netfilter 中的钩子，在 iptables 中称作“链”（chain）。
 
-iptables 默认有五条链：PREROUTING、INPUT、FORWARD、OUTPUT、POSTROUTING。从名字上看，它们分别对应 Netfilter 的 5 个钩子。
+iptables 默认有五条链：PREROUTING、INPUT、FORWARD、OUTPUT、POSTROUTING。从名字上看，它们分别对应了 Netfilter 的 5 个钩子。
 
-iptables 把一些常用数据包管理操作总结成具体的动作，当数据包经过内核协议栈的钩子时（也就是 iptables 的链），判断经过此链的数据包是否匹配 iptables 规则。iptables 规则包括匹配 IP 数据包的源地址、目的地址、传输层协议（TCP/UDP/ICMP/..）以及应用层协议（HTTP/FTP/SMTP/..）等。如果数据包匹配规则，则触发定义好的动作。
+iptables 把一些常用数据包管理操作总结成具体的动作，当数据包经过内核协议栈的钩子时（也就是 iptables 的链），判断经过此链的数据包是否匹配 iptables 规则。iptables 规则包括匹配 IP 数据包的源地址、目的地址、传输层协议（TCP/UDP/ICMP/..）以及应用层协议（HTTP/FTP/SMTP/..）等。
 
-如下为部分常见的动作及说明：
+如果数据包匹配规则，则触发定义好的动作。如下为部分常见的动作及说明：
 
 - ACCEPT：允许数据包通过，继续执行后续的规则。
 - DROP：直接丢弃数据包。
@@ -26,7 +24,9 @@ iptables 把一些常用数据包管理操作总结成具体的动作，当数�
 - MASQUERADE：地址伪装，可以理解为动态的 SNAT。通过它可以将源地址绑定到某个网卡上，因为这个网卡的 IP 可能是动态变化的，此时用 SNAT 就不好实现；
 - LOG：内核对数据包进行日志记录。
 
-不同的链上能处理的事情有区别，而相同的动作放在一起也便于管理。如数据包过滤的动作（ACCEPT，DROP，RETURN，REJECT 等）可以合并到一处，数据包的修改动作（DNAT、SNAT）可以合并到另外一处，这便有了规则表的概念。将规则表与链进行关联，而不是规则本身与链关联，通过一个中间层解耦了链与具体的某条规则，原先复杂的对应关系就变得简单了。
+不同的链上能处理的事情有区别，而相同的动作放在一起也便于管理。如数据包过滤的动作（ACCEPT，DROP，RETURN，REJECT 等）可以合并到一处，数据包的修改动作（DNAT、SNAT）可以合并到另外一处，这便有了规则表的概念。
+
+将规则表与链进行关联，而不是规则本身与链关联，通过一个中间层解耦了链与具体的某条规则，原先复杂的对应关系就变得简单了。
 
 iptables 共有 5 规则表，它们的名称与含义如下：
  
