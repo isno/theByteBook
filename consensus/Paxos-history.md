@@ -37,7 +37,7 @@ Paxos 最初的论文名称为《The Part-Time Parliament》，翻译成中文�
   图 6-2 Paxos 论文摘要
 :::
 
-然而，这篇论文还是非常难以理解，引用斯坦福学者 Diego Ongaro 和 John Ousterhout 在设计 Raft 时发表的论文[^4]中对 Paxos 的描述：
+然而，这篇论文还是非常难以理解，引用斯坦福学者 Diego Ongaro 和 John Ousterhout 设计 Raft 时发表的论文[^4]中对 Paxos 的描述：
 
 :::tip 《In Search of an Understandable Consensus Algorithm》节选
 
@@ -46,7 +46,9 @@ Unfortunately, Paxos has two significant drawbacks. The first drawback is that *
 we were not able to understand the complete protocol until after reading several simplified explanations and designing our own alternative protocol, a process that took almost a year.
 :::
 
-上面大致的含义是，“Paxos 真的太难懂了...”。连斯坦福的教授和博士都感觉难以理解。所以，他们的论文取名《In Search of an Understandable Consensus Algorithm》，意思是“易懂的共识算法还在寻找中”，根本不像 Lamport 说的那么简单。
+上面大致的含义是，“Paxos 真的太难懂了...”。
+
+连斯坦福的教授和博士都感觉难以理解。所以，他们的论文取名《In Search of an Understandable Consensus Algorithm》，意思是“易懂的共识算法还在寻找中”，根本不像 Lamport 说的那么简单。
 
 注意 Raft 论文发表于 2013 年，而论文《Paxos Made Simple》是 2001 年发表的，也就是说 Paxos 算法已经被研究了十几年，直到 Google 的 Chubby 横空出世，使用 Paxos 算法解决了数据的一致性和可用性，即使在面临节点故障或其他网络问题时也能保证服务的稳定性。
 

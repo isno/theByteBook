@@ -184,16 +184,9 @@ export default defineUserConfig({
                 '/balance/balance.md',
                 '/balance/balance-features.md',
                 '/balance/balance-topology.md',
-               
-                {
-                    text: "4.4 四层负载均衡技术",
-                    link: '/balance/balance4.md',
-                    children: [
-                        '/balance/balance4-principle.md',
-                        '/balance/balance4-ha.md' 
-                    ]
-                },
+                '/balance/balance4.md',
                 '/balance/balance7.md',
+                '/balance/global-load-balancer.md',
                 '/balance/conclusion.md',
                 ]
             },
@@ -281,6 +274,8 @@ export default defineUserConfig({
                 children: [
                     '/ServiceMesh/What-is-ServiceMesh.md',
                     '/ServiceMesh/MicroService-history.md',
+                    '/ServiceMesh/data-plane.md',
+                    '/ServiceMesh/control-plane.md',
                     '/ServiceMesh/overview.md',
                     '/ServiceMesh/ServiceMesh-and-Kubernetes.md',
                     '/ServiceMesh/The-future-of-ServiceMesh.md',
