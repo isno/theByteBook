@@ -2,12 +2,12 @@
 
 conntrack 是 connection track（连接跟踪）的缩写。
 
-顾名思义，Linux 内核中的 conntrack 模块是用来跟踪“连接”的。需要注意的是，conntrack 中的“连接”指的是通信双方之间的数据传输连接，不仅可以跟踪 TCP 连接，还可以跟踪 UDP、ICMP 这样的“连接”。
+顾名思义，Linux 内核中的 conntrack 模块是用来跟踪“连接”的。需要注意的是，conntrack 中的“连接”指的是通信双方之间的数据传输连接，不仅跟踪 TCP 连接，还可以跟踪 UDP、ICMP 这样的“连接”。
 
-当 Linux 系统收到数据包时，内核中的 conntrack 模块为每个经过网络协议栈的数据包生成一个连接记录（或称连接条目），并标识其连接状态（如 NEW、ESTABLISHED 等）。用 TCP 三次握手的例子说明：
-- 首先，客户端向服务器发送一个 TCP SYN 包以请求建立连接。
-- Linux 系统收到 TCP SYN 包时，内核中的 conntrack 模块为其创建一个新的连接记录，并将状态标记为 NEW。
-- 随后，服务器回复一个 SYN-ACK，等待客户端的 ACK 报文。一旦 TCP 握手完成，连接记录中的状态将变为 ESTABLISHED。
+当 Linux 系统收到数据包时，内核中的 conntrack 模块为其新建一个（或标识属于某个）连接记录（或称连接条目），并根据数据包类型更新连接状态（如 NEW、ESTABLISHED 等）。用 TCP 三次握手的例子说明：
+- 首先，客户端向服务器发送一个 TCP SYN 包请求建立连接。
+- Linux 系统收到 TCP SYN 包时，内核中的 conntrack 模块为其创建一个新的连接记录，并将状态标记成 NEW。
+- 随后，服务器回复一个 SYN-ACK，等待客户端的 ACK 报文。一旦 TCP 握手完成，连接记录中的状态变成 ESTABLISHED。
 
 通过命令 cat /proc/net/nf_conntrack 查看连接记录，输出了一个连接类型为 TCP，连接状态为 ESTABLISHED 的连接记录。
 
@@ -38,5 +38,5 @@ conntrack 模块维护的连接记录包含了从客户端到 Pod 的 DNAT 映�
   图 3-5 请求和响应不在一个“频道”上，双方通信失败
 :::
 
-针对上述问题，Linux 内核提供了 bridge-nf-call-iptables 配置，决定 Linux 网桥中的数据包是否触发 iptables 规则匹配。也就是处理 NAT 保证 conntrack 连接记录的完整性。这也解释了为什么部署 Kubernetes 集群时，务必开启 Linux 系统配置 bridge-nf-call-iptables（设置为 1）的原因。
+针对上述问题，Linux 内核开放了 bridge-nf-call-iptables 配置，决定 Linux 网桥中的数据包是否触发 iptables 匹配规则。也就是处理 NAT 保证 conntrack 连接记录的完整性。这也解释了为什么部署 Kubernetes 集群时，务必开启 Linux 系统配置 bridge-nf-call-iptables（设置为 1）的原因。
 

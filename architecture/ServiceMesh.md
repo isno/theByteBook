@@ -2,7 +2,7 @@
 
 服务网格（Service Mesh）的概念最早由 Buoyant 公司的创始人 William Morgan 于 2016 年提出。
 
-2017 年 4 月，该公司发布了首个服务网格产品 Linkerd。同年，Morgan 的文章《What’s a service mesh? And why do I need one?》[^1]在互联网中开始广泛流传，这篇文章被认定为服务网格的权威定义。
+2017 年 4 月，该公司发布了首个服务网格产品 Linkerd。同年，Morgan 的文章《What’s a service mesh? And why do I need one?》[^1]在互联网中开始广泛流传，这篇文章内的解读被认定为服务网格的权威定义。
 
 :::tip 服务网格的定义
 
@@ -38,9 +38,9 @@ ServiceMesh 之所以称为服务网格，是因为每台节点同时运行着�
 :::
 
 
-值得注意的是，尽管服务网格普遍使用 Sidecar 作为数据平面，但 Sidecar 模式并非服务网格所独有。
+值得注意的是，尽管服务网格的特点是 Sidecar 模式，但 Sidecar 模式并非服务网格专有。
 
-Sidecar 是一种常见的容器设计模式，在 Kubernetes 的工作负载 Pod 中可以运行多个容器，所有业务容器之外的其他容器均可称为 Sidecar 容器，如日志收集 Sidecar、请求代理 Sidecar 和链路追踪 Sidecar 等等。
+Sidecar 是一种常见的容器设计模式，Kubernetes 的工作负载 Pod 内可配置多个容器，业务容器之外的其他所有容器均可称为 Sidecar 容器。如日志收集 Sidecar、请求代理 Sidecar 和链路追踪 Sidecar 等等。
 
 如图 1-25 所示，app-container 是一个主业务容器，logging-agent 是一个日志收集的容器。主业务容器完全感知不到 logging-agent 的存在，它只负责输出日志，无需关心后续日志该怎么处理。你思考这样开发一个高内聚、低耦合的系统是否更加容易？
 
