@@ -9,7 +9,7 @@
 
 ## 8.5.1 Proxyless 模式
 
-既然问题是代理，那就把代理去掉，这就是 Proxyless（无代理）模式。
+既然问题出自代理，那就把代理去掉，这就是 Proxyless（无代理）模式。
 
 Proxyless 模式的设计理念是，服务间通信总是要选择一种协议进行，那么将协议的类库（SDK）扩展，使其具有流量控制的能力，不就能代替 Sidecar 代理了吗？且 SDK 和应用同属于一个进程，必然有更优秀的性能表现，Sidecar 为人诟病的延迟问题将迎刃而解。
 
@@ -32,9 +32,9 @@ Proxyless 模式的设计理念是，服务间通信总是要选择一种协议�
 
 ## 8.5.2 Sidecarless 模式
 
-有了 Proxyless，也不妨再多个 Sidecarless。
+既然有了 Proxyless 模式，也不妨再多个 Sidecarless 模式（无边车模式）。
 
-2022 年 7 月，专注于容器网络领域的开源软件 Cilium 发布了 v1.12 版本。该版本最大的亮点是实现了一种 Sidecarless（无 Sidecar）模式的服务网格。
+2022 年 7 月，专注于容器网络领域的开源软件 Cilium 发布了 v1.12 版本。该版本最大的亮点是实现了一种无边车模式的服务网格。
 
 Cilium Sidecarless 模式的服务网格工作原理如图 8-20 所示。首先，Cilium 在节点中运行一个 Enovy 实例，作为所有容器的共享代理，这样每个 Pod 内就不需要放置一个 Sidecar 了。然后，借助 Cilium CNI 底层网络能力，当业务容器的数据包经过内核时，与节点中的共享代理打通，从而构建出一种全新形态的服务网格。
 
@@ -58,9 +58,11 @@ Cilium Sidecarless 模式的服务网格工作原理如图 8-20 所示。首先�
 
 ## 8.5.3 Ambient Mesh 模式
 
-2022 年 9 月，服务网格 Istio 发布了一种全新的数据平面模式 “Ambient Mesh”[^2]。Ambient Mesh 让用户无需使用 Sidecar 代理，就能将网格数据平面集成到其基础设施中，同时还能保持 Istio 的零信任安全、可观测和流量治理等核心特性。
+2022 年 9 月，服务网格 Istio 发布了一种全新的数据平面模式 “Ambient Mesh”[^2]。
 
-以往 Istio 的设计中，Sidecar 实现了从基本加密到高级 L7 策略所有数据平面功能。在实践中，这使得 Sidecar 成为一个 0 和 1 的命题（要么全有，要么全无），即使服务对传输安全性要求不高，工程师们仍然需要付出部署和维护 Sidecar 的额外成本。
+Ambient Mesh 让用户无需使用 Sidecar 代理，就能将网格数据平面集成到其基础设施中，同时还能保持 Istio 的零信任安全、可观测和流量治理等核心特性。
+
+以往 Istio 的设计中，Sidecar 实现了从基本加密到高级 L7 策略所有数据平面功能。实践中，这使得 Sidecar 成为一个 0 和 1 的命题（要么全有，要么全无），即使服务对传输安全性要求不高，工程师们仍然需要付出部署和维护 Sidecar 的额外成本。
 
 如下图所示，Ambient mesh，将 Istio 的功能分成两个不同的层次：安全覆盖层和 L7 处理层。实现安全覆盖层是 Ambient 新引入的 ztunnel组件 ，它在 Kubernetes 集群中以 DaemonSet 的方式部署在每个节点上，ztunnel 为网格中的应用通信提供 mTLS、TCP 路由等 L4 层的处理。
 
@@ -71,11 +73,9 @@ Cilium Sidecarless 模式的服务网格工作原理如图 8-20 所示。首先�
  图 8-19 ambient-layers
 :::
 
-根据官方的博客信息，Istio 一直在推进 Ambient Mesh 的开发，并在 2023 年 2 月将其合并到了 Istio 的主代码分支。这也从一定程度上说明 Ambient Mesh 不是什么实验性质的“玩具”，而是 Istio 的未来发展方向之一。
+根据官方的博客信息，Istio 一直在推进 Ambient Mesh 的开发，并在 2023 年 2 月将其合并到了 Istio 的主分支。这个动作一定程度上说明了 Ambient Mesh 不是什么实验性质的“玩具”，而是 Istio 的未来发展方向之一。
 
-无论是 Sidecarless 还是 Ambient Mesh，它们的设计思路本质是用中心化的代理，替代位于应用容器旁边的 Sidecar 代理。这在一定程度上解决了传统 Sidecar 模式带来的资源消耗、网络延迟问题。
-
-但反面是，服务网格的设计理念本来就很抽象，引入 Proxyless、Sidecarless、Ambient Mesh 模式，让服务网格愈加抽象。笔者相信，大部分业务工程师直面这些抽象概念时，一定感觉脑袋发晕。
+无论是 Sidecarless 还是 Ambient Mesh，它们的设计思路本质是：用中心化的代理，替代位于应用容器旁边的 Sidecar 代理。这在一定程度上解决了传统 Sidecar 模式带来的资源消耗、网络延迟问题。但反面是，服务网格的设计理念本来就很抽象，引入 Proxyless、Sidecarless、Ambient Mesh 等模式，让服务网格愈加抽象。笔者相信，大部分业务工程师直面这些抽象概念时，一定感觉脑袋发晕。
 
 
 [^1]: 参见 https://istio.io/latest/zh/blog/2021/proxyless-grpc/
