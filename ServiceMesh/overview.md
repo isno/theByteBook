@@ -74,9 +74,9 @@ Linkerd2 的架构如图 8-12 所示，增加了控制平面，但整体相对�
 :::
 
 
-Linkerd 和 Istio 在性能和资源成本上的显著差异，主要归因于 Linkerd2-proxy。该代理为 Linkerd 的整个数据平面提供动力，因此该基准测试在很大程度上反映了 Linkerd2-proxy 与 Envoy 之间的性能和资源消耗对比。
+Linkerd 和 Istio 在性能和资源成本上的显著差异，要归因于 Linkerd2-proxy，该代理为 Linkerd 的整个数据平面提供动力。因此。上述基准测试很大程度上反映了 Linkerd2-proxy 与 Envoy 之间的性能和资源消耗对比。
 
-虽然 Linkerd2-proxy 性能卓越，但由于其使用的语言（rust）相对小众，开源社区的贡献者数量稀少。截至 2024 年 6 月，Linkerd2-proxy 的贡献者仅有 53 人，而 Envoy 的贡献者则多达 1,104 人。此外，Linkerd2-proxy 不支持服务网格领域的 xDS 控制协议，其未来发展将高度依赖于 Linkerd 本身的进展。
+虽然 Linkerd2-proxy 性能卓越，但由于其使用编程语言 Rust 相对小众，开源社区的贡献者数量稀少。截至 2024 年 6 月，Linkerd2-proxy 的贡献者仅有 53 人，而 Envoy 的贡献者则多达 1,104 人。此外，Linkerd2-proxy 不支持服务网格领域的 xDS 控制协议，其未来发展将高度依赖于 Linkerd 本身的进展。
 
 [^1]: 参见 https://github.com/linkerd/linkerd2
 [^2]: 这项测试工作还诞生服务网格基准测试工具 service-mesh-benchmark，以便任何人都可以复核结果。https://github.com/kinvolk/service-mesh-benchmark，以便任何人都可以复核结果。

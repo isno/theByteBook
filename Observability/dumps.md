@@ -1,6 +1,8 @@
 # 9.3.5 核心转储 Core dump
 
-核心转储（Core dump）历史悠久，很早就在各类 Unix 系统中出现。在任何安装了《Linux man 手册》的 Linux 发行版上，都可以通过运行 man core 命名查阅相关信息。
+核心转储（Core dump）历史悠久，很早就在各类 Unix 系统中出现。
+
+在任何安装了《Linux man 手册》的 Linux 发行版上，都可以通过运行 man core 命名查阅相关信息。
 
 ```bash
 $ man core
