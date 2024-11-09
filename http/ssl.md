@@ -1,6 +1,9 @@
 # 2.5.2 HTTPS 优化实践
 
-众所周知，HTTPS 出了名的慢。未进行任何优化的情况下，HTTPS 的延迟比 HTTP 高出几百毫秒。在本节中，将介绍通过升级 TLS 协议、选择合适的密码套件以及开启 OCSP Stapling 的方式降低 HTTPS 请求延迟。
+众所周知，HTTPS 请求出了名的慢。
+
+未进行任何优化的情况下，HTTPS 的延迟比 HTTP 高出几百毫秒。本节，笔者介绍升级 TLS 协议、选择合适的密码套件、
+开启 OCSP Stapling 等手段降低 HTTPS 请求延迟。
 
 ## 1. 使用 TLS1.3 协议 
 
@@ -22,9 +25,11 @@ HTTPS 数字证书分为 RSA 证书和 ECC 证书，二者的区别在于：
 - RSA 证书使用的是 RSA 算法生成的公钥，兼容性好，但不支持 PFS（Perfect Forward Secrecy，完美前向保密。保证即使私钥泄露，也无法破解泄露之前通信内容）。
 - ECC 证书使用的是椭圆曲线算法（Elliptic Curve Cryptography）生成的公钥，它的计算速度快，安全性高，支持 PFS，能以更小的密钥长度提供更高的安全性。例如，256 位的 ECC 密钥提供的安全性约等于 3072 位的 RSA 密钥。
 
-相较于 RSA 证书，ECC 证书的唯一缺点是兼容性稍差。例如，在 Windows XP 上，只有 Firefox 能访问使用 ECC 证书的网站（因其独立实现 TLS，不依赖操作系统）；在 Android 平台上，也需 Android 4.0 以上版本才能支持 ECC 证书。
+相较于 RSA 证书，ECC 证书的唯一缺点是兼容性稍差。如在 Windows XP 上，只有 Firefox 能访问使用 ECC 证书的网站（因其独立实现 TLS，不依赖操作系统）；在 Android 平台上，也需 Android 4.0 以上版本才能支持 ECC 证书。
 
-好消息是，从 Nginx 1.11.0 开始，支持配置 RSA/ECC 双证书。其实现原理是：在 TLS 握手中，通过分析双方协商的密码套件（Cipher Suite），如果支持 ECDSA 算法则返回 ECC 证书，否则返回 RSA 证书。Nginx 的双证书配置示例如下：
+好消息是，从 Nginx 1.11.0 开始，支持配置 RSA/ECC 双证书。其实现原理是：在 TLS 握手过程期间，分析双方协商的密码套件（Cipher Suite），如果支持 ECDSA 算法则返回 ECC 证书，否则返回 RSA 证书。
+
+Nginx 的双证书配置示例如下：
 
 ```nginx
 server {
@@ -41,7 +46,7 @@ server {
     # 其他 SSL 配置...
 }
 ```
-需要注意的是，配置 ECC 证书并不意味着它一定会生效。
+需要注意的是，配置了 ECC 证书并不意味着它一定会生效。
 
 ECC 证书的生效与客户端和服务端协商的密码套件（Cipher Suite）直接相关。密码套件决定了通信双方使用的加密、认证算法和密钥交换算法。以下是密码套件的配置示例：
 
@@ -67,30 +72,30 @@ $ openssl ciphers -V 'ECDHE+CHACHA20:ECDHE+CHACHA20-draft:ECDSA+AES128:ECDHE+AES
 0xC0,0x2B  -  ECDHE-ECDSA-AES128-GCM-SHA256  TLSv1.2  Kx=ECDH  Au=ECDSA  Enc=AESGCM(128)             Mac=AEAD
 ```
 
-通过该命令的输出，可以看到使用 ECDSA 签名认证算法（Au=ECDSA）的密码套件排列在使用 RSA 签名认证算法（Au=RSA）的套件之前。这种优先级设置确保了在客户端支持的情况下，服务器会优先使用 ECC 证书，从而实现更高的安全性和性能。
+通过该命令的输出，可以看到使用 ECDSA 签名认证算法（Au=ECDSA）的密码套件排列在使用 RSA 签名认证算法（Au=RSA）的套件之前。这种优先级确保了在客户端支持的情况下，服务器优先选择 ECC 证书。
 
 
 ## 3. 调整 https 会话缓存
 
-在 HTTPS 连接建立后，会生成一个 session，用于保存客户端和服务器之间的安全连接信息。如果 session 未过期，后续连接可以复用先前的握手结果，从而提高连接效率。
+HTTPS 连接建立后，会生成一个会话（session），用于保存客户端和服务器之间的安全连接信息。如果会话未过期，后续连接可以复用之前的握手结果，从而提高连接效率。
 
-与 session 相关的配置如下：
+与会话相关的配置如下：
 ```nginx
 server {
 	ssl_session_cache shared:SSL:10m;
-	ssl_session_timeout
+	ssl_session_timeout 1h;
 }
 ```
 上述配置说明如下：
 
-- ssl_session_cache：设置 SSL/TLS 会话缓存的类型和大小。配置为 shared:SSL:10m 表示所有 Nginx 工作进程共享一个 SSL 会话缓存。根据官方说明，1MB 大小的缓存可存储约 4000 个会话。
-- ssl_session_timeout：设置会话缓存中 SSL 参数的过期时间，决定客户端可以在多长时间内重用缓存的会话信息。
+- **ssl_session_cache**：设置 SSL/TLS 会话缓存的类型和大小。配置为 shared:SSL:10m 表示所有 Nginx 工作进程共享一个 10MB 的 SSL 会话缓存。根据官方说明，1MB 的缓存可以存储大约 4000 个会话。
+- **ssl_session_timeout**：设置会话缓存中 SSL 参数的过期时间，决定客户端可以在多长时间内重用缓存的会话信息。在此例中，设定为 1 小时。
 
 ## 4. 开启 OCSP stapling
 
-客户端在首次下载数字证书时会向 CA 发起 OCSP（在线证书状态协议）请求，以验证证书是否被撤销或过期。由于网络延迟，这一操作通常会导致一段时间的阻塞。
+客户端首次下载数字证书时，会向 CA 发起 OCSP（在线证书状态协议）请求，以验证证书是否被撤销或过期。由于不同 CA 的部署位置不同，这一操作通常会引起一定的网络延迟。
 
-OCSP Stapling 是一种 TLS 扩展，它将 OCSP 查询的工作交由服务器处理。服务器会预先获取 OCSP 响应并将其缓存。当客户端发起 TLS 握手请求时，服务器将证书的 OCSP 信息与证书链一起发送给客户端，从而避免了客户端在验证证书时可能出现的阻塞问题。
+上述问题可使用 OCSP Stapling 技术解决。图 2-24 展示了它的工作原理，原本客户端本地的 OCSP 查询工作转交给后端服务器处理。后端服务器会预先获取并缓存 OCSP 响应。当客户端发起 TLS 握手时，服务器将证书的 OCSP 信息与证书链一同发送给客户端，从而避免了客户端本地验证证书时可能遇到的网络延迟问题。
 
 :::center
   ![](../assets/OCSP-Stapling.png)<br/>
@@ -106,9 +111,10 @@ server {
 	resolver_timeout 2s;
 }
 ``` 
-要注意的是，如果你的 CA 提供的 OCSP 需要验证的话，必须用 ssl_trusted_certificate 指定 CA 的中级证书和根证书（PEM 格式，放在一个文件中）的位置，否则会报错 ：[error] 17105#17105: OCSP_basic_verify() failed。
 
-配置完成之后，使用 openssl 测试服务端是否已开启 OCSP Stapling 功能。
+需要注意的是，如果你的 CA 提供的 OCSP 需要二次验证，则必须通过 ssl_trusted_certificate 指定 CA 的中级证书和根证书的位置，否则会报错：[error] 17105#17105: OCSP_basic_verify() failed。
+
+配置完成之后，使用 openssl 命令测试服务端是否生效。
 
 ```bash 
 $ openssl s_client -connect thebyte.com.cn:443 -servername thebyte.com.cn -status -tlsextdebug < /dev/null 2>&1 | grep "OCSP" 
@@ -119,18 +125,18 @@ OCSP Response Data:
 ```
 若结果中存在“successful”关键字，则表示已开启 OCSP Stapling 服务。
 
-上述配置（（TLS1.3、ECC 证书、OCSP Stapling））完成之后，使用 https://myssl.com/ 服务验证是否生效，如图 2-20 所示。
+至此，整个 HTTPS 优化手段（TLS1.3、ECC 证书、OCSP Stapling）介绍结束。接下来，进入成果检验阶段。
+
+## 5. 优化效果
+
+首先使用 https://myssl.com/ 服务确认配置是否生效，如图 2-20 所示。
 
 :::center
   ![](../assets/ssl-test.png)<br/>
  图 2-24 证书配置
 :::
 
-## 5. 优化效果
-
-HTTPS 优化手段除了软件层面，还有一些硬件加速的方案，如使用 QAT 加速卡（Quick Assist Technology，Intel 公司推出的一种专用硬件加速技术）。
-
-通过对不同的证书（ECC 和 RSA），不同的 TLS 协议（TLS1.2 和 TLS1.3）进行压测，测试结果如表 2-2 所示。
+接着，对不同证书（ECC 和 RSA），不同 TLS 协议（TLS1.2 和 TLS1.3）进行压测，测试结果如表 2-2 所示。
 
 :::center
 表 2-2 HTTPS 性能基准测试
@@ -143,6 +149,10 @@ HTTPS 优化手段除了软件层面，还有一些硬件加速的方案，如�
 |RSA 证书 + TLS1.3 + QAT| 499.29| 200.285ms|100|
 |ECC 证书 + TLS1.2| 639.39| 203.319ms|100|
 |ECC 证书 + TLS1.3| 627.39| 159.390ms|100|
+
+:::tip 
+表格中的 QAT 指的是 Quick Assist Technology。这是 Intel 公司推出的一种专用硬件加速技术
+::: 
 
 从测试结果上看，使用 ECC 证书明显比 RSA 证书性能提升很多。即使 RSA 证书使用了 QAT 加速，比起 ECC 证书的方式还是存在差距。此外，使用 QAT 加速要额外购买硬件，硬件成本以及维护成本都很高，不再推荐使用。
 
