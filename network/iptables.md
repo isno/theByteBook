@@ -88,7 +88,7 @@ iptables 共有 5 规则表，它们的名称与含义如下：
 
 :::center
   ![](../assets/iptables-vs-ipvs.png)<br/>
-  图 3-4 iptables 与 IPVS 的性能差异 [图片来源](https://www.tigera.io/blog/comparing-kube-proxy-modes-iptables-or-ipvs/)
+  图 3-4 iptables 与 IPVS 的性能差异（结果越低，性能越好）[图片来源](https://www.tigera.io/blog/comparing-kube-proxy-modes-iptables-or-ipvs/)
 :::
 
 所以，当 Kubernetes 集群的规模较大时，应该避免使用 iptables 模式。如果容器间通信解决方案使用的是 Cilium，还可以创建没有 kube-proxy 组件的 Kubernetes 集群，利用笔者稍后介绍的“内核旁路”技术越过 iptables 影响，全方位提升容器网络性能。 

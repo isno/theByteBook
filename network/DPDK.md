@@ -19,7 +19,7 @@
 
 :::center
   ![](../assets/dpvs-performance.png)<br/>
- 图 3-7 DPVS 与 LVS 的 PPS 性能指标对比 [图片来源](https://github.com/iqiyi/dpvs)
+ 图 3-7 DPVS 与 LVS 的 PPS 性能指标对比（结果越高，性能越好）[图片来源](https://github.com/iqiyi/dpvs)
 :::
 
 对于海量用户规模的互联网应用来说，动辄需要部署数千、甚至数万台服务器，如果能将单机性能提升十倍甚至百倍，无论是从硬件投入还是运营成本上来看，都能带来非常可观的成本削减。这样的技术变革带来的潜在效益，无疑非常诱人。

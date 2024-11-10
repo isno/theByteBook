@@ -141,23 +141,23 @@ $ iperf3 -c 10.0.1.188 -p 8080
 测试结果如表 2-3 所示。可以看出，BBR 在轻微丢包的网络环境下表现尤为出色。
 
 :::center
-表 2-3 各拥塞控制算法在不同丢包率环境下的性能测试 [表数据来源](https://toonk.io/tcp-bbr-exploring-tcp-congestion-control/index.html)
+表 2-3 不同网络环境下，各拥塞控制算法的网络吞吐表现 [表数据来源](https://toonk.io/tcp-bbr-exploring-tcp-congestion-control/index.html)
 :::
 
-|网络吞吐|拥塞控制算法（服务端）|延迟|丢包率|
+|服务端的拥塞控制算法|延迟|丢包率|网络吞吐表现|
 |:--|:--|:--|:--|
-|2.35Gb/s| Cubic| <1ms| 0% |
-|195 Mb/s| Reno| <140ms| 0% |
-|147 Mb/s| Cubic| <140ms| 0% |
-|344 Mb/s| Westwood| <140ms| 0% |
-|340 Mb/s| BBR| <140ms| 0% |
-|1.13 Mb/s| Reno| <140ms| 1.5% |
-|1.23 Mb/s| Cubic| <140ms| 1.5% |
-|2.46 Mb/s| Westwood| <140ms| 1.5% |
-|**160 Mb/s**| BBR| <140ms| 1.5% |
-|0.65 Mb/s| Reno| <140ms| 3% |
-|0.78 Mb/s| Cubic| <140ms| 3% |
-|0.97 Mb/s| Westwood| <140ms| 3% |
-|**132 Mb/s**| BBR| <140ms| 3% |
+| Cubic| <1ms| 0% |2.35Gb/s|
+| Reno| <140ms| 0% |195 Mb/s|
+| Cubic| <140ms| 0% |147 Mb/s|
+|Westwood| <140ms| 0% |344 Mb/s| 
+| BBR| <140ms| 0% |340 Mb/s| 
+| Reno| <140ms| 1.5% |1.13 Mb/s| 
+| Cubic| <140ms| 1.5% |1.23 Mb/s|
+| Westwood| <140ms| 1.5% |2.46 Mb/s|
+| BBR| <140ms| 1.5% |**160 Mb/s**| 
+| Reno| <140ms| 3% |0.65 Mb/s| 
+| Cubic| <140ms| 3% |0.78 Mb/s| 
+| Westwood| <140ms| 3% |0.97 Mb/s| 
+| BBR| <140ms| 3% |**132 Mb/s**| 
 
 
