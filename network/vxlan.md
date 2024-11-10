@@ -67,7 +67,7 @@ VXLAN 属于 NVO3（Network Virtualization over Layer 3，三层虚拟化网络�
 
 在 VXLAN 隧道网络中，负责“封装/解封”的设备称为 VTEP 设备（VXLAN Tunnel Endpoints，VXLAN 隧道端点），它在 Linux 系统中实际上是一个虚拟 VXLAN 网络接口。当源服务器内的容器发出原始数据帧后，首先在隧道的起点（VTEP 设备）被封装成 VXLAN 格式的报文，然后被主机 IP 网络传递到隧道的终点（也就是目标服务器中的 VTEP 设备）。目标服务器内的 VETP 设备解封 VXLAN 报文，得到原始的数据帧，转发至目标服务器内的某容器。
 
-从 Linux 内核 3.12 版本起，Linux 系统对 VXLAN 技术有了完备的支持。只要三层可达的网络，不需要专门的硬件，简单的配置下，就可以部署基于 VXLAN 的隧道网络。
+从 Linux 内核 3.12 版本起，Linux 内核对 VXLAN 技术有了完备的支持。只要三层可达的网络，不需要专门的硬件，简单的配置下，就可以部署基于 VXLAN 的隧道网络。
 
 用一个具体的例子解释，下面的命令演示了如何在 Linux 系统中配置 VXLAN 接口并将其绑定到 Linux bridge。
 

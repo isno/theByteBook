@@ -217,7 +217,9 @@ bandwidth  bridge  dhcp  firewall  flannel calico-ipam cilium...
 
 举一个具体的例子：使用 flannel 配置 VXLAN 网络，帮助你理解 CNI 插件使用的流程。
 
-首先，当在宿主机安装 flanneld 时，flanneld 启动会在每台宿主机生成对应的 CNI 配置文件，告诉 Kubernetes：该集群使用 flannel 容器网络方案。 CNI 配置文件通常位于 /etc/cni/net.d/ 目录下。以下是一个示例配置文件 10-flannel.conflist：
+首先，当在宿主机安装 flanneld 时，flanneld 启动会在每台宿主机生成对应的 CNI 配置文件，告诉 Kubernetes：该集群使用 flannel 容器网络方案。 CNI 配置文件通常位于 /etc/cni/net.d/ 目录下。
+
+以下是一个示例配置文件 10-flannel.conflist：
 
 ```json
 {
@@ -238,13 +240,13 @@ bandwidth  bridge  dhcp  firewall  flannel calico-ipam cilium...
 ```
 接下来，容器运行时（如 CRI-O 或 containerd）加载上述 CNI 配置文件，将 plugins 列表里的第一个插件（flannel）设置为默认插件。
 
-当 Kubelet 组件在启动容器之前（也就是创建 Infra 容器时），调用 CNI 插件为 Infra 容器配置网络。这里的 CNI 插件就是可执行文件 /opt/cni/bin/flannel。调用 CNI 插件时，传入的参数分为两个部分：
+Kubelet 组件在启动容器之前（也就是创建 Infra 容器时），调用 CNI 插件为 Infra 容器配置网络。这里的 CNI 插件就是可执行文件 /opt/cni/bin/flannel。调用 CNI 插件时，传入的参数分为两个部分：
 - Pod 信息：如容器的唯一标识符、Pod 所在的命名空间、Pod 的名称等，这些信息一般组织成 JSON 对象；
 - CNI 插件执行的方法，如 add 和 del。
 	- add 操作的含义是：执行分配 IP，创建 veth pair 设备等操作，将新创建的容器添加 flannel 网络中；
 	- del 操作的含义是：清除容器的网络配置，将容器从 flannel 网络中删除。
 
-然后，容器运行时通过标准输入将上述参数传递给插件。后面就是 CNI 插件的具体操作了，笔者就不再赘述了。
+然后，容器运行时通过标准输入将上述参数传递给插件。后面的逻辑属于 CNI 插件的具体操作了，笔者就不再赘述了。
 ```bash
 echo '{
   "cniVersion": "0.4.0",
@@ -260,7 +262,7 @@ echo '{
   }
 }' | /opt/cni/bin/flannel add abc123def456
 ```
-最后，当 CNI 插件执行结束之后，会把容器的 IP 地址等信息返回给容器运行时，然后被 kubelet 添加到 Pod status 字段中，整个容器网络配置就宣告解决了。
+最后，当 CNI 插件执行结束之后，会把容器的 IP 地址等信息返回给容器运行时，然后被 kubelet 添加到 Pod status 字段中，整个容器网络配置就宣告结束了。
 
 有了类似容器运行时接口（CRI）、持久化存储接口（CSI）这种开放性的设计，需要接入什么样的网络，设计一个对应的网络插件即可。这样一来节省了开发资源集中精力到 Kubernetes 本身，二来可以利用开源社区的力量打造一整个丰富的生态。
 

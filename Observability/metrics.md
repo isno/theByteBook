@@ -1,10 +1,14 @@
 # 9.3.1 指标数据的处理
 
-指标（Metrics）是监控系统的核心。提到监控系统，Prometheus 是绕不开的关键话题。本节将通过解析 Prometheus 系统，详细介绍指标的收集、存储和处理逻辑。
+指标（Metrics）是监控系统的核心。
 
-Prometheus 项目的灵感来自 Google 内部的 Borg 监控系统（Brogmon），由前 Google 工程师在 SoundCloud 公司发起并将其开源。2016 年 5 月，Prometheus 继 Kubernetes 之后，成为云原生计算基金会（CNCF）的第二个正式项目。经过多年的发展，Prometheus 已成为云原生系统中指标监控的事实标准。
+提到监控系统，Prometheus 是绕不开的关键话题。Prometheus 的起源可以追溯到 Google 的内部监控系统 BorgMon。
 
-如图 9-3 所示，Prometheus 是一个典型的模块化系统，每个组件承担特定功能。其中，服务发现（Service Discovery）自动发现监控目标；Exporter 将监控目标的指标转换为 Prometheus 可理解的格式；Pushgateway 处理短期任务的指标；Prometheus Server 处理指标的存储和查询；Alertmanager 负责度量指标，触发告警动作。
+2012 年，前 Google 工程师 Julius Volz 加入 SoundCloud，并受到 BorgMon 的启发，设计了 Prometheus，以解决 SoundCloud 对监控和告警的需求。Prometheus 专注于通过时间序列数据库采集和存储指标数据。2016 年 5 月，它继 Kubernetes 之后成为云原生计算基金会（CNCF）的第二个正式项目。如今，Prometheus 已成为云原生系统中监控指标的事实标准。
+
+本节，我们分析 Prometheus 系统的设计，理解指标的收集、存储、查询等相关处理。
+
+如图 9-3 所示，Prometheus 是一个高度模块化的系统。其中，服务发现（Service Discovery）自动发现监控目标；Exporter 将监控目标的指标转换为 Prometheus 可理解的格式；Pushgateway 处理短期任务的指标；Prometheus Server 处理指标的存储和查询；Alertmanager 负责度量指标，触发告警动作。
 
 :::center
   ![](../assets/prometheus-arch.png)<br/>
