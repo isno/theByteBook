@@ -155,7 +155,7 @@ ORDER BY id;
 
 :::center
   ![](../assets/es-vs-clickhouse.png)<br/>
-  图 9-8 同一份日志在 Elasticsearch、ClickHouse 和 ClickHouse(zstd) 中的容量对比
+  图 9-8 同一份日志在 Elasticsearch、ClickHouse 和 ClickHouse(zstd) 中的容量对比（结果越低越好）
 :::
 
 ClickHouse 支持分片（Sharding），也就是支持分布式并行计算。通过增加更多的节点，Clickhouse 能实现处理数百亿到数万亿条记录，以及数 PB 级别的数据。

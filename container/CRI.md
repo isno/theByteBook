@@ -112,7 +112,7 @@ Kubernetes v1.24 版本正式删除 dockershim，本质是废弃了内置的 doc
 
 :::center
   ![](../assets/k8s-runtime-v4.svg)<br/>
-  图 7-17 Containerd 与 Docker 的性能对比
+  图 7-17 Containerd 与 Docker 的性能对比（结果越低越好）
 :::
 
 ## 7.4.5 安全容器运行时

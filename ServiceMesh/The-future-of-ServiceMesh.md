@@ -24,7 +24,7 @@ Proxyless 模式的设计理念是，服务间通信总是要选择一种协议�
 
 :::center
   ![](../assets/latencies_p50.svg)<br/>
- 图 8-18 Proxyless 性能测试报告
+ 图 8-18 Proxyless 性能测试报告（结果越低越好）
 :::
 
 
@@ -47,7 +47,7 @@ Cilium Sidecarless 模式的服务网格工作原理如图 8-20 所示。首先�
 
 :::center
   ![](../assets/cilium-istio-benchmark.webp)<br/>
- 图 8-22 Cilium Sidecarless 模式与 Istio Sidecar 模式的性能测试 [图片来源](https://isovalent.com/blog/post/2022-05-03-servicemesh-security/)
+ 图 8-22 Cilium Sidecarless 模式与 Istio Sidecar 模式的性能测试（结果越低越好） [图片来源](https://isovalent.com/blog/post/2022-05-03-servicemesh-security/)
 :::
 
 回过头看，Cilium Sidecarless 模式设计思路上其实和 Proxyless 如出一辙。即用一种非 Sidecar 的方式实现流量控制能力。两者的区别是：
