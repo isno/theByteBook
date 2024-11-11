@@ -45,7 +45,7 @@ spec:
 Kubernetes 使用下面两个属性描述 Pod 的资源分配和限制：
 
 - requests：表示容器请求的资源量，Kubernetes 会确保 Pod 能获得这些资源。requests 是调度的依据，调度器只有在节点上有足够可用资源满足 Pod 的请求时，才会将 Pod 调度到该节点。
-- limits：表示容器可使用资源的上限，以防止容器过度消耗资源，导致资源短缺甚至节点宕机。limits 实际上会配置到 cgroups 中对应任务的 /sys/fs/cgroup... 文件中。
+- limits：表示容器可使用资源的上限，以防止容器过度消耗资源，导致节点夯住。limits 实际上会配置到 cgroups 中对应任务的 /sys/fs/cgroup... 文件中。
 
 Pod 是由一个或多个容器组成的，因此资源需求是在容器级别进行描述的。如图 7-32 所示，每个容器都可以通过 resources 属性单独设定相应的 requests 和 limits。例如，container-1 指定其容器进程需要 500m/1000m（即 50% 的 CPU）才能被调度，并且允许最多使用 1000m/1000m（即 100% 的 CPU）。
 
