@@ -22,12 +22,12 @@ server {
 ## 2. 使用 ECC 证书
 
 HTTPS 数字证书分为 RSA 证书和 ECC 证书，二者的区别在于：
-- RSA 证书使用的是 RSA 算法生成的公钥，兼容性好，但不支持 PFS（Perfect Forward Secrecy，完美前向保密。保证即使私钥泄露，也无法破解泄露之前通信内容）。
-- ECC 证书使用的是椭圆曲线算法（Elliptic Curve Cryptography）生成的公钥，它的计算速度快，安全性高，支持 PFS，能以更小的密钥长度提供更高的安全性。例如，256 位的 ECC 密钥提供的安全性约等于 3072 位的 RSA 密钥。
+- RSA 证书采用 RSA 算法生成公钥，具有良好的兼容性，但不支持完美前向保密（PFS）。PFS 能确保即使私钥泄露，也无法破解泄露之前的通信内容。
+- ECC 证书则使用椭圆曲线加密算法（Elliptic Curve Cryptography）生成公钥，具有较快的计算速度和更高的安全性，且支持 PFS。ECC 能以更小的密钥长度提供相同或更高的安全性。例如，256 位的 ECC 密钥提供的安全性相当于 3072 位的 RSA 密钥。
 
-相较于 RSA 证书，ECC 证书的唯一缺点是兼容性稍差。如在 Windows XP 上，只有 Firefox 能访问使用 ECC 证书的网站（因其独立实现 TLS，不依赖操作系统）；在 Android 平台上，也需 Android 4.0 以上版本才能支持 ECC 证书。
+ECC 证书的唯一缺点是兼容性稍差。如在 Windows XP 上，只有 Firefox 能访问使用 ECC 证书的网站（因其独立实现 TLS，不依赖操作系统）；在 Android 平台上，也需 Android 4.0 以上版本才能支持 ECC 证书。
 
-好消息是，从 Nginx 1.11.0 开始，支持配置 RSA/ECC 双证书。其实现原理是：在 TLS 握手过程期间，分析双方协商的密码套件（Cipher Suite），如果支持 ECDSA 算法则返回 ECC 证书，否则返回 RSA 证书。
+好消息是，从 Nginx 1.11.0 开始，支持配置 RSA/ECC 双证书。双证书的实现原理是：在 TLS 握手过程期间，分析双方协商的密码套件（Cipher Suite），如果支持 ECDSA 算法则返回 ECC 证书，否则返回 RSA 证书。
 
 Nginx 的双证书配置示例如下：
 
