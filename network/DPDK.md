@@ -1,8 +1,8 @@
 # 3.4.1 数据平面开发套件 DPDK
 
-2010 年，由 Intel 领导的 DPDK实现了一套基于“内核旁路”思想的高性能网络应用解决方案，并逐渐成为了独树一帜的成熟技术体系。
+2010 年，由 Intel 领导的 DPDK（Data Plane Development Kit，数据平面开发套件） 实现了一套基于“内核旁路”思想的高性能网络应用解决方案，并逐渐成为了独树一帜的成熟技术体系。
 
-起初，DPDK （Data Plane Development Kit，数据平面开发套件）实际上是 Intel 为了卖自家的硬件，针对 Intel 处理器和网卡开发的一款高性能的网络驱动组件。DPDK 开源之后，越来越多的厂商参与进来贡献代码，DPDK 开始支持更多的硬件。如处理器不仅支持 Intel，还支持 AMD、ARM 等厂商的处理器；网卡支持的范围也包括 Intel 网卡、Mellanox 网卡、ARM 集成网卡等。
+起初，DPDK 是 Intel 为了卖自家的硬件，针对 Intel 处理器和网卡开发的一款高性能的网络驱动组件。DPDK 开源之后，越来越多的厂商参与进来贡献代码，DPDK 开始支持更多的硬件：处理器不仅支持 Intel，还支持 AMD、ARM 等厂商的处理器；网卡支持的范围也包括 Intel 网卡、Mellanox 网卡、ARM 集成网卡等。
 
 图 3-6 展示了 DPDK（Fast Path）与传统内核网络（Slow Path）的区别。在 Linux 系统中，位于用户空间的 DPDK Lib 和 APP 的编译、连接和加载方式和普通程序没什么区别。但两者网络数据包在 Linux 系统中的传输路径完全不同：
 
