@@ -1,14 +1,14 @@
 # 4.4 四层负载均衡技术
 
-软件层面四层负载均衡器的典型代表是 LVS（Linux Virtual Server，Linux 虚拟服务器）。
+四层负载均衡器的典型代表是 LVS（Linux Virtual Server，Linux 虚拟服务器）。
 
-从 Linux 内核 2.4 版本起，LVS 被集成进 Linux 内核，它基于本书第三章介绍的 Netfilter 的钩子捕获数据包并进行相应修改，在内核网络栈层面，将这些请求按照负载均衡算法转发至“后端服务器”。
+从 Linux 内核 2.4 版本起，LVS 被集成进 Linux 内核，它基于本书第三章介绍的 Netfilter 的钩子捕获数据包并进一步处理，然后根据负载均衡算法转发至“后端服务器”。
 
 :::tip 
 LVS 称 Linux 虚拟服务器，相应的，实际执行请求的称真实服务器（real server）。为了简化表述，本节统一称“后端服务器”。
 :::
 
-根据数据包的修改方式，LVS 有了三种工作模式：直接路由（DR，Direct Routing）、隧道（Tunnel）和网络地址转换（NAT，Network Address Translation）。
+区别数据包的处理方式，LVS 有了三种工作模式：直接路由（DR，Direct Routing）、隧道（Tunnel）和网络地址转换（NAT，Network Address Translation）。
 
 ## 4.4.1 直接路由模式
 
