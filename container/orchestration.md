@@ -245,7 +245,7 @@ spec:
   图 7-5 Kubernetes 核心功能全景图
 :::
 
-最后，上述的对象 Kubernetes 都将其抽象为“资源”进行管理。所有的资源通过 YAML 文件描述，通过不同层级描述依赖关系，再基于标准的 RESTful API 对资源进行增删查改。“一切皆为资源”是 Kubernetes 顺利实施声明式 API 设计的的必要前提，是 Kubernetes 中最重要的设计思想。
+最后，上述的对象 Kubernetes 都将其抽象为“资源”进行管理。所有的资源通过 YAML 文件描述，通过不同层级描述依赖关系，再基于标准的 RESTful API 对资源进行增删查改。“一切皆为资源”是 Kubernetes 成功实施声明式 API 设计的必要前提，是 Kubernetes 中最重要的设计思想。
 
 ## 7.2.7 Pod 是调度的原子单位
 
