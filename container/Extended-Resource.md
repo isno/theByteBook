@@ -48,14 +48,14 @@ spec:
         request:
           nvidia.com/gpu: 1
 ```
-上面 Pod 资源配置中，GPU 的资源名称为 nvidia.com/gpu，它的配额是 1 个该资源。这意味着调度器将把该 Pod 分配到一个有足够 nvidia.com/gpu 资源的节点上。
+上面 Pod 资源配置中，GPU 的资源名称为“nvidia.com/gpu”，它的配额是 1 个该资源。这意味着调度器将把该 Pod 分配到一个有足够 nvidia.com/gpu 资源的节点上。
 
 当 Pod 被成功调度到宿主机节点后，进行相应的配置（设置环境变量，挂载设备驱动等操作），便可在容器内部使用 GPU 资源了。
 
 
 ## 2. Device Plugin
 
-当然，除非有特殊情况，通常不需用手动的方式扩展异构资源。在 Kubernetes 中，管理各类异构资源的操作由一种称为 Device Plugin（设备插件）的机制负责。
+当然，除非有特殊情况，通常不需用手动的方式扩展异构资源。在 Kubernetes 中，管理各类异构资源的操作由一种称为“Device Plugin”（设备插件）的机制负责。
 
 Device Plugin 核心就是提供了多个 gRPC 接口，硬件供应商根据接口规范为特定硬件编写插件。kubelet 通过 gRPC 接口与设备插件交互，实现设备发现、状态更新、资源上报等。最后，Pod 通过 request、limit 显示声明，即可使用各类异构资源，如同 CPU、内存一样。
 

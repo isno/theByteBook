@@ -25,7 +25,7 @@ Kubernetes 需要重新考虑对所有容器运行时的兼容适配问题了。
 
 Kubernetes 从 1.5 版本开始，在遵循 OCI 的基础上，将对容器的各类操作抽象为一个个接口。这些接口作为 Kubelet（Kubernetes 中的节点代理）与容器运行时实现对接的桥梁。Kubelet 通过发送接口请求来实现对容器的各类管理。
 
-上述的接口，称为 CRI（Container Runtime Interface，容器运行时接口）。CRI 的实现上是一套通过 Protocol Buffer 定义的 API。笔者列举 CRI 接口中与操作容器相关的部分供你参考：
+上述的接口，称为“CRI 接口”（Container Runtime Interface，容器运行时接口）。CRI 接口实现上是一套通过 Protocol Buffer 定义的 API。笔者列举部分容器操作接口供你参考：
 
 ```protobuf
 // RuntimeService 定义了管理容器的 API

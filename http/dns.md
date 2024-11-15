@@ -1,6 +1,6 @@
 # 2.3 域名解析的原理与实践
 
-DNS（Domain Name System，域名系统）是互联网中最重要的基础设施，它的主要职责是实现域名的解析，也就是将域名转换为 IP 地址。
+DNS（Domain Name System，域名系统）是互联网中最重要的基础设施（没有之一），它的职责是实现域名的解析，也就是将域名转换为 IP 地址。
 
 2021 年，互联网发生了几起影响颇大的服务宕机事件，故障的原因均与 DNS 系统有直接关系：
 - 7 月22 日，技术服务商 Aakamai 的 Edge DNS 服务故障，造成 PlayStation Network、HBO、UPS、Airbnb、Salesforce 等众多知名网站宕机[^1]；

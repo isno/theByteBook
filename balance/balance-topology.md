@@ -11,8 +11,9 @@
 中间代理型拓扑应该是大家最熟悉负载均衡部署模式，负载均衡器位于客户端和后端服务器之间，将客户端的请求转发至多个后端服务器。明显具有中间代理拓扑特征的负载均衡产品有：
 
 - 硬件设备：Cisco、Juniper、F5 Networks 等公司的产品。
-- 云软件解决方案：阿里云的 SLB（Server Load Balancer），AWS 的 ELB（Elastic Load Balancer）、Azure 的 Load Balancer 和 Google Cloud 的 Cloud Load Balancing 等。
 - 纯软件方案：Nginx、HAProxy、Envoy、Traefik 等。
+- 云软件解决方案：阿里云的 SLB（Server Load Balancer），AWS 的 ELB（Elastic Load Balancer）、Azure 的 Load Balancer 和 Google Cloud 的 Cloud Load Balancing 等。
+
 
 总结中间代理型拓扑的优缺点：
  - 优点是，配置简单，**用户只需通过 DNS 连接到负载均衡器，无需关注其他细节**。
@@ -49,7 +50,7 @@
 
 客户端内嵌库的一个变种是边车代理（sidecar）型拓扑。
 
-近年来边车型代理拓扑非常流行，被称为服务网格（service mesh）。边车代理模式核心思路是：将流量导到另一个进程，牺牲一点（延迟）性能，实现客户端内嵌库模式的所有好处，而无任何语言绑定。当下，最流行的网络型边车代理有 Envoy、Linkerd 等，笔者将第八章详细阐述服务网格的技术原理。
+近年来边车型代理拓扑非常流行，被称为“服务网格”（service mesh）。边车代理拓扑的核心思路是：将流量导到另一个进程，牺牲一点（延迟）性能，实现客户端内嵌库模式的所有好处，而无任何语言绑定。当下，最流行的网络型边车代理有 Envoy、Linkerd 等，笔者将第八章详细阐述服务网格的技术原理。
 
 :::center
   ![](../assets/balancer-sidecar.svg)<br/>

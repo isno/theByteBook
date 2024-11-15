@@ -26,9 +26,9 @@
 
 受 RTT 和传输速率的影响，图 2-22 被分成了三个区间：
 
-1. (0，BDP)：称为应用受限区（app limited）。在这个区间内，inflight 数据量未占满瓶颈带宽。RTT 最小、传输速率最高。
-2. (BDP，BtlBwBuffSize)：称为带宽受限区（bandwidth limited）。在这个区间内，inflight 数据量已达到链路瓶颈容量，但尚未超过瓶颈容量加缓冲区容量。此时，应用能发送的数据量主要受带宽限制。RTT 逐渐变大，传输速率到达上限。
-3. (BDP + BtlBwBuffSize，infinity)：称为缓冲区受限区（buffer limited）。在这个区间内，实际发送速率已超过瓶颈容量加缓冲区容量，超出部分的数据会被丢弃，从而产生丢包。RTT 以及传输速率均达到上限。
+1. (0，BDP)：称为“应用受限区”（app limited）。这个区间内，inflight 数据量未占满瓶颈带宽。RTT 最小、传输速率最高。
+2. (BDP，BtlBwBuffSize)：称为“带宽受限区”（bandwidth limited）。这个区间内，inflight 数据量已达到链路瓶颈容量，但尚未超过瓶颈容量加缓冲区容量。此时，应用能发送的数据量主要受带宽限制。RTT 逐渐变大，传输速率到达上限。
+3. (BDP + BtlBwBuffSize，infinity)：称为“缓冲受限区”（buffer limited）。这个区间内，实际发送速率已超过瓶颈容量加缓冲区容量，超出部分的数据会被丢弃，从而产生丢包。RTT 以及传输速率均达到上限。
 
 根据图 2-22，可以看出，拥塞的本质在于 inflight 数据量持续偏离 BDP 线向右扩展，而拥塞控制的关键在于调节 inflight 数据量保持在合适的区间内。显然，当 inflight 数据量位于应用受限区与带宽受限区的边界时，传输速率接近瓶颈带宽，且无丢包发生。
 

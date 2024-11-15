@@ -105,7 +105,7 @@ lrwxrwxrwx 1 root root 11 2月  17 2023 cpuacct -> cpu,cpuacct
 drwxr-xr-x 3 root root  0 2月  17 2023 memory
 ...
 ```
-在 cgroups 中，子目录也被称为控制组子系统（control group subsystems），它们明确了可以限制的资源类型。例如，内存子系统包含以下配置文件：
+在 cgroups 中，子目录也被称为“控制组子系统”（control group subsystems），它们明确了可以限制的资源类型。例如，内存子系统包含以下配置文件：
 ```bash
 $ ls /sys/fs/cgroup/memory
 cgroup.clone_children               memory.memsw.failcnt
