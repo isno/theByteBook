@@ -1,8 +1,8 @@
 # 9.3.5 核心转储 Core dump
 
-核心转储（Core dump）历史悠久，很早就在各类 Unix 系统中出现。
+核心转储（Core dump）中的 “core” 代表程序的关键运行状态，“dump” 意为导出或快照。
 
-在任何安装了《Linux man 手册》的 Linux 发行版上，都可以通过运行 man core 命名查阅相关信息。
+核心转储历史悠久，很早就在各类 Unix 系统中出现。在任何安装了《Linux man 手册》的 Linux 发行版上，都可以通过运行 man core 命名查阅相关信息。
 
 ```bash
 $ man core
@@ -14,9 +14,7 @@ A small number of signals which cause abnormal termination of a process
 ...
 ```
 
-核心转储（Core dump）中的 “core” 代表程序的关键运行状态，“dump” 意为导出或快照。
-
-**当程序异常终止时，Linux 系统会将程序的关键运行状态（如程序计数器、内存映像、堆栈跟踪等）导出到一个核心文件（core file）中**。使用调试器（如 gdb）打开核心文件，开发者可以查看程序崩溃时的内存状态、变量值和函数调用堆栈情况，从而更容易地定位问题。
+上面的大致意思是：**当程序异常终止时，Linux 系统会将程序的关键运行状态（如程序计数器、内存映像、堆栈跟踪等）导出到一个核心文件（core file）中**。使用调试器（如 gdb）打开核心文件，开发者可以查看程序崩溃时的内存状态、变量值和函数调用堆栈情况，从而更容易地定位问题。
 
 :::tip  注意
 
