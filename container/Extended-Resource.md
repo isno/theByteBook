@@ -4,9 +4,9 @@
 
 ## 1. 扩展资源
 
-作为一个通用型的容器编排平台，Kubernetes 自然需要与各类异构资源集成，以满足不同用户的需求。因此，Kubernetes 提供了扩展资源（Extended Resource）机制，使集群管理员能够声明、管理和使用除标准资源之外的自定义资源。
+作为一个通用型的容器编排平台，Kubernetes 自然需要与各类异构资源集成，以满足不同用户的需求。为此，Kubernetes 提供了扩展资源（Extended Resource）机制，使集群管理员能够声明、管理和使用除标准资源之外的自定义资源。
 
-为了能让调度器知道自定义资源在每台宿主机的可用量，宿主机节点必须能够访问 API Server 汇报自定义资源情况。Kubernetes 中，汇报自定义资源的手段是向 Kubernetes API Server 发送 HTTP PATCH 请求。例如，某个宿主机节点中带有 4 个 GPU 资源。下面是一个 PATCH 请求的示例，该请求为 `<your-node-name>` 节点发布 4 个 GPU 资源。
+为了能让调度器知道自定义资源在每台宿主机的可用量，宿主机节点必须能够访问 API Server 汇报自定义资源情况。汇报自定义资源的手段是向 Kubernetes API Server 发送 HTTP PATCH 请求。例如，某个宿主机节点中带有 4 个 GPU 资源。下面是一个 PATCH 请求的示例，该请求为 `<your-node-name>` 节点发布 4 个 GPU 资源。
 ```bash
 PATCH /api/v1/nodes/<your-node-name>/status HTTP/1.1
 Accept: application/json
@@ -22,7 +22,7 @@ Host: k8s-master:8080
 ```
 需要注意的是，上述 PATCH 请求仅告知 Kubernetes，某宿主机节点 `<your-node-name>` 拥有 4 个名为 GPU 的资源。Kubernetes 并不理解 GPU 资源的具体含义和用途。
 
-在 Kubernetes 中，各种资源可用量可在 Node Status 内容查看。如下所示，使用 kubectl describe node 命令查看宿主机节点资源情况。可以看到，输出了刚才扩展的 nvidia.com/gpu 资源，容量（capacity）为 4。
+接着，使用 kubectl describe node 命令查看宿主机节点资源情况。可以看到，命令输出了刚才扩展的 nvidia.com/gpu 资源，容量（capacity）为 4。
 ```bash
 $ kubectl describe node <your-node-name>
 ...
@@ -55,9 +55,11 @@ spec:
 
 ## 2. Device Plugin
 
-当然，除非有特殊情况，通常不需用手动的方式扩展异构资源。在 Kubernetes 中，管理各类异构资源的操作由一种称为“Device Plugin”（设备插件）的机制负责。
+当然，除非有特殊情况，通常不需用手动的方式扩展异构资源。
 
-Device Plugin 核心就是提供了多个 gRPC 接口，硬件供应商根据接口规范为特定硬件编写插件。kubelet 通过 gRPC 接口与设备插件交互，实现设备发现、状态更新、资源上报等。最后，Pod 通过 request、limit 显示声明，即可使用各类异构资源，如同 CPU、内存一样。
+在 Kubernetes 中，管理各类异构资源的操作由一种称为“Device Plugin”（设备插件）的机制负责。
+
+Device Plugin 核心思想是提供了多个 gRPC 接口，硬件供应商根据接口规范为特定硬件编写插件。kubelet 通过 gRPC 接口与设备插件交互，实现设备发现、状态更新、资源上报等。最后，Pod 通过 request、limit 显示声明，即可使用各类异构资源，如同 CPU、内存一样。
 
 Device Plugin 定义的 gRPC 接口如下所示，硬件设备插件按照规范实现接口，与 kubelet 进行交互，Kubernetes 便可感知和使用这些硬件资源。
 

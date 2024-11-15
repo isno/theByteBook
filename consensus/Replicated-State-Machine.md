@@ -1,5 +1,8 @@
 # 6.2 日志复制状态机
 
+如果说什么是分布式系统的理论基石，“日志”一定是其中之一。
+
+在 MongoDB 中称 Oplog（Operations Log），在 MySQL 中称 binlog（Binary Log），在 Redis 中称 AOF（Append Only File），在 PostgreSQL 中称 WAL（Write-Ahead Log）。
 
 这里的日志与平时应用程序中打印的日志不同，它是最简单的存储抽象。只能追加、按照时间完全有序的记录序列。日志看起来的样子
 
