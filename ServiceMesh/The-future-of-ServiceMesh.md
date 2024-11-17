@@ -86,12 +86,13 @@ Ambient Mesh 的设计理念是：将数据平面分层，分为“安全覆盖�
   图 8-15 Ambient-Mesh
 :::
 
-Ambient 分层模式允许你以逐步递进的方式采用 Istio，你可以根据需要基于每个命名空间，从无网格平滑过渡到安全的 L4 覆盖，再到完整的 L7 处理和策略。
-
+Ambient 分层模式允许你以逐步递进的方式采用 Istio，你可以按需从无网格平滑过渡到安全的 L4 覆盖，再到完整的 L7 处理和策略。
 
 根据官方的博客信息，Istio 一直在推进 Ambient Mesh 的开发，并在 2023 年 2 月将其合并到了 Istio 的主分支。这个动作一定程度上说明了 Ambient Mesh 不是什么实验性质的“玩具”，而是 Istio 的未来发展方向之一。
 
-无论是 Sidecarless 还是 Ambient Mesh，它们的设计思路本质是：用中心化的代理，替代位于应用容器旁边的 Sidecar 代理。这在一定程度上解决了传统 Sidecar 模式带来的资源消耗、网络延迟问题。但反面是，服务网格的设计理念本来就很抽象，引入 Proxyless、Sidecarless、Ambient Mesh 等模式，使本已复杂的设计更难以理解。过度复杂，成为服务网格应用推广的障碍之一。
+无论是 Sidecarless 还是 Ambient Mesh，它们的设计思路本质是：用中心化的代理，替代位于应用容器旁边的 Sidecar 代理。这在一定程度上解决了传统 Sidecar 模式带来的资源消耗、网络延迟问题。但反面是，服务网格的设计理念本来就很抽象，引入 Proxyless、Sidecarless、Ambient Mesh 等模式，使本已复杂的设计更难以理解。
+
+作为一种技创新术，过度复杂成为服务网格应用推广的障碍之一。
 
 
 [^1]: 参见 https://istio.io/latest/zh/blog/2021/proxyless-grpc/
