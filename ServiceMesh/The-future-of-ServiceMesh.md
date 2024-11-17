@@ -92,7 +92,7 @@ Ambient 分层模式允许你以逐步递进的方式采用 Istio，你可以按
 
 无论是 Sidecarless 还是 Ambient Mesh，它们的设计思路本质是：用中心化的代理，替代位于应用容器旁边的 Sidecar 代理。这在一定程度上解决了传统 Sidecar 模式带来的资源消耗、网络延迟问题。但反面是，服务网格的设计理念本来就很抽象，引入 Proxyless、Sidecarless、Ambient Mesh 等模式，使本已复杂的设计更难以理解。
 
-作为一种技创新术，过度复杂成为服务网格应用推广的障碍之一。
+作为一种技术创新，特别是在业务工程师普遍存在“传统微服务框架又不是不能用”的心态影响下，过度复杂和难以理解成为服务网格推广的障碍之一。
 
 
 [^1]: 参见 https://istio.io/latest/zh/blog/2021/proxyless-grpc/
