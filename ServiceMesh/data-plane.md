@@ -1,24 +1,68 @@
 # 8.3 数据平面技术
 
 
+## 8.3.1 Sidecar 自动注入
 
+只要用过 Istio 的读者一定知道，带有 istio-injection: enabled 标签的命名空间中创建 Pod，Kubernetes 会自动为创建的 Pod 注入一个名为 istio-proxy 的 Sidecar 容器。
 
-## 流量劫持
+实现自动注入 Sidecar 的核心在于 Kubernetes 的准入控制器。
 
-```bash
-$ /usr/local/bin/istio-iptables -p 15001 -z 15006 -u 1337 -m REDIRECT -i '*' -x "" -b * -d "15090,15201,15020"
-```
-该容器存在的意义就是让 Envoy 代理可以拦截所有的进出 Pod 的流量，即将入站流量重定向到 Sidecar，再拦截应用容器的出站流量经过 Sidecar 处理后再出站。
-
-Init 容器通过向 iptables nat 表中注入转发规则来劫持流量的，下图显示的是三个 reviews 服务示例中的某一个 Pod，其中有 init 容器、应用容器和 sidecar 容器，图中展示了 iptables 流量劫持的详细过程。
-
-
-:::center
-  ![](../assets/istio-iptables.svg)<br/>
- 
+:::tip 准入控制器
+准入控制器会拦截 Kubernetes API Server 收到的请求，在资源对象被持久化到 etcd 之前，对这些对象进行校验和修改。准入控制器分为两类：Mutating 和 Validating：
+- Validating 类型的准入控制器用于校验请求，它们不能修改对象，但是可以拒绝不符合特定策略的请求；
+- Mutating 类型的准入控制器在对象被创建或更新时可以修改它们。
 :::
 
+Istio 预先在 Kubernetes 集群中注册了一个类型为 MutatingWebhookConfiguration 的资源，包含以下内容：
 
+- Webhook 服务地址：指向运行注入逻辑的 Webhook 服务（如 Istio 的 istio-sidecar-injector）。
+- 匹配规则：定义哪些资源和操作会触发此 Webhook，例如针对 Pod 的创建请求。
+- 注入条件：通过 Label 或 Annotation 决定是否对某些 Pod 进行注入。
+
+```yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: sidecar-injector
+webhooks:
+  - name: sidecar-injector.example.com
+    admissionReviewVersions: ["v1"]
+    clientConfig:
+      service:
+        name: sidecar-injector-service
+        namespace: istio-system
+        path: "/inject"
+    rules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        resources: ["pods"]
+        operations: ["CREATE"]
+    namespaceSelector:
+      matchLabels:
+        istio-injection: enabled
+```
+
+以上配置指示 Kubernetes 在带有 istio-injection: enabled 标签的命名空间中，拦截 Pod 创建请求并触发 Istio 的 Webhook。Webhook 服务会将 Sidecar 容器（如 Envoy）注入到 Pod 配置中。之后，Kubernetes 使用更新后的配置完成资源调度和 Pod 创建流程。
+
+
+## 8.3.2 流量劫持
+
+Isito 在注入边车代理后，还会注入一个初始化容器 istio-init。
+
+istio-init 容器的主要作用是为 Istio Sidecar 的流量劫持功能进行必要的网络环境配置，具体来说就是设置 iptables 规则。 这些规则确保 Pod 中的应用流量能够通过 Istio 的 Sidecar 容器（通常是 istio-proxy，基于 Envoy 实现）代理处理。
+
+```yaml
+initContainers:
+  - name: istio-init
+    image: docker.io/istio/proxyv2:1.13.1
+    args: ["istio-iptables", "-p", "15001", "-z", "15006", "-u", "1337", "-m", "REDIRECT", "-i", "*", "-x", "", "-b", "*", "-d", "15090,15021,15020"]
+```
+
+我们看到 istio-init 容器的入口是 istio-iptables 命令，该命令的作用是设置 iptables 规则，对除了特定的几个端口，如 15090、15021、15020 的流量拦截，重定向到 Istio 的 Sidecar 代理（Envoy）上：
+- 对于入站流量，它会将流量重定向到 Sidecar 代理监听的端口（通常是15006端口）
+- 对于出站流量，它会将流量重定向到 Sidecar 代理监听的另一个端口（通常是15001端口）
+
+通过 iptables -t nat -L -v 命令查看 istio-iptables 添加的 iptables 规则。
 
 ```
 # 查看 NAT 表中规则配置的详细信息
@@ -66,9 +110,16 @@ Chain ISTIO_REDIRECT (2 references)
    53  3180 REDIRECT   tcp  --  any    any     anywhere             anywhere             redir ports 15001
 ```
 
-使用 iptables 实现流量劫持是最经典的方式。不过，iptables 重定向流量。如何降低流量劫持的延迟和资源消耗，是未来服务网格的主要研究方向。在 8.5 节，笔者将介绍 Proxyless 模式、Sidecarless 模式、Ambient Mesh 模式。
+根据图进一步理解上述 iptables 自定义链（以 ISTIO_开头）处理流量的逻辑，
 
-## 可靠通信
+:::center
+  ![](../assets/istio-iptables.svg)<br/> 
+:::
+
+
+使用 iptables 实现流量劫持是最经典的方式。不过，客户端 Pod 到服务端 Pod 之间的网络数据路径，至少要来回进入 TCP/IP 堆栈 3 次（出站、客户端 Sidecar Proxy 到服务端 Sidecar Proxy、入站）。如何降低流量劫持的延迟和资源消耗，是服务网格未来的主要研究方向。在 8.5 节，笔者将介绍 Proxyless 模式、Sidecarless 模式、Ambient Mesh 模式。
+
+## 8.3.3 实现可靠通信
 
 通过 iptables 劫持流量，转发至 sidecar 后，sidecar 根据配置接管应用程序之间的通信，并进行处理。
 
@@ -107,11 +158,9 @@ Envoy 将代理转发行为所涉及的配置抽象为三类资源：Listener、
 	Route 对应的发现服务称之为 RDS（Route Discovery Service）。Router 中最核心配置包含匹配规则和目标 Cluster。此外，也可能包含重试、分流、限流等等。
 
 
-Envoy 另外一个重要的设计是可扩展的 Filter 机制，通俗地讲就是 Envoy 的插件机制。
+Envoy 的另一项重要设计是其可扩展的 Filter 机制，通俗地讲就是 Envoy 的插件系统。Envoy 的许多核心功能都基于 Filter 实现，例如，针对 HTTP 流量和服务的治理主要依赖于两个插件：HttpConnectionManager（网络 Filter，负责协议解析）和 Router（负责流量分发）。通过 Filter 机制，Envoy 理论上能够支持任意协议，实现协议间的转换，并对请求流量进行全面的修改和定制。
 
-在 Envoy 中，很多核心功能都使用 Filter 来实现。比如对于 Http 流量和服务的治理就是依赖 HttpConnectionManager（Network Filter，负责协议解析）以及 Router（负责流量分发）两个插件来实现。利用 Filter 机制，Envoy 理论上可以实现任意协议的支持以及协议之间的转换，对请求流量进行全方位的修改和定制。
-
-Filter 本身并没有专门的 xDS 服务来发现配置。Filter 所有配置都是嵌入在上述 LDS、RDS 以及 CDS（Cluster Network Filter）中的。
+Filter 并没有独立的 xDS 服务来进行配置发现，其所有配置都嵌套在其他 xDS 服务中，例如 LDS（Listener Discovery Service）、RDS（Route Discovery Service）和 CDS（Cluster Discovery Service）等
 
 :::center
   ![](../assets/envoy-resource.png)<br/>
