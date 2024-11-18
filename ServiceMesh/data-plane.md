@@ -2,6 +2,8 @@
 
 数据平面由轻量级的网络代理（如 Envoy 或 Linkerd Proxy）组成，核心职责是在不可靠的网络环境中确保服务间通信的可靠性。确保服务间通信的可靠性并不是什么高深的技术，服务网格之所以被追捧的原因在于，实现上述目标的整个过程无需手动配置，对应用完全透明。
 
+接下来，我们将从 SideCar 自动注入、流量透明劫持、实现可靠通信三个方面讨论数据平面的工作原理。
+
 ## 8.3.1 Sidecar 自动注入
 
 只要用过 Istio 的读者一定知道，带有 istio-injection: enabled 标签的命名空间中创建 Pod，Kubernetes 会自动为创建的 Pod 注入一个名为 istio-proxy 的 Sidecar 容器。
@@ -46,7 +48,7 @@ webhooks:
 以上配置指示 Kubernetes 在带有 istio-injection: enabled 标签的命名空间中，拦截 Pod 创建请求并触发 Istio 的 Webhook。Webhook 服务会将 Sidecar 容器（如 Envoy）注入到 Pod 配置中。之后，Kubernetes 使用更新后的配置完成资源调度和 Pod 创建流程。
 
 
-## 8.3.2 流量劫持
+## 8.3.2 流量透明劫持
 
 Isito 在注入边车代理后，还会注入一个初始化容器 istio-init。该容器的配置如下：
 
