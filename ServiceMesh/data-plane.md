@@ -1,6 +1,6 @@
 # 8.3 数据平面技术：对应用透明
 
-数据平面，也称为转发平面，由轻量级的网络代理（如 Envoy 或 Linkerd Proxy）组成，核心职责是在不可靠的网络环境中确保服务间通信的可靠性。确保服务间通信的可靠性并不是什么高深的技术，服务网格之所以被追捧的原因在于，实现上述目标的整个过程无需手动配置，对应用完全透明。
+数据平面由轻量级的网络代理（如 Envoy 或 Linkerd Proxy）组成，核心职责是在不可靠的网络环境中确保服务间通信的可靠性。确保服务间通信的可靠性并不是什么高深的技术，服务网格之所以被追捧的原因在于，实现上述目标的整个过程无需手动配置，对应用完全透明。
 
 ## 8.3.1 Sidecar 自动注入
 
@@ -14,7 +14,7 @@
 - Mutating 类型的准入控制器在对象被创建或更新时可以修改它们。
 :::
 
-Istio 预先在 Kubernetes 集群中注册了一个类型为 MutatingWebhookConfiguration 的资源，包含以下内容：
+Istio 预先在 Kubernetes 集群中注册了一个类型为 Mutating 类型的准入控制器，它包含以下内容：
 
 - Webhook 服务地址：指向运行注入逻辑的 Webhook 服务（如 Istio 的 istio-sidecar-injector）。
 - 匹配规则：定义哪些资源和操作会触发此 Webhook，例如针对 Pod 的创建请求。
@@ -48,9 +48,7 @@ webhooks:
 
 ## 8.3.2 流量劫持
 
-Isito 在注入边车代理后，还会注入一个初始化容器 istio-init。
-
-istio-init 容器的主要作用是为 Istio Sidecar 的流量劫持功能进行必要的网络环境配置，具体来说就是设置 iptables 规则。 这些规则确保 Pod 中的应用流量能够通过 Istio 的 Sidecar 容器（通常是 istio-proxy，基于 Envoy 实现）代理处理。
+Isito 在注入边车代理后，还会注入一个初始化容器 istio-init。该容器的配置如下：
 
 ```yaml
 initContainers:
@@ -58,10 +56,9 @@ initContainers:
     image: docker.io/istio/proxyv2:1.13.1
     args: ["istio-iptables", "-p", "15001", "-z", "15006", "-u", "1337", "-m", "REDIRECT", "-i", "*", "-x", "", "-b", "*", "-d", "15090,15021,15020"]
 ```
-
-我们看到 istio-init 容器的入口是 istio-iptables 命令，该命令的作用是设置 iptables 规则，对除了特定的几个端口，如 15090、15021、15020 的流量拦截，重定向到 Istio 的 Sidecar 代理（Envoy）上：
-- 对于入站流量，它会将流量重定向到 Sidecar 代理监听的端口（通常是15006端口）
-- 对于出站流量，它会将流量重定向到 Sidecar 代理监听的另一个端口（通常是15001端口）
+上述配置中，istio-init 容器的入口命令是 istio-iptables，该命令设置一系列 iptables 规则，对除了特定的几个端口，如 15090、15021、15020 的流量拦截，重定向到 Istio 的 Sidecar 代理（Envoy）上：
+- 对于入站流量，它会将流量重定向到 Sidecar 代理监听的端口（通常是 15006 端口）；
+- 对于出站流量，它会将流量重定向到 Sidecar 代理监听的另一个端口（通常是 15001 端口）。
 
 通过 iptables -t nat -L -v 命令查看 istio-iptables 添加的 iptables 规则。
 
@@ -111,10 +108,11 @@ Chain ISTIO_REDIRECT (2 references)
    53  3180 REDIRECT   tcp  --  any    any     anywhere             anywhere             redir ports 15001
 ```
 
-根据图进一步理解上述 iptables 自定义链（以 ISTIO_开头）处理流量的逻辑，
+根据图 8-10 进一步理解上述 iptables 自定义链（以 ISTIO_开头）处理流量的逻辑，
 
 :::center
   ![](../assets/istio-iptables.svg)<br/> 
+  图 8-10 Istio 透明流量劫持示意图
 :::
 
 
@@ -122,7 +120,7 @@ Chain ISTIO_REDIRECT (2 references)
 
 ## 8.3.3 实现可靠通信
 
-通过 iptables 劫持流量，转发至 sidecar 后，sidecar 根据配置接管应用程序之间的通信，并进行处理。
+通过 iptables 劫持流量，转发至 Sidecar 后，Sidecar 根据配置接管应用程序之间的通信。
 
 传统的代理（如 HAProxy 或者 Nginx）依赖静态配置文件来定义各种资源以及数据转发规则。而 Envoy 几乎所有配置都可以通过订阅来动态获取。
 
@@ -165,6 +163,7 @@ Filter 并没有独立的 xDS 服务来进行配置发现，其所有配置都�
 
 :::center
   ![](../assets/envoy-resource.png)<br/>
+  图 8-11 Envoy 的动态配置示例
  
 :::
 
