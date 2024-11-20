@@ -2,47 +2,51 @@
 
 如果要统计分布式系统有多少块基石，“日志”一定是其中之一。
 
+这里的“日志“，并不是工程师熟悉的，通过 log4j 或者 syslog 输出的描述发生事情的文本。而是 MySQL 中的 binlog（Binary Log）、MongoDB 中的 Oplog（Operations Log）、Redis 中的 AOF（Append Only File）、PostgreSQL 中的 WAL（Write-Ahead Log）...。这些日志名字不同，但它们的全都是**只能追加、完全有序的记录序列**。
 
-这里的“日志“，并不是工程师熟悉的，通过 log4j 或者 syslog 输出的描述发生事情的文本。它们是只能追加、完全有序的记录序列，
-
-。日志使用二进制格式，仅能由其他程序读取。在 MongoDB 中称 Oplog（Operations Log），在 MySQL 中称 binlog（Binary Log），在 Redis 中称 AOF（Append Only File），在 PostgreSQL 中称 WAL（Write-Ahead Log）。
-
-
-图 展示了日志结构。每一条记录代表一条指令，每一条记录都指定了一个唯一的顺序的日志记录编号。在日志的末尾添加记录，读取日志记录则从左到右。
+图 5-1 展示了日志结构，是有序的、持久化的记录序列，以追加的方式在末尾添加记录，读取时则从左到右顺序扫描。
 :::center
   ![](../assets/log.png) <br/>
-  日志记录了什么时候发生了什么 [图片来源^1]
+  图 5-1 日志是有序的、持久化的记录序列 [图片来源](https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying)
 :::
 
+有序的日志记录了什么时候发生了什么，这对于分布式系统非常重要。来看分布式系统复制数据的两种模式：
 
-:::tip 状态机复制的基本原理
-如果两个相同的 (identical)、确定 (deterministic) 的进程以相同的状态启动，按相同的顺序获取相同的输入，它们将最终达到相同的状态。
+- 主备模式：主节点（Master）负责执行操作，例如“+1”、“-2”等，同时将这些操作的结果记录到日志中，例如“1”、“3”、“6”等。备节点（Replica）根据日志直接同步结果；
+- 状态机模式：日志记录的不是最终结果，而是一些具体的操作指令，如“+1”、“-2”等。这些指令会按照日志中的顺序被依次复制到各个节点，每个节点通过执行这些操作，最终达到一致的状态。
 
-多个这样的进程，就组成了我们熟知的各种分布式系统。
-:::
-
-
-分布式系统服务本质上就是关于状态的变更，这里可以理解为状态机，两个独立的进程(不依赖于外部环境，例如系统时钟、外部接口等)给定一致的输入将会产生一致的输出并最终保持一致的状态，而日志由于其固有的顺序性并不依赖系统时钟，正好可以用来解决变更有序性的问题
-
-因此，即使集群发生了故障，只要有一个存活的节点。就可以通过复制器状态来恢复其他节点，从而保证整个系统状态的一致性。
-
-
-
-有序的日志，可以不用依赖于系统时钟，解决分布式系统中的多个节点同时处理请求，确定事件的先后顺序问题。
-
-
-日志是
-
-对分布式系统，通常有两种方式来处理复制和数据处理：
-
-- State machine model（active - active）：在日志记录这样的一些操作，如“+1”、“-2”等，这样，每个复制节点需要执行这些操作，以保证最后的数据状态是一致的。
-- Primary-back model (active - passive)：一个单独的master节点，执行“+1”、“-2”等操作，并且在日志中记录操作的结果，如“1”、“3”、“6”等。
 :::center
   ![](../assets/active_and_passive_arch.png) <br/>
-  日志记录了何时发生了什么
+  图 5-2 分布式系统复制数据的两种模式
 :::
 
+无论哪一种模式，它们都揭示了：“**顺序是节点之间保持一致性的关键因素**”。如果打乱了这些操作的顺序，就会得到不同的运算结果。
 
+
+再进一步解释以“复制状态机”（State Machine Replication）构建的分布式系统，基本原理如图 5-3 所示。
+
+:::tip 复制状态机的基本原理
+两个相同的 (identical)、确定 (deterministic) 的进程：
+
+- 相同的：进程的代码、逻辑、以及配置完全一致，它们在设计和实现上是完全相；
+- 确定的：进程的行为是完全可预测的，不能有任何非确定性的逻辑，比如随机数生成或不受控制的时间依赖。
+
+如果它们以相同的状态启动，按相同的顺序获取相同的输入。那么，最终将达到相同的状态。
+
+:::
+
+共识算法（图中的 Consensus Module，是 Paxos 或者 Raft 算法）以广播的形式将一条日志发送到所有节点，它们就日志什么位置，记录什么（序号为 9，执行 set x=3）达成一致。也就说，每一台节点中，都有着相同顺序的日志序列。
+
+```json
+{ "index": 9, "command": "set x=3" },
+```
+
+节点内的进程(图中的 State Machine）依次执行日志序列。那么，所有节点最终成一致的状态。多个这样的进程加上有序的日志，就组成了我们熟知的各种分布式系统。
+
+:::center
+  ![](../assets/Replicated-state-machine.webp) <br/>
+  图 5-3 复制状态机（State Machine Replication）工作过程 [图片来源](https://raft.github.io/raft.pdf)
+:::
 
 
 [^1]: https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying 
