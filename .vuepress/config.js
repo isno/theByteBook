@@ -218,7 +218,7 @@ export default defineUserConfig({
                     '/consensus/consensus.md',
                     '/consensus/Replicated-State-Machine.md',
                     {
-                        text: "6.2 Paxos 算法",
+                        text: "6.3 Paxos 算法",
                         link: '/consensus/Paxos.md',
                         children: [
                             '/consensus/Paxos-history.md',
@@ -227,7 +227,7 @@ export default defineUserConfig({
                         ]
                     },
                     {
-                        text: "6.3 Raft 算法",
+                        text: "6.4 Raft 算法",
                         link: '/consensus/Raft.md',
                         children: [
                             '/consensus/raft-leader-election.md',
