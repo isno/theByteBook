@@ -1,5 +1,7 @@
 # 6.3.2 日志复制
 
+前面的介绍中，笔者已经阐述过：Raft 的本质就是多个副本的日志数据达成一致的解决方案。
+
 理解日志复制的问题之前，我们得先搞清楚 Raft 中的日志和日志项是什么。
 
 分布式系统中有一种常见的复制状态机的抽象，就是把具有一定顺序的一系列动作抽象成一条日志（log），每个动作都是日志中的一个日志项（log entry）。我们可以把 Raft 中的日志项理解为包含以下几个关键数据的数据格式：
@@ -13,25 +15,31 @@
  图 6-17 日志项概念
 :::
 
+
+
 ## 1. 日志复制
 
 Raft 是强 Leader 模型的算法，日志项只能由 Leader 复制给其他成员，这意味着日志复制是单向的，Leader 从来不会覆盖本地的日志项，即所有的日志项以 Leader 为准。
 
+当 Raft 收到客户端的指令时（x<-3）：
+- 如果当前节点不是 Leader，则把指令转发至 Leader；
+- Leader 收到指令后先写入本地的日志仓库，然后向所有的 Follower 广播日志复制消息。
+- 一旦 Leader 确认该指令充分复制（即集群半数以上的节点确认它们的日志仓库已经成功复制了该指令），该指令就会被 commit。在 raft 集中中 commit 的日志即被认为安全的日志。
+- Leader 更新 commit 水位，在随后的心跳或者日志复制请求消息中携带 commit 水位。Follower 收到心跳后更新本地的 commit 水位。
+
+
 :::center
-  ![](../assets/raft-log-commit.png) <br/>
- 图 6-18 日志项复制过程
+  ![](../assets/raft-append-entries.svg) <br/>
+ 图 6-17 日志项概念
 :::
 
-1. Leader 首先以日志项（log entry）的形式将事务请求追加（append）至本地日志中。
-2. Leader 并行地通过消息（AppendEntries RPC）将日志项广播给所有的 Follower。
-3. Follower 将请求的日志项追加到自己的本地日志中，并将执行结果发送给 Leader
-4. 当 Leader 收到大多数的 Follower 的成功回复后，这个 entry 就会被认为达到提交（committed）状态，Leader 将这个 entry 应用到状态机中，并回复客户端此次请求成功。
 
-此时，细心的读者是否产生一个疑问“上面的过程笔者只提到了 Leader 的日志项提交，那 Follower 什么时候提交日志项呢？”答案是 Leader 发送心跳或者下一次日志协商的 AppendEntries 消息来通知 Follower 提交（committed）日志项。这种做法可以**使协商优化成一个阶段，降低处理客户端请求一半的延迟**。
+:::tip 选择节点的数量
 
-为此 Raft 引入了 committedIndex 变量，committedIndex 代表已经达成日志共识的索引，也是应用到状态机的最大日志索引值。根据日志复制的过程，第一轮的 AppendEntries 只会持久化日志项，并不会执行提交操作，只有 Leader 才知道该日志项是否复制到多数派，是否可以提交。 
+Raft 的日志复制需要等待多数派节点确认。节点越多，复制延迟也相应增加。所以说，以 Raft 构建的分布式系统并不是节点越多越好。如 ETCD 推荐使用 3 个节点。对高可用性要求较高，且能容忍稍高的性能开销，可增加至 5 个节点。如果超出 5 个节点，则得不偿失。
+:::
 
-当 Leader 收到多数派的 follower 的成功响应后，Leader 将提交该日志项，并更新 committedIndex，同时在下一个心跳或者下一个日志协商的 AppendEntries 消息中携带 committedIndex。follower 无论收到哪一类消息，都会从中获取 committedIndex，因此在 Follower 的本地日志中，所有小于或者等于 committedIndex 的日志均可以执行提交操作。
+通过心跳或者下一次日志复制请求消息来通知 Follower 提交（committed）日志项。这种做法可以**使协商优化成一个阶段，降低处理客户端请求一半的延迟**。
 
 
 ## 2. 实现日志的一致性
@@ -49,6 +57,21 @@ Raft 引入两个变量，来方便找出这一最大索引值：
 
 - **prevLogIndex**：表示 Leader 当前需要复制的日志项，前面那一个日志项的索引值。例如，下图，如果领导者需要将索引值为 8 的日志项复制到 Follower，那么 prevLogIndex 为 7
 - **prevLogTerm**：表示 Leader 当前需要复制的日志项，前面一个日志项的任期编号。例如，下图，如果领导者需要将索引值为 8 的日志项复制到 Follower ，那么 prevLogTerm 为 4
+
+
+```json
+{
+  "term": 5,
+  "leaderId": "leader-123",
+  "prevLogIndex": 8,
+  "prevLogTerm": 4,
+  "entries": [
+    { "index": 9, "term": 5, "command": "set x=42" },
+  ],
+  "leaderCommit": 7
+}
+
+```
 
 :::center
   ![](../assets/raft-log-fix.svg) <br/>
