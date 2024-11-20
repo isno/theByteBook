@@ -1,11 +1,11 @@
 # 6.2 日志与复制状态机
 
-如果说什么是分布式系统的理论基石，“日志”一定是其中之一。
+如果要统计分布式系统有多少块基石，“日志”一定是其中之一。
 
 
-这里的“日志“，并不是我们所熟悉的“应用程序输出的描述发生事情的文本”。
+这里的“日志“，并不是工程师熟悉的，通过 log4j 或者 syslog 输出的描述发生事情的文本。它们是只能追加、完全有序的记录序列，
 
-它们是只能追加、完全有序的记录序列。日志使用二进制格式，仅能由其他程序读取。在 MongoDB 中称 Oplog（Operations Log），在 MySQL 中称 binlog（Binary Log），在 Redis 中称 AOF（Append Only File），在 PostgreSQL 中称 WAL（Write-Ahead Log）。
+。日志使用二进制格式，仅能由其他程序读取。在 MongoDB 中称 Oplog（Operations Log），在 MySQL 中称 binlog（Binary Log），在 Redis 中称 AOF（Append Only File），在 PostgreSQL 中称 WAL（Write-Ahead Log）。
 
 
 图 展示了日志结构。每一条记录代表一条指令，每一条记录都指定了一个唯一的顺序的日志记录编号。在日志的末尾添加记录，读取日志记录则从左到右。
