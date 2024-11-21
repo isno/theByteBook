@@ -2,9 +2,9 @@
 
 conntrack 是 connection track（连接跟踪）的缩写。
 
-顾名思义，Linux 内核中的 conntrack 模块是用来跟踪“连接”的。需要注意的是，conntrack 中的“连接”指的是通信双方之间的数据传输连接，不仅跟踪 TCP 连接，还可以跟踪 UDP、ICMP 这样的“连接”。
+顾名思义，Linux 内核中的 conntrack 模块是用来跟踪“连接”的。需要注意的是，conntrack 中的“连接”指的是通信双方之间的数据传输连接，不仅跟踪 TCP 连接，还可以跟踪 UDP、ICMP 这样的“连接”。当 Linux 系统收到数据包时，内核中的 conntrack 模块为其新建一个（或标识属于某个）连接记录（或称连接条目），并根据数据包类型更新连接状态（如 NEW、ESTABLISHED 等）。
 
-当 Linux 系统收到数据包时，内核中的 conntrack 模块为其新建一个（或标识属于某个）连接记录（或称连接条目），并根据数据包类型更新连接状态（如 NEW、ESTABLISHED 等）。用 TCP 三次握手的例子说明：
+举一个 TCP 三次握手的例子：
 - 首先，客户端向服务器发送一个 TCP SYN 包请求建立连接。
 - Linux 系统收到 TCP SYN 包时，内核中的 conntrack 模块为其创建一个新的连接记录，并将状态标记成 NEW。
 - 随后，服务器回复一个 SYN-ACK，等待客户端的 ACK 报文。一旦 TCP 握手完成，连接记录中的状态变成 ESTABLISHED。
