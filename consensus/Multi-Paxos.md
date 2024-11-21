@@ -1,23 +1,5 @@
 # 6.2.3 Multi Paxos
 
-lamport 在论文中对 Multi Paxos 的描述称之为 **Implementing a State Machine**，我们从理论转向现实问题，探讨分布式中的 State Machine。
-
-在分布式环境中，如果我们要让一个服务具有容错能力，那么最常用最直接的办法就是让一个服务的多个副本同时运行在不同的节点上。但是，当一个服务的多个副本都在运行的时候，我们如何保证它们的状态都是同步的呢，或者说，如果让客户端看起来无论请求发送到哪一个服务副本，最后都能得到相同的结果？实现这种同步方法就是所谓的**状态机复制**（State Machine Replication）。
-
-:::tip 额外知识
-
-状态机（State Machine）来源于数学领域，全称是有限状态自动机，自动两个字也是包含重要含义的。给定一个状态机，同时给定它的当前状态以及输入，那么输出状态时可以明确的运算出来的。
-:::
-
-分布式系统为了实现多副本状态机（Replicated state machine），常常需要一个**多副本日志**（Replicated log）系统，如果日志的内容和顺序都相同，多个进程从同一状态开始，并且以相同的顺序获得相同的输入，那么这些进程将会生成相同的输出，并且结束在相同的状态。
-
-:::center
-  ![](../assets/Replicated-state-machine.webp) <br/>
-  图 6-13 多副本状态机
-:::
-
-多副本日志问题是如何保证日志数据在每台机器上都一样？我们看看 Multi Paxos 的思路。
-
 既然 Paxos Basic 可以确定一个值，**想确定多个值（日志）那就运行多个 Paxos Basic ，然后将这些值列成一个序列（ Replicated log），在这个过程中并解决效率问题** —— 这就是 Multi Paxos 。
 
 Replicated log 类似一个数组，因此我们需要知道当次请求是在写日志的第几位，Multi Paxos 做的第一个调整就是要添加一个日志的 index 参数到 Prepare 和 Accept 阶段，表示这轮 Paxos 正在决策哪一条日志记录。

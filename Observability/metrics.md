@@ -115,9 +115,9 @@ Prometheus 服务端内置了一个强大的时序数据库（该时序数据库
 笔者稍后介绍的 Elastic Stack、ClickHouse 等技术皆是利用了分片技术实现水平可扩展以及并行计算能力。
 :::
 
-Prometheus 时序数据库内置了专用的数据查询语言 PromQL（Prometheus Query Language）。PromQL 是一种由 Prometheus 定制的查询 DSL，其语法类似于支持函数和运算的 CSS 选择器。
+Prometheus 时序数据库内置了专用的数据查询语言 PromQL（Prometheus Query Language）。
 
-笔者举一个使用 PromQL 例子供你参考，假设有一个名为 http_requests_total 的指标，要计算过去 5 分钟内 host 标签为 server1 的请求速率，请参考下面的 PromQL 查询语法：
+PromQL 是一种由 Prometheus 定制的查询 DSL，其语法类似于支持函数和运算的 CSS 选择器。举一个例子供你参考，假设有一个名为 http_requests_total 的指标，要计算过去 5 分钟内 host 标签为 server1 的请求速率，该 PromQL 查询如下：
 
 ```PromQL
 rate(http_requests_total{host="server1"}[5m])

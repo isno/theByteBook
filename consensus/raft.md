@@ -1,4 +1,4 @@
-# 6.3 Raft 算法
+# 6.4 Raft 算法
 
 :::tip 额外知识
 Raft 是由 Re{liable|plicated|dundant} And Fault-Tolerant 组合起来的单词，意思是可靠、复制、冗余和容错。该词在英文有“筏”的含义，隐喻 Raft 是一艘可以帮助你逃离 Paxos 小岛的救生筏。
