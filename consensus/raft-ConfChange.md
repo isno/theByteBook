@@ -11,9 +11,7 @@
 
 如果把“配置”当成 Raft 中的“特殊日志”。这样一来，成员的动态变更就可以转化为“配置日志”的一致性问题。但注意的是，节点“提交”（commit）日志是异步的，不可能同时操作。这种情况下，成员变更就会出现问题。
 
-举一个具体的例子，假设当前 Raft 集群由 Server1（Leader）、Server2 和 Server3 组成，配置称为 C~old~，该集群 Quorum 为（N/2）+1 = 2。现在，我们计划增加两个节点，新的集群配置为[Server1、Server2、Server3、Server4、Server5]，新的配置称为 C~new~，该集群 Quorum 为（N/2）+1 = 3。
-
-由于提交日志是异步的，可能 Server3，Server4，Server5 已“提交”新配置 C~new~，而 Server1，Server2 比较迟钝，还在用老配置 C~old~：
+举一个具体的例子，一个 Raft 集群配置为 C~old~ [Server1、Server2 和 Server3]，该集群的 Quorum 为（N/2）+1 = 2。现在，我们计划增加两个节点，新集群配置为 C~new~ [Server1、Server2、Server3、Server4、Server5]，该集群的 Quorum 为（N/2）+1 = 3。由于提交日志是异步的，假设 Server1，Server2 比较迟钝，还在用老配置 C~old~，而 Server3，Server4，Server5 已“提交”新配置 C~new~：
 - 假设 Server5 触发选举，赢得 Server3，Server4，Server5 的投票（满足 C~new~ 的 3 Quorum 要求），成为 Leader；
 - 假设 Server1 也触发选举，赢得 Server1，Server2 的投票（满足 C~old~ 的 2 Quorum 要求），成为 Leader。
 
@@ -28,7 +26,13 @@
 
 最初，Diego Ongaro 在论文中提出了一种基于两阶段的联合共识（Joint Consensus）成员变更方法，但这种方式实现起来很复杂。后来，Diego Ongaro 又提出的一种更简单的方案 —— 单成员变更（Single Server Changes）。单成员变更的思路是，既然同时提交多个成员变更会存在问题，那每次就提交一个成员变更，如果要添加多个成员，那就执行多次单成员变更。
 
-单节点变更的方法很容易穷举出所有情况，如图 6-22 所示，穷举集群奇/偶数节点下添加和删除情况。如果每次只操作一个节点，那么 **C~old~ 的 Quorum 和 C~new~ 的 Quorum 之间一定存在交集。也就是说，同一个 term 中，C~old~ 和 C~new~ 中交集的那个节点只会进行一次投票，要么投票给 C~old~，要么投票给 C~new~，这样就避免了同一 term 下出现两个 Leader**。
+单节点变更的方法很容易穷举出所有情况，如图 6-22 所示，穷举集群奇/偶数节点下添加和删除情况。如果每次只操作一个节点，那么 **C~old~ 的 Quorum 和 C~new~ 的 Quorum 之间一定存在交集**。同一个 term 中，C~old~ 和 C~new~ 中交集的那个节点只会进行一次投票，要么投票给 C~old~，要么投票给 C~new~，这样就避免了同一 term 下出现两个 Leader。
+
+
+以图 6-22 第二种情况为例，C~old~ 为 [Server1、Server2、Server3]，该集群的 Quorum 为（N/2）+1 = 2，C~new~ 为 [Server1、Server2、Server3、Server4]，该集群的 Quorum 为（N/2）+1 = 3。假设 Server1、Server2 比较迟钝，还在用 C~old~ ，其他节点已经“提交”了 C~new~：
+- Server1 触发选举，赢得 Server1，Server2 的投票，满足  C~old~ Quorum 要求，当选 Leader；
+- Server3 触发选举，赢得 Server3，Server4 的投票，但**不满足 C~new~ 的 Quorum 要求，选举失效**。
+
 
 :::center
   ![](../assets/raft-single-server.svg) <br/>

@@ -10,10 +10,10 @@
   图 5-1 日志是有序的、持久化的记录序列 [图片来源](https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying)
 :::
 
-有序的日志记录了什么时候发生了什么，这句话的含义通过分布式系统中数据复制的两种模式来理解：
+有序的日志记录了什么时候发生了什么，这句话的含义通过两种分布式系统数据复制模式来理解：
 
-- 主备模式（Primary-backup）：主节点（Master）负责执行操作，例如“+1”、“-2”等，同时将这些操作的结果（如“1”、“3”、“6”）记录到日志中。备节点（Slave）根据日志直接同步结果；
-- 复制状态机模式（State-Machine Replication）：日志记录的不是最终结果，而是具体的操作指令，如“+1”、“-2”等。这些指令按照日志中的顺序被依次复制到各个节点（Peer），每个节点按顺序执行这些操作，最终达到一致的状态。
+- **主备模式（Primary-backup）**：主节点（Master）负责执行如“+1”、“-2”的操作，然后将这些操作的结果（如“1”、“3”、“6”）记录到日志中。备节点（Slave）根据日志直接同步结果；
+- **复制状态机模式（State-Machine Replication）**：日志记录的不是最终结果，而是具体的操作指令，如“+1”、“-2”。这些指令按照日志中的顺序被依次复制到各个节点（Peer）。如果每个节点按顺序执行这些操作，将最终达到一致的状态。
 
 :::center
   ![](../assets/active_and_passive_arch.png) <br/>
