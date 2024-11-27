@@ -1,96 +1,71 @@
 # 6.4.2 日志复制
 
+一旦集群选举出了 Leader，那么 Leader 便承担起“**将系统发生的所有变更复制到所有节点**”的职责。
 
-在 Raft 系统中，所有的数据变化都是以日志记录的形式添加到服务节点之中。服务节点会不断的读取日志记录，并将日志记录更新到服务节点的数据中。日志记录最开始的状态是 uncommited, 更新之后状态则变为 commited。commited 意味着：日志记录不会被回滚，可以安全地应用到状态机。
 
+图 6-17 展示了 Raft 集群中各个节点的日志情况，每个日志条目（log entry）包含了索引、任期、指令等关键信息：
 
-前面的介绍中，笔者已经阐述过：Raft 的本质就是多个副本的日志数据达成一致的解决方案。
-
-理解日志复制的问题之前，我们得先搞清楚 Raft 中的日志和日志项是什么。
-
-分布式系统中有一种常见的复制状态机的抽象，就是把具有一定顺序的一系列动作抽象成一条日志（log），每个动作都是日志中的一个日志项（log entry）。我们可以把 Raft 中的日志项理解为包含以下几个关键数据的数据格式：
-
-- **指令**: 一条由客户端请求转换成状态机需要执行的指令。
-- **索引值**：日志项对应的整数索引值，用于标识日志项，是一个连续、单调递增的整数。如此，Raft 可以不用关注空洞日志，也可以通过最大日志索引定位缺失的数据。
-- **任期编号**：创建这个日志项的 Leader 任期编号。
+- **指令**: 表示客户端请求的具体操作内容，也就是待“状态机”（State Machine）执行的操作。
+- **索引值**：日志在仓库中的索引值，单调递增。
+- **任期编号**：该日志是在哪个任期（Leader 任期）中被创建的，用于解决“脑裂”和日志不一致问题。
 
 :::center
   ![](../assets/raft-log.svg) <br/>
- 图 6-17 日志项概念
+ 图 6-17 日志结构
 :::
 
+Raft 通过 RPC 消息将日志复制至各个 Follower 节点。用于日志复制的 RPC 被称为 AppendEntries RPC，它的结构大致如下：
 
-## 1. 日志复制
+```json
+{
+  "term": 5, // Leader 的当前任期号
+  "leaderId": "leader-123",
+  "prevLogIndex": 8, // 前一日志的索引
+  "prevLogTerm": 4, // 前一日志的任期
+  "entries": [
+    { "index": 9, "term": 5, "command": "set x=4" }, // 要复制的日志条目
+  ],
+  "leaderCommit": 7// Leader 的“已提交”的索引号
+}
+```
 
-Raft 是强 Leader 模型的算法，日志项只能由 Leader 复制给其他成员，这意味着日志复制是单向的，Leader 从来不会覆盖本地的日志项，即所有的日志项以 Leader 为准。
+根据图 6-17 来看日志复制的过程，当 Raft 集群收到客户端的请求（set x=4）时：
 
-当 Raft 收到客户端的指令时（x<-3）：
 - 如果当前节点不是 Leader，则把指令转发至 Leader；
-- Leader 收到指令后先写入本地的日志仓库，然后向所有的 Follower 广播日志复制消息。
-- 一旦 Leader 确认该指令充分复制（被多数派节点“Quorum”确认），该指令就会被“提交”（commit）。提交意味着，日志记录不会被回滚，可以安全地应用到状态机。
-- Leader 更新 commit 水位，在随后的心跳或者日志复制请求消息中携带 commit 水位。Follower 收到心跳后更新本地的 commit 水位。
+- Leader 接收请求后：
+  - 将指令转换成日志条目（log entry）写入本地日志仓库，此时日志条目的状态为“未提交”（uncommitted）；
+  - 生成一条 AppendEntries RPC，将日志条目广播至所有的 Follower；
+- Follower 收到 Leader 的 AppendEntries RPC 后，检查任期以及日志一致性，将新日志条目追加到本地仓库。
+- 一旦 Leader 确认日志条目被充分追加（也就是达到 Quorum 要求），Leader 便将日志条目标记为“已提交”（committed），并向客户端返回执行结果。已提交的日志意味着：指令永久生效，日志不可回滚，可以安全地“应用”（apply）到状态机。
 
 :::center
   ![](../assets/raft-append-entries.svg) <br/>
  图 6-17 日志项概念
 :::
 
+Leader 向客户端返回结果，并不意味着日志复制的过程就此结束。Follower 并不知道哪些日志已经被大多数节点确认，Raft 的的方案是：Leader 在心跳或下一次日志复制中携带 leaderCommit，通知 Follower 当前已经提交的最高日志索引。这个设计的目的主要把 Quorum 确认优化成一个阶段，降低客户端请求延迟。
 
-:::tip 选择节点的数量
 
-Raft 的日志复制需要等待多数派节点确认。节点越多，复制延迟也相应增加。所以说，以 Raft 构建的分布式系统并不是节点越多越好。如 ETCD 推荐使用 3 个节点。对高可用性要求较高，且能容忍稍高的性能开销，可增加至 5 个节点。如果超出 5 个节点，则得不偿失。
+:::tip 如何选择节点的数量
+
+Raft 的日志复制需要等待多数节点确认。节点越多，日志复制延迟也相应增加。所以说，以 Raft 构建的分布式系统并不是节点越多越好。如 ETCD，推荐使用 3 个节点，对高可用性要求较高，且能容忍稍高的性能开销，可增加至 5 个节点，如果超出 5 个节点，可能得不偿失。
 :::
 
-通过心跳或者下一次日志复制请求消息来通知 Follower 提交（committed）日志项。这种做法可以**使协商优化成一个阶段，降低处理客户端请求一半的延迟**。
+实际上，上面日志复制例子中，只有 follower-1 会成功，这是因为其他节点（follower-2）的日志缺少一些日志条目。**日志的连续性相当重要，顺序不一致性的日志应用到状态机，会导致各个 follower 节点状态不一致**。
 
-
-## 2. 实现日志的一致性
-
-当一个 Follower 新加入集群或 Leader 刚晋升时，Leader 并不清楚需要同步哪些日志给 Follower。此外，当旧的 Leader 转变为 Follower 时，可能携带上一任期（term）中仅在本地提交的日志项，而这些日志项在当前新的 Leader 上并不存在。
-
-Raft 算法中，通过 Leader 强制 Follower 复制自己的日志项，来处理不一致的日志。具体包括两个步骤：
-
-1. Leader 通过日志复制 RPC 的一致性检查，找到 Follower 与自己相同日志项的最大索引值。即在该索引值之前的日志，Leader 和 Follower 是一致的，之后的日志就不一致了；
-2. Leader 强制将 Follower 该索引值之后的所有日志项删除，并将 Leader 该索引值之后的所有日志项同步至 Follower，以实现日志的一致。
-
-因此，处理 Leader 与 Follower 日志不一致的关键是找出上述的最大索引值。
-
-Raft 引入两个变量，来方便找出这一最大索引值：
-
-- **prevLogIndex**：表示 Leader 当前需要复制的日志项，前面那一个日志项的索引值。例如，下图，如果领导者需要将索引值为 8 的日志项复制到 Follower，那么 prevLogIndex 为 7
-- **prevLogTerm**：表示 Leader 当前需要复制的日志项，前面一个日志项的任期编号。例如，下图，如果领导者需要将索引值为 8 的日志项复制到 Follower ，那么 prevLogTerm 为 4
-
+follower-2 收到 AppendEntries 消息，根据 prevLogIndex、prevLogTerm 确认本地日志缺少或者冲突，它将返回失败信息：
 
 ```json
 {
-  "term": 5,
-  "leaderId": "leader-123",
-  "prevLogIndex": 8,
-  "prevLogTerm": 4,
-  "entries": [
-    { "index": 9, "term": 5, "command": "set x=42" },
-  ],
-  "leaderCommit": 7
+  "success": false,
+  "term": 4,
+  "conflictIndex": 4, // 表示发生缺失的日志索引，Follower 的日志中最大索引为 3，所以缺失的索引是 4。
+  "conflictTerm": 3//缺失日志的“上一个有效日志条目”的任期号
 }
-
 ```
+这之后，Leader 根据上述信息找到一个与 Follower 日志匹配的最大索引（也就是 6），重新开始日志复制过程，逐步恢复与 Follower 的一致性。
 
-:::center
-  ![](../assets/raft-log-fix.svg) <br/>
- 图 6-19 领导者处理不一致日志
-:::
 
-Leader 处理不一致的具体过程分析如下：
 
-1. Leader 通过日志复制 RPC 消息，发送当前自己最新日志项给 Follower，该消息的 prevLogIndex 为 7，prevLogTerm 为 4。
-2. 由于 Follower 在其日志中，无法找到索引值为 7，任期编号为 4 的日志项，即 Follower 的日志和 Leader 的不一致，故 Follower 会拒绝接收新的日志项，返回失败。
-3. 此时，Follower 在其日志中，找到了索引值为 6，任期编号为 3 的日志项，故 Follower 返回成功。
-4. Leader 收到 Follower 成功返回后，知道在索引值为 6 的位置之前的所有日志项，均与自己的相同。于是通过日志复制 RPC ，复制并覆盖索引值为 6 之后的日志项，以达到 Follower 的日志与 Leader 的日志一致。
 
-:::center
-  ![](../assets/raft-log-fix-action.svg) <br/>
-图 6-20 Leader 处理不一致日志过程
-:::
-
-从上面的步骤看到，Leader 通过日志复制 RPC 消息的一致性检查，比较 index 和 term，从而找到 Follower 节点上与自己相同日志项的最大索引值，然后复制并更新该索引值之后的日志项，实现各个节点日志自动趋于一致。
 

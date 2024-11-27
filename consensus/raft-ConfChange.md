@@ -9,7 +9,7 @@
 配置说明集群由哪些节点组成。例如，一个集群有三个节点（Server 1、Server 2、Server 3），该集群的配置就是 [Server1、Server2、Server3]。
 :::
 
-如果把“配置”当成 Raft 中的“特殊日志”。这样一来，成员的动态变更就可以转化为“配置日志”的一致性问题。但注意的是，节点“提交”（commit）日志是异步的，不可能同时操作。这种情况下，成员变更就会出现问题。
+如果把“配置”当成 Raft 中的“特殊日志”。这样一来，成员的动态变更就可以转化为“配置日志”的一致性问题。但注意的是，日志“应用”（apply）到状态机时异步的，不可能同时操作。这种情况下，成员变更就会出现问题。
 
 举一个具体的例子，一个 Raft 集群配置为 C~old~ [Server1、Server2 和 Server3]，该集群的 Quorum 为（N/2）+1 = 2。现在，我们计划增加两个节点，新集群配置为 C~new~ [Server1、Server2、Server3、Server4、Server5]，该集群的 Quorum 为（N/2）+1 = 3。由于提交日志是异步的，假设 Server1，Server2 比较迟钝，还在用老配置 C~old~，而 Server3，Server4，Server5 已“提交”新配置 C~new~：
 - 假设 Server5 触发选举，赢得 Server3，Server4，Server5 的投票（满足 C~new~ 的 3 Quorum 要求），成为 Leader；
