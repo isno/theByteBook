@@ -36,5 +36,5 @@ Lamport 提出的选举方案是一种很简单的策略，有同时出现 2 个
 
 后续，如果 Leader 接收到超过半数的 Acceptor 回复了 noMoreAccepted，那 Leader 就不需要发送 Prepare 请求了，直接发送 Accept 请求即可，这样只需要一轮 RPC。
 
-最后，把上述共识问题分解为领导者选举、日志复制和安全性三个问题来思考，就是下一节我们要讨论的 Raft 算法中的内容。2014 年 斯坦福的学者 Diego Ongaro 和 John Ousterhout 在发表一篇名为《In Search of an Understandable Consensus Algorithm》的论文中提出了 Raft 算法，并获得了 USENIX ATC 2014 大会的 Best Paper，后来更是成为 Etcd、Consul 等分布式程序的实现基础。
+最后，把上述共识问题分解为领导者选举、日志复制和安全性三个问题来思考，就是下一节我们要讨论的 Raft 算法中的内容。2014 年，斯坦福的学者 Diego Ongaro 和 John Ousterhout 发表了论文《In Search of an Understandable Consensus Algorithm》，提出了 Raft 算法，该论文斩获 USENIX ATC 2014 大会 Best Paper 荣誉，Raft 算法更是成为 etcd、Consul 等分布式系统的实现基础。
 

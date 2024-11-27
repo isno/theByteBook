@@ -1,8 +1,8 @@
 # 2.3.3 Facebook 故障分析与总结
 
-Facebook 史诗级故障事件发生在 2021 年 10 月 4 日，故障绕过了所有的高可用设计，让 Facebook 公司旗下的 Facebook、Instagram、WhatsApp 等众多服务出现了长达接近 7 个小时宕机。这次故障的影响范围极广，差点导致严重的二次故障，险些搞崩整个互联网。
+Facebook “史诗级故障”发生在 2021 年 10 月 4 日，故障绕过了所有的高可用设计，让 Facebook 公司旗下的 Facebook、Instagram、WhatsApp 等众多服务出现了长达 7 个小时宕机。故障的影响范围极广，差点导致严重的二次故障，搞崩半个互联网。
 
-如此大规模服务的瘫痪不是 DNS 就是 BGP 出了问题。Facebook 很倒霉，这次故障是因为 DNS 和 BGP 一起出现了问题。
+如此大规模服务瘫痪不是 DNS 出现了问题就是 BGP 出现了问题。Facebook 很倒霉，DNS 和 BGP 一起出现了问题。
 
 <div  align="center">
 	<img src="../assets/facebook-404-error.jpeg" width = "450"  align=center />
@@ -14,7 +14,7 @@ Facebook 官方后续发布的故障原因如下：
 运维人员修改 BGP 路由规则时，误将 Facebook 的自治域 AS32934 [^1]内的“权威域名服务器”的路由给删除了。
 :::
 
-这个操作的直接后果是，所有 Facebook 域名的解析请求都会丢弃在网络中，世界各地“DNS 解析器”无法再正常解析 Facebook 相关的域名。
+这个操作的直接后果是，所有 Facebook 域名的解析请求都被丢弃，世界各地“DNS 解析器”无法正常解析 Facebook 相关的域名。
 
 ## 1.故障现象
 
