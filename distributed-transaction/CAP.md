@@ -2,9 +2,7 @@
 
 CAP 是分布式系统中关于一致性与可用性权衡的理论，是理解分布式系统的起点。
 
-1999 年，美国工程院院士 Eric A.Brewer 发表的论文《Harvest, Yield, and Scalable Tolerant Systems》[^1] 中，首次提出了 CAP 原理（CAP Principle）。不过彼时的 CAP 仅是一种猜想，尚未得到理论上的证明。2002 年，麻省理工学院的 Seth Gilbert 和 Nancy Lynch 用严谨的数学推理证明了 CAP 的正确性。
-
-此后，CAP 从原理转变成定理，在分布式系统领域产生了深远的影响。
+1999 年，美国工程院院士 Eric A.Brewer 发表的论文《Harvest, Yield, and Scalable Tolerant Systems》[^1] 中，首次提出了 CAP 原理（CAP Principle）。不过彼时的 CAP 仅是一种猜想，尚未得到理论上的证明。2002 年，麻省理工学院的 Seth Gilbert 和 Nancy Lynch 用严谨的数学推理证明了 CAP 的正确性。此后，CAP 从原理转变成定理，在分布式系统领域产生了深远的影响。
 
 :::center
   ![](../assets/cap-theorem.png) <br/>
