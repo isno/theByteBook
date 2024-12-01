@@ -1,8 +1,13 @@
 # 6.4.1 领导者选举
 
-Raft 是一个强领导者算法。强领导意思是：接收客户端的所有请求，将客户端的请求操作复制给其他节点（Follower，跟随者）、不断发送心跳通知其他节点”我是 Leader，我还活者，你们现在不要发起新的选举“。
+在 Raft 算法中，节点间并不平等。不同角色的节点承担不用的职责。
 
-Follower 的职责相对较为简单：即无条件从 Leader 同步日志。此外，还有一个过渡角色 Candidate，Leader 丧失时，Follower 会转为 Candidate 参与选举；
+- **Leader（领导者）**：
+- **Follower（跟随者）**：
+- **Candidate（）**：过渡角色 Candidate，Leader 丧失时，Follower 会转为 Candidate 参与选举；
+
+Raft 是一个强领导者算法。强领导意思是：整个集群，只有一个节点接收客户端的所有请求，该节点将客户端的请求操作复制给其他节点（Follower，跟随者），其他节点无条件服从 Leader 的操作。
+
 
 联想到现实世界中的领导人都有一段不等的任期。自然，Raft 中的 Leader 也对应的概念 —— term。
 

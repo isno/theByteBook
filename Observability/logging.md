@@ -6,17 +6,17 @@
 
 ## 1. 全文索引方案 Elastic Stack
 
-在讨论如何实现一套完整的日志系统时，工程师们或多或少听说过以下几个名词：ELK、ELKB 或 Elastic Stack。
+讨论如何实现一套完整的日志系统时，工程师们或多或少都听说过这几个名词：ELK、ELKB 或 Elastic Stack。
 
-实际上，它们指的是同一套用于日志处理的开源组件。Elastic Stack（为明确统一，本文统称 Elastic Stack）是由 Elastic 公司开发的一组开源工具，专门用于数据海量的收集、搜索、分析和可视化处理。
+实际上，它们指向的是同一套用于日志处理的开源组件。Elastic Stack（为明确统一，本文统称 Elastic Stack）是由 Elastic 公司开发的一组开源工具，专门用于数据海量的收集、搜索、分析和可视化处理。
 
 图 9-6 展示了一套基于 Elastic Stack 的日志处理方案：
 
-- **数据收集**：Beats 组件部署在日志生成节点上，负责收集原始数据。
-- **数据缓冲**：使用消息队列（MQ）进行数据缓冲，以提高数据吞吐量。
-- **数据清洗**：数据发送到 Logstash 进行清洗和处理。
-- **数据存储**：处理后的数据存储在 Elasticsearch 集群中，并生成索引。
-- **数据可视化**：用户通过 Kibana 进行数据可视化、检索和分析。如果需要，还可以通过 Nginx 实现访问控制。
+- **数据收集**：Beats 组件部署在日志生成节点，负责收集原始数据。
+- **数据缓冲**：使用消息队列（RabbitMQ）缓冲数据，以提高数据吞吐量。
+- **数据清洗**：数据发送到 Logstash 清洗。
+- **数据存储**：清洗后的数据存储在 Elasticsearch 集群，并生成索引。
+- **数据可视化**：Kibana 负责数据检索、分析、可视化处理。如果需要，还可以再部署一套 Nginx 实现访问控制。
 
 :::center
   ![](../assets/ELK.png)<br/>
@@ -29,7 +29,7 @@ Elastic 公司的发展始于创始人 Shay Banon 的个人兴趣，从开源、
 
 Elastic Stack 套件中，最核心的组件是 Elasticsearch —— 一个基于 Apache Lucene 构建的开源的搜索与分析引擎。值得一提的是，Lucene 的作者就是大名鼎鼎的 Doug Cutting，如果你不知道他是谁是？那你一定听过他儿子玩具的名字 —— Hadoop。
 
-Elasticsearch 能够在海量数据中快速检索关键词，其关键技术之一是 Lucene 中的反向索引（Inverted Index）。与反向索引相对的是正向索引，两者的区别是：
+Elasticsearch 能够在海量数据中快速检索关键词，其关键技术之一是 Lucene 中的“反向索引”（Inverted Index）。与反向索引相对的是正向索引，两者的区别是：
 
 - **正向索引（Forward Index）**：正向索引是一种传统的索引方法，它将文档集合中的每个单词作为键，将包含该单词的文档列表作为值。正向索引适用于快速检索特定标识符的文档，常用于数据库管理系统中的主键索引。
 - **反向索引（Inverted Index）**：反向索引通常被译为“倒排索引”，但“倒排”容易让人误以为与排序有关，实际上它与排序无关。反向索引的工作原理是将文本分割成词条，并构建“<词条->文档编号>”的索引，以便快速定位某个词出现在哪些文档中。
@@ -48,16 +48,14 @@ Elasticsearch 能够在海量数据中快速检索关键词，其关键技术之
 "it":     {0, 1, 2}
 "what":   {0, 1}
 ```
-进行检索时，条件“what”, “is” 和 “it” 将对应这个集合：$\{0, 1\}\cap\{0,1,2\}\cap\{0,1,2\} = \{0,1\}$。
+检索时，条件“what”, “is” 和 “it” 将对应这个集合：$\{0, 1\}\cap\{0,1,2\}\cap\{0,1,2\} = \{0,1\}$。可以看出，反向索引使得搜索操作能够快速定位包含特定关键词的文档，而无需逐一扫描所有文档。
 
-在 Elasticsearch 中，反向索引使得搜索操作能够快速定位包含特定关键词的文档，而无需逐一扫描所有文档。
-
-Elasticsearch 另一项关键技术是分片机制（sharding）。Elasticsearch 中的每个分片相当于一个独立的 Lucene 实例，类似于一个完整的数据库。
+Elasticsearch 另一项关键技术是“分片”（sharding），每个分片相当于一个独立的 Lucene 实例，类似于一个完整的数据库。
 
 - 文档写入时，Elasticsearch 通过哈希函数（通常基于文档 ID）计算该文档应存储的分片，从而将文档有序地分配到不同的分片中。
 - 查询文档时，查询请求并行地在多个分片上执行计算，最终将结果聚合后返回给客户端，这显著提升了查询的吞吐量。
 
-为了追求极致的查询性能，Elasticsearch 在数据写入吞吐量和存储空间占用方面付出了代价：
+追求极致查询性能的背后，Elasticsearch 也付出了相应的代价：
 
 - **写入吞吐量下降**：文档写入过程中需要进行分词和构建排序表等 CPU 和内存密集型操作，导致写入性能下降。
 - **存储空间占用高**：Elasticsearch 存储原始数据和反向索引，为了加速分析，可能还需要额外存储一份列式数据。
@@ -151,17 +149,16 @@ CREATE TABLE example (
 ORDER BY id;
 ```
 
-近几年来，经常能在国内各个技术公众号看到使用 ClickHouse 降低存储成本的实践分享。在 B 站的技术文章《B 站基于 Clickhouse 的下一代日志体系建设实践》中，我们看到相较于 Elasticsearch ，B 站使用 ClickHouse 后降低了 60%+ 的存储成本[^2]。
+近几年来，经常在国内各个技术公众号看到 ClickHouse 降低存储成本的实践分享。在 B 站的技术文章《B 站基于 Clickhouse 的下一代日志体系建设实践》中，我们看到相较于 Elasticsearch ，B 站使用 ClickHouse 后降低了 60%+ 的存储成本[^2]。
 
 :::center
   ![](../assets/es-vs-clickhouse.png)<br/>
   图 9-8 同一份日志在 Elasticsearch、ClickHouse 和 ClickHouse(zstd) 中的容量对比（结果越低越好）
 :::
 
-ClickHouse 支持分片（Sharding），也就是支持分布式并行计算。通过增加更多的节点，Clickhouse 能实现处理数百亿到数万亿条记录，以及数 PB 级别的数据。
+ClickHouse 支持“分片”（Sharding）技术，也就是支持分布式并行计算。节点规模的上限即是 Clickhouse 处理能力的上限，只要有足够多的硬件资源，Clickhouse 能实现处理数百亿到数万亿条记录、数 PB 级别的数据。
 
-根据 Yandex 的内部跑分结果来看（图 9-9），在一亿条记录的规模上，ClickHouse 比 Vertia（一款商业的 OLAP 分析软件）快约 5 倍、比 Hive 快 279 倍、比 InifniDB 快 31 倍。ClickHouse 表现的惊人的查询性能，当之无愧阐述 ClickHouse 介绍中“实时”（real-time）二字含义。
-
+根据 Yandex 的内部跑分结果来看（图 9-9），一亿条记录的规模上，ClickHouse 比 Vertia（一款商业的 OLAP 分析软件）快约 5 倍、比 Hive 快 279 倍、比 InifniDB 快 31 倍。ClickHouse 表现的惊人的查询性能，当之无愧阐述 ClickHouse 介绍中“实时”（real-time）二字含义。
 
 :::center
   ![](../assets/ClickHouse-benchmark.jpeg)<br/>
@@ -169,7 +166,6 @@ ClickHouse 支持分片（Sharding），也就是支持分布式并行计算。�
 :::
 
 正如 ClickHouse 的宣传所言，其他的开源系统太慢，商用的又太贵。只有 ClickHouse 在存储成本与查询性能之间做到了良好平衡，不仅快且还开源。
-
 
 [^1]: 以运营俄罗斯最受欢迎的搜索引擎闻名，被称为俄罗斯的 Google
 [^2]: 参见 https://mp.weixin.qq.com/s/dUs7WUKUDOf9lLG6tzdk0g
