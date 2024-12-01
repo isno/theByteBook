@@ -1,4 +1,4 @@
-# 6.2.3 Multi Paxos
+# 6.3.3 Multi Paxos
 
 既然 Paxos Basic 可以确定一个值，想确定多个值那就运行多次 Paxos Basic —— 这就是 Multi Paxos 。
 
@@ -22,8 +22,6 @@ Multi Paxos 算法对此的改进是增加“选主”机制。节点之间就�
 
 一旦选举出多数节点接受的领导者。那领导者就可以跳过 Basix Paxos 中 Prepare 多数派承诺阶段，直接向其他节点广播 Accept 消息即可。这样一个提案达成共识，只需要一轮 RPC。
 
-
-把上述问题总结为“选主”、“日志复制”
-、“安全”三个子问题来思考，就是下一节我们要讨论的 Raft 算法。2014 年，斯坦福的学者 Diego Ongaro 和 John Ousterhout 发表了论文《In Search of an Understandable Consensus Algorithm》，提出了 Multi-Paxos 思想上简化和改进的 Raft 算法，该论文斩获 USENIX ATC 2014 大会 Best Paper 荣誉，Raft 算法更是成为 etcd、Consul 等分布式系统的实现基础。
+不过呢，Lamport 的论文主要关注的是 Basic Paxos 的算法基础和正确性证明，虽然在理论上做了 Multi Paxos 扩展，但没有深入描述如何通过领导者角色解决多轮提案的效率问题，且没有给出充分的优化细节。2014 年，斯坦福的学者 Diego Ongaro 和 John Ousterhout 发表了论文《In Search of an Understandable Consensus Algorithm》，提出了 Multi-Paxos 思想上简化和改进的 Raft 算法，明确提出了“选主”、“日志复制”等概念以及实现细节的描述。该论文斩获 USENIX ATC 2014 大会 Best Paper 荣誉，Raft 算法更是成为 etcd、Consul 等分布式系统的实现基础。
 
 
