@@ -1,40 +1,29 @@
 # 6.2.3 Multi Paxos
 
-既然 Paxos Basic 可以确定一个值，**想确定多个值（日志）那就运行多个 Paxos Basic ，然后将这些值列成一个序列（ Replicated log），在这个过程中并解决效率问题** —— 这就是 Multi Paxos 。
+既然 Paxos Basic 可以确定一个值，想确定多个值那就运行多次 Paxos Basic —— 这就是 Multi Paxos 。
 
-Replicated log 类似一个数组，因此我们需要知道当次请求是在写日志的第几位，Multi Paxos 做的第一个调整就是要添加一个日志的 index 参数到 Prepare 和 Accept 阶段，表示这轮 Paxos 正在决策哪一条日志记录。
+来看一个具体的例子，当 S~1~ 收到客户端的请求 jmp（提案）时（假设此时是 S~3~ 宕机），运行多次 Paxos Basic 会出现什么情况：
 
-下面我们举个例子说明，当 S~1~ 收到客户端的请求命令 jmp（提案）时（假设此时是 S~3~ 宕机）：
-
-- 会先尝试日志项 3，发现已经写入了 cmp（但 cmp 还未被选中），于是运行 Basic Paxos 在日志项 3 放置 cmp。
-- 继续找下一个没有选中的位置 —— 也就是第 4 位，由于 S~2~ 已经存在 sub，产生冲突，最终 sub 在日志项 4 达成共识。
-- S~1~ 继续尝试下一个日志项，直到给 jmp 找到一个可以达成共识的位置（日志项 4）。
+- 第一轮 Paxos Basic：尝试在索引 4 处写入提案（cmp），但 Prepare 阶段发现 S~2~ 的索引 3 已经存在 sub 提案，S~1~ 的索引 4 处，写入提案（sub）。
+- 第二轮 Paxos Basic：S1 继续尝试下一个日志索引 5，本轮就S~1~、S~2~ 的索引 5 的提案达成共识；
+- 此外，上述过程中还发现 S~2~ 存在空洞日志。S~1~ 发起新一轮 Paxos Basic，S~2~ 的索引 3 处，cmp 提案达成共识。
 
 :::center
   ![](../assets/multi_paxos.png) <br/>
   图 6-14 当节点收到客户端的请求命令 jmp（提案）时情况
 :::
 
-我们思考一下上面的流程中的一些问题：
-1. jump 提案经历了 3 轮 Basic Paxos，共花费 6 个 RTT。
-2. 当多个节点同时进行提议的时候，对于 index 的争抢会比较严重，会出现冲突导致活锁。
+决议jump 提案时经历了 3 轮 Basic Paxos，花费 6 个 RTT（日志不顺序，以及 Basic Paxos 本身就需要 2 个 RTT）。此外，当多个节点同时发起提案时，还导致频繁出现活锁。
 
-Paxos 想要从理论走向现实，必须要解决这两类问题。
+形成活锁的原因是 Paxos 算法中“节点众生平等”，每个节点都可以并行的发起提案。如何不破坏 Paxos 的“节点众生平等”基本原则，又能在提案节点中实现主次之分，限制每个节点都有不受控的提案权利？这是共识算法从理论研究走向实际工程的第一步；
+如何就多个值形成决议，并在过程成解决网络通信效率问题?，这是共识算法走向实际工程的第二步；解决了上述两个问题，并在过程中保证安全性。就认为是一个可“落地”的共识系统。
 
-Lamport 的第一个想法是**选择一个 Leader，任意时刻只有一个 Proposer，这样就可以避免冲突**。关于 Leader 的选举，Lamport 提出了一种简单的方式：让 server_id 最大的节点成为 Leader（在上篇说到提案编号由自增 id 和 server_id 组成，就是这个 server_id）。如此，节点之间就要维持 T 间隔的心跳，如果一个节点在 2T 时间内没有收到比自己 server_id 更大的心跳，那它自己就转为 Leader，担任 Proposer 和 Acceptor 的职责，并开始处理客户端请求。那些非 Leader 的节点如果收到客户端的请求，要么丢弃要么将请求重定向到 Leader 节点。
+Multi Paxos 算法对此的改进是增加“选主”机制。节点之间就要维持 T 间隔的心跳，如果一个节点在 2T 时间内没收到“提案节点”的心跳，那该节点通过 Basic Paxos 中的准备阶段、批准阶段，向其他节点广播“我希望成为提案节点”，如果得到决策节点的多数派批准，则宣告竞选成功。选主成功后，“提案节点”处理所有的客户端请求，其他节点如果收到客户端的请求，要么丢弃要么将请求重定向到 Leader 节点。
 
-Lamport 提出的选举方案是一种很简单的策略，有同时出现 2 个 Leader 的概率，不过即使是系统中有 2 个 Leader，Paxos 也是能正常工作的，只是冲突的概率就大了很多。
+一旦选举出多数节点接受的领导者。那领导者就可以跳过 Basix Paxos 中 Prepare 多数派承诺阶段，直接向其他节点广播 Accept 消息即可。这样一个提案达成共识，只需要一轮 RPC。
 
-除了选主的优化方式，另外一个思路就是**优化二阶段提交的次数**，具体的方式是减小 Prepare 请求之前，在此之前，我们再来回顾 Prepare 阶段的作用：
 
-1. 阻止那些更老的还未完成的提案被选中
-2. 看看有没有已经被选中的值，如果有，提议者的提议就应该使用这个值
+把上述问题总结为“选主”、“日志复制”
+、“安全”三个子问题来思考，就是下一节我们要讨论的 Raft 算法。2014 年，斯坦福的学者 Diego Ongaro 和 John Ousterhout 发表了论文《In Search of an Understandable Consensus Algorithm》，提出了 Multi-Paxos 思想上简化和改进的 Raft 算法，该论文斩获 USENIX ATC 2014 大会 Best Paper 荣誉，Raft 算法更是成为 etcd、Consul 等分布式系统的实现基础。
 
-优化 Prepare 阶段的前提要保证上述功能的完整性。第一点，我们可以通过改变提议序号的含义来解决这个问题，**将提议序号全局化，代表完整的日志 ，而不是为每个日志记录都保留独立的提议序号**。这样的话就只需要一次 prepare 请求就可以 prepare 所有的日志了。
-
-关于第二点，需要拓展 Prepare 请求的返回信息，和之前一样，Prepare 还是会返回最大提案编号的 acceptedValue，除此之外，Acceptor 还会向后查看日志记录，如果要写的这个位置之后都是空的记录，没有接受过任何值，那么 Acceptor 就额外返回一个标志位 noMoreAccepted。
-
-后续，如果 Leader 接收到超过半数的 Acceptor 回复了 noMoreAccepted，那 Leader 就不需要发送 Prepare 请求了，直接发送 Accept 请求即可，这样只需要一轮 RPC。
-
-最后，把上述共识问题分解为领导者选举、日志复制和安全性三个问题来思考，就是下一节我们要讨论的 Raft 算法中的内容。2014 年，斯坦福的学者 Diego Ongaro 和 John Ousterhout 发表了论文《In Search of an Understandable Consensus Algorithm》，提出了 Raft 算法，该论文斩获 USENIX ATC 2014 大会 Best Paper 荣誉，Raft 算法更是成为 etcd、Consul 等分布式系统的实现基础。
 
