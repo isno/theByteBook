@@ -13,7 +13,7 @@
   图 6-14 当节点收到客户端的请求命令 jmp（提案）时情况
 :::
 
-决议jump 提案时经历了 3 轮 Basic Paxos，花费 6 个 RTT（日志不顺序，以及 Basic Paxos 本身就需要 2 个 RTT）。此外，当多个节点同时发起提案时，还导致频繁出现活锁。
+决议jump 提案时经历了 3 轮 Basic Paxos，花费 6 个 RTT（日志顺序不一致，以及 Basic Paxos 本身就需要 2 个 RTT）。此外，当多个节点同时发起提案时，还导致频繁出现活锁。
 
 形成活锁的原因是 Paxos 算法中“节点众生平等”，每个节点都可以并行的发起提案。如何不破坏 Paxos 的“节点众生平等”基本原则，又能在提案节点中实现主次之分，限制每个节点都有不受控的提案权利？这是共识算法从理论研究走向实际工程的第一步；
 如何就多个值形成决议，并在过程成解决网络通信效率问题?，这是共识算法走向实际工程的第二步；解决了上述两个问题，并在过程中保证安全性。就认为是一个可“落地”的共识系统。
@@ -22,6 +22,6 @@ Multi Paxos 算法对此的改进是增加“选主”机制。节点之间就�
 
 一旦选举出多数节点接受的领导者。那领导者就可以跳过 Basix Paxos 中 Prepare 多数派承诺阶段，直接向其他节点广播 Accept 消息即可。这样一个提案达成共识，只需要一轮 RPC。
 
-不过呢，Lamport 的论文主要关注的是 Basic Paxos 的算法基础和正确性证明，虽然在理论上做了 Multi Paxos 扩展，但没有深入描述如何通过领导者角色解决多轮提案的效率问题，且没有给出充分的优化细节。2014 年，斯坦福的学者 Diego Ongaro 和 John Ousterhout 发表了论文《In Search of an Understandable Consensus Algorithm》，提出了 Multi-Paxos 思想上简化和改进的 Raft 算法，明确提出了“选主”、“日志复制”等概念以及实现细节的描述。该论文斩获 USENIX ATC 2014 大会 Best Paper 荣誉，Raft 算法更是成为 etcd、Consul 等分布式系统的实现基础。
+不过呢，Lamport 的论文主要关注的是 Basic Paxos 的算法基础和正确性证明，虽然在 Basic Paxos 之上做了 Multi Paxos 扩展，但没有深入描述如何通过领导者角色解决多轮提案的效率问题，且没有给出充分的优化细节。2014 年，斯坦福的学者 Diego Ongaro 和 John Ousterhout 发表了论文《In Search of an Understandable Consensus Algorithm》，提出了 Multi-Paxos 思想上简化和改进的 Raft 算法，明确提出了“选主”、“日志复制”等概念以及实现细节的描述。该论文斩获 USENIX ATC 2014 大会 Best Paper 荣誉，Raft 算法更是成为 etcd、Consul 等分布式系统的实现基础。
 
 

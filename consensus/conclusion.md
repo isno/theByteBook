@@ -1,10 +1,9 @@
 # 6.5 小结
 
-Paxos 以及 Raft 算法属于故障容错（Crash Fault Tolerance，CFT）算法的范畴，解决的是分布式系统中存在故障，但不存在恶意节点下的分布式共识问题。
+Paxos 论文的意义在于它首次定义了分布式系统中的一致性问题，并提供了一种可验证的数学模型。
 
-如果把共识问题扩展到包含恶意节点的情况时，那便进入了最困难、最复杂的分布式故障场景 —— 拜占庭容错（Byzantine Fault Tolerance）领域。谈及此处，你大概率会联想到数字货币和 Web3 等区块链技术。没错，这些技术正是基于拜占庭容错算法（譬如 PBFT、PoW）达成共识，从而实现了去中心化网络中的安全性和一致性。
+Paxos 开创了分布式共识研究的先河，不仅成为许多分布式系统课程和教材中的经典内容，而且它的思想和技术也广泛应用于许多工业系统中。例如，Google 的 Chubby 锁服务、Amazon 的 Dynamo 系统、Apache Kafka 和 Zookeeper 等，都采纳了 Paxos 或其衍生算法来实现分布式一致性和容错机制。毫无疑问，Paxos 算法是分布式系统领域最具影响力的算法之一。不夸张地说，如果没有 Paxos 算法的先驱性工作，区块链、分布式系统、云计算等领域的发展可能会推迟数年甚至十几年。
 
-限于篇幅以及笔者的精力，这部分内容就不再展开讨论，有兴趣的读者就自行探索吧。
 
 参考文档：
 - https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying
