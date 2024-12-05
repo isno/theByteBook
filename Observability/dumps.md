@@ -22,4 +22,4 @@ A small number of signals which cause abnormal termination of a process
 
 此外，CNCF 发布的可观测性白皮书中仅提及了 core dump。实际上，dumps 范围应该扩展到 Heap dump（Java 堆栈在特定时刻的快照）、Thread dump（特定时刻的 Java 线程快照）和 Memory dump（内存快照）等等。
 
-虽然 CNCF 将 dumps 纳入可观测性体系，但面临业务容器与操作系统全局配置的冲突、数据持久化的挑战（在 Pod 重启前需要将数 Gb 的 core dump 文件写入持久卷）等众多技术难题，导致处理和分析 dumps 数据仍然得用传统的手段。
+虽然 CNCF 将 dumps 纳入可观测性体系，但仍有许多技术难题，如业务容器与操作系统全局配置的冲突、数据持久化的挑战（在 Pod 重启前需要将数 Gb 的 core dump 文件写入持久卷）等，导致处理 dumps 数据还得依靠传统手段。

@@ -25,6 +25,6 @@ Raft is a consensus algorithm for managing a replicated log. It produces a resul
 
 此后，Raft 算法成为分布式系统领域的首选共识算法。
 
-接下来，笔者将以领导者角色、选举、日志提交等设计机制，讲解 Raft 算法是如何妥善解决分布式系统一致性需求的。
+接下来，笔者将以领导选举、日志复制为主题，讲解 Raft 算法是如何妥善解决分布式系统一致性需求的。
 
 [^1]: 论文参见 https://raft.github.io/raft.pdf

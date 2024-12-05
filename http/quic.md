@@ -4,7 +4,7 @@ QUIC（Quick UDP Internet Connection，快速 UDP 网络连接）是一种基于
 
 许多人可能认为是 IETF 在推动 QUIC 替代 TCP。实际上，QUIC 的开发始于 Google。
 
-早在 2013 年，Google 就在其后端服务（如 Google.com 和 YouTube.com）及 Chrome 浏览器中启用了名为“QUIC”（业内称为 gQUIC）的全新传输协议。2015 年，Google 将 gQUIC 提交给 IETF，经 IETF 规范化后的 QUIC 被称为“iQUIC”。早期的 iQUIC 有多个“草稿”版本，如 h3-27、h3-29 和 h3 v1 等。2018 年末，IETF 发布了基于 QUIC 协议的新一代互联网标准 HTTP/3。
+早在 2013 年，Google 就在自家服务（如 google.com、youtube.com）及 Chrome 浏览器中启用了名为“QUIC”（业内称为 gQUIC）的全新传输协议。2015 年，Google 将 gQUIC 提交给 IETF，经 IETF 规范化后的 QUIC 被称为“iQUIC”。早期的 iQUIC 有多个“草稿”版本，如 h3-27、h3-29 和 h3 v1 等。2018 年末，IETF 发布了基于 QUIC 协议的新一代互联网标准 HTTP/3。
 
 图 2-26 展示了各个 HTTP 协议的区别。可以看出，HTTP/3 最大的特点是：底层基于 QUIC 协议，默认集成了 TLS 安全协议。
 
@@ -62,7 +62,7 @@ QUIC 内部集成了 TLS 安全协议，无需像 TCP 先经过三次握手，�
 
 如图 2-29 所示，若一个属于 Stream2 的 TCP 数据包丢失（如图中标记为 5 的圆圈），将导致后续数据包的传输阻塞。该问题就是业界常常提到的“队头阻塞”（head-of-line blocking）。
 
-相比之下，**QUIC 为每个 Stream 设计了独立的控制机制，Stream 之间没有顺序依赖**。这意味着，如果一个属于 Stream2 的 UDP 数据包丢失，它只会影响 Stream2 的处理，不会阻塞 Stream1 和 Stream3 的传输。
+相比之下，**QUIC 为每个 Stream 设计了独立的控制机制，Stream 之间没有先后依赖**。这意味着，如果一个属于 Stream2 的 UDP 数据包丢失，它只会影响 Stream2 的处理，不会阻塞 Stream1 和 Stream3 的传输。
 
 这样的设计有效避免了 TCP 协议中的队头阻塞问题。
 

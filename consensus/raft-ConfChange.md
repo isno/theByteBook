@@ -26,8 +26,7 @@
 
 最初，Diego Ongaro 在论文中提出了一种基于两阶段的“联合共识”（Joint Consensus）成员变更方案，但这种方案实现起来很复杂。后来，Diego Ongaro 又提出的一种更简单的方案 —— “单成员变更”（Single Server Changes）。单成员变更的思路是，既然同时提交多个成员变更会存在问题，那每次就提交一个成员变更，如果要添加多个成员，那就执行多次单成员变更方案。
 
-单成员变更方案很容易穷举出所有情况，如图 6-22 所示，穷举集群奇/偶数节点下添加/删除情况。如果每次只操作一个节点，那么 **C~old~ 的 Quorum 和 C~new~ 的 Quorum 之间一定存在交集**。同一个 term 中，C~old~ 和 C~new~ 中交集的那个节点只会进行一次投票，要么投票给 C~old~，要么投票给 C~new~，不可能出现两个符合条件的 Quorum，也就不会出现两个 Leader。
-
+单成员变更方案很容易穷举出所有情况，如图 6-22 所示，穷举集群奇/偶数节点下添加/删除情况：如果每次只操作一个节点，那么 **C~old~ 的 Quorum 和 C~new~ 的 Quorum 之间一定存在交集**，交集的那个节点只会进行一次投票，要么投票给 C~old~，要么投票给 C~new~。因此，不可能出现两个符合条件的 Quorum，也就不会出现两个 Leader。
 
 以图 6-16 第二种情况为例，C~old~ 为 [Server1、Server2、Server3]，该集群的 Quorum 为（N/2）+1 = 2，C~new~ 为 [Server1、Server2、Server3、Server4]，该集群的 Quorum 为（N/2）+1 = 3。假设 Server1、Server2 比较迟钝，还在用 C~old~ ，其他节点的状态机已经“apply” C~new~：
 - 假设 Server1 触发选举，赢得 Server1，Server2 的投票，满足  C~old~ Quorum 要求，当选 Leader；
