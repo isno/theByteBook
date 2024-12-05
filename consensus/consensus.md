@@ -1,6 +1,6 @@
 # 6.1 什么是共识
 
-在讨论 Paxos 或 Raft 时，很多文献使用“分布式一致性协议”或“分布式一致性算法”来描述这些技术。例如，Google Chubby 系统的作者 Mike Burrows 曾评价 Paxos：“There is only one consensus protocol...”，这一句话常被翻译为“世界上只有一种一致性算法”。
+讨论 Paxos 或 Raft 时，很多文献使用“分布式一致性协议”或“分布式一致性算法”来描述这些技术。例如，Google Chubby 系统的作者 Mike Burrows 曾评价 Paxos：“There is only one consensus protocol...”，这一句话常被翻译为“世界上只有一种一致性算法”。
 
 尽管“共识”和“一致”在汉语中含义相近，但在计算机领域，这两个术语具有截然不同的含义：
 
