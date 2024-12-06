@@ -91,9 +91,9 @@ TCP/IP 协议出现之后，机器之间的网络通信不再是一个难题，�
   图 8-7 初代 Sidecar 模式的探索
 :::
 
-但是此类 Sidecar 模式存在局限性：它们往往被设计成与特定的基础设施组件配合使用。如 Airbnb 的 Nerve & Synapse 假设服务注册必须使用 Zookeeper，而对于 Prana，则限定使用 Netflix 自己的服务注册 Eureka。
+但是此类 Sidecar 模式存在局限性：它们往往被设计成与特定的基础设施组件配合使用。如 Airbnb 的 Nerve & Synapse，要求服务发现必须使用 Zookeeper，Prana 则限定使用 Netflix 自家的服务发现框架 Eureka。
 
-因此，该阶段的 Sidecar 模式只能局限在某些特定架构体系中，不具备通用性。
+因此，该阶段的 Sidecar 模式局限在某些特定架构体系中，谈不上通用性。
 
 ## 8.2.7 第一代服务网格
 

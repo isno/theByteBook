@@ -2,7 +2,7 @@
 
 实施 GitOps 由以下三个要素：
 
-- **一切皆代码**：因为 GitOps 要将一切（不仅包含 IaC，也涵盖应用组织、状态描述等）代码化，然后用 Git 进行版本控制，应用程序或者基础设施的变更也都是通过 Git 进行。所以，GitOps 也被称为 IaC（Infrastructure as Code，基础设施即代码） + Git + CI/CD。
+- **一切皆代码**：GitOps 的设计理念是将一切（基础设施、应用程序、服务状态等）代码化，然后使用 Git 对代码版本控制，有任何变更则通过 Git Push/Pull 处理。所以，GitOps 也被称为 IaC（Infrastructure as Code，基础设施即代码）+ Git + CI/CD。
 - **Git 为单一可信源**：所有的变更都要从 Git 仓库侧发起，这样方便代码的安全和审计。 
 - **声明式系统为基座**：以声明式系统（包括基础设施和应用程序）为基座（典型如 Kubernetes）。
 
