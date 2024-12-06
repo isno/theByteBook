@@ -2,7 +2,6 @@
 
 希望你没有对前篇 Paxos 的“复杂”做的铺垫所吓倒，共识问题已经算是一个古老的领域，30 余年间已经有无数简洁直白的视频、论文等资料进行过解读。网络中流传甚广的 Raft 和 Paxos 视频讲解[^1]，即使没有多少技术背景，也能通俗地理解 Paxos。
 
-
 ## 1. Paxos 算法背景
 
 在 Paxos 算法中，节点分为三种角色：
@@ -106,7 +105,7 @@ Paxos 算法的第二个阶段称“批准阶段”（Accept）。提议者向�
 
 Paxos 的价值在于推动了分布式共识算法的发展，但它有以下缺陷：只能处理单一提案，且达成共识至少需要两次网络往返，高并发情况下可能导致活锁。因此，Paxos 算法主要用于理论研究，较少直接应用于工程实践。为了应对多次提案和大规模分布式系统的需求，Lamport 在论文《Paxos Made Simple》中提出了 Paxos 的优化变体 —— Multi Paxos。Multi Paxos 引入了“选主”机制，通过多次运行 Paxos 算法来处理多个提案。
 
-不过，Lamport 的论文主要关注的是 Paxos 的算法基础和正确性证明，对于领导者选举以及解决多轮提案的效率问题，并没有给出充分的实现细节。2014 年，斯坦福的学者 Diego Ongaro 和 John Ousterhout 发表了论文《In Search of an Understandable Consensus Algorithm》，该论文基于 Multi Paxos 思想，提出了简化和改进版的 Raft 算法。Raft 算法明确提出了“选主”、“日志复制”等概念及其实现细节。该论文斩获 USENIX ATC 2014 大会 Best Paper 荣誉，Raft 算法更是成为后来 etcd、Consul 等分布式系统的实现基础。
+不过，Lamport 的论文主要关注的是 Paxos 的算法基础和正确性证明，对于领导者选举以及解决多轮提案的效率问题，并没有给出充分的实现细节。2014 年，斯坦福的学者 Diego Ongaro 和 John Ousterhout 发表了论文《In Search of an Understandable Consensus Algorithm》，该论文基于 Multi Paxos 思想，提出了“选主”、“日志复制”等概念及其实现细节，提出了简化和改进版的 Raft 算法。该论文斩获 USENIX ATC 2014 大会 Best Paper 荣誉，Raft 算法更是成为后来 etcd、Consul 等分布式系统的实现基础。
 
 
 [^1]: 讲解作者是斯坦福教授 John Ousterhunt，他还指导了 Diego Ongaro 写出了 Raft 的论文。本章配图也多来源于 John Ousterhunt 所发表的内容。
