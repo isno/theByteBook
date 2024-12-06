@@ -4,7 +4,7 @@
 
 这里的“日志“，并不是工程师熟悉的，通过 log4j 或者 syslog 输出的描述发生事情的文本。而是 MySQL 中的 binlog（Binary Log）、MongoDB 中的 Oplog（Operations Log）、Redis 中的 AOF（Append Only File）、PostgreSQL 中的 WAL（Write-Ahead Log）...。这些日志名字不同，但它们的全都是**只能追加、完全有序的记录序列**。
 
-图 6-1 展示了日志结构，日志是有序的、持久化的记录序列，日志以追加的方式在末尾添加记录，读取时则从左到右顺序扫描。
+图 6-1 展示了日志结构，日志是有序的、持久化的记录序列，日志在末尾追加记录，读取时则从左到右顺序扫描。
 :::center
   ![](../assets/log.png) <br/>
   图 6-1 日志是有序的、持久化的记录序列 [图片来源](https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying)

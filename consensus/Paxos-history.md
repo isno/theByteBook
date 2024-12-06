@@ -10,13 +10,13 @@ Paxos 算法最初的论文名称为《The Part-Time Parliament》，翻译成�
 
 为了说明 Paxos 算法并增强演讲效果，Lamport 演讲中多次扮演《夺宝奇兵》中的主角印第安纳·琼斯。遗憾的是，Paxos 论文中采用的希腊民主议会的比喻显然不太成功。Lamport 像写小说一样，把一个复杂的数学问题写成了一篇带有考古色彩的历史小说，听众没有记住 Paxos 算法，仅仅记住了印第安纳·琼斯。
 
-1990 年，Lamport 将《The Part-Time Parliament》论文提交给学术期刊 TOCS。根据 Lamport 的本人的回忆[^1]，TOCS 审稿人阅读后认为“这篇论文不怎么重要，但还有些意思”，并建议删掉与 Paxos 相关的故事背景。Lamport 对这些缺乏幽默感的审稿人颇为不爽，拒绝对论文进行修改。于是，论文的发表被搁置。
+1990 年，Lamport 将《The Part-Time Parliament》论文提交给 TOCS 期刊。根据 Lamport 的本人的回忆[^1]，TOCS 审稿人阅读后认为“这篇论文不怎么重要，但还有些意思”，并建议删掉与 Paxos 相关的故事背景。Lamport 对这些缺乏幽默感的审稿人颇为不爽，拒绝对论文进行修改。于是，论文的发表被搁置。
 
-虽然论文没有发表，但不代表没有人关注这个算法，Bulter W.Lampson（1991 年图灵奖获得者）认识到这个算法的重要性，在他的论文《How to Build a Highly Availability System using Consensus》对 Paxos 进行了讲述。后来，De Prisco、Lynch 和 Lampson 几人又联合在《理论计算机科学》期刊发表了论文《Revisiting the PAXOS algorithm》对 Paxos 算法进行了详细地描述和证明。经过 Lampson 等人的大力宣传，Paxos 算法逐渐被学术界重视。
+虽然论文没有发表，但不代表没有人关注这个算法，Bulter W.Lampson（1991 年图灵奖获得者）认识到 Paxos 算法的重要性，在他的论文《How to Build a Highly Availability System using Consensus》对 Paxos 算法进行了讲述。后来，De Prisco、Lynch 和 Lampson 几人联合在《理论计算机科学》期刊发表了论文《Revisiting the PAXOS algorithm》对 Paxos 算法进行了详细地描述和证明。经过 Lampson 等人的大力宣传，Paxos 算法逐渐被学术界重视。
 
-另一方面，这些介绍 Paxos 论文的发表使 Lamport 觉得《The Part-Time Parliament》重新发表的时间到了。
+另一方面，这些介绍 Paxos 算法的论文使 Lamport 觉得《The Part-Time Parliament》重新发表的时间到了。
 
-或许作为玩笑的延续，或许为保留原有的工作，更直白的说法是 Lamport 认为论文内容的描述和证明足够清晰，根本不需要任何修改，这次论文的发布仅增加了一段编辑注解。有意思的是，编辑也在注解上也风趣了一把。
+或许作为玩笑的延续，或许为保留原有的工作，更直白的说法是 Lamport 认为论文描述和证明足够清晰，根本不需要任何修改，这次论文的发布仅增加了一段编辑的注解。有意思的是，编辑也风趣了一把。
 
 :::tip <span></span>
 
@@ -37,7 +37,7 @@ Paxos 算法最初的论文名称为《The Part-Time Parliament》，翻译成�
   图 6-4 《Paxos Made Simple》论文摘要
 :::
 
-然而，这篇论文还是非常难以理解，引用斯坦福大学的学者 Diego Ongaro 和 John Ousterhout 设计 Raft 时发表的论文[^4]中对 Paxos 的描述：
+然而，这篇论文还是非常难以理解，引用斯坦福大学学者 Diego Ongaro 和 John Ousterhout 在设计 Raft 时的论文[^4]中对 Paxos 的描述：
 
 :::tip 《In Search of an Understandable Consensus Algorithm》节选
 
@@ -57,4 +57,4 @@ we were not able to understand the complete protocol until after reading several
 [^1]: 参见 https://lamport.azurewebsites.net/pubs/pubs.html#lamport-paxos
 [^2]: 参见 https://lamport.azurewebsites.net/pubs/lamport-paxos.pdf
 [^3]: 参见 https://lamport.azurewebsites.net/pubs/paxos-simple.pdf
-[^4]: 参见 https://raft.github.io/raft.pdf USENIX ATC 2013 年 best paper
+[^4]: 参见 https://raft.github.io/raft.pdf
