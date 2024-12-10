@@ -4,7 +4,7 @@
 
 这里提到的“日志”，并不是常见的通过 log4j 或 syslog 输出的文本。而是 MySQL 中的 binlog（Binary Log）、MongoDB 中的 Oplog（Operations Log）、Redis 中的 AOF（Append Only File）、PostgreSQL 中的 WAL（Write-Ahead Log）...。这些日志名称不同，但它们的共同特点是**只能追加、完全有序的记录序列**。
 
-图 6-1 展示了日志结构，日志是有序的、持久化的记录序列，日志在末尾追加记录，读取时则从左到右顺序扫描。
+图 6-1 展示了日志结构，日志是有序的、持久化的记录序列，在末尾追加记录，读取时则从左到右顺序扫描。
 
 :::center
   ![](../assets/log.png) <br/>
@@ -35,13 +35,13 @@
 
 :::
 
-共识算法（图中的 Consensus Module，是 Paxos 或者 Raft 算法）将一条条日志消息发广播至所有节点，它们就日志什么位置，记录什么（序号为 9，执行 set x=3）达成一致。也就说，每一台节点都有着相同顺序的日志序列。
+共识算法（图中的 Consensus Module，是 Paxos 或者 Raft 算法）以消息的形式将日志广播至所有节点，它们就日志什么位置，记录什么（序号为 9，执行 set x=3）达成共识。也就说，每一台节点都有着相同顺序的日志序列，日志按一个全局的时序顺序执行，并且每个操作看起来是原子发生的。
 
 ```json
 { "index": 9, "command": "set x=3" },
 ```
 
-节点内的进程(图中的 State Machine）依次执行日志序列。那么，所有节点最终成一致的状态。多个这样的进程加上有序的日志，就组成了我们所熟知的分布式存储、分布式消息队列、分布式锁等等各类分布式系统。
+节点内的进程(图中的 State Machine）依次执行日志序列。那么，所有节点最终成一致的状态。多个这样的进程加上有序的日志，就组成了广泛应用的分布式线性一致性模型系统，例如，Apache Kafka、Zookeeper、etcd、CockroachDB 等等。
 
 :::center
   ![](../assets/Replicated-state-machine.webp) <br/>
