@@ -41,7 +41,7 @@
 { "index": 9, "command": "set x=3" },
 ```
 
-节点内的进程(图中的 State Machine）依次执行日志序列。那么，所有节点最终成一致的状态。多个这样的进程加上有序的日志，就组成了广泛应用的分布式线性一致性模型系统，例如，Apache Kafka、Zookeeper、etcd、CockroachDB 等等。
+节点内的进程(图中的 State Machine）依次执行日志序列。那么，所有节点最终成一致的状态。多个这样的进程加上有序的日志，就组成了如 Apache Kafka、Zookeeper、etcd、CockroachDB 等分布式系统中的关键组件。
 
 :::center
   ![](../assets/Replicated-state-machine.webp) <br/>

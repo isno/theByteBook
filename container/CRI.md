@@ -4,22 +4,22 @@ Docker 完全没有预料到，在它诞生的十多年后，仍然能够再次�
 
 事件的起因是 Kubernetes 宣布进入废弃 dockershim 支持的倒计时，随后讹传讹被人误以为 Docker 不能再用了。虽说此次事件有众多标题党的推波助澜，但也侧面说明了 Kubernetes 与 Docker 的关系十分微妙。
 
-本节，我们把握这两者关系的变化，从中理解各类容器运行时和 Kubernetes 关系的演变。
+本节，我们把握这两者关系的变化，从中理解 Kubernetes 容器运行时接口的演变。
 
 ## 7.4.1 Docker 与 Kubernetes 
 
 早期，Kubernetes 完全依赖并绑定于 Docker。
 
-由于当时 Docker 太流行了，所以 Kubernetes 没有过多考虑够日后使用其他容器引擎的可能性。当时 kubernetes 通过内部的 DockerManager 组件直接调用 Docker API 来创建和管理容器。
+当时 Docker 太流行了，所以 Kubernetes 没有过多考虑够日后使用其他容器引擎的可能性。当时 kubernetes 通过内部的 DockerManager 组件直接调用 Docker API 来创建和管理容器。
 
 :::center
   ![](../assets/k8s-runtime-v1.svg)<br/>
   图 7-12 Kubernetes 早期调用 Docker 的链路
 :::
 
-后来，市场上出现了越来越多的容器运行时，比如 CoreOS[^1] 推出的开源容器引擎 Rocket（简称 rkt）。rkt 出现之后，Kubernetes 用类似强绑定 Docker 的方式又实现了对 rkt 容器引擎的支持。随着容器技术的蓬勃发展，越来越多容器运行时出现。如果继续使用与 Docker 类似强绑定的方式，Kubernetes 的工作量将无比庞大。
+后来，市场上出现了越来越多的容器运行时，比如 CoreOS[^1] 推出的开源容器引擎 Rocket（简称 rkt）。rkt 出现之后，Kubernetes 用类似强绑定 Docker 的方式又实现了对 rkt 容器引擎的支持。随着容器技术的蓬勃发展，如果继续使用与 Docker 类似强绑定的方式，Kubernetes 的工作量将无比庞大。
 
-Kubernetes 需要重新考虑对所有容器运行时的兼容适配问题了。
+Kubernetes 需要重新审视与市面上各类容器运行时的适配问题了。
 
 ## 7.4.2 容器运行时接口 CRI
 
