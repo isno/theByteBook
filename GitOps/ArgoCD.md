@@ -1,8 +1,8 @@
 # 10.5 使用 Argo CD 进行持续交付
 
-Argo CD 是以 Kubernetes 作为基础设施，并遵循声明式 GitOps 设计理念的 CD（continuous delivery，持续交付）工具。Argo CD 支持多种配置管理，包括 ksonnet/jsonnet、kustomize 和 Helm 等。它的配置和使用非常简单，并自带一个简单易用的可视化界面。
+Argo CD 是一个基于 Kubernetes 的声明式 GitOps 持续交付工具，主要用于 Kubernetes 集群中的应用管理和部署。它能够从 Git 仓库中获取应用的定义，并自动同步到集群中。
 
-如图 10-10 所示，Argo CD 部署在集群之后，它将持续监控应用当前的实际状态是否与 Git 仓库中声明的期望状态相匹配，如不匹配则自动同步修正。
+如图 10-10 所示，Argo CD 是通过 Kubernetes 控制器来实现的，它持续 watch 正在运行的应用程序，并将应用程序的实际状态与所需的目标状态（ Git 存储库中指定的）进行比较。如果应用程序的实际状态与目标状态有差异，则被认为是 OutOfSync 状态，Argo CD 会报告这些差异，同时提供工具来自动或手动将状态同步到期望的目标状态。
 
 :::center
   ![](../assets/argocd_architecture.png)<br/>
