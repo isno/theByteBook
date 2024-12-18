@@ -1,7 +1,6 @@
 # 10.4 使用 Tekton 进行持续集成
 
-Tekton 起源于 Google 主导的 Knative 项目，最初作为 Knative 的一个组件存在，名为 build-pipeline，用于在 Kubernetes 环境中构建容器化 CI/CD 流水线。随着功能的逐步扩展，build-pipeline 从 Knative 中独立出来，并更名为 Tekton，成为一个通用的、Kubernetes 原生的 CI/CD 框架。
+Tekton 是一个开源的 Kubernetes 原生持续集成/持续交付（CI/CD）工具，由 Google 发起。它的核心是通过自定义资源定义（CRD）在 Kubernetes 集群中实现流水线即代码（Pipeline as Code）。这意味着开发人员可以使用代码的方式来定义复杂的构建、测试和部署流水线。例如，一个软件开发团队可以利用 Tekton 来构建从代码拉取、单元测试、构建容器镜像，一直到将镜像部署到 Kubernetes 集群的完整流程。
 
-Tekton 充分利用了 Kubernetes 的容器调度和管理能力，所有任务均在容器中（也就是 Pod）运行，并通过 YAML 文件定义流水线和任务。相比传统的 CI/CD 系统（如 GitLab CI 和 Jenkins），Tekton 更适合构建基于 Kubernetes 的 CI/CD 系统。
 
 接下来，我们先了解 Tekton 中与构建流水线相关的概念以及流水线执行的原理。之后，再基于 Tekton 构建一个完整的持续集成系统，该系统包括程序测试、镜像构建和镜像推送。 
