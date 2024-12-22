@@ -59,7 +59,7 @@ spec:
 
 在 Kubernetes 中，管理各类异构资源的操作由一种称为“Device Plugin”（设备插件）的机制负责。
 
-Device Plugin 核心思想是提供了多个 gRPC 接口，硬件供应商根据接口规范为特定硬件编写插件。kubelet 通过 gRPC 接口与设备插件交互，实现设备发现、状态更新、资源上报等。最后，Pod 通过 request、limit 显示声明，即可使用各类异构资源，如同 CPU、内存一样。
+Device Plugin 核心思想是提供了多个 gRPC 接口，硬件供应商根据接口规范为特定硬件编写插件。kubelet 通过 gRPC 接口与设备插件交互，实现设备发现、状态更新、资源上报等。最后，Pod 通过 request、limit 显式声明，即可使用各类异构资源，如同 CPU、内存一样。
 
 Device Plugin 定义的 gRPC 接口如下所示，硬件设备插件按照规范实现接口，与 kubelet 进行交互，Kubernetes 便可感知和使用这些硬件资源。
 

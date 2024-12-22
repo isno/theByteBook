@@ -1,4 +1,7 @@
-# 10.4.1 Tekton 中的资源对象
+# 10.4 使用 Tekton 进行持续集成
+
+Tekton 是一个开源的 Kubernetes 原生持续集成/持续交付（CI/CD）工具，由 Google 发起。它的核心是通过自定义资源定义（CRD）在 Kubernetes 集群中实现流水线即代码（Pipeline as Code）。这意味着开发人员可以使用代码的方式来定义复杂的构建、测试和部署流水线。例如，一个软件开发团队可以利用 Tekton 来构建从代码拉取、单元测试、构建容器镜像，一直到将镜像部署到 Kubernetes 集群的“一条龙”流程。
+
 
 Tekton 主要有以下几种关键的自定义资源定义（CRD）：
 
@@ -15,6 +18,3 @@ Tekton 事件触发器（Trigger）监听外部事件（如 Webhook），会使�
   ![](../assets/tekton-pipeline.png)<br/>
   图 10-6 使用 Tekton 进行持续集成的流程
 :::
-
-
-

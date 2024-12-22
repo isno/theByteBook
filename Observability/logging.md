@@ -149,23 +149,16 @@ CREATE TABLE example (
 ORDER BY id;
 ```
 
-近几年来，经常在国内各个技术公众号看到 ClickHouse 降低存储成本的实践分享。在 B 站的技术文章《B 站基于 Clickhouse 的下一代日志体系建设实践》中，我们看到相较于 Elasticsearch ，B 站使用 ClickHouse 后降低了 60%+ 的存储成本[^2]。
-
-:::center
-  ![](../assets/es-vs-clickhouse.png)<br/>
-  图 9-8 同一份日志在 Elasticsearch、ClickHouse 和 ClickHouse(zstd) 中的容量对比（结果越低越好）
-:::
-
 ClickHouse 支持“分片”（Sharding）技术，也就是支持分布式并行计算。节点规模的上限即是 Clickhouse 处理能力的上限，只要有足够多的硬件资源，Clickhouse 能实现处理数百亿到数万亿条记录、数 PB 级别的数据。
 
-根据 Yandex 的内部跑分结果来看（图 9-9），一亿条记录的规模上，ClickHouse 比 Vertia（一款商业的 OLAP 分析软件）快约 5 倍、比 Hive 快 279 倍、比 InifniDB 快 31 倍。ClickHouse 表现的惊人的查询性能，当之无愧阐述 ClickHouse 介绍中“实时”（real-time）二字含义。
+根据 Yandex 的内部跑分结果来看（图 9-9），一亿条记录的规模上，ClickHouse 比 Vertia（一款商业的 OLAP 分析软件）快约 5 倍、比 Hive 快 279 倍、比 InifniDB 快 31 倍。正如 ClickHouse 的宣传所言，其他的开源系统太慢，商用的又太贵。只有 ClickHouse 在存储成本与查询性能之间做到了良好平衡，不仅快且还开源。
 
 :::center
   ![](../assets/ClickHouse-benchmark.jpeg)<br/>
   图 9-9 ClickHouse 性能测试 [图片来源](http://clickhouse.yandex/benchmark.html)
 :::
 
-正如 ClickHouse 的宣传所言，其他的开源系统太慢，商用的又太贵。只有 ClickHouse 在存储成本与查询性能之间做到了良好平衡，不仅快且还开源。
+
 
 [^1]: 以运营俄罗斯最受欢迎的搜索引擎闻名，被称为俄罗斯的 Google
 [^2]: 参见 https://mp.weixin.qq.com/s/dUs7WUKUDOf9lLG6tzdk0g
