@@ -18,7 +18,93 @@ Operator 属于 Kubernetes 中的高级应用，理解 Operator 所做的工作�
 - **唯一性和顺序性**：StatefulSet 中的每个 Pod 都有一个唯一的标识（通常是 Pod 名称），并且它们会按照顺序启动和停止。这对于需要严格顺序或唯一性的场景（如分布式数据库的复制集群）非常重要。
 
 
-假设我们要部署一套 Elasticsearch 集群，通常要在 StatefulSet 中定义相当多的细节。比如服务的端口、Elasticsearch 的配置、更新策略、内存大小、虚拟机参数、环境变量、数据文件位置等等。
+假设我们要部署一套 etcd 集群，通常要在 StatefulSet 中定义相当多的细节。比如节点通信端口、环境变量配置、持久化存储、网络策略、安全证书、健康检查等等。
+
+```yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: etcd
+  namespace: default
+spec:
+  serviceName: "etcd"
+  replicas: 3  # etcd 集群的副本数
+  selector:
+    matchLabels:
+      app: etcd
+  template:
+    metadata:
+      labels:
+        app: etcd
+    spec:
+      containers:
+        - name: etcd
+          image: quay.io/coreos/etcd:v3.5.0  # 替换为适合版本的镜像
+          env:
+            - name: ETCD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name  # 使用 Pod 名作为 etcd 节点名
+            - name: ETCD_DATA_DIR
+              value: /etcd-data  # 数据存储目录
+            - name: ETCD_INITIAL_CLUSTER
+              value: "etcd-0=etcd-0.etcd.default.svc.cluster.local:2380,etcd-1=etcd-1.etcd.default.svc.cluster.local:2380,etcd-2=etcd-2.etcd.default.svc.cluster.local:2380"
+            - name: ETCD_INITIAL_CLUSTER_STATE
+              value: "new"  # 如果是新集群，设置为 'new'
+            - name: ETCD_INITIAL_CLUSTER_TOKEN
+              value: "etcd-cluster"
+            - name: ETCD_LISTEN_PEER_URLS
+              value: "http://0.0.0.0:2380"  # 节点间通信的地址
+            - name: ETCD_LISTEN_CLIENT_URLS
+              value: "http://0.0.0.0:2379"  # 客户端访问的地址
+            - name: ETCD_ADVERTISE_CLIENT_URLS
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP  # 将 Pod 的 IP 地址作为客户端访问地址
+            - name: ETCD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name  # 使用 Pod 名作为 etcd 节点名
+          volumeMounts:
+            - name: etcd-data
+              mountPath: /etcd-data
+  volumeClaimTemplates:
+    - metadata:
+        name: etcd-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 8Gi  # 每个 Pod 请求的持久化存储大小
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: etcd
+  namespace: default
+spec:
+  clusterIP: None  # 使用 None 保证 Pod 可以通过 DNS 名称直接访问
+  ports:
+    - port: 2379
+      name: client
+    - port: 2380
+      name: peer
+  selector:
+    app: etcd
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: etcd-client
+  namespace: default
+spec:
+  ports:
+    - port: 2379
+      targetPort: 2379
+  selector:
+    app: etcd
+```
+
 
 将特定应用程序的操作逻辑编码，
 
@@ -34,58 +120,33 @@ Operator 属于 Kubernetes 中的高级应用，理解 Operator 所做的工作�
 
 
 
-StatefulSet 管理的 Pod 具有以下几个重要特点：
 
-```yaml
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: mysql
-spec:
-  serviceName: "mysql"
-  replicas: 3
-  selector:
-    matchLabels:
-      app: mysql
-  template:
-    metadata:
-      labels:
-        app: mysql
-    spec:
-      containers:
-        - name: mysql
-          image: mysql:5.7
-          volumeMounts:
-            - name: mysql-data
-              mountPath: /var/lib/mysql
-  volumeClaimTemplates:
-    - metadata:
-        name: mysql-data
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:
-            storage: 1Gi
-```
+
 
 - 稳定的标识符：
 
 通过 StatefulSet，最多只能做到安装、基础的运维操作。对于其他高级运维操作，例如升级、扩容、备份、恢复、监控和故障转移，StatefulSet 并不能提供有效的帮助。
 
+Operator 本身在实现上，其实是在 Kubernetes 声明式 API 基础上的一种“微创新”。它合理的利用了 Kubernetes API 可以添加自定义 API 类型的能力，然后又巧妙的通过 Kubernetes 原生的“控制器模式”，完成了一个面向分布式应用终态的调谐过程。
+
 
 ```yaml
-apiVersion: elasticsearch.k8s.elastic.co/v1 
-kind: Elasticsearch 
-metadata: 
-	name: elasticsearch-cluster 
-spec: 
-	version: 7.9.1 
-	nodeSets:
-	name: default 
-	count: 3 
-	config: node.master: true node.data: true 
-	node.ingest: true 
-	node.store.allow_mmap: false 
+apiVersion: operator.etcd.database.coreos.com/v1beta2
+kind: EtcdCluster
+metadata:
+  name: my-etcd-cluster
+  namespace: default
+spec:
+  size: 3
+  version: "3.4.15"
+  storage:
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 8Gi
 ```
 
 有了 Elasticsearch 自定义资源，相当于 Kubernetes 已经知道了
