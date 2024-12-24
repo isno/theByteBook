@@ -25,11 +25,11 @@ export default defineUserConfig({
             })(); 
      `
  ]
-    ]/*,
-    bundler: webpackBundler({
+    ],
+    /**bundler: webpackBundler({
         postcss: {},
         vue: {},
-      })*/,
+      }),*/
     plugins: [
         mdEnhancePlugin({
           // 启用脚注
@@ -73,6 +73,7 @@ export default defineUserConfig({
             }
         ],
         sidebar: [
+        
             '/intro.md',
             '/noun.md',
             {
@@ -305,29 +306,24 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第十章：GitOps 理念与实现设计',
-                link: '/GitOps/summary.md',
+                text: '第十章：应用的封装与交付',
+                link: '/application-centric/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
-                    '/GitOps/background.md',
-                    '/GitOps/what-is-GitOps.md',
-                    '/GitOps/IaC.md',
-                    '/GitOps/secrets-management.md',
-                     {
-                        text: "10.4 使用 Tekton 进行持续集成",
-                        link: '/GitOps/Tekton.md',
+                    '/application-centric/Controller.md',
+                    '/application-centric/IaD.md',
+                    {
+                        text: "10.3 从“构建抽象”到“应用模型”",
+                        link: '/application-centric/app-model.md',
                         children: [
-                            '/GitOps/Tekton-CRD.md',
-                            '/GitOps/Tekton-install.md',
-                            '/GitOps/Tekton-test.md',
-                            '/GitOps/Tekton-build-image.md',
-                            '/GitOps/Tekton-trigger.md',
-
+                            '/application-centric/Kustomize.md',
+                            '/application-centric/Helm.md',
+                            '/application-centric/Operator.md',
                         ]
                     },
-                    '/GitOps/ArgoCD.md',
-                    '/GitOps/conclusion.md',
+                    '/application-centric/GitOps.md',
+                    '/application-centric/conclusion.md',
                 ]
             }
         ]
