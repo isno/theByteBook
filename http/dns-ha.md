@@ -57,7 +57,7 @@ Facebook 这次故障带给我们以下关于 DNS 系统设计的思考：
 - **部署形式考虑**：可选择将“权威域名服务器”全部放在 SLB（Server Load Balancer，负载均衡）后方，或采用 OSPF Anycast 架构[^2]等部署形式，从而提高 DNS 系统的可靠性。
 - **部署位置考虑**：可选择数据中心自建集群 + 公有云服务混合异构部署，利用云的分布式优势进一步增强 DNS 系统健壮性，同时提升 DNS 系统在遭受 DDoS 攻击时的抵御能力。
 
-如图 2-6 所示，amazon.com 和 facebook.com 的权威域体系对比：amazon.com 的权威解析服务器有多套不同的地址，分散于不同的 TLD 域名服务器，所以它的抗风险能力肯要强于 Facebook。
+如图 2-6 所示，amazon.com 和 facebook.com 的权威域体系对比：amazon.com 的权威解析服务器有多套不同的地址，分散于不同的 TLD 域名服务器，所以它的抗风险能力肯定强于 Facebook。
 
 <div  align="center">
 	<img src="../assets/dns-1.png" width = "220"  align=center />
