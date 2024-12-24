@@ -8,26 +8,22 @@ Dapper 发布后，市场上涌现出大量追踪系统，如 Jaeger、Pinpoint�
 
 开发者只要根据 OpenTracing 规范实现追踪逻辑接口，可以灵活地替换或组合探针、存储和界面等组件。2016 年，CNCF 正式接纳 OpenTracing 成为其第三个项目，前两个项目分别是鼎鼎大名的 Kubernetes 和 Prometheus。这标志着 OpenTracing 作为分布式系统可观测性领域的标准之一，得到了业界的广泛认可。
 
-OpenTracing 推出不久之后，Google 和微软联合推出了 OpenCensus 项目。
+OpenTracing 推出不久之后，Google 和微软联合推出了 OpenCensus 项目。OpenCensus 最初是 Google 内部监控工具，开源的目地并不是抢 OpenTracing 的饭碗，而是希望为分布式系统提供一个统一的、跨语言的、开箱即用的可观测性框架，既能够处理链路追踪（trace）、又能够处理指标（metrics）。
 
-OpenCensus 最初是 Google 内部监控工具，开源的目地并不是抢 OpenTracing 的饭碗，而是希望为分布式系统提供一个统一的、跨语言的、开箱即用的可观测性框架，既能够处理链路追踪（trace），又能够处理指标（metrics）。
+虽说 OpenTracing 和 OpenCensus 推动了可观测性系统的发展，但它们作为可观测领域下的协议标准，彼此之间的竞争和分裂不可避免地消耗了大量社区资源。对于普通开发者而言，一边是老牌 APM 厂商，另一边是拥有强大影响力的 Google 和微软。选择困难症发作时，一个新的设想不断被讨论：“能否有一个标准的方案，同时支持指标、追踪和日志等各类遥测数据？”。
 
-虽说 OpenTracing 和 OpenCensus 推动了可观测性系统的发展，但它们作为可观测领域下的协议标准，彼此之间的竞争和分裂不可避免地消耗了大量社区资源。对于普通开发者而言，一边是老牌 APM 厂商，另一边是拥有强大影响力的 Google 和微软。选择困难症发作时，一个新的设想开始被不断讨论：“能否有一个统一的标准，能够同时支持指标、追踪和日志等各类遥测数据？”。
+2019 年，OpenTracing 和 OpenCensus 的维护者决定将两个项目整合在一起，也就是现在的 OpenTelemetry 项目。OpenTelemetry 做的事情是，提供各类遥测数据统一采集解决方案。如图 9-17 所示，集成了 OpenTelemetry 的可观测系统：
 
-2019 年，OpenTracing 和 OpenCensus 的维护者决定将两个项目整合在一起，提供各类遥测数据统一采集解决方案 —— OpenTelemetry。
-
-OpenTelemetry 做的事情是，标准化遥测数据的定义、采集。至于采集后如何使用、存储、展示、告警，OpenTelemetry 本身并不涉及。这使得 OpenTelemetry 既不会因动了“数据的蛋糕”，引起生态抵制，也极大保存了精力，得以专注实现兼容“所有的语言、所有的系统”的“遥测数据采集器”（OpenTelemetry Collector）。
-
-如图 9-17 所示，集成了 OpenTelemetry 的可观测系统：
 - 应用程序只需要一种 SDK 就可以实现所有类型遥测数据的统一产生；
 - 集群只需要部署一个 OpenTelemetry Collector 便可以实现所有遥测数据的采集。
-
-指标、链路追踪、日志等遥测数据一般具有相同的 Meta 信息（描述和标识数据的附加信息，如标签、时间戳、上下文信息等），可以做无缝关联。之后，你可以使用 Prometheus + Grafana 做指标的存储和展示，使用 Jaeger 做分布式跟踪的存储和展示。
 
 :::center
   ![](../assets/otel-diagram.svg)<br/>
   图 9-17 集成 OpenTelemetry 的可观测架构 [图片来源](https://opentelemetry.io/docs/)
 :::
+
+
+至于采集后如何使用、存储、展示、告警，OpenTelemetry 本身并不涉及，你可以使用 Prometheus + Grafana 做指标的存储和展示，使用 Jaeger 做分布式跟踪的存储和展示。这使得 OpenTelemetry 既不会因动了“数据的蛋糕”，引起生态抵制，也极大保存了精力，得以专注实现兼容“所有的语言、所有的系统”的“遥测数据采集器”（OpenTelemetry Collector）。
 
 
 自 2019 年发布，OpenTelemetry 便得到了社区的广泛支持。现如今，多数的云服务提供商和容器平台，如 AWS、Google Cloud、Azure、阿里云等均已开始支持和推广 OpenTelemetry。在复杂的微服务架构和云原生环境中，OpenTelemetry 已成为可观测领域遥测数据生成和收集的事实标准。
