@@ -16,7 +16,7 @@ OpenCensus 最初是 Google 内部监控工具，开源的目地并不是抢 Ope
 
 2019 年，OpenTracing 和 OpenCensus 的维护者决定将两个项目整合在一起，提供各类遥测数据统一采集解决方案 —— OpenTelemetry。
 
-OpenTelemetry 覆盖了各类遥测数据规范定义、API 定义、规范实现以及数据的获取与传输。目标是解决的是遥测数据统一的第一步：通过 API 和 SDK 来标准化遥测数据采集和传输。之后，遥测数据如何使用、存储、展示和告警，OpenTelemetry 本身并不涉及。这使得 OpenTelemetry 既不会因动了“数据的蛋糕”，引起生态抵制，也极大保存了精力，得以专注实现兼容“所有的语言、所有的系统”的遥测数据采集器（OpenTelemetry Collector）。
+OpenTelemetry 做的事情是，标准化遥测数据的定义、采集。至于采集后如何使用、存储、展示、告警，OpenTelemetry 本身并不涉及。这使得 OpenTelemetry 既不会因动了“数据的蛋糕”，引起生态抵制，也极大保存了精力，得以专注实现兼容“所有的语言、所有的系统”的“遥测数据采集器”（OpenTelemetry Collector）。
 
 如图 9-17 所示，集成了 OpenTelemetry 的可观测系统：
 - 应用程序只需要一种 SDK 就可以实现所有类型遥测数据的统一产生；
@@ -30,4 +30,4 @@ OpenTelemetry 覆盖了各类遥测数据规范定义、API 定义、规范实�
 :::
 
 
-自 2019 年发布，OpenTelemetry 便得到了广泛的社区支持。现如今，多数的云服务提供商和容器平台，如 AWS、Google Cloud、Azure、阿里云等均已开始支持和推广 OpenTelemetry。在复杂的微服务架构和云原生环境中，OpenTelemetry 已成为可观测领域遥测数据生成和收集的事实标准。
+自 2019 年发布，OpenTelemetry 便得到了社区的广泛支持。现如今，多数的云服务提供商和容器平台，如 AWS、Google Cloud、Azure、阿里云等均已开始支持和推广 OpenTelemetry。在复杂的微服务架构和云原生环境中，OpenTelemetry 已成为可观测领域遥测数据生成和收集的事实标准。
