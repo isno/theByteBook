@@ -20,7 +20,7 @@ iptables 把常用数据包管理操作总结成具体的动作，当数据包�
 - DNAT：修改数据包的目标网络地址。
 - SNAT：修改数据包的源网络地址。
 - REDIRECT：在本机上做端口映射，比如将 80 端口映射到 8080，访问 80 端口的数据包将会重定向到 8080 端口对应的监听服务。
-- REJECT：功能与 DROP 类似，只不过它会通过 ICMP 协议给发送端返回错误信息，比如 Destination network unreachable 或者 Destination host。
+- REJECT：功能与 DROP 类似，只不过它会通过 ICMP 协议向发送端返回错误信息，比如返回 Destination network unreachable 错误。
 - MASQUERADE：地址伪装，可以理解为动态的 SNAT。通过它可以将源地址绑定到某个网卡上，因为这个网卡的 IP 可能是动态变化的，此时用 SNAT 就不好实现；
 - LOG：内核对数据包进行日志记录。
 
