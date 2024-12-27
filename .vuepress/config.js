@@ -277,7 +277,6 @@ export default defineUserConfig({
                     '/ServiceMesh/data-plane.md',
                     '/ServiceMesh/control-plane.md',
                     '/ServiceMesh/overview.md',
-                    '/ServiceMesh/ServiceMesh-and-Kubernetes.md',
                     '/ServiceMesh/The-future-of-ServiceMesh.md',
                     '/ServiceMesh/conclusion.md',
                 ]
@@ -311,8 +310,8 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
+                    '/application-centric/PaaS.md',
                     '/application-centric/Controller.md',
-                    '/application-centric/IaD.md',
                     {
                         text: "10.3 从“构建抽象”到“应用模型”",
                         link: '/application-centric/app-model.md',
@@ -320,9 +319,9 @@ export default defineUserConfig({
                             '/application-centric/Kustomize.md',
                             '/application-centric/Helm.md',
                             '/application-centric/Operator.md',
+                            '/application-centric/OAM.md',
                         ]
                     },
-                    '/application-centric/GitOps.md',
                     '/application-centric/conclusion.md',
                 ]
             }

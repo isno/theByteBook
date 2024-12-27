@@ -36,7 +36,6 @@ Operator 本身在实现上，其实是在 Kubernetes 声明式 API 基础上的
 
 就是把运维的经验沉淀为代码，实现运维的代码化、自动化、智能化。以往的高可用、扩展收缩，以及故障恢复等等运维操作，都通过 Operator 进行沉淀下来。
 
-
 Red Hat 今天与 AWS、Google Cloud 和 Microsoft 合作推出了 OperatorHub.io。
 
 :::center

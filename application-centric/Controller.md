@@ -1,4 +1,4 @@
-# 10.1 声明式应用管理
+# 10.2 声明式应用管理的本质
 
 Kubernetes 与其他技术项目最大的不同是“声明式应用管理”。
 
@@ -21,9 +21,9 @@ Kubernetes 中有多种类型的控制器，例如 Deployment Controller、Repli
 
 ## 10.1.2 基础设施即数据思想
 
-上述操作体系的理论基础，是一种叫做 IaD（Infrastructure as Data，基础设施即数据）的思想。这种思想认为，基础设施的管理不应该耦合于某种编程语言或者配置方式，而应该是纯粹的、格式化的、系统可读的数据，并且这些数据能够完整的表征使用者所期望的系统状态。
+“控制器模式”体系的理论基础，是一种叫做 IaD（Infrastructure as Data，基础设施即数据）的思想。
 
-这种思想的优势在于，对基础设施实施的任何操作，本质上都等同于对数据执行 “增、删、改、查” 操作。更为关键的是，这些数据 “增、删、改、查” 的实现方式，与基础设施本身毫无关系。这意味着，操作方式不会受限于特定的编程语言、远程调用协议或软件开发工具包（SDK）。只要能够生成符合对应格式的 “数据”，便可以 “随心所欲” 地采用任何你偏好的方式来完成对基础设施的操作 。
+IaD 思想主张，基础设施的管理应脱离特定的编程语言或配置方式，而采用纯粹、格式化、系统可读的数据形式。这些数据能够完整地描述用户期望的系统状态。这种思想的优势在于，对基础设施的所有操作本质上等同于对数据的“增、删、改、查”。更重要的是，这些操作的实现方式与基础设施本身无关，不受限于特定的编程语言、远程调用协议或 SDK。只要生成符合格式要求的“数据”，便可以“随心所欲”地采用任何你偏好的方式管理基础设施。
 
 IaD 思想在 Kubernetes 上的体现，就是执行任何操作，只需要提交一个 YAML 文件，然后对 YAML 文件增、删、查、改即可，而不是必须使用 Kubernetes SDK 或者 Restful API。这个 YAML 文件其实就对应了 IaD 中的 Data。 
 
@@ -53,16 +53,15 @@ spec:
 |COLUMN|property|表里面的列，有 string、boolean 等多种类型|
 |rows|resources|表中的一个具体记录|
 
-Kubernetes 在 v1.7 版本开始支持 CRD（Custom Resource Definitions，自定义资源定义），实质上是允许用户定义自己的资源类型，扩展 Kubernetes API，将复杂的业务需求抽象为 Kubernetes 的原生对象。
+
+所以说，Kubernetes v1.7 版本支持 CRD（Custom Resource Definitions，自定义资源定义），实质上是允许用户定义自己的资源类型，，扩展 Kubernetes API，将复杂的业务需求抽象为 Kubernetes 的原生对象。
+
+有了 CRD，用户便不再受制于 Kubernetes 内置资源的表达能力，自定义出数据库、Task Runner、消息总线、数字证书...。加上自定义的“控制器”，便可把“能力”移植到 Kubernetes 中，并以 Kubernetes 统一的方式暴漏给上层用户。
 
 :::center
   ![](../assets/CRD.webp)<br/>
   图 10-10 CRD
 :::
 
-CRD 加上自定义的“控制器”，便不在受制于 Kubernetes 内置资源的表达能力。例如、持续集成 CRD（Tekton）、持续部署 CRD（ArgoCD）、管理应用伸缩 CRD（Keda）、微服务通信治理（Istio）、监控（Prometheus）“能力”移植到 Kubernetes 中。
+至此，相信读者已经理解了：IaD 思想中的 Data 具体表现其实就是声明式的 Kubernetes API 对象，而 Kubernetes 中的控制循环确保系统状态始终跟这些 Data 所描述的状态保持一致。从这一点讲，Kubernetes 的本质是一个以“数据”（Data）表达系统的设定值，通过“控制器”（Controller）的动作来让系统维持在设定值的“调谐”系统。
 
-
-至此，相信读者已经理解了：IaD 思想中的 Data 具体表现其实就是声明式的 Kubernetes API 对象，而 Kubernetes 中的控制循环确保系统状态始终跟这些 Data 所描述的状态保持一致。从这一点讲，Kubernetes 的本质是一个以“数据”（Data）表达系统的设定值，通过“控制器”（Controller）的动作来让系统维持在设定值的调谐系统。
-
-今天我们在使用 Kubernetes 的时候之所以要写那么多 YAML 文件，其实是因为我们需要通过一种方式把 Data 提交给 Kubernetes 这个控制系统。而在这个过程中，YAML 只是一种为了让人类能够格式化的编写 Data 的一个载体。
