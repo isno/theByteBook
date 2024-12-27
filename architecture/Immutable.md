@@ -21,7 +21,7 @@
 
 2013 年 6 月，Chad Fowler 撰写了一篇名为 《Trash Your Servers and Burn Your Code: Immutable Infrastructure and Disposable Components》的文章，提出了 Immutable Infrastructure（不可变基础设施）的概念[^1]。这一前瞻性的构想，伴随着 Docker 容器技术的兴起、微服务架构的流行，得到了事实上的检验。
 
-不可变基础设施的核心思想是**任何基础设施的运行实例一旦创建之后就变成只读状态**。如需修改或升级，应该先修改基础设施的配置模版（例如 yaml、Dockerfile 配置），之后再使用新的运行实例替换。例如上面提到的 Nginx 升级案例，应该准备一个新的装有 Nginx 的 Linux 操作系统，而不是在 Linux 操作系统上原地更新。
+不可变基础设施思想的核心是，**任何基础设施的运行实例一旦创建之后就变成只读状态**。如需修改或升级，应该先修改基础设施的配置模版（例如 yaml、Dockerfile 配置），之后再使用新的运行实例替换。例如上面提到的 Nginx 升级案例，应该准备一个新的装有 Nginx 的 Linux 操作系统，而不是在 Linux 操作系统上原地更新。
 
 :::center
   ![](../assets/Immutable.png)<br/>
