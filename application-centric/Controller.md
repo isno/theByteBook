@@ -23,28 +23,9 @@ Kubernetes 中有多种类型的控制器，例如 Deployment Controller、Repli
 
 “控制器模式”体系的理论基础，是一种叫做 IaD（Infrastructure as Data，基础设施即数据）的思想。
 
-IaD 思想主张，基础设施的管理应脱离特定的编程语言或配置方式，而采用纯粹、格式化、系统可读的数据形式。这些数据能够完整地描述用户期望的系统状态。这种思想的优势在于，对基础设施的所有操作本质上等同于对数据的“增、删、改、查”。更重要的是，这些操作的实现方式与基础设施本身无关，不受限于特定的编程语言、远程调用协议或 SDK。只要生成符合格式要求的“数据”，便可以“随心所欲”地采用任何你偏好的方式管理基础设施。
+IaD 思想主张，基础设施的管理应该脱离特定的编程语言或配置方式，而采用纯粹、格式化、系统可读的数据，描述用户期望的系统状态。这种思想的优势在于，对基础设施的所有操作本质上等同于对数据的“增、删、改、查”。更重要的是，这些操作的实现方式与基础设施本身无关，不依赖于特定编程语言、协议或 SDK，只要生成符合格式要求的“数据”，便可以“随心所欲”地采用任何你偏好的方式管理基础设施。
 
-IaD 思想在 Kubernetes 上的体现，就是执行任何操作，只需要提交一个 YAML 文件，然后对 YAML 文件增、删、查、改即可，而不是必须使用 Kubernetes SDK 或者 Restful API。这个 YAML 文件其实就对应了 IaD 中的 Data。 
-
-Kubernetes 把所有的功能都定义为“API 对象”，其实就是一个 Data。既然 Kubernetes 要处理这些数据，那么 Data 本身也应该有一个固定的“格式”，这样 Kubernetes 才能解析。这里的格式在 Kubernetes 中就叫做 API 对象的 Schema。
-
-```YAML
-apiVersion: v1
-kind: Pod
-metadata:
-  name: nginx-pod
-  labels:
-    app: nginx
-spec:
-  containers:
-  - name: nginx
-    image: nginx:1.25.3
-    ports:
-    - containerPort: 80
-```
-
-从这个角度来讲，Kubernetes 暴露出来的各种 API 对象，实际上就是一张张预先定义好 Schema 的表（Table）。唯一跟传统数据库不太一样的是，Kubernetes 在拿到这些数据之后，并不以把这些数据持久化起来为目的，而是监控数据变化来驱动“控制器”执行某些操作。
+IaD 思想在 Kubernetes 上的体现，就是执行任何操作，只需要提交一个 YAML 文件，然后对 YAML 文件增、删、查、改即可，而不是必须使用 Kubernetes SDK 或者 Restful API。这个 YAML 文件其实就对应了 IaD 中的 Data。从这个角度来看，Kubernetes 暴露出来的各种 API 对象，一张张预先定义好 Schema 的“表”（table）。唯一跟传统数据库不太一样的是，Kubernetes 并不以持久化这些数据为目标，而是监控数据变化驱动“控制器”执行相应操作。
 
 |关系型数据库|Kubernetes (as a database)|说明|
 |:--|:--|:--|
@@ -53,15 +34,27 @@ spec:
 |COLUMN|property|表里面的列，有 string、boolean 等多种类型|
 |rows|resources|表中的一个具体记录|
 
+所以说，Kubernetes v1.7 版本引入了 CRD（自定义资源定义）功能，实质上赋予用户创建和管理自定义“数据”、将特定业务需求抽象为 Kubernetes 原生对象的能力。
 
-所以说，Kubernetes v1.7 版本支持 CRD（Custom Resource Definitions，自定义资源定义），实质上是允许用户定义自己的资源类型，，扩展 Kubernetes API，将复杂的业务需求抽象为 Kubernetes 的原生对象。
+例如，用户定义一个 CRD 来描述持续交付流程中的任务。
 
-有了 CRD，用户便不再受制于 Kubernetes 内置资源的表达能力，自定义出数据库、Task Runner、消息总线、数字证书...。加上自定义的“控制器”，便可把“能力”移植到 Kubernetes 中，并以 Kubernetes 统一的方式暴漏给上层用户。
+```yaml
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: example-task
+spec:
+  steps:
+    - name: echo-hello
+      image: alpine:3.14
+      script: |
+        #!/bin/sh
+        echo "Hello, Tekton!"
+```
 
-:::center
-  ![](../assets/CRD.webp)<br/>
-  图 10-10 CRD
-:::
+有了 CRD，工程师不再受限于 Kubernetes 内置资源的表达能力，可以根据需求自定义出数据库、CI/CD 流程、消息队列、数字证书等等资源类型。再加上自定义的“控制器”，便可把特定的业务逻辑和基础设施能力无缝集成到 Kubernetes 中。更重要的是，使用者只需理解 CRD 定义的 Schema，即可通过标准的 API 对象操作方式管理和使用这些资源。
 
-至此，相信读者已经理解了：IaD 思想中的 Data 具体表现其实就是声明式的 Kubernetes API 对象，而 Kubernetes 中的控制循环确保系统状态始终跟这些 Data 所描述的状态保持一致。从这一点讲，Kubernetes 的本质是一个以“数据”（Data）表达系统的设定值，通过“控制器”（Controller）的动作来让系统维持在设定值的“调谐”系统。
+## 构建上层抽象
+
+
 

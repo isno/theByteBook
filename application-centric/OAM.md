@@ -1,10 +1,8 @@
 # 10.3.5 OAM
 
-前面介绍的 Helm、Kustomize、CRD + Operator 在各自领域很好的承载一个“组件”的概念。但对于一个完整的“应用”，即面向具体业务场景的定义、部署和运行需求，仍旧缺乏系统化的解决方案。
+2019 年 10 月，阿里云与微软在上海 QCon 大会上联合发布了开源项目 Open Application Model（OAM）。该项目以“关注点分离”（Separation of Concerns）为核心理念，为云原生应用的完整 DevOps 流程提供了高度抽象和封装。
 
-OAM 的全称为开放应用模型（Open Application Model），由阿里巴巴联合微软共同推出，提供了一种大家都可以遵循的、标准化的方式来定义更高层级的应用层抽象，并且把“关注点分离”（Separation of Concerns）作为这个应用模型的核心思想。
-
-OAM 有两个部分：OAM 规范、OAM 规范的 Kubernetes 实现。
+OAM 项目有两个部分，OAM 规范（spec）和 OAM 规范的 Kubernetes 实现。
 
 详细的说，OAM 规范是基于自定义资源讲原先 All-in-One 的复杂配置做了一定层次的解耦，它强调一个现代应用是多个“组件”（Component）的集合，而非一个简单的工作负载或者 K8s Operator。更进一步的，OAM 把这个应用所需的“运维策略”（Trait）也认为是一个应用的一部分，在 OAM 中，一个应用程序包含三个核心理念：
 - 第一个核心理念是组成应用程序的组件（Component），它可能包含微服务集合、数据库和云负载均衡器；
@@ -15,7 +13,7 @@ OAM 有两个部分：OAM 规范、OAM 规范的 Kubernetes 实现。
 
 :::center
   ![](../assets/OAM-app.png)<br/>
-  图 4-0 OAM
+  图 4-0 OAM 应用开放模型
 :::
 
 OAM 在社区的众多用户呼声下诞生。KubeVela 在“关注点分离”的核心思想之上，把平台的用户分成两种角色：

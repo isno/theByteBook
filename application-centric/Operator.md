@@ -8,7 +8,6 @@ Operator 的概念由 CoreOS 于 2016 年提出，它并非一个具体的工具
 理解 Operator 所做的工作，需要先弄清楚“无状态应用”和“有状态应用”的含义。
 
 
-
 如果使用 Operator，情况就简单得多。Etcd 的 Operator 提供了 EtcdCluster 自定义资源，在它的帮助下，仅用几十行代码，安装、启动、停止等基础的运维操作。但对于其他高级运维操作，例如升级、扩容、备份、恢复、监控和故障转移，如下面代码所示。
 
 ```yaml
@@ -46,4 +45,6 @@ Red Hat 今天与 AWS、Google Cloud 和 Microsoft 合作推出了 OperatorHub.i
 
 现在很多复杂分布式系统都有了官方或者第三方提供的 Operator，从数据库（如 MySQL、PostgreSQL、MongoDB）到消息队列（如 RabbitMQ、Kafka），再到监控系统（如 Prometheus）。
 
-这些 Operator 提供了 Kubernetes 集群中各种服务和应用程序的生命周期管理，
+这些 Operator 提供了 Kubernetes 集群中各种服务和应用程序的生命周期管理。
+
+无论是 Helm、Kustomize 或者是 CRD + Operator ，它们其实在自领域承载一个“组件”的概念。但对于一个完整的“应用”，即面向具体业务场景的定义、部署和运行需求，仍旧缺乏思想指导和有效的解决手段。
