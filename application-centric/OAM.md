@@ -1,4 +1,4 @@
-# 10.3.5 OAM
+# 10.3.4 OAM
 
 2019 年 10 月，阿里云与微软在上海 QCon 大会上联合发布了开源项目 Open Application Model（OAM）。该项目以“关注点分离”（Separation of Concerns）为核心理念，为云原生应用的完整 DevOps 流程提供了高度抽象和封装。
 
