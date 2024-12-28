@@ -6,9 +6,9 @@ Dapper 发布后，市场上涌现出大量追踪系统，如 Jaeger、Pinpoint�
 
 为解决追踪系统各自为政的乱象，一些老牌应用性能监控（APM）厂商（如 Uber、LightStep 和 Red Hat）联合定义了一套跨语言的、平台无关分布式追踪标准协议 —— OpenTracing。
 
-开发者只要根据 OpenTracing 规范实现追踪逻辑接口，可以灵活地替换或组合探针、存储和界面等组件。2016 年，CNCF 正式接纳 OpenTracing 成为其第三个项目，前两个项目分别是鼎鼎大名的 Kubernetes 和 Prometheus。这标志着 OpenTracing 作为分布式系统可观测性领域的标准之一，得到了业界的广泛认可。
+开发者只需按照 OpenTracing 规范实现追踪逻辑接口，便可灵活替换或组合探针、存储和界面等组件。2016 年，CNCF 将 OpenTracing 收录为其第三个项目，前两个分别是大名鼎鼎的 Kubernetes 和 Prometheus。这一举措标志着 OpenTracing 作为分布式系统可观测性领域的标准之一，获得了业界的广泛认可。
 
-OpenTracing 推出不久之后，Google 和微软联合推出了 OpenCensus 项目。OpenCensus 最初是 Google 内部监控工具，开源的目地并不是抢 OpenTracing 的饭碗，而是希望为分布式系统提供一个统一的、跨语言的、开箱即用的可观测性框架，既能够处理链路追踪（trace）、又能够处理指标（metrics）。
+在 OpenTracing 推出后不久，Google 和微软联合推出了 OpenCensus 项目。OpenCensus 起初是 Google 内部的监控工具，开源的目的并非与 OpenTracing 竞争，而是希望为分布式系统提供一个统一、跨语言、开箱即用的可观测性框架。它不仅能够支持链路追踪（tracing），还具备处理指标（metrics）的能力。
 
 虽说 OpenTracing 和 OpenCensus 推动了可观测性系统的发展，但它们作为可观测领域下的协议标准，彼此之间的竞争和分裂不可避免地消耗了大量社区资源。对于普通开发者而言，一边是老牌 APM 厂商，另一边是拥有强大影响力的 Google 和微软。选择困难症发作时，一个新的设想不断被讨论：“能否有一个标准的方案，同时支持指标、追踪和日志等各类遥测数据？”。
 

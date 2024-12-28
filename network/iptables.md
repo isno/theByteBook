@@ -6,7 +6,7 @@ Netfilter 的钩子回调固然强大，但得通过程序编码才能使用，�
 
 ## 1. iptables 表和链
 
-Netfilter 中的钩子，在 iptables 中称作“链”（chain）。
+Netfilter 中的钩子在 iptables 中的对应称作“链”（chain）。
 
 iptables 默认有五条链：PREROUTING、INPUT、FORWARD、OUTPUT、POSTROUTING。从名字上看，它们分别对应了 Netfilter 的 5 个钩子。
 
