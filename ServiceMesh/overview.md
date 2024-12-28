@@ -1,14 +1,16 @@
 # 8.5 服务网格的产品与生态
 
-Buoyant 公司在 2016 年发布了第一代服务网格 Linkerd，同一时期，离开 Twitter 的工程师 Matt Klein 加入了 Lyft，并开启了 Envoy 项目。第一代服务网格稳步推进的过程中，世界的另一角落，Google 和 IBM 两个巨头开始握手合作，它们联合 Lyft 启动了 Istio 项目。
+2016 年，Buoyant 公司发布了第一代服务网格 Linkerd。同一时期，离开 Twitter 的工程师 Matt Klein 加入了 Lyft，启动了 Envoy 项目。第一代服务网格稳步发展时，世界的另一角落，Google 和 IBM 两个巨头开始联手，与 Lyft 一起启动了 Istio 项目。
 
-2017 年 5 月，Google、IBM 和 Lyft 开源新一代的服务网格 Istio，有巨头背书以及**新增控制平面的设计理念**让 Istio 得到极大关注和发展，并迅速成为第二代服务网格的代表项目。
+Istio 的最大创新在于为微服务系统带来了前所未有的控制力：
+- 以 Linkerd 为代表的第一代服务网格，通过 Sidecar 模式控制微服务间的流量；
+- 以 Istio 为代表的第二代服务网格，引入了控制平面，进一步管理所有 Sidecar。于是，间接掌控了系统中的所有流量。
+
+巨头背书、新增控制平面的设计理念让 Istio 得到极大关注和发展，并迅速成为业界实施服务网格的主流选择。
 
 ## 8.5.1 Linkerd2 出击
 
-Istio 被争相追捧的同时，作为服务网格概念的创造者 William Morgan 自然不甘心出局。
-
-公司生死存亡之际，William Morgan 瞄准 Istio 的缺陷（过于复杂）并借鉴 Istio 的设计理念（新增控制平面），开始重新设计它们的服务网格产品。
+在 Istio 受到广泛追捧的同时，服务网格概念的创造者 William Morgan 自然不甘心出局。公司生死存亡之际，William Morgan 瞄准 Istio 的缺陷（过于复杂）并借鉴 Istio 的设计理念（新增控制平面），开始重新设计它们的服务网格产品。
 
 Buoyant 公司的第二代服务网格使用 Rust 构建数据平面 linkerd2-proxy ，使用 Go 开发了控制平面 Conduit，主打轻量化，目标是世界上最轻、最简单、最安全的 Kubernetes 专用服务网格。该产品最初以 Conduit 命名，Conduit 加入 CNCF 后不久，宣布与原有的 Linkerd 项目合并，被重新命名为 Linkerd 2[^1]，
 
