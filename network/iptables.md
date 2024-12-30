@@ -12,7 +12,7 @@ iptables 默认有五条链：PREROUTING、INPUT、FORWARD、OUTPUT、POSTROUTIN
 
 iptables 把常用数据包管理操作总结成具体的动作，当数据包经过内核协议栈的钩子时（也就是 iptables 的链），根据 IP 数据包源地址/目的地址、传输层协议（TCP/UDP/ICMP/...）、端口等信息判断是否触发定义好的动作。
 
-如下为常见的动作说明：
+常见的动作及含义如下：
 
 - ACCEPT：允许数据包通过，继续执行后续的规则。
 - DROP：直接丢弃数据包。
