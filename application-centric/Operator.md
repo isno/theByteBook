@@ -29,13 +29,16 @@ spec:
             storage: 8Gi
 ```
 
-Operator 本身在实现上，其实是在 Kubernetes 声明式 API 基础上的一种“微创新”。它利用了 CRD 构建“高层抽象”，又通过 Kubernetes 原生的“控制器模式”，完成了一个面向分布式应用终态的“调谐”过程。
+Operator 的实现上，其实是 Kubernetes 声明式 API 基础上的一种“微创新”。它利用了 CRD 构建“高层抽象”，又通过 Kubernetes 原生的“控制器模式”，将复杂应用的运维逻辑代码化
 
-使用 CRD 构建“高层抽象”、使用配套的控制器来维护期望状态，带来的好处远不止使用简单。
+使用 CRD 构建“高层抽象”、使用配套的控制器来维护期望状态，带来的好处远不止使用简单。以往的高可用、扩展收缩、以及故障恢复等等运维经验沉淀为代码，通过 Operator 继承。只要几行代码，就可以复用最专业的运维能力。
 
-就是把运维的经验沉淀为代码，实现运维的代码化、自动化、智能化。以往的高可用、扩展收缩，以及故障恢复等等运维操作，都通过 Operator 进行沉淀下来。
 
-Red Hat 今天与 AWS、Google Cloud 和 Microsoft 合作推出了 OperatorHub.io。
+不过，开发 Operator 的门槛相对较高，需要既了解 Kubernetes、又了解开发、又了解运维，通常又专业的组件公司开发。
+
+
+
+2019 年，Red Hat、AWS、Google Cloud 和 Microsoft 联合推出了 OperatorHub.io，为 Kubernetes 社区提供一个官方的、经过验证的 Operator 集中目录。用户搜索所需的 Operator，查看说明文档和安装指南，通过几行命令即可在目标集群上完成 Operator 的安装。
 
 :::center
   ![](../assets/operatorhub.io.png)<br/>
@@ -43,8 +46,4 @@ Red Hat 今天与 AWS、Google Cloud 和 Microsoft 合作推出了 OperatorHub.i
 :::
 
 
-现在很多复杂分布式系统都有了官方或者第三方提供的 Operator，从数据库（如 MySQL、PostgreSQL、MongoDB）到消息队列（如 RabbitMQ、Kafka），再到监控系统（如 Prometheus）。
-
-这些 Operator 提供了 Kubernetes 集群中各种服务和应用程序的生命周期管理。
-
-无论是 Helm、Kustomize 或者是 CRD + Operator ，它们其实在自领域承载一个“组件”的概念。但对于一个完整的“应用”，即面向具体业务场景的定义、部署和运行需求，仍旧缺乏思想指导和有效的解决手段。
+无论是 Helm、Kustomize 或者是 CRD + Operator ，它们在各自领域承载的是一个“组件”的概念，对于一个完整的“应用”，即面向具体业务场景的定义、部署和运行需求，仍旧缺乏思想指导和有效的解决手段。

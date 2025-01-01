@@ -36,7 +36,7 @@ IaD 思想在 Kubernetes 上的体现，就是执行任何操作，只需要提�
 
 所以说，Kubernetes v1.7 版本引入了 CRD（自定义资源定义）功能，实质上赋予用户创建和管理自定义“数据”、将特定业务需求抽象为 Kubernetes 原生对象的能力。
 
-例如，可以定义描述持续交付流程的 CRD，描述任务的 Task、描述流水线的 Pipeline 等等。也就说，完全可以在 Kuberntes 之上构建一套全新的 CI/CD 系统。
+例如，定义持续交付领域中，描述任务的 Task、描述流水线的 Pipeline 的 CRD。也就说，完全可以在 Kuberntes 之上构建一套全新的 CI/CD 系统。
 
 ```yaml
 apiVersion: tekton.dev/v1beta1
@@ -52,9 +52,7 @@ spec:
         echo "Hello, Tekton!"
 ```
 
-有了 CRD，工程师不再受限于 Kubernetes 内置资源的表达能力，可以根据需求自定义出数据库、CI/CD 流程、消息队列、数字证书等等资源类型。再加上自定义的“控制器”，便可把特定的业务逻辑和基础设施能力无缝集成到 Kubernetes 中。更重要的是，使用者只需理解 CRD 定义的 Schema，即可通过标准的 API 对象操作方式管理和使用这些资源。
-
-## 构建上层抽象
+有了 CRD，工程师不再受限于 Kubernetes 内置资源的表达能力，可以根据需求自定义数据库、CI/CD 流程、消息队列、数字证书等等资源类型。再加上自定义的“控制器”，便可把特定的业务逻辑和基础设施能力无缝集成到 Kubernetes 中。
 
 
 
