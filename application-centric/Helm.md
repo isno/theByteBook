@@ -29,47 +29,14 @@ WordPress
 
 其中 Chart.yaml 是元数据文件，包含了 Chart 的名称、版本、描述等信息。values.yaml 是默认的配置文件，定义了 Chart 中变量的默认值。用户可以通过自定义 values.yaml 或通过命令行参数覆盖这些默认值。templates 目录包含 Kubernetes YAML 配置文件的模板，这些模板通过 Go 的模板引擎进行渲染，生成最终的 Kubernetes 资源定义文件。
 
+Repository 是存储、共享 Chart 的地方。Helm 项目团队开发和维护了最大的公共仓库是 artifacthub，上面托管了托管了成千上万 Chart 应用。除了公共仓库，用户也可以创建私有的 Helm 仓库，用来存储内部开发的 Charts。
 
-
-如下图所示，开发者和运维人员将复杂的应用程序及其依赖项打包成一个 Chart。用户使用 helm install 命令快速部署应用，无需再手动编写大量的 YAML 配置文件。
+如下图所示，开发者和运维人员将应用程序及其依赖项打包成 Chart。用户使用 helm install 命令快速部署应用，无需再手动编写大量的 YAML 配置文件。
 
 :::center
   ![](../assets/helm.webp)<br/>
   图 7-1 Tekton Dashboard
 :::
 
-Helm 仓库 是存储和分发 Helm Charts 的地方。用户在 Helm 仓库可以搜索、安装、升级、管理应用程序。用户可以创建和使用私有的 Helm 仓库。
+Helm 主要目标是通过 Charts 模板化定义 Kubernetes 资源，简化应用的部署和管理。它侧重于配置相对固定、生命周期简单的应用，提供安装、升级、回滚和卸载等粗粒度的基本操作。但对于复杂的有状态应用，比如数据库类的应用，管理还涉及数据备份、分区重平衡、数据迁移等细粒度操作，这些超出了 Helm 的设计范畴。这些正是稍后介绍的 Operator 要解决的问题。
 
-Artifact Hub 是最大的公共 Helm 仓库之一，大量开源项目提供了 Helm Charts，用户可以直接利用这些 Charts 部署生产环境中的应用。
-
-
-
-
-
-
-
-如果说 Docker 是奠定的单实例的标准化交付，那么 Helm 则是集群化多实例、多资源的标准化交付。Helm 将复杂的应用部署简化为几个简单的命令。
-
-Helm 仓库是存储 Helm chart（应用程序的定义和配置包）的地方。默认情况下，Helm 配置了一个稳定的仓库（https://charts.helm.sh/stable），但你也可以添加其他仓库。
-
-如下所示，使用 helm repo add 命令添加一个名为bitnami的仓库：
-
-```bash
-$ helm repo add bitnami https://charts.bitnami.com/bitnami
-```
-
-接着，使用 helm search repo 命令在已添加的仓库中搜索需要的 chart。例如，如果你想部署一个 Wordpress:
-
-```bash
-$ helm search repo wordpress
-NAME                                        CHART VERSION   APP VERSION     DESCRIPTION
-bitnami/wordpress                           15.3.1          6.2.1           Web publishing platform for building blogs and websites
-bitnami/wordpress-multisite                 6.3.1           5.7.4           WordPress for Multisite environments
-```
-
-选择合适的 WordPress chart，使用helm install命令进行安装。
-
-```bash
-$ helm install my - wordpress - instance bitnami/wordpress 
-```
-当不再需要 WordPress 应用程序时，使用 helm uninstall my - wordpress - instance 命令卸载。这会删除 Kubernetes 集群中为 WordPress 创建的所有资源。

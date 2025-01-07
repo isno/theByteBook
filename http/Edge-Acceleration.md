@@ -16,7 +16,7 @@ CDN 技术依赖“边缘节点”缓存静态文件实现就近访问，“动�
  图 2-24 DSA 服务网络加速原理 [图片来源](https://www.cdnetworks.com/cn/web-performance/dynamic-web-acceleration/)
 :::
 
-笔者之前负责的业务曾使用过 Aakamai 加速，根据表 2-4 所示的实践结果，HTTPS 请求延迟降低了 30% 左右。
+笔者曾使用过 Aakamai 的加速服务，根据表 2-4 所示的实践结果，HTTPS 请求延迟降低了 30% 左右。
 
 :::center
 表 2-4 网络直连与使用动态加速的效果对比

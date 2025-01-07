@@ -106,7 +106,7 @@ KEDA 的出现并非为了取代 HPA，而是与其形成互补关系。它的�
 
 :::center
   ![](../assets/keda-arch.png)<br/>
-  图 7-39 KADA 架构图
+  图 7-39 KEDA 架构图
 :::
 
 KEDA 内置了几十种常见的 Scaler，用于处理特定的事件源或指标源。笔者列举部分 Scaler 供参考：
