@@ -26,9 +26,9 @@ Kubernetes 默认调度器（kube-scheduler）双循环调度机制如图 7-36 �
 
 第一个控制循环称为“Informer 循环”。该循环的主要逻辑是启动一系列 Informer 监听（Watch）API 资源（主要是 Pod 和 Node）状态的变化。当 API 资源变化时，触发 Informer 回调函数进一步处理。如一个待调度 Pod 被创建后，触发 Pod Informer 回调函数，该回调函数将 Pod 入队到调度队列中（PriorityQueue），待下一阶段处理。
 
-当 API 资源变化时，Informer 的回调函数还承担对调度器缓存（即 Scheduler Cache）更新的职责，该操作的目的是尽可能将 Pod、Node 的信息缓存化，以便提升后续阶段调度算法的执行效率。
+当 API 资源变化时，Informer 的回调函数还承担更新调度器缓存（即 Scheduler Cache）职责，以便尽可能将 Pod、Node 的信息缓存化，提升后续阶段调度算法的执行效率。
 
-第二个控制循环称为“Scheduling 循环”。该循环主要逻辑是不断地从调度队列（PriorityQueue）中出队一个 Pod。然后，触发两个最核心的调度阶段：预选阶段（图 7-31 中的 Predicates）和优选阶段（图 7-36 中的 Priority）。
+第二个控制循环称为“Scheduling 循环”。该循环主要逻辑是不断地从调度队列（PriorityQueue）中出队一个 Pod。然后，触发两个最核心的调度阶段：预选阶段（图 7-36 中的 Predicates）和优选阶段（图 7-36 中的 Priority）。
 
 这里有必要补充调度器的扩展机制。Kubernetes 从 v1.15 版本起，为默认调度器（kube-scheduler）设计了可扩展的机制 —— Scheduling Framework。这个设计的主要目的，是在调度器生命周期的关键点上（图7-37 中绿色矩形箭头框），向外暴露可以扩展和实现自定义调度逻辑的接口。
 
