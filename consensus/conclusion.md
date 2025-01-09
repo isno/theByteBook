@@ -1,15 +1,11 @@
-# 6.4 小结
+# 6.5 小结
 
-Paxos 以及 Raft 算法属于故障容错（Crash Fault Tolerance，CFT）算法的范畴，解决的是分布式系统中存在故障，但不存在恶意节点下的分布式共识问题。
+尽管 Paxos 是几十年前提出的算法，但它开创了分布式共识研究的先河。
 
-如果把共识问题扩展到包含恶意节点的情况时，那便进入了最困难、最复杂的分布式故障场景 —— 拜占庭容错（Byzantine Fault Tolerance）领域。谈及此处，你大概率会联想到数字货币和 Web3 等区块链技术。没错，这些技术正是基于拜占庭容错算法（譬如 PBFT、PoW）达成共识，从而实现了去中心化网络中的安全性和一致性。
+Paxos 基于“少数服从多数”（Quorum 机制）原则，通过“请求阶段”、“批准阶段”在不确定环境下协商达成一致决策，解决了单个“提案”的共识问题。运行多次 Paxos 便可实现一系列“提案”共识，这正是 Multi-Paxos 思想的核心。Raft 在 Multi-Paxos 思想之上，以工程实用性为目标，在一致性、安全性和可理解性之间找到平衡，成为分布式系统关键组件实现一致性的主流选择。
 
-限于篇幅以及笔者的精力，这部分内容就不再展开讨论，有兴趣的读者就自行探索吧。
+最后，再让我们思考一个问题，Raft 算法属于“强领导者”（Strong Leader）模型，领导者负责所有写入操作必限制整个 Raft 集群的写入性能，那如何突破 Raft 集群的写性能瓶颈呢？
 
-参考文档：
-- https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying
-- raft 动画，https://raft.github.io/raftscope/index.html
-- 《In Search of an Understandable Consensus Algorithm》，https://raft.github.io/raft.pdf
-- 《Raft 分布式系统一致性协议探讨》，https://zhuanlan.zhihu.com/p/510220698
-- 《Implementing Replicated Logs
-with Paxos》，https://ongardie.net/static/raft/userstudy/paxos.pdf
+一种方法是使用一致性哈希算法将数据划分为多个独立部分。例如，一个拥有 100TB 数据的系统，可以将数据分成 10 个部分，每部分只需处理 10TB。这种通过规则（如范围或哈希）将数据分散到不同部分进行处理的策略，被称为“分区机制”（Partitioning）。分区机制广泛应用于 Prometheus、Elasticsearch 、ClickHouse 等大数据系统（详见本书第九章）。理论上，只要机器数量足够，分区机制便能够支持几乎无限规模的数据处理。
+
+解决了数据规模的问题，接下来的课题是“将请求均匀地分摊至各个分区”，这部分内容我们在下一章《负载均衡》展开讨论。

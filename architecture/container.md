@@ -99,8 +99,8 @@ Docker 把与内部负责管理容器执行、分发、监控、网络、构建�
 :::
 
 根据拆分后的 Docker 架构图看 ，根据功能的不同，容器运行时被分成两类：
-- 只关注如 namespace、cgroups、镜像拆包等基础的容器运行时实现被称为**低层运行时（low-level container runtime）**。目前应用最广泛的低层运行时是 runc；
-- 支持更多高级功能，如镜像管理、容器应用的管理等，被称为**高层运行时（high-level container runtime）**。目前应用最广泛高层运行时是 containerd。
+- 只关注如 namespace、cgroups、镜像拆包等基础的容器运行时实现被称为“低层运行时”（low-level container runtime）。目前，应用最广泛的低层运行时是 runc；
+- 支持更多高级功能，如镜像管理、容器应用的管理等，被称为“高层运行时”（high-level container runtime）。目前，应用最广泛高层运行时是 containerd。
 
 在 OCI 标准规范下，两类运行时履行各自的职责，协作完成整个容器生命周期的管理工作。
 

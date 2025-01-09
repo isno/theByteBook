@@ -12,14 +12,14 @@
 —— by William Morgan
 :::
 
-ServiceMesh 之所以称为服务网格，是因为每台节点同时运行着业务逻辑和具备通信治理能力的网络代理（如 Envoy、Linkerd-proxy）。这个代理被形象地称为网络边车代理（Sidecar），其中业务逻辑相当于主驾驶，处理辅助功能的网络代理相当于边车。
+ServiceMesh 之所以称为“服务网格”，是因为每台节点同时运行着业务逻辑和具备通信治理能力的网络代理（如 Envoy、Linkerd-proxy）。这个代理被形象地称为“网络边车代理”（Sidecar），其中业务逻辑相当于主驾驶，处理辅助功能的网络代理相当于边车。
 
 :::center
   ![](../assets/sidecar-example.jpg)<br/>
   图 1-22 边车示例
 :::
 
-服务网格的关键在于边车（Sidecar）模式，具有通信治理能力的网络代理以边车形式部署，服务之间通过网络代理型边车发现和调用目标服务。如果我们把节点和业务逻辑从视图剥离，网络代理边车之间呈现图 1-23 所示网络状依赖关系，服务网格由此得名。
+具有通信治理能力的网络代理以边车形式部署，服务之间通过边车发现和调用目标服务。如果我们把节点和业务逻辑从视图剥离，边车之间呈现图 1-23 所示网络状依赖关系，服务网格由此得名。
 
 :::center
   ![](../assets/service-mesh.png)<br/>
@@ -40,9 +40,9 @@ ServiceMesh 之所以称为服务网格，是因为每台节点同时运行着�
 
 值得注意的是，尽管服务网格的特点是 Sidecar 模式，但 Sidecar 模式并非服务网格专有。
 
-Sidecar 是一种常见的容器设计模式，Kubernetes 的工作负载 Pod 内可配置多个容器，业务容器之外的其他所有容器均可称为 Sidecar 容器。如日志收集 Sidecar、请求代理 Sidecar 和链路追踪 Sidecar 等等。
+Sidecar 是一种常见的容器设计模式，Kubernetes 的工作负载 Pod 内可配置多个容器，业务容器之外的其他所有容器均可称为“边车容器”（Sidecar container）。如日志收集 Sidecar、请求代理 Sidecar 和链路追踪 Sidecar 等等。
 
-如图 1-25 所示，app-container 是一个主业务容器，logging-agent 是一个日志收集的容器。主业务容器完全感知不到 logging-agent 的存在，它只负责输出日志，无需关心后续日志该怎么处理。你思考这样开发一个高内聚、低耦合的系统是否更加容易？
+如图 1-25 所示，app-container 是一个主业务容器，logging-agent 是一个日志收集容器。主业务容器完全感知不到 logging-agent 的存在，它只负责输出日志，无需关心后续日志该怎么处理。你思考这样开发一个高内聚、低耦合的系统是否更加容易？
 
 :::center
   ![](../assets/k8s-sidecar.png)<br/>

@@ -48,9 +48,9 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 
 根据上面的路由规则，Container-1 的发出的数据包交由 flannel.1 接口处理，也就是说数据包进入了隧道的“起始端点”。因此，当“起始端点”收到“原始的 IP 包”后，它需要构造 VXLAN 网络的内层以太网帧，然后将其发送给隧道网络的“目的地端点”，即 Node2 中的 VTEP 设备。这样，就能成功构建虚拟的二层网络，实现跨节点的容器通信。
 
-进行下一步需要解决的问题是，Node1 节点的 flannel.1 设备需要知道 Node2 中 flannel.1 设备的 IP 地址和 MAC 地址。目前，我们已经通过 Node1 的路由表获得了 VTEP 设备的 IP 地址（100.10.2.0）。那么，flannel.1 设备的 MAC 地址该如何获取呢？
+进行下一步的前提是：Node1 节点的 flannel.1 设备需要知道 Node2 中 flannel.1 设备的 IP 地址和 MAC 地址。目前，我们已经通过 Node1 的路由表获得了 VTEP 设备的 IP 地址（100.10.2.0）。那么，flannel.1 设备的 MAC 地址该如何获取呢？
 
-实际上，Node2 中 VTEP 设备的 MAC 地址已由 flanneld 自动添加到 Node1 的 ARP 表中，可以通过在 Node1 中使用 ip 命令查看。
+实际上，Node2 中 VTEP 设备的 MAC 地址已由 flanneld 自动添加到 Node1 的 ARP 表中。在 Node1 中执行下述 ip 命令：
 ```bash
 [root@Node1 ~]# ip n | grep flannel.1
 100.10.2.0  dev flannel.1 lladdr ba:74:f9:db:69:c1 PERMANENT # PERMANENT 表示永不过期
@@ -62,7 +62,6 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 :::
 
 现在，隧道网络的内层数据帧已封装完成。接下来，Linux 内核将把内层数据帧进一步封装到宿主机网络的数据帧中。然后，通过宿主机的 eth0 网卡，以“搭便车”的方式将其发送出去。
-
 
 为了实现“搭便车”机制，Linux 内核会在内层数据帧前添加一个特殊的 VXLAN Header，以指示“乘客”实际上是 Linux 内核中 VXLAN 模块需要使用的数据。VXLAN Header 中有一个重要的标志 —— VNI（VXLAN Network Identifier），这是 VTEP 设备判断数据包是否属于自己处理的依据。在 Flannel 的 VXLAN 工作模式中，所有节点的 VNI 默认为 1，这也是 VTEP 设备为什么命名为 flannel.1 的原因。
 
@@ -145,7 +144,7 @@ $ ip route
 Calico 和 Flannel 的原理都是直接利用宿主机的路由功能实现容器间通信，但不同之处在于**Calico 通过 BGP 协议实现路由规则的自动化分发**。因此 Calico 的灵活性更强，更适合大规模容器组网。
 
 :::tip 什么是 BGP
-BGP（Border Gateway Protocol，边界网关协议）使用 TCP 作为传输层的路由协议，用于交互 AS（Autonomous System，自治域）之间的路由规则。每个 BGP 服务实例一般称为 BGP Router，与 BGP Router 连接的对端称为 BGP Peer。每个 BGP Router 在收到 Peer 传来的路由信息后，经过校验判断后，将其存储在路由表中。
+BGP（Border Gateway Protocol，边界网关协议）使用 TCP 作为传输层的路由协议，用于交互 AS（Autonomous System，自治域）之间的路由规则。每个 BGP 服务实例一般称为“BGP Router”，与 BGP Router 连接的对端称为“BGP Peer”。每个 BGP Router 收到 Peer 传来的路由信息后，经过校验判断后，将其存储在路由表中。
 :::
 
 了解 BGP 协议之后，再看 Calico 的架构（图 7-28 ），就能理解它各个组件的作用了：
@@ -200,7 +199,7 @@ $ docker network create -d macvlan \
 
 设计一个容器网络模型是一个很复杂的过程，Kubernetes 本身并不实现网络模型，而是通过 CNI（Container Network Interface，容器网络接口）把网络变成外部可扩展的功能。
 
-CNI 接口最初由 CoreOS 为 rkt 容器创建，现在已成为容器网络的事实标准，许多容器平台（如 Kubernetes、Mesos 和 OpenShift 等）都采用了 CNI 标准。需要注意的是，CNI 接口并不是指类似 CSI、CRI 那样的 gRPC 接口，而是指对符合 CNI 规范可执行程序的调用（exec），这些可执行程序被称为 CNI 插件。
+CNI 接口最初由 CoreOS 为 rkt 容器创建，现在已成为容器网络的事实标准，许多容器平台（如 Kubernetes、Mesos 和 OpenShift 等）都采用了 CNI 标准。需要注意的是，CNI 接口并不是指类似 CSI、CRI 那样的 gRPC 接口，而是指对符合 CNI 规范可执行程序的调用（exec），这些可执行程序被称为“CNI 插件”。
 
 以 Kubernetes 为例，Kubernetes 节点默认的 CNI 插件路径为 /opt/cni/bin。在该路径下查看时，可以看到可供使用的 CNI 插件，这些插件有的是内置的，有些是安装容器网络方案时自动下载的。
 ```bash

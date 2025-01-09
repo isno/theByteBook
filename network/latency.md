@@ -12,7 +12,7 @@
 CPU 从一级缓存中读取数据| 1 ns
 CPU 分支预测错误（Branch mispredict）| 3 ns
 CPU 从二级缓存中读取数据 | 4 ns
-线性间互斥锁/解锁 | 17 ns
+线程间，共享资源加锁/解锁 | 17 ns
 在 1Gbps 的网络上发送 2KB 数据 | 44 ns
 访问一次主存 | 100 ns
 使用 Zippy 压缩 1KB 数据 | 2,000 ns ≈ 2 μs

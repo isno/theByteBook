@@ -25,11 +25,11 @@ export default defineUserConfig({
             })(); 
      `
  ]
-    ]/*,
-    bundler: webpackBundler({
+    ],
+    /**bundler: webpackBundler({
         postcss: {},
         vue: {},
-      })*/,
+      }),*/
     plugins: [
         mdEnhancePlugin({
           // 启用脚注
@@ -73,6 +73,7 @@ export default defineUserConfig({
             }
         ],
         sidebar: [
+        
             '/intro.md',
             '/noun.md',
             {
@@ -176,7 +177,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第四章：负载均衡技术',
+                text: '第四章：负载均衡与代理技术',
                 link: '/balance/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
@@ -218,16 +219,15 @@ export default defineUserConfig({
                     '/consensus/consensus.md',
                     '/consensus/Replicated-State-Machine.md',
                     {
-                        text: "6.2 Paxos 算法",
+                        text: "6.3 Paxos 算法",
                         link: '/consensus/Paxos.md',
                         children: [
                             '/consensus/Paxos-history.md',
                             '/consensus/Basic-Paxos.md',
-                            '/consensus/Multi-Paxos.md',
                         ]
                     },
                     {
-                        text: "6.3 Raft 算法",
+                        text: "6.4 Raft 算法",
                         link: '/consensus/Raft.md',
                         children: [
                             '/consensus/raft-leader-election.md',
@@ -277,7 +277,6 @@ export default defineUserConfig({
                     '/ServiceMesh/data-plane.md',
                     '/ServiceMesh/control-plane.md',
                     '/ServiceMesh/overview.md',
-                    '/ServiceMesh/ServiceMesh-and-Kubernetes.md',
                     '/ServiceMesh/The-future-of-ServiceMesh.md',
                     '/ServiceMesh/conclusion.md',
                 ]
@@ -306,29 +305,24 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第十章：GitOps 理念与实现设计',
-                link: '/GitOps/summary.md',
+                text: '第十章：应用的封装与交付',
+                link: '/application-centric/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
-                    '/GitOps/background.md',
-                    '/GitOps/what-is-GitOps.md',
-                    '/GitOps/IaC.md',
-                    '/GitOps/secrets-management.md',
-                     {
-                        text: "10.4 使用 Tekton 进行持续集成",
-                        link: '/GitOps/Tekton.md',
+                    '/application-centric/PaaS.md',
+                    '/application-centric/Controller.md',
+                    {
+                        text: "10.3 从“构建抽象”到“应用模型”",
+                        link: '/application-centric/app-model.md',
                         children: [
-                            '/GitOps/Tekton-CRD.md',
-                            '/GitOps/Tekton-install.md',
-                            '/GitOps/Tekton-test.md',
-                            '/GitOps/Tekton-build-image.md',
-                            '/GitOps/Tekton-trigger.md',
-
+                            '/application-centric/Kustomize.md',
+                            '/application-centric/Helm.md',
+                            '/application-centric/Operator.md',
+                            '/application-centric/OAM.md',
                         ]
                     },
-                    '/GitOps/ArgoCD.md',
-                    '/GitOps/conclusion.md',
+                    '/application-centric/conclusion.md',
                 ]
             }
         ]

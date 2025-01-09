@@ -4,9 +4,9 @@
 
 ## 1. 扩展资源
 
-作为一个通用型的容器编排平台，Kubernetes 自然需要与各类异构资源集成，以满足不同用户的需求。因此，Kubernetes 提供了扩展资源（Extended Resource）机制，使集群管理员能够声明、管理和使用除标准资源之外的自定义资源。
+作为一个通用型的容器编排平台，Kubernetes 自然需要与各类异构资源集成，以满足不同用户的需求。为此，Kubernetes 提供了扩展资源（Extended Resource）机制，使集群管理员能够声明、管理和使用除标准资源之外的自定义资源。
 
-为了能让调度器知道自定义资源在每台宿主机的可用量，宿主机节点必须能够访问 API Server 汇报自定义资源情况。Kubernetes 中，汇报自定义资源的手段是向 Kubernetes API Server 发送 HTTP PATCH 请求。例如，某个宿主机节点中带有 4 个 GPU 资源。下面是一个 PATCH 请求的示例，该请求为 `<your-node-name>` 节点发布 4 个 GPU 资源。
+为了能让调度器知道自定义资源在每台宿主机的可用量，宿主机节点必须能够访问 API Server 汇报自定义资源情况。汇报自定义资源的手段是向 Kubernetes API Server 发送 HTTP PATCH 请求。例如，某个宿主机节点中带有 4 个 GPU 资源。下面是一个 PATCH 请求的示例，该请求为 `<your-node-name>` 节点发布 4 个 GPU 资源。
 ```bash
 PATCH /api/v1/nodes/<your-node-name>/status HTTP/1.1
 Accept: application/json
@@ -22,7 +22,7 @@ Host: k8s-master:8080
 ```
 需要注意的是，上述 PATCH 请求仅告知 Kubernetes，某宿主机节点 `<your-node-name>` 拥有 4 个名为 GPU 的资源。Kubernetes 并不理解 GPU 资源的具体含义和用途。
 
-在 Kubernetes 中，各种资源可用量可在 Node Status 内容查看。如下所示，使用 kubectl describe node 命令查看宿主机节点资源情况。可以看到，输出了刚才扩展的 nvidia.com/gpu 资源，容量（capacity）为 4。
+接着，使用 kubectl describe node 命令查看宿主机节点资源情况。可以看到，命令输出了刚才扩展的 nvidia.com/gpu 资源，容量（capacity）为 4。
 ```bash
 $ kubectl describe node <your-node-name>
 ...
@@ -48,16 +48,18 @@ spec:
         request:
           nvidia.com/gpu: 1
 ```
-上面 Pod 资源配置中，GPU 的资源名称为 nvidia.com/gpu，它的配额是 1 个该资源。这意味着调度器将把该 Pod 分配到一个有足够 nvidia.com/gpu 资源的节点上。
+上面 Pod 资源配置中，GPU 的资源名称为“nvidia.com/gpu”，它的配额是 1 个该资源。这意味着调度器将把该 Pod 分配到一个有足够 nvidia.com/gpu 资源的节点上。
 
 当 Pod 被成功调度到宿主机节点后，进行相应的配置（设置环境变量，挂载设备驱动等操作），便可在容器内部使用 GPU 资源了。
 
 
 ## 2. Device Plugin
 
-当然，除非有特殊情况，通常不需用手动的方式扩展异构资源。在 Kubernetes 中，管理各类异构资源的操作由一种称为 Device Plugin（设备插件）的机制负责。
+当然，除非有特殊情况，通常不需用手动的方式扩展异构资源。
 
-Device Plugin 核心就是提供了多个 gRPC 接口，硬件供应商根据接口规范为特定硬件编写插件。kubelet 通过 gRPC 接口与设备插件交互，实现设备发现、状态更新、资源上报等。最后，Pod 通过 request、limit 显示声明，即可使用各类异构资源，如同 CPU、内存一样。
+在 Kubernetes 中，管理各类异构资源的操作由一种称为“Device Plugin”（设备插件）的机制负责。
+
+Device Plugin 核心思想是提供了多个 gRPC 接口，硬件供应商根据接口规范为特定硬件编写插件。kubelet 通过 gRPC 接口与设备插件交互，实现设备发现、状态更新、资源上报等。最后，Pod 通过 request、limit 显式声明，即可使用各类异构资源，如同 CPU、内存一样。
 
 Device Plugin 定义的 gRPC 接口如下所示，硬件设备插件按照规范实现接口，与 kubelet 进行交互，Kubernetes 便可感知和使用这些硬件资源。
 
@@ -98,9 +100,9 @@ service DevicePlugin {
 
 你注意到扩展资源与 Device Plugin 的问题了么？
 
-Pod 只能通过“nvidia.com/gpu:2”这种简单的“计数形式”来申请 2 块 GPU。然而，对于这 2 个 GPU 的具体型号、拓扑结构、是否共享或独享等属性，用户无法进行选择。所以说，Device Plugin 仅实现了基本的入门级功能，无法满足更复杂的资源管理需求。
+Pod 只能通过“nvidia.com/gpu:2”这种简单的“计数形式”申请 2 个 GPU，但这 2 个 GPU 的具体型号、拓扑结构、是否共享/独享等属性，用户并不清楚。也就是说，Device Plugin 仅实现了基本的入门级功能，无法满足更复杂的资源管理需求。
 
-在这些特殊场景的催化下，Nvidia、Intel 等头部厂商联合推出了 DRA（Dynamic Resource Allocation，动态资源分配）机制，允许用户以更复杂的方式描述和发现可用的异构资源，而不仅仅是简单的计数形式。例如，它可以支持 GPU 型号、性能、拓扑结构等属性的描述。
+在“成本要省”、“资源利用率更高”场景的催化下，Nvidia、Intel 等头部厂商联合推出了“动态资源分配”（Dynamic Resource Allocation，DRA）机制，允许用户以更复杂的方式描述异构资源，而不仅仅是简单的计数形式。例如，它可以支持 GPU 型号、性能、拓扑结构等属性的描述。
 
-由于 DRA 是一种相对较新的机制，具体的接口规范可能会因硬件供应商和 Kubernetes 版本的不同而有所变化。限于篇幅，笔者就不再扩展讨论了，有兴趣的读者可以查阅其他资料。
+由于 DRA 属于较新的机制，具体的接口规范可能因硬件供应商和 Kubernetes 版本的不同有所变化。限于篇幅，笔者就不再扩展讨论了，有兴趣的读者可以查阅其他资料。
 :::

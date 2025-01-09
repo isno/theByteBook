@@ -2,35 +2,30 @@
 
 作为不可变的基础设施，镜像要求在任何环境下复制出完全一致的容器实例。这意味着，容器内部写入的数据与镜像无关，一旦容器重启，所有写入的数据都会丢失。
 
-那容器系统怎么实现数据持久化存储呢？我们由浅入深，先从 Docker 看起，逐步了解容器持久化存储的原理，以及不同存储类型的区别与应用。
+那容器系统怎么实现数据持久化存储呢？我们由浅入深，从 Docker 看起，逐步了解容器持久化存储的原理、不同存储类型的特点和适用场景。
 
 ## 7.5.1 Docker 的存储设计
 
-Docker 通过挂载宿主机的目录到容器内部的方式，实现数据的持久化存储。
-
-目前，Docker 支持三种挂载方式：bind mount、volume 和 tmpfs mount。
+Docker 通过将宿主机目录挂载到容器内部，实现数据持久化存储。目前，它支持三种挂载方式：bind mount、volume 和 tmpfs mount。
 
 :::center
   ![](../assets/types-of-mounts-volume.webp)<br/>
   图 7-21 Docker 中持久存储的挂载种类
 :::
 
-bind mount 是 Docker 最早支持的挂载类型，很多用户都熟悉这种挂载方式。
-
-以下命令启动一个 Nginx 容器，并将宿主机的 /usr/share/nginx/html 目录挂载到容器内的 /data 目录：
+bind mount 是 Docker 最早支持的挂载类型，也是我们最熟悉的挂载方式。如下命令所示，启动一个 Nginx 容器，并将宿主机的 /usr/share/nginx/html 目录挂载到容器内 /data 目录：
 ``` bash
 $ docker run -v /usr/share/nginx/html:/data nginx:lastest
 ```
-这个操作实际上是利用 MS_BIND 类型的 mount 系统调用来实现的：
-
+bind mount 实际上是通过 mount 系统调用实现的。
 ```c
-// 将宿主机中的 /usr/share/nginx/html 挂载到 rootfs 指定的挂载点 /data 上
-mount("/usr/share/nginx/html","rootfs/data", "none", MS_BIND, nulll)
+// 将宿主机中的 /usr/share/nginx/html 挂载到容器根文件系统的 /data 路径
+mount("/usr/share/nginx/html", "rootfs/data", "none", MS_BIND, NULL);
 ```
-直接通过 mount 命令挂载宿主机目录来实现数据持久化存储，显然存在明显的缺陷：
-- 与操作系统的强耦合：容器内的目录通过 mount 挂载到宿主机的绝对路径，这使得容器的运行环境与操作系统紧密绑定。这意味着 bind mount 方式无法写在 Dockerfile 中，否则镜像在其他环境可能无法启动。此外，宿主机中被挂载的目录与 Docker 没有明显关联，其他进程可能会误写，存在潜在的安全隐患。
-- 无法应对存储需求的复杂性：容器被广泛使用后，容器存储的需求绝对不是挂载到某个目录就能搞定。存储位置不再仅限于宿主机（可能需要挂载网络存储），存储介质不仅局限于磁盘（也可能是 tmpfs），存储类型也不仅是文件系统（还可能是块设备或对象存储）。
-- 此外，对于网络类型的存储，实在没必要先将其挂载到操作系统再挂载到容器内的目录。Docker 完全可以直接对接网络存储协议（如 iSCSI、NFS 等）越过操作系统，减少系统资源占用和延迟。
+通过 mount 命令挂载宿主机目录来实现数据持久化存储，存在以下缺陷：
+- **与操作系统的强耦合**：容器内的目录通过 mount 挂载到宿主机的绝对路径，这使得容器的运行环境与操作系统紧密绑定。这意味着 bind mount 方式无法写在 Dockerfile 中，否则镜像在其他环境可能无法启动。此外，宿主机中被挂载的目录与 Docker 没有明显关联，其他进程可能会误写，存在潜在的安全隐患。
+- **难以满足多样化的存储需求**：容器被广泛使用后，容器存储的需求绝对不是挂载到某个目录就能搞定。存储位置不仅仅限于宿主机，还可能是外部网络存储；存储介质不仅局限于磁盘，还可能是内存文件系统（如 tmpfs）；存储类型不仅仅是文件系统，还可能是块设备或对象存储。
+- **低效的网络存储处理**，对于网络存储，没必要先将其挂载到操作系统再挂载到容器内的目录。Docker 完全可以直接对接网络存储协议（如 iSCSI、NFS），绕过操作系统层面，降低资源占用和访问延迟。
 
 为此，Docker 从 1.7 版本起提供全新的挂载类型 Volume（存储卷）：
 
@@ -76,11 +71,11 @@ docker run -d -v my-aliyun-nas-volume:/mnt/nas nginx:latest
 
 乍一看，这么多 Volume 类型实在难以下手。然而，总结起来就 3 类：
 
-- 普通的 Volume：用于临时数据存储，生命周期与 Pod 绑定，如 emptyDir、hostPath 等。这类 Volume 在 Pod 重启时数据会丢失，适用于无需持久化的数据场景。
-- 持久化的 Volume：通过 PersistentVolume（PV）和 PersistentVolumeClaim（PVC）机制来实现，支持长期存储且与 Pod 的生命周期解耦。常见的类型包括 NFS、云存储（如 AWS EBS、GCE PD）等，适用于数据库或需要持久化存储的应用。
-- 特殊的 Volume：如 Secret 和 ConfigMap。使用此类的 Volume 容器内部的应用能够像操作本地文件一样访问和操作 Kubernetes 集群的配置信息（例如环境变量、凭据）。
-
-严格来讲，最后一类 Volume 并不属于实际的存储类型，它们本质是实现了标准的 POSIX（Portable Operating System Interface，可移植操作系统接口）接口，方便操作 Kubernetes 集群内的配置信息，笔者后续就不再展开讨论了。
+- 普通 Volume：主要用于临时数据存储，包括 emptyDir 和 hostPath 等类型。
+  - emptyDir：在 Pod 删除时数据会被清空。
+  - hostPath：数据存储在节点本地路径上，如果 Pod 被调度到其他节点，则无法访问原有数据。
+- 持久化的 Volume：通过 PersistentVolume（PV）和 PersistentVolumeClaim（PVC）机制实现，支持长期存储且与 Pod 的生命周期解耦。常见的类型包括 NFS、云存储（如 AWS EBS、GCE PD）等。
+- 特殊的 Volume：用于管理配置和敏感数据，例如 Secret 和 ConfigMap。严格来说，这类 Volume 并非传统意义上的存储类型，而是通过实现标准的 POSIX（可移植操作系统接口）接口，提供对 Kubernetes 集群中配置信息的便捷访问。笔者后续就不再展开讨论了。
 
 ## 7.5.3 普通的 Volume
 
@@ -180,7 +175,7 @@ spec:
 
 在 Kubernetes 中，如果没有适合的 PV 满足 PVC 的需求，PVC 将保持在 Pending 状态，直到有合适的 PV 可用。在此期间，Pod 无法正常启动。对于小规模集群，可以预先创建多个 PV 来匹配 PVC。但在大规模 Kubernetes 集群中，Pod 的数量可能达到成千上万，显然无法依靠人工方式提前创建如此多的 PV。
 
-为此，Kubernetes 提供了一套自动创建 PV 的机制 —— 动态供给（Dynamic Provisioning）。相对而言，前面通过人工创建 PV 的方式被称为静态供给（Static Provisioning）。
+为此，Kubernetes 提供了一套自动创建 PV 的机制 —— 动态供给（Dynamic Provisioning）。相对而言，前面通过人工创建 PV 的方式被称为“静态供给”（Static Provisioning）。
 
 动态供给机制的核心在于 StorageClass 对象，它的作用是创建 PV 的模板，使 PV 可以自动生成。
 
@@ -209,7 +204,7 @@ volumeBindingMode: Immediate
 当 StorageClass 资源提交到 Kubernetes 集群后，Kubernetes 将根据 StorageClass 定义的模板和 PVC 的请求规格，自动创建一个新的 PV 实例。新创建的 PV 将自动绑定到 PVC，使得 PVC 的状态从 Pending 变为 Bound（表示存储资源已经准备就绪）。随后，Pod 就能够利用 PVC 声明的存储资源，无论是用于数据持久化还是其他存储需求。
 
 
-## 7.5.6 Kuberneters 的存储系统设计
+## 7.5.6 Kubernetes 存储系统设计
 
 相信大部分读者对如何使用 Volume 已经没有疑问了。接下来，我们将继续探讨存储系统与 Kubernetes 的集成，以及它们是如何与 Pod 相关联的。在深入这个高级主题之前，我们需要先掌握一些关于操作存储设备的基础知识。
 
@@ -220,7 +215,7 @@ Kubernetes 继承了操作系统接入外置存储的设计，将新增或卸载
 - 挂载（Mount）：最后，将附加好的存储挂载到系统中。Mount 可类比为将设备挂载到系统的指定位置，这就是操作系统中 mount 命令的作用，其逆向操作为卸载（Unmount）存储设备。
 
 :::tip <i/>
-如果 Pod 中使用的是 EmptyDir、HostPath 这类普通 Volume，并不会经历附着/分离的操作，它们只会被挂载/卸载到某一个 Pod 中。
+如果 Pod 中使用的是 EmptyDir、HostPath 这类普通 Volume，并不会经历附加/分离的操作，它们只会被挂载/卸载到某一个 Pod 中。
 :::
 
 Kubernetes 中的 Volume 创建和管理主要由 VolumeManager（卷管理器）、AttachDetachController（挂载控制器）和 PVController（PV 生命周期管理器）负责。前面提到的 Provision、Delete、Attach、Detach、Mount 和 Unmount 操作由具体的 VolumePlugin（第三方存储插件，也称 CSI 插件）实现。
@@ -259,7 +254,7 @@ service Identity {
     returns (ProbeResponse) {}
 }
 ```
-Controller Service 管理卷的生命周期，包括创建、删除和获取卷的信息，它的接口定义如下所示。可以看出，接口中定义的操作就是图 7-27 Master 节点中 准备（Provision）和 附加（Attach）的逻辑。
+Controller Service 管理卷的生命周期，包括创建、删除和获取卷的信息，它的接口定义如下所示。可以看出，接口中定义的操作就是图 7-24 Master 节点中 准备（Provision）和 附加（Attach）的逻辑。
 
 ```protobuf
 service Controller {
@@ -318,7 +313,7 @@ CSI 插件机制为存储供应商和容器编排系统之间的交互提供了�
 
 - **文件存储**：块设备存储的是最原始的二进制数据（0 和 1），对于人类用户来说，这样的数据既难以使用也难以管理。因此，我们使用“文件”这一概念来组织这些数据。所有用于同一用途的数据按照不同应用程序要求的结构方式组成不同类型的文件，并用不同的后缀来指代这些类型。每个文件有一个便于理解和记忆的名称。当文件数量较多时，通过某种划分方式对这些文件分组，所有文件和目录形成一个树状结构。再补充权限、文件名称、创建时间、所有者、修改者等元数据信息。
 
-  这种定义文件分配、实现方式、存储信息和提供功能的标准被称为文件系统（File System）。常见的文件系统有 FAT32、NTFS、exFAT、ext2/3/4、XFS、BTRFS 等等。如果文件存储在网络服务器中，客户端用类似访问本地文件系统的方式访问远程服务器上的文件，这样的系统称为网络文件系统。常见的网络文件系统有 Windows 网络的 CIFS（Common Internet File System，也称 SMB）和类 Unix 系统的 NFS（Network File System）。
+  这种定义文件分配、实现方式、存储信息和提供功能的标准被称为“文件系统”（File System）。常见的文件系统有 FAT32、NTFS、exFAT、ext2/3/4、XFS、BTRFS 等等。如果文件存储在网络服务器中，客户端用类似访问本地文件系统的方式访问远程服务器上的文件，这样的系统称为“网络文件系统”。常见的网络文件系统有 Windows 网络的 CIFS（Common Internet File System，也称 SMB）和类 Unix 系统的 NFS（Network File System）。
 
 - **对象存储**：文件存储的树状结构和路径访问方式便于人类理解、记忆和访问，但计算机需要逐级分解路径并查找，最终定位到所需文件，这对于应用程序而言既不必要，也浪费性能。块存储则性能出色，但难以理解且无法共享。选择困难症出现的同时，人们思考：“是否可以有一种既具备高性能、实现共享、又能满足大规模扩展需求的新型存储系统？”。于是，对象存储应运而生。
 
@@ -326,6 +321,6 @@ CSI 插件机制为存储供应商和容器编排系统之间的交互提供了�
   - 元数据提供了对象的上下文信息，如数据类型、大小、权限、创建人、创建时间等；
   - 数据块则存储了对象的具体内容。
 
-  对象存储中，所有数据都在同一个层次中，通过一个唯一标识来识别和查找。对象存储可以非常简单地扩展到超大规模，非常适合处理数据量大、增速快的非结构化数据（如视频、图像等）。
+  对象存储中，所有数据处于同一层次，通过唯一标识来识别和查找（扩展简单），非常适合处理数据量大、增速快的非结构化数据（如视频、图像等）。
 
   最著名的对象存储服务是 AWS S3（Simple Storage Service），它的接口规范已经成为业内对象存储服务事实标准。如果你考虑降低云成本，也可以通过开源项目如 Ceph、Minio 或 Swift 等自建对象存储服务。
