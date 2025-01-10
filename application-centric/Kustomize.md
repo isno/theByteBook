@@ -24,7 +24,7 @@ Kubernetes 官方对此的观点是，如果逐一配置、部署各个资源文
 │       └── patch-deployment.yaml
 
 ```
-只要建立好多个 Kustomization 文件，kustomize 就可以在相同的基础配置之上，对应用不同模式（开发、测试）、不同的项目（客制）定制出一个 All-in-One 的资源整合包，把应用涉及的所有资源一次部署好。
+只要建立好多个 Kustomization 文件，kustomize 就可以在一个基础配置之上，对应用不同模式（开发、测试）、不同的项目（客制）定制出一个不同的 All-in-One 的资源整合包，把应用涉及的所有资源一次部署好。
 
 ```bash
 kubectl apply -f all-in-one.yaml
