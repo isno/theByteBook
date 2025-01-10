@@ -1,27 +1,29 @@
 # 10.3.1 Kustomize
 
-最初 Kubernetes 对如何封装应用 的解决方案是用配置文件来配置文件，这并不是绕口令，可以理解为针对 yaml 模版引擎的变体。
+一旦开始处理多种资源类型，Kubernetes 资源的配置文件就会开始泛滥，尤其是当环境之间的差异很小时，例如开发、生产环境。直接通过 kubectl 来管理一个应用，你会发现这十分“蛋疼”。
 
-Kubernetes 官方认为，应用就是一组具有相同目标的 Kubernetes 资源的集合，如果逐一管理、部署每项资源元数据过于繁琐的话，那就提供一种便捷的方式，把应用中不变的信息和易变的信息分离，应用中所涉及的资源自动生成一个多合一(All-in-One) 的整合包，以此解决部署管理问题。
+Kubernetes 官方对此的观点是，如果逐一配置、部署各个资源文件过于繁琐，那就提供一种便捷的方式，将应用中不变的信息与易变的信息分离，并自动生成一个多合一（All-in-One）的整合包，从而解决 YAML 资源文件配置、部署的问题。完成这项工作的工具叫 Kustomize。Kustomize 原本只是一个独立的小工具，从 Kubernetes 1.14 起，被纳入了 kubectl 命令中，成为 Kubernetes 内置的功能。
 
-完成这项工作的工具就叫 Kustomize。Kustomize 原本只是一个独立的小工具，从 Kubernetes 1.14 起，被纳入了 kubectl 命令中，成为 Kubernetes 内置的功能。
-
-Kustomize 采用分层的方式来管理配置。用户可以定义多个层次的配置，从基础配置层开始，然后通过添加或修改特定层次的配置来生成最终的配置。这就像搭建积木一样，基础的积木块（基础配置）是通用的，然后根据不同的需求添加不同的积木块（特定环境或功能的配置）来构建最终的结构（定制化配置）。
+一个由 kustomize 管理的应用结构，主要由 base 和 overlays 目录组成。其中，base 目录称基础配置层，里面包含原始的 Kubernetes YAML 文件，例如 deployment.yaml 和 service.yaml；overlays 目录称覆盖层，它用于对基础配置进行定制和扩展。在每个 overlays 目录内，都包含一个 kustomization.yaml 文件，它负责定义该层次上的自定义配置和补丁。
 
 ```bash
-my - application/
-    ├── base/
-    │   ├── deployment.yaml
-    │   └── service.yaml
-    ├── dev/
-    │   ├── kustomization.yaml
-    │   └── resources.yaml
-    └── prod/
-        ├── kustomization.yaml
-        └── resources.yaml
+.
+├── base/
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   └── kustomization.yaml
+├── overlays/
+│   ├── dev/
+│   │   ├── kustomization.yaml
+│   │   └── patch-deployment.yaml
+│   ├── staging/
+│   │   ├── kustomization.yaml
+│   │   └── patch-deployment.yaml
+│   └── prod/
+│       ├── kustomization.yaml
+│       └── patch-deployment.yaml
+
 ```
+只要建立好多个 Kustomization 文件，kustomize 就可以在相同的基础配置之上，对应用不同模式（开发、测试）、不同的项目（客制）定制出一个 All-in-One 的资源整合包，把应用涉及的所有资源一次安装好。
 
-Kustomize 使用 Kustomization 文件来组织与应用相关的所有资源，Kustomization 本身也是一个 yaml 编写的配置文件，里面定义了构成应用的全部资源，以及资源中根据情况被覆盖的变量。
-
-Kustomize 的价值在于根据环境来生成不同的部署配置，只要建立多个 Kustomization 文件，开发人员就能基于基准派生的方式，对应用不同模式（开发、测试），不同的项目（客制）定制出不同的资源整合包。
-
+不过，Kustomize 的定位只是个简单的配置管理工具，帮助开发人员简化应用在不同场景下的重复配置。对于一个应用而言，它的管理远不止于部署，还包括更新、回滚、卸载、多版本管理、多实例支持以及依赖维护等等。要解决这些问题，还需要更高级的“工具”，这就是接下来要介绍的 Helm。
