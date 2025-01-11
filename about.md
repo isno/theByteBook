@@ -5,7 +5,7 @@
 ## 兴趣
 
 - Networking
-- Cloud、Infra、Container、ServiceMesh...
+- Cloud、AI Infra、Container、Serverless...
 
 ## 公众号
 
