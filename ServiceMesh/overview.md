@@ -15,7 +15,7 @@ Istio 的最大创新在于为微服务系统带来了前所未有的控制力�
 Buoyant 公司的第二代服务网格使用 Rust 构建数据平面 linkerd2-proxy ，使用 Go 开发了控制平面 Conduit，主打轻量化，目标是世界上最轻、最简单、最安全的 Kubernetes 专用服务网格。该产品最初以 Conduit 命名，Conduit 加入 CNCF 后不久，宣布与原有的 Linkerd 项目合并，被重新命名为 Linkerd 2[^1]，
 
 Linkerd2 的架构如图 8-13 所示，增加了控制平面，但整体相对简单：
-- 控制层面组件只有 destination（类似 Istio 中的 Pilot 组件）、identity（类似 Istio 中的 Citadel）和 proxy injector（代理注入器，自动将 Linkerd 代理作为 Sidecar 容器注入到匹配的 Pod 中，无需手动修改应用程序的部署配置）。
+- 控制层面组件只有 destination（类似 Istio 中的 Pilot 组件）、identity（类似 Istio 中的 Citadel）和 proxy injector（代理注入器）。
 - 数据平面中 linkerd-init 设置 iptables 规则拦截 Pod 中的 TCP 连接，linkerd-proxy 实现对所有的流量管控（负载均衡、熔断..）。
 
 :::center
@@ -25,11 +25,11 @@ Linkerd2 的架构如图 8-13 所示，增加了控制平面，但整体相对�
 
 ## 8.5.2 其他参与者
 
-除了头部的 Linkerd2、Istio 玩家外，明显能影响微服务格局的新兴领域，又怎少得了传统的 Proxy 玩家。
+能明显影响微服务格局的新兴领域，除了头部的 Linkerd2、Istio 玩家外，又怎少得了传统的 Proxy 玩家。
 
-先是远古玩家 Nginx 祭出自己新一代的产品 Nginx ServiceMesh，理念是简化版的服务网格。接着，F5 Networks 公司顺势推出商业化产品 Aspen Mesh，定位企业级服务网格项目。随后，API 网关独角兽 Kong 推出了 Kuma，主打通用型的服务网格。有意思的是，Kong 选择了 Envoy 作为数据平面，而非它自己的核心内核 OpenResty。
+先是远古玩家 Nginx 祭出自己新一代的产品 Nginx ServiceMesh，理念是简化版的服务网格。接着，F5 Networks 公司顺势推出商业化产品 Aspen Mesh，定位企业级服务网格。随后，API 网关独角兽 Kong 推出了 Kuma，主打通用型服务网格。有意思的是，Kong 选择了 Envoy 作为数据平面，而非它自己内核 OpenResty。
 
-与 William Morgan 死磕 Istio 策略不同，绝大部分在 Proxy 领域根基深厚玩家，从一开始就没有想过做一套完整服务网格方案，而是选择实现 xDS 协议或基于 Istio 扩展，作为 Istio 的数据平面出现。
+与 William Morgan 死磕 Istio 策略不同，绝大部分在 Proxy 领域根基深厚玩家，从一开始就没有想过做一套完整服务网格，而是选择实现 xDS 协议或基于 Istio 扩展，作为 Istio 的数据平面出现。
 
 至 2023 年，服务网格经过 8 年的发展，产品生态如图 8-14 所示。虽然有众多的选手，但就社区活跃度而言，Istio 和 Linkerd 还是牢牢占据了头部地位。
 
