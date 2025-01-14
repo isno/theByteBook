@@ -37,7 +37,7 @@ Mark Andreessen 是风险投资公司 Andreessen-Horowitz 的联合创始人（�
 - 企业 IT（Enterprise IT）：规模小、变化慢，容易处理。
 - 电信（Telcos）：规模大、变化慢，主要应对硬件失败。
 - 初创公司（Startups）：规模小、变化快，主要应对软件失败。
-- 网络规模的互联网企业（Web-Scale）：规模大、变化快，软硬件或者说所有东西都会出问题。
+- 互联网企业（Web-Scale）：规模大、变化快，软硬件或者说所有东西都会出问题。
 
 :::center
   ![](../assets/ppt4.jpg)<br/>
