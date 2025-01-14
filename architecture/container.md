@@ -16,9 +16,7 @@ chroot 被认为是最早的容器技术之一，它能将进程的根目录重�
 
 ## 2.LXC 阶段：封装系统 
 
-2006 年，Google 推出 Process Container（进程容器），Process Container 目的非常直白，它希望能够像虚拟化技术那样给进程提供操作系统级别的资源限制、优先级控制、资源审计和进程控制能力。
-
-带着这样的设计思路，Process Container 推出不久就进入了 Linux 内核主干，不过由于 container 这一命名在内核中具有许多不同的含义，为了避免代码命名的混乱，后来就将 Process Container 更名为了 Control Groups —— 简称 cgroups。
+2006 年，Google 推出 Process Container（进程容器），希望能够像虚拟机那样，给进程提供操作系统级别的资源限制、优先级控制、资源审计和进程控制能力。带着这样的设计理念，Process Container 推出不久后便被引入 Linux 内核。不过，由于 "container" 一词在内核中包含多种含义，为避免命名混淆，Process Container 随后被重命名为 Control Groups，简称 cgroups。
 
 2008 年，Linux 内核版本 2.6.24 刚开始提供 cgroups，社区开发者就将 cgroups 资源管理能力和 Linux namespace 资源隔离能力组合在一起，形成了完整的容器技术 LXC（Linux Container，Linux 容器）。
 
@@ -49,15 +47,15 @@ LXC 是如今被广泛应用的容器技术的实现基础，通过 LXC 可以�
  图 1-14 Docker 的愿景：Build, Ship, and Run Any App, Anywhere
 :::
 
-至此，现阶段容器技术体系已经解决了**最核心的两个问题“如何运行软件和如何发布软件”**，云计算开始进入容器阶段。
+至此，现阶段容器技术体系解决了**最核心的两个问题“如何运行软件和如何发布软件”**，云计算进入容器阶段！
 
 ## 4.OCI 阶段：容器标准化
 
 当容器技术的前景显现后，众多公司纷纷投入该领域进行探索。
 
-先是 CoreOS 推出了自己的容器引擎 rkt（Rocket 的缩写），Google 也推出了自己的容器引擎 lmctfy（Let Me Contain That For You 的缩写）试图与 Docker 分庭抗礼，相互竞争的结果就是大家坐下来谈容器接口标准，避免出现“碎片化”的容器技术。
+先是 CoreOS 推出了自己的容器引擎 rkt（Rocket 的缩写），Google 也推出了自己的容器引擎 lmctfy（Let Me Contain That For You 的缩写）试图与 Docker 分庭抗礼，相互竞争的结果容器技术开始出现“碎片化”，镜像格式的标准不一、容器引擎的接口各异。
 
-2015 年 6 月，Linux 基金会联合 Docker 带头成立 OCI（Open Container Initiative，开放容器标准）项目，**OCI 组织着力解决容器的构建、分发和运行标准问题，其宗旨是制定并维护 OCI Specifications（容器镜像格式和容器运行时的标准规范）**。
+2015 年 6 月，Linux 基金会联合 Docker 带头成立 OCI（Open Container Initiative，开放容器标准）项目，**OCI 的目标是解决容器构建、分发和运行标准问题，制定并维护容器镜像格式、容器运行时的标准规范（OCI Specifications）**。
 
 OCI 的成立结束了容器技术标准之争，Docker 公司被迫放弃容器规范独家控制权。作为回报，Docker 的容器格式被 OCI 采纳为新标准的基础，并且由 Docker 起草 OCI 草案规范的初稿。
 
