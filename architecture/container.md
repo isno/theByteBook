@@ -8,16 +8,11 @@
 
 ## 1.chroot 阶段：隔离文件系统
 
-容器技术并不是凭空出现的，它具有非常久远的历史。
+容器技术并非凭空出现，它有非常久远的历史！
 
-早在 1979 年，贝尔实验室的工程师在开发 Unix V7 期间，发现当系统软件编译和安装完成后，整个测试环境的变量就会发生改变，如果要进行下一次构建、安装和测试，就必须重新搭建和配置测试环境。
+早在 1979 年，贝尔实验室的工程师在开发 Unix V7 期间，发现当系统软件编译和安装完成后，整个测试环境的变量就会发生改变，如果要进行下一次构建、安装和测试，就必须重新搭建和配置测试环境。工程师们思考：“能否在现有的操作系统环境下，隔离出一个用来重构和测试软件的独立环境？”。于是，一个叫做 chroot（Change Root）的系统调用功能诞生。
 
-工程师们开始思考：“能否在现有的操作系统环境下，隔离出一个用来重构和测试软件的独立环境？”。于是，一个叫做 chroot（Change Root）的系统调用功能诞生。
-
-
-chroot 被认为是最早的容器技术之一，它能将进程的根目录重定向到某个新目录，复现某些特定环境，同时也将进程的文件读写权限限制在该目录内。
-
-通过 chroot 隔离出来的新环境有一个形象的命名“Jail”（监狱），这便是容器最重要的特性 —— 隔离。
+chroot 被认为是最早的容器技术之一，它能将进程的根目录重定向到某个新目录，复现某些特定环境，同时也将进程的文件读写权限限制在该目录内。通过 chroot 隔离出来的新环境有一个形象的命名“监狱”（Jail），这便是容器最重要的特性 —— 隔离的体现。
 
 ## 2.LXC 阶段：封装系统 
 
@@ -82,23 +77,22 @@ runc 是非常小的运行核，其目的在于提供一个干净简单的运行
 
 OCI 项目启动后，为了符合 OCI 标准，Docker 开始推动自身的架构向前演进。
 
-Docker 把与内部负责管理容器执行、分发、监控、网络、构建、日志等功能的模块重构为 containerd 项目 。如图 7-13 所示，containerd 的架构主要分为三个部分：生态系统（Ecosystem）、平台（Platform）和客户端（Client），每个部分在整个系统中扮演着不同的角色，协同工作以提供全面的容器管理功能。
+Docker 把内部管理容器执行、分发、监控、网络、构建、日志等功能的模块重构为 containerd 项目 。如图 7-13 所示，containerd 的架构分为三个部分：生态系统（Ecosystem）、平台（Platform）和客户端（Client）。它们各司其职、协同工作，提供了全面的容器管理能力。
 
+2016 年，Docker 将 containerd 捐献给了 CNCF 管理。现在，containerd 已经成为最流行的容器运行时！
 :::center
   ![](../assets/containerd-arch.png)<br/>
   图 7-13 Containerd 架构 [图片来源](https://containerd.io/)
 :::
 
-2016 年，Docker 将 containerd 捐献给了 CNCF 管理，现在，containerd 已经成为最流行的容器运行时。
-
-经过 runc、containerd 组件的拆分改造之后，Docker 就不再是一个简单的守护进程那么简单了，而是通过集成 containerd、containerd-shim、runc 等多个组件共同完成。
+根据图图 1-15，再来看 Docker 的架构。经过 runc、containerd 组件的拆分改造之后，Docker 就不再是一个简单的守护进程那么简单了，而是通过集成 containerd、containerd-shim、runc 等多个组件共同完成。
 
 :::center
   ![](../assets/docker-arc.png)<br/>
  图 1-15 拆分后的 Docker 架构
 :::
 
-根据拆分后的 Docker 架构图看 ，根据功能的不同，容器运行时被分成两类：
+从拆分后的 Docker 架构图看 ，容器运行时被分成两类：
 - 只关注如 namespace、cgroups、镜像拆包等基础的容器运行时实现被称为“低层运行时”（low-level container runtime）。目前，应用最广泛的低层运行时是 runc；
 - 支持更多高级功能，如镜像管理、容器应用的管理等，被称为“高层运行时”（high-level container runtime）。目前，应用最广泛高层运行时是 containerd。
 
@@ -118,11 +112,9 @@ Kubernetes 围绕容器抽象了一系列的“资源”概念能描述整个分
 
 ## 6.云原生阶段：百花齐放
 
-2015 年 7 月 21 日，Google 带头成立了 Cloud Native Computing Foundation（CNCF，云原生基金会）。
+2015 年 7 月 21 日，Google 带头成立了 CNCF（Cloud Native Computing Foundation，云原生基金会）。
 
-OCI 和 CNCF 这两个围绕容器的基金会对云原生生态的发展发挥了非常重要的作用，二者不是竞争而是相辅相成，共同制定了一系列行业事实标准。
-
-其中与容器相关的最为重要的几个规范包括：CRI（Container Runtime Interface，容器运行时接口规范）、CNI（Container Network Interface，容器网络接口规范）、CSI（Container Storage Interface，容器存储接口规范）、OCI Distribution Spec、OCI Image Spec、OCI Runtime Spec，它们之间的关系如图 1-16 所示。
+OCI 和 CNCF 这两个围绕容器的基金会对云原生生态的发展发挥了非常重要的作用，二者相辅相成，共同制定了一系列行业事实标准规范。其中与容器相关规范有：CRI（Container Runtime Interface，容器运行时接口）、CNI（Container Network Interface，容器网络接口）、CSI（Container Storage Interface，容器存储接口）、OCI Distribution Spec、OCI Image Spec、OCI Runtime Spec。它们之间的关系如图 1-16 所示。
 
 :::center
   ![](../assets/container-2.jpeg)<br/>
@@ -131,7 +123,7 @@ OCI 和 CNCF 这两个围绕容器的基金会对云原生生态的发展发挥�
 
 这些行业事实标准的确立，为软件相关的各行业注入了无限活力，基于标准接口的具体实现不断涌现，呈现出一片百花齐放的景象。
 
-如图 1-17 所示，迄今为止在其 CNCF 公布的云原生全景图中，显示了近 30 个领域、数百个项目的繁荣发展，从数据存储、消息传递，到持续集成、服务编排乃至网络管理无所不包、无所不含。
+如图 1-17 所示，迄今为止在其 CNCF 公布的云原生全景图中，显示了近 30 个领域、数百个项目的繁荣发展，从数据存储、消息传递，到持续集成、服务编排乃至网络管理无所不包、无所不含！
 
 :::center
   ![](../assets/landscape.png)<br/>
