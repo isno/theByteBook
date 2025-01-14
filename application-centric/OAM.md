@@ -16,41 +16,20 @@ OAM 规范下的应用模型并非纯粹的抽象概念，是可以被实际使�
 
 通过组件（Component）和运维特征（Trait）将业务研发人员与运维人员关注的不同特征进行分离，再将不同的运维特征（Trait）与业务组件（Component）进行绑定，最终再由 OAM 可交付物 – Application Configuration 组装为一个统一的应用。对于一个应用而言，大家只需要一份 OAM 的这种自包含的应用描述文件，完整地跟踪到一个软件运行所需要的所有资源和依赖。
 
-```
-apiVersion: core.oam.dev/v1beta1
-kind: ApplicationConfiguration
-metadata:
-  name: my-app-config
-spec:
-  components:
-    - componentName: web-server
-      traits:
-        - trait:
-            apiVersion: core.oam.dev/v1alpha2
-            kind: ManualScalerTrait
-            metadata:
-              name: web-server-scaler
-            spec:
-              replicaCount: 3
-    - componentName: database
-      traits:
-        - trait:
-            apiVersion: core.oam.dev/v1alpha2
-            kind: SidecarTrait
-            metadata:
-              name: database-sidecar
-            spec:
-              containers:
-                - name: backup-agent
-                  image: backup/agent:latest
-                  resources:
-                    limits:
-                      cpu: "0.5"
-                      memory: "128Mi"
-```
-把这样的”高级抽象“交给 OAM 规范实现（如 KubeVela），它将其转换为 Kubernetes 底层资源（如 Deployment、Service 等），就可以快速、在不同运行环境上把应用随时运行起来！
+把这样的”高级抽象“交给 OAM 规范实现（如 KubeVela），它将其转换为 Kubernetes 底层资源（如 Deployment、Service 等），
 
-KubeVela 可以看做是 OAM 规范的 Kubernetes 解释器，它于 2020 年 11 月发布正式对外开源，2021 年 4 月发布了 v1.0，2021 年 6 月加入 CNCF 成为沙箱项目。该项目的贡献者来自世界各地，有超过 260 多名贡献者，包括招商银行、滴滴、京东、极狐 GitLab、SHEIN 等。
+KubeVela 项目是 OAM 社区的官方项目，它既是一个端到端、面向全量场景的 OAM Kubernetes 完整实现，同时也是阿里云 EDAS 服务和内部多个核心 PaaS/Serverless 生产系统底层的核心组件。
+
+
+KubeVela 的交付模型是可编程的、以声明式的方式驱动。KubeVela 在 OAM 模型层实现中集成了 CUELang 这种简洁强大的模板语言，从而为平台工程师基于 Kubernetes API 对象定义用户侧抽象，提供了一个标准、通用的配置工具！利用整个 Kubernetes 社区作为自己的“插件中心”，并且“故意”把它的每一个内置能力都设计成是独立的、可插拔的插件。
+
+:::center
+  ![](../assets/definition-cap.png)<br/>
+  图 4-0 OAM 应用部署计划
+:::
+
+有了 KubeVela，平台工程师终于拥有了一个可以方便快捷地将任何一个 Kubernetes 社区能力封装抽象成一个面向用户的上层平台特性的强大工具。而作为这个平台的最终用户，应用开发者们只需要学习这些上层抽象，在一个配置文件中描述应用，就可以快速、在不同运行环境上把应用随时运行起来！
+
 
 
 [^1]: https://zh.wikipedia.org/wiki/%E4%BF%A1%E6%81%AF%E7%83%9F%E5%9B%B1
