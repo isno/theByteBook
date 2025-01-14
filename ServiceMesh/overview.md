@@ -1,6 +1,6 @@
 # 8.5 服务网格的产品与生态
 
-2016 年，Buoyant 公司发布了第一代服务网格 Linkerd。同一时期，离开 Twitter 的工程师 Matt Klein 加入了 Lyft，启动了 Envoy 项目。第一代服务网格稳步发展时，世界的另一角落，Google 和 IBM 两个巨头开始联手，与 Lyft 一起启动了 Istio 项目。
+2016 年，Buoyant 公司发布了 Linkerd。同一时期，离开 Twitter 的工程师 Matt Klein 加入了 Lyft，启动了 Envoy 项目。第一代服务网格稳步发展时，世界的另一角落，Google 和 IBM 两个巨头联手，与 Lyft 一起启动了 Istio 项目。
 
 Istio 的最大创新在于为微服务系统带来了前所未有的控制力：
 - 以 Linkerd 为代表的第一代服务网格，通过 Sidecar 模式控制微服务间的流量；
@@ -60,7 +60,7 @@ Linkerd2 的架构如图 8-13 所示，增加了控制平面，但整体相对�
 
 Linkerd 和 Istio 在性能和资源成本上的显著差异，要归因于 Linkerd2-proxy，该代理为 Linkerd 的整个数据平面提供动力。因此。上述基准测试很大程度上反映了 Linkerd2-proxy 与 Envoy 之间的性能和资源消耗对比。
 
-虽然 Linkerd2-proxy 性能卓越，但由于其使用编程语言 Rust 相对小众，开源社区的贡献者数量稀少。截至 2024 年 6 月，Linkerd2-proxy 的贡献者仅有 53 人，而 Envoy 的贡献者则多达 1,104 人。此外，Linkerd2-proxy 不支持服务网格领域的 xDS 控制协议，其未来发展将高度依赖于 Linkerd 本身的进展。
+虽然 Linkerd2-proxy 性能卓越，但使用的编程语言 Rust 相对小众，开源社区的贡献者数量稀少。截至 2024 年 6 月，Linkerd2-proxy 的贡献者仅有 53 人，而 Envoy 的贡献者则高达 1,104 人。此外，Linkerd2-proxy 不支持服务网格领域的 xDS 控制协议，其未来发展将高度依赖于 Linkerd 本身的进展。
 
 [^1]: 参见 https://github.com/linkerd/linkerd2
 [^2]: 这项测试工作还诞生服务网格基准测试工具 service-mesh-benchmark，以便任何人都可以复核结果。https://github.com/kinvolk/service-mesh-benchmark，以便任何人都可以复核结果。
