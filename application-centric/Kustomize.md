@@ -2,9 +2,9 @@
 
 Kubernetes 官方对应用的定义是一组具有相同目标资源合集。这种设定下，只要应用规模稍大，资源配置文件就开始泛滥。尤其是当不同环境（如开发和生产环境）之间的差异较小时，你就会发现通过 kubectl 管理应用十分“蛋疼”。
 
-Kubernetes 对此的观点是，如果逐一配置和部署资源文件过于繁琐，那就将应用中的稳定信息与可变信息分离，并自动生成一个多合一（All-in-One）的配置包。完成这一任务的工具名为 Kustomize。最初，Kustomize 是一个独立的小工具，但从 Kubernetes 1.14 版本开始，它被集成到 kubectl 命令中，成为 Kubernetes 的内置功能。
+Kubernetes 对此的观点是，如果逐一配置和部署资源文件过于繁琐，那就将应用中的稳定信息与可变信息分离，并自动生成一个多合一（All-in-One）的配置包。完成这一任务的工具名为 Kustomize。
 
-Kustomize 可以看作是 YAML 模板引擎的变体，由它的应用结构包括两个主要部分：base 和 overlays。base 目录存放原始的 Kubernetes YAML 模板文件，overlays 目录用于管理不同环境的差异。每个目录下都有一个 kustomization.yaml 配置文件，描述如何组合和修改 Kubernetes 资源。
+Kustomize 可以看作是 YAML 模板引擎的变体，由它组织的应用结构有两个部分：base 和 overlays。base 目录存放原始的 Kubernetes YAML 模板文件，overlays 目录用于管理不同环境的差异。每个目录下都有一个 kustomization.yaml 配置文件，描述如何组合和修改 Kubernetes 资源。
 
 ```bash
 .
