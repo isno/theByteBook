@@ -4,7 +4,7 @@
 
 ## 7.8.1 Pod 水平自动伸缩
 
-HPA（Horizontal Pod Autoscaler，Pod 水平自动扩缩）是 Kubernetes 中，根据工作负载（如 Deployment）的需求自动调整 Pod 副本的数量的机制。
+HPA（Horizontal Pod Autoscaler，Pod 水平自动扩缩）是根据工作负载（如 Deployment）的需求自动调整 Pod 副本的数量的机制。
 
 HPA 的原理很简单，即监控资源使用程度做出相应的调整：
 - 当负载较高时，增加工作负载的 Pod 副本数量；
@@ -37,7 +37,7 @@ $ kubectl get --raw "/apis/metrics.k8s.io/v1beta1/nodes/minikube" | jq '.'
 ```bash
 $ kubectl autoscale deployment foo --cpu-percent=70 --min=1 --max=10
 ```
-随后，HPA 定期获取 Metrics 数据，与设定的目标值比较，决定是否进行扩缩。如果需要扩缩，HPA 调用 Deployment 的 Scale 接口调整当前的副本数量，将 Deployment 下每个 Pod 的负荷维持在用户期望的水平。
+随后，HPA 定期获取 Metrics 数据，与设定的目标值比较，决定是否进行扩缩。如果需要扩缩，HPA 调用 Deployment 的 Scale 接口调整副本数量，将每个 Pod 的负荷维持在用户期望的水平。
 
 :::center
   ![](../assets/HPA.svg)<br/>
@@ -46,11 +46,9 @@ $ kubectl autoscale deployment foo --cpu-percent=70 --min=1 --max=10
 
 ## 7.8.2 Pod 垂直自动伸缩
 
-VPA，全称是 Vertical Pod Autoscaler（Pod 垂直自动伸缩）。
+VPA 全称是 Vertical Pod Autoscaler（Pod 垂直自动伸缩）。它的实现思路与 HPA 基本一致，两者都是通过 Metrics 接口获取指标，评估后做出相应的调整。不同的是，VPA 调整的是工作负载的资源配额（如 Pod 的 CPU 和内存的 request 和 limit）。
 
-VPA 的实现思路与 HPA 基本一致，也是通过监控 Metrics 接口并根据指标评估后做出相应的调整。不同的是，VPA 调整的是工作负载的资源配额（如 Pod 的 CPU 和内存的 request 和 limit）。
-
-值得注意的是，VPA 是 Kubernetes 中的一个可选附加组件，需单独安装和配置后，才能为特定工作负载（如 Deployment）创建 VPA 资源并定义资源调整策略。
+值得注意的是，VPA 是 Kubernetes 的附加组件，需要安装和配置后才能为工作负载（如 Deployment）定义资源调整策略。
 
 以下是一个 VPA 配置示例，供读者参考：
 
@@ -91,7 +89,7 @@ Recommendation:
 ...
 ```
 
-可见，VPA 适用于负载动态变化较大且资源使用需求不确定的应用场景，尤其是在无法精确预估应用资源需求的情况下。
+相比于 HPA，VPA 适用于负载动态变化较大、资源需求不确定的场景，尤其是在无法精确预估应用资源需求的情况下。
 
 ## 7.8.3 基于事件驱动的伸缩
 
@@ -140,11 +138,11 @@ spec:
 ```
 ## 7.8.4 节点自动伸缩
 
-业务的增长（也有可能萎缩），会导致集群资源不足或者过度冗余。开源节流的背景下，根据资源利用率情况自动增/减节点，集群规模越大，降低的成本越高！
+业务的增长（也有可能萎缩），会导致集群资源不足或者过度冗余。如果能根据集群资情况自动增/减节点，保证集群可用性的同时，还能最大程度降低资源成本！
 
-专门用于自动增/减节点组件为 Cluster AutoScaler。它的功能如下：
-- **自动扩展（Scale Up）**：当节点资源不能满足 Pod 需求时，Cluster AutoScaler 自动向云服务提供商（如 GCE、GKE、Azure、AKS、AWS 等）请求创建新的节点，扩展集群容量，确保应用能够获得所需的资源。
-- **自动缩减（Scale Down）**：当节点资源利用率长期处于低水平（如低于 50%），Cluster AutoScaler 自动将该节点上的 Pod 重新调度到其他节点，然后将节点从集群中移除，减少成本和资源浪费。
+Cluster AutoScaler 是专门用于调整节点的组件，它的功能如下：
+- **自动扩展（Scale Up）**：当节点资源不能满足 Pod 需求时，Cluster AutoScaler 向云服务提供商（如 GCE、GKE、Azure、AKS、AWS 等）请求创建新的节点，扩展集群容量，确保业务能够获得所需的资源。
+- **自动缩减（Scale Down）**：当节点资源利用率长期处于低水平（如低于 50%），Cluster AutoScaler 将该节点上的 Pod 调度到其他节点，然后将节点从集群中移除，避免资源浪费。
 
 :::center
   ![](../assets/Cluster-AutoScaler.png)<br/>
