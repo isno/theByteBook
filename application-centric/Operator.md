@@ -125,4 +125,4 @@ Operator 的实现上，其实是基于 CRD 构建“高层抽象”，通过 Ku
 
 Red Hat 收购 CoreOS 之后，为开发者提供一套完整的工具集 Operator Framework 简化 Kubernetes Operator 的开发过程，但这依然不是一件轻松的工作。以 etcd 的 Operator 为例，尽管 etcd 本身算不上特别复杂的有状态应用，etcd Operator 的功能也相对基础，但其代码超过了9,000 行。这是因为，管理有状态应用本身就是非常复杂的事情，更何况在容器云平台上进行管理。
 
-尽管业内对是否将有状态应用以容器形式部署存在激烈争议，但可以肯定的是，若希望有状态应用在 Kubernetes 上稳定运行，Operator 目前是最可行的解决方案！
+尽管业内对是否将有状态应用以容器形式部署存在激烈争议，但可以肯定的是，若希望有状态应用在 Kubernetes 上稳定运行，Operator 是目前最可行的方案！
