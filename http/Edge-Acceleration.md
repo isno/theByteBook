@@ -1,15 +1,15 @@
 # 2.7 对请求进行“动态加速”
 
-CDN 技术依赖“边缘节点”缓存静态文件实现就近访问，“动态加速”技术则是通过“边缘节点”，优化 IP 路由和传输层，对动态请求进行加速。
+CDN 技术依赖“边缘节点”缓存静态文件实现就近访问，“动态加速”技术则是利用“边缘节点”，优化 IP 路由、传输协议算法，对请求进行动态加速。
 
-目前，主流的技术服务商，如 Akamai、Fastly、Amazon CloudFront 和 Microsoft Azure 等在全球多个地区部署了数量庞大的边缘服务器，构建了一个庞大的全球性加速网络。使用上述服务商提供的“动态加速”操作简单，将域名的解析记录 CNAME 到服务商提供的域名后，整个加速过程就能自动实现。
+主流技术服务商（如 Akamai、Fastly、Amazon CloudFront 和 Microsoft Azure）在全球各地部署了大量边缘服务器，构建了覆盖广泛的全球加速网络。使用这些服务商的“动态加速”服务非常简单，只需将域名 CNAME 到服务商提供的地址，即可自动实现加速。
 
 操作流程大致如下：
 
-1. 源站（Origin）将域名 CNAME 到 CDN 服务商提供的域名。例如，将 www.thebyte.com.cn CNAME  到 thebyte.akamai.com。
+1. “源站”（Origin）将域名 CNAME 到 CDN 服务商提供的域名。例如，将 www.thebyte.com.cn CNAME  到 thebyte.akamai.com。
 2. 源站提供一个约 20KB 的文件资源，用于探测网络质量。
-3. CDN 服务商在源站附近选择一批转发节点（Relay Nodes）。
-4. 转发节点对测试资源执行下载测试，根据丢包率、RTT、路由的 hops 数等，选定客户端（End Users）到源站的最佳路径。
+3. CDN 服务商在源站附近选择一批“转发节点”（Relay Nodes）。
+4. 转发节点对测试资源执行下载测试，根据丢包率、RTT、路由的 hops 数等，选定“客户端”（End Users）到源站的最佳路径。
 
 :::center
   ![](../assets/dsa.png)<br/>
