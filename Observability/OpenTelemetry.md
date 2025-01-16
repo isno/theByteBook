@@ -22,6 +22,6 @@ OpenTracing 推出后不久，Google 和微软联合推出了 OpenCensus 项目�
   图 9-17 集成 OpenTelemetry 的可观测架构 [图片来源](https://opentelemetry.io/docs/)
 :::
 
-至于遥测数据采集后如何存储、展示、使用，OpenTelemetry 并不涉及。你可以使用 Prometheus + Grafana 做指标的存储和展示，使用 Jaeger 做链路追踪的存储和展示。这使得 OpenTelemetry 既不会因动了“数据的蛋糕”，引起生态抵制，也极大保存了精力，得以专注实现兼容“所有的语言、所有的系统”的“遥测数据采集器”（OpenTelemetry Collector）。
+至于遥测数据采集后如何存储、展示、使用，OpenTelemetry 并不涉及。你可以使用 Prometheus + Grafana 做指标的存储和展示，使用 Jaeger 做链路追踪的存储和展示。这使得 OpenTelemetry 既不会因动了“数据的蛋糕”，引起生态抵制，也保存了精力，专注实现兼容“所有的语言、所有的系统”的“遥测数据采集器”（OpenTelemetry Collector）。
 
-自 2019 年发布，OpenTelemetry 便得到了社区的广泛支持。现如今，绝大部分的云服务商，如 AWS、Google Cloud、Azure、阿里云等均已支持和推广 OpenTelemetry，各种第三方工具（如 Jaeger、Prometheus、Zipkin）也逐步集成 OpenTelemetry，共建了丰富的可观测性生态系统。
+自 2019 年发布，OpenTelemetry 便得到了社区的广泛支持，绝大部分云服务商，如 AWS、Google Cloud、Azure、阿里云等均已支持和推广 OpenTelemetry，各种第三方工具（如 Jaeger、Prometheus、Zipkin）也逐步集成 OpenTelemetry，共建了丰富的可观测性生态系统。
