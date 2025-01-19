@@ -19,13 +19,30 @@ OAM 使用上述自定义资源将原先 Kubernetes All-in-one 的复杂配置�
 
 KubeVela 是 OAM 规范在 Kubernetes 上的完整实现，它起源于 OAM 社区，由阿里巴巴、微软等技术专家共同维护。
 
-对于平台工程师（latform Builder）来说，他们按照 OAM 模型，把 Kubernetes 生态中的各种能力，无缝转换为 KubeVela 的能力；而对于最终用户（End User，研发人员或者运维人员）来说，他们选择部署环境、挑选能力模块并填写业务参数，就可以在不同运行环境上把应用随时运行起来！所以说，KubeVela 对最终用户提供媲美 PaaS 的使用体验，又为平台工程师带来 Kubernees 原生的高可扩展性和平台构建规范！
+对于平台工程师（latform Builder）来说，KubeVela 像一个可以无限扩展、Kubernetes 原生的应用构建引擎，他们准备应用部署环境、维护稳定可靠的基础设施功能，并将这些基础设施能力作为 KubeVela 模块注册到集群中；而对于最终用户（End User，研发人员或者运维人员）来说，他们选择部署环境、挑选能力模块并填写业务参数，就可以在不同运行环境上把应用随时运行起来！
 
 KubeVela 工作流程如下图。
 :::center
   ![](../assets/kubevela.jpg)<br/>
   图 4-0 KubeVela 工作流程
 :::
+
+:::tip 落地 Kubernetes 的难题
+
+很多公司落地 Kubernetes 的时候采用了 “PaaS” 化的思路，即在 Kubernetes 之上，开发一个类 PaaS 平台。但这个设计，跟 Kubernetes “以应用为中心”的设计不一致，Kubernetes 一旦退化成“类IaaS 基础设施”，它的声明式 API、容器设计模式、控制器模式根本无法发挥原本的实力，也很难与广泛的生态对接。
+
+上述问题在 PaaS 系统上的体现就是不具备扩展性，假设我们要满足以下诉求：
+
+- 能不能帮我运行一个定时任务
+- 能不能帮我运运行一个 MySQL Operator
+- 能不能根据自定义 metrics 定义水平扩容策略
+- 能不能基于 Istio 来帮我做渐进式灰度发布
+
+这里的关键点在于，上述能力在 Kubernetes 生态中都是非常常见的的能力，有的甚至是 Kubernetes 内置就可以支持。但是到了 PaaS 这里，要支持上述任何一个能力，必须进行一轮开发。而且由于先前的一些假设和设计，甚至很可能需要大规模的重构。
+:::
+
+KubeVela 本质上其实就是在 Kuberntes 上安装了一个 OAM 插件，从而使得平台工程师能够按照 OAM 规范，把 Kubernetes 生态中的各种能力或插件“攒”成一个应用交付平台。所以说，KubeVela 对最终用户提供媲美 PaaS 的使用体验，又为平台工程师带来 Kubernees 原生的高可扩展性和平台构建规范！
+
 
 不过，目前来看，KubeVela 背后的理论还是过于抽象，落地有一定的技术门槛！但 KubeVela 这种构建以”应用为中心“的上层平台的思想，无疑代表着云原生技术未来发展的趋向！
 
