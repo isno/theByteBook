@@ -313,7 +313,7 @@ export default defineUserConfig({
                     '/application-centric/PaaS.md',
                     '/application-centric/Controller.md',
                     {
-                        text: "10.3 从“构建抽象”到“应用模型”",
+                        text: "10.3 从“封装配置”到“应用模型”",
                         link: '/application-centric/app-model.md',
                         children: [
                             '/application-centric/Kustomize.md',
