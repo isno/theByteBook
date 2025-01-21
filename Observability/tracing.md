@@ -1,6 +1,6 @@
 # 9.3.3 分布式链路追踪
 
-微服务架构的先驱 Uber 公司曾在公开资料中介绍过它们微服务的规模，它们的打车系统约由 2,200 个相互依赖的子服务组成。引用资料中的配图，直观感受铺面而来的复杂。
+微服务架构的先驱 Uber，曾经撰写博客介绍过它们的打车系统，该系统约由 2,200 个相互依赖的微服务组成。引用资料中的配图，直观感受铺面而来的复杂。
 :::center
   ![](../assets/uber-microservice.png)<br/>
   图 9-10 Uber 使用 Jaeger 生成的追踪链路拓扑 [图片来源](https://www.uber.com/en-IN/blog/microservice-architecture/)
