@@ -28,6 +28,6 @@ Trace ID: 12345
 :::
 
 
-2021 年，CNCF 发布的可观测性白皮书[^1]中，新增了性能剖析（Profiling）和核心转储（Core dump）2 种数据类型。接下来，笔者将详细介绍这 5 类数据的采集、存储和分析处理，以及海量规模时的处理难点。
+2021 年，CNCF 发布了可观测性白皮书[^1]，里面新增了性能剖析（Profiling）和核心转储（Core dump）2 种数据类型。接下来，笔者将详细介绍这 5 类遥测数据的采集、存储和分析处理逻辑。
 
 [^1]: 参见 https://github.com/cncf/tag-observability/blob/main/whitepaper.md
