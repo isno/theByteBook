@@ -15,7 +15,7 @@ Kubernetes 使用 Deployment 编排无状态应用，假设所有 Pod 完全相�
 
 Kubernetes v1.9 版本引入 StatefulSet 的核心功能就是用某种方式记录这些状态，当有状态应用的 Pod 重建后，仍然满足上一次运行状态的需求。不过有状态应用的维护并不限于此：
 - 以 StatefulSet 创建的 Etcd 集群为例，最多只能实现创建、删除集群等基本操作。对于集群扩容、健康检查、备份恢复等等高级运维操作，也需要配套支持。
-- 其次，使用 StatefulSet 创建 etcd 集群，还必须配置大量的细节，明确网络标识符、存储配置、集群成员管理、健康检查方式，告诉 Kuberntes 如何处理 Etcd。举一个具体的例子，让你体会在“在 YAML 文件里编程序”的感觉，请看：
+- 其次，使用 StatefulSet 创建 etcd 集群，还必须配置大量的细节，明确网络标识符、存储配置、集群成员管理、健康检查方式，告诉 Kuberntes 如何处理 Etcd。举一个具体的例子，供你体会在“在 YAML 文件里编程序”的感觉，请看下面配置 etcd 的 YAML 文件：
 ```yaml
 apiVersion: v1
 kind: Service
@@ -90,14 +90,13 @@ spec:
             storage: 1Gi
 ```
 
-观察上面的例子，不难发现，用户很难、也不想关心运维以及 Kubernetes 底层的各种概念。用户其实只关心下面两个信息。
+观察上面的例子，不难发现，用户很难、也不想关心运维以及 Kubernetes 底层的各种概念。用户其实只关心两个信息：我怎么连接它（端口 port）、etcd 的版本是多少（image）。如果向最终用户只暴露下述信息，是不是简洁很多了呢！
 ```
 port: 2379
 image: quay.io/coreos/etcd:v3.5.0
 ```
-将这样的对象暴漏给最终用户是不是简洁很多了呢！这种设计“简化版”的 API 对象，就叫做“构建上层抽象”，“构建上层抽象”是简化应用管理的必要手段。
 
-直接来看使用 Operator 后的情况，事情就变得简单多了。Etcd 的 Operator 提供了 EtcdCluster 自定义资源，在它的帮助下，仅用几十行代码，安装、启动、停止等基础的运维操作。
+这种设计“简化版”的 API 对象，就叫做“构建上层抽象”，“构建上层抽象”是简化应用管理的必要手段。接下来，看使用 Operator 后的情况，事情就变得简单多了。Etcd 的 Operator 提供了 EtcdCluster 自定义资源，在它的帮助下，仅用几十行代码，安装、启动、停止等基础的运维操作。
 ```yaml
 apiVersion: operator.etcd.database.coreos.com/v1beta2
 kind: EtcdCluster
