@@ -15,10 +15,7 @@ Kubernetes 使用 Deployment 编排无状态应用，假设所有 Pod 完全相�
 
 Kubernetes v1.9 版本引入 StatefulSet 的核心功能就是用某种方式记录这些状态，当有状态应用的 Pod 重建后，仍然满足上一次运行状态的需求。不过有状态应用的维护并不限于此：
 - 以 StatefulSet 创建的 Etcd 集群为例，最多只能实现创建、删除集群等基本操作。对于集群扩容、健康检查、备份恢复等等高级运维操作，也需要配套支持。
-- 其次，使用 StatefulSet 创建 etcd 集群，还必须配置大量的细节，明确网络标识符、存储配置、集群成员管理、健康检查方式，告诉 Kuberntes 如何处理 Etcd。
-
-笔者举一个具体的例子供你体会，你是否有“在 YAML 文件里编程序”的感觉？
-
+- 其次，使用 StatefulSet 创建 etcd 集群，还必须配置大量的细节，明确网络标识符、存储配置、集群成员管理、健康检查方式，告诉 Kuberntes 如何处理 Etcd。举一个具体的例子，让你体会在“在 YAML 文件里编程序”的感觉，请看：
 ```yaml
 apiVersion: v1
 kind: Service
