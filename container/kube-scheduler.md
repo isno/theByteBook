@@ -73,9 +73,7 @@ func getDefaultConfig() *schedulerapi.Plugins {
 }
 ```
 
-上述插件本质上是按照 Scheduling Framework 规范实现 Filter 方法，根据方法内预设的策略筛选节点。
-
-内置筛选插件的筛选策略，可总结为下述三类：
+上述插件本质上是按照 Scheduling Framework 规范实现 Filter 方法，根据方法内预设的策略筛选节点。总结它们的筛选策略为下述三类：
 
   - **通用过滤策略**：负责最基础的筛选策略。例如，检查节点可用资源是否满足 Pod 请求（request），检查 Pod 申请的宿主机端口号（spec.nodeport）是否跟节点中端口号冲突。对应的插件有 noderesources、nodeports 等。
   - **节点相关的过滤策略**：与节点相关的筛选策略。例如，检查 Pod 中污点容忍度（tolerations）是否匹配节点的污点（taints）；检查待调度 Pod 节点亲和性设置（nodeAffinity）是否和节点匹配；检查待调度 Pod 与节点中已有 Pod 之间亲和性（Affinity）和反亲和性（Anti-Affinity）的关系。对应的插件有 tainttoleration、interpodaffinity、nodeunschedulable 等。
@@ -150,12 +148,10 @@ profiles:
 
 经过优选阶段之后，调度器根据预定的打分策略为每个节点分配一个分数，最终选择出分数最高的节点来运行 Pod。如果存在多个节点分数相同，调度器则随机选择其中一个。
 
-经过预选阶段筛选，优选阶段的打分之后，调度器选择最终目标节点，最后阶段是通知目标节点内的 Kubelet 创建 Pod 了。
+选择出最终目标节点后，接下来就是通知目标节点内的 Kubelet 创建 Pod 了。
 
 这一阶段中，调度器并不会直接与 Kubelet 通信，而是将 Pod 对象的 nodeName 字段的值，修改为上述选中 Node 的名字即可。Kubelet 会持续监控 Etcd 中 Pod 信息的变化，然后执行一个称为“Admin”的本地操作，确认资源是否可用、端口是否冲突，实际上就是通用过滤策略再执行一遍，二次确认 Pod 是否能在该节点运行。
 
 不过，从调度器更新 Etcd 中的 nodeName，到 Kueblet 检测到变化，再到二次确认是否可调度。这一系列的过程，会持续一段不等的时间。如果等到一切工作都完成，才宣告调度结束，那势必影响整体调度的效率。
 
 调度器采用了“乐观绑定”（Optimistic Binding）策略来解决上述问题。首先，调度器同步更新 Scheduler Cache 里的 Pod 的 nodeName 的信息，并发起异步请求 Etcd 更新 Pod 的 nodeName 信息，该步骤在调度生命周期中称 Bind 步骤。如果调度成功了，Scheduler Cache 和 Etcd 中的信息势必一致。如果调度失败了（也就是异步更新失败），也没有太大关系，Informer 会持续监控 Pod 的变化，将调度成功却没有创建成功的 Pod 清空 nodeName 字段，并重新同步至调度队列。
-
-至此，整个 Pod 调度生命周期宣告结束。

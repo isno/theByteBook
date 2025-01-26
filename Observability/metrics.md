@@ -29,17 +29,15 @@ Prometheus 起源可以追溯到 Google 的内部监控系统 BorgMon。2012 年
 
 ## 2. 通过 Exporter 收集指标
 
-定义完指标类型后，接下来的任务是从监控目标中收集这些指标。
-
 收集指标看似简单，但实际上复杂得多：首先，应用程序、操作系统和硬件设备的指标获取方式各不相同；其次，它们通常不会以 Prometheus 格式直接暴露。例如：
 
 - Linux 的许多指标信息存储在 /proc 目录下，如 /proc/meminfo 提供内存信息，/proc/stat 提供 CPU 信息。
 - Redis 的监控数据通过执行 INFO 命令获取。
 - 路由器等硬件设备的监控数据通常通过 SNMP 协议获取。
 
-为了解决上述问题，Prometheus 设计了 Exporter 作为监控系统与被监控目标之间的“中介”，负责将不同来源的监控数据转换为 Prometheus 支持的格式。Exporter 通过 HTTP 协议将指标暴露在指定的端点（通常是 /metrics）上，供 Prometheus 定期抓取。
+为了解决上述问题，Prometheus 设计了 Exporter 作为监控系统与被监控目标之间的“中介”，负责将不同来源的监控数据转换为 Prometheus 支持的格式。
 
-如下所示，Prometheus 请求某个 Exporter，获取名称为 http_request_total、类型为 Counter 的指标。Prometheus 定期请求这个接口，从而实现对系统状态的实时监控的目标。
+Exporter 通过 HTTP 协议将指标暴露在指定的端点（通常是 /metrics）上，供 Prometheus 定期抓取。如下所示，Prometheus 定期请求某个 Exporter，获取名称为 http_request_total、类型为 Counter 的指标。
 
 ```bash
 $ curl http://127.0.0.1:8080/metrics | grep http_request_total
@@ -48,7 +46,7 @@ $ curl http://127.0.0.1:8080/metrics | grep http_request_total
 http_request_total 5
 ```
 
-现今，Prometheus 社区涌现出大量用于不同场景的 Exporter，涵盖了基础设施、中间件和网络等各个领域。如表 9-1 所示，这些 Exporter 扩展了 Prometheus 的监控范围，几乎覆盖了所有用户关心的监控目标。
+现今，Prometheus 社区涌现出大量用于不同场景的 Exporter，涵盖了基础设施、中间件和网络等各个领域。如表 9-1 所示，这些 Exporter 扩展了 Prometheus 的监控范围，几乎覆盖了用户关心的所有监控目标。
 
 :::center
 表 9-1 Prometheus 中常用 Exporter
@@ -60,25 +58,23 @@ http_request_total 5
  | 硬件 | Apcupsd Exporter、IoT Edison Exporter、IPMI Exporter、Node Exporter 等 | 
  | 消息队列 |  Beanstalkd Exporter、Kafka Exporter、NSQ Exporter、RabbitMQ Exporter 等 |
  | 存储 | Ceph Exporter、Gluster Exporter、HDFS Exporter、ScaleIO Exporter 等 | 
- | HTTP服务 | Apache Exporter、HAProxy Exporter、Nginx Exporter 等 |
- | API服务 | AWS ECS Exporter、Docker Cloud Exporter、Docker Hub Exporter、GitHub Exporter 等 | 
+ | HTTP 服务 | Apache Exporter、HAProxy Exporter、Nginx Exporter 等 |
+ | API 服务 | AWS ECS Exporter、Docker Cloud Exporter、Docker Hub Exporter、GitHub Exporter 等 | 
  | 日志 | Fluentd Exporter、Grok Exporter 等 | 
  | 监控系统 |  Collectd Exporter、Graphite Exporter、InfluxDB Exporter、Nagios Exporter、SNMP Exporter 等 |
  | 其它 | Blockbox Exporter、JIRA Exporter、Jenkins Exporter、Confluence Exporter 等|
 
 ## 3. 存储指标
 
-存储数据本来是一项常规操作，但当面对存储指标类型的场景来说，必须换一种思路应对。举例来说，假设你负责管理一个小型集群，该集群有 10 个节点，运行着 30 个微服务系统。每个节点需要采集 CPU、内存、磁盘和网络等资源使用情况，而每个服务则需要采集业务相关和中间件相关的指标。假设这些加起来一共有 20 个指标，且按每 5 秒采集一次。那么一天的数据规模将是：
+存储数据本来是一项常规操作，但当面对存储指标类型的场景来说，必须换一种思路应对。举例来说，假设你负责管理一个小型集群，该集群有 10 个节点，运行着 30 个微服务系统。每个节点需要采集 CPU、内存、磁盘和网络等资源使用情况，而每个服务则需要采集业务相关和中间件相关的指标。假设这些加起来一共有 20 个指标，且按每 5 秒采集一次。那么，一天的数据规模将是：
 
 ```
 10（节点）* 30（服务）* 20 (指标) * (86400/5) （秒） = 103,680,000（记录）
 ```
 
-对于一个仅有 10 个节点的小规模业务来说，`7*24` 小时不间断生成的数据可能超过上亿条记录，占用 TB 级别的存储空间。
+对于一个仅有 10 个节点的小规模业务来说，`7*24` 小时不间断生成的数据可能超过上亿条记录，占用 TB 级别的存储空间。虽然关系型数据库或 NoSQL 数据库也可以处理时序数据，但它们并未充分利用时序数据的特点。因此，使用这些数据库往往需要不断增加计算和存储资源，导致系统的运维成本急剧上升。如何低成本存储这些海量的指标数据，是个关乎系统可用的重要课题。
 
-虽然关系型数据库或 NoSQL 数据库也可以处理时序数据，但它们并未充分利用时序数据的特点。因此，使用这些数据库往往需要不断增加计算和存储资源，导致系统的运维成本急剧上升。如何低成本存储这些海量的指标数据，是个关乎系统可用的重要课题。
-
-根据下面的指标数据思考它们的特征。
+以一个具体的指标数据为例，分析其特征可以发现，指标数据是纯数字型的，具有时间属性，旨在揭示某些事件的趋势和规律。此类数据通常不涉及关系嵌套、主键/外键，也不需要考虑事务处理。针对这一数据特点，业界已发展出专门优化的数据库类型——时序数据库（Time-Series Database，简称 TSDB）。
 
 ```json
   {
@@ -92,14 +88,10 @@ http_request_total 5
   },
 ```
 
-观察上述的数据结构，可以看出指标类型的数据是纯数字的、具有时间属性，目的揭示某些事件的趋势和规律。它们肯定没有关系嵌套、不用考虑主键/外键、不用考虑事务处理。对于这种类型的数据，业界也发展出了专门优化的数据库类型 —— 时序数据库（Time-Series Database，简称 TSDB）。
-
-时序数据库并不是一个新概念。最早的专用时序数据库之一是 1999 年问世的 RRDtool。自 2015 年以来，随着对实时数据监控、性能管理和预测分析需求的增加，时序数据库逐渐受到广泛关注，现已成为 DB-engines 排行网站上最受欢迎的数据库类型。
-
 与常规数据库（如关系型数据库或 NoSQL 数据库）相比，时序数据库在设计和用途上存在显著区别。笔者介绍数据结构、数据保留策略方面的差异供你参考：
 
-- 数据结构：时序数据库使用 LSM-Tree（Log-Structured Merge-Tree）来替代常规数据库中的 B+Tree。时序数据库中，所有写入操作首先写入内存存储区（MemTable，通常为跳表或平衡树）。当 MemTable 满时，数据会被批量写入磁盘文件中。虽然磁盘写入延迟较高，但由于批量操作，时序数据库在写入吞吐量上通常优于传统关系数据库（使用 B+Tree）。
-- 数据保留策略：时序数据通常有明确的生命周期，例如监控数据可能只需保留几天或几个月。时序数据库通常具有自动化的数据保留策略（data retention），以防止存储空间无限膨胀。例如，可以设置基于时间的保留策略，保留最近 30 天的数据，超过 30 天的数据将自动删除。
+- **数据结构**：时序数据库使用 LSM-Tree（Log-Structured Merge-Tree）来替代常规数据库中的 B+Tree。时序数据库中，所有写入操作首先写入内存存储区（MemTable，通常为跳表或平衡树）。当 MemTable 满时，数据会被批量写入磁盘文件中。虽然磁盘写入延迟较高，但由于批量操作，时序数据库在写入吞吐量上通常优于传统关系数据库（使用 B+Tree）。
+- **数据保留策略**：时序数据通常有明确的生命周期，例如监控数据可能只需保留几天或几个月。时序数据库通常具有自动化的数据保留策略（data retention），以防止存储空间无限膨胀。例如，可以设置基于时间的保留策略，保留最近 30 天的数据，超过 30 天的数据将自动删除。
 
 Prometheus 服务端内置了一个强大的时序数据库（该时序数据库与 Prometheus 同名）。Prometheus 时序数据库将数据按照时间范围进行“分片”存储，每两小时为一个时间窗口，数据被组织成时间块（chunk）。每个时间块包含该时间段内的所有样本数据、元数据文件以及索引文件。通过时间窗口以及分片的方式存储数据，使得 Prometheus 可以在海量数据规模的情况下，高效地根据特定时间段进行分析/查询指标。
 
@@ -110,9 +102,9 @@ Prometheus 服务端内置了一个强大的时序数据库（该时序数据库
 笔者稍后介绍的 Elastic Stack、ClickHouse 等技术皆是利用了分片技术实现水平可扩展以及并行计算能力。
 :::
 
-Prometheus 时序数据库内置了专用的数据查询语言 PromQL（Prometheus Query Language）。
+Prometheus 时序数据库内置了专用的数据查询语言 PromQL（Prometheus Query Language），这是一种由 Prometheus 定制的查询 DSL，其语法类似于支持函数和运算的 CSS 选择器。
 
-PromQL 是一种由 Prometheus 定制的查询 DSL，其语法类似于支持函数和运算的 CSS 选择器。举一个例子供你参考，假设有一个名为 http_requests_total 的指标，要计算过去 5 分钟内 host 标签为 server1 的请求速率，该 PromQL 查询如下：
+举个例子，假设有一个名为 http_requests_total 的指标，若要计算过去 5 分钟内 host 标签为 server1 的请求速率，该 PromQL 如下：
 
 ```PromQL
 rate(http_requests_total{host="server1"}[5m])
@@ -120,20 +112,16 @@ rate(http_requests_total{host="server1"}[5m])
 // 返回查询结果
 92.0
 ```
-PromQL 对时间序列数据提供了丰富的查询、聚合和逻辑运算，已广泛应用于 Prometheus 指标查询、可视化和告警处理等日常操作中。掌握 PromQL 语法已成为必备技能，笔者就不再详细介绍语法细节了。
+PromQL 提供了强大的查询、聚合和逻辑运算功能，广泛应用于 Prometheus 的指标查询、可视化和告警处理等日常操作中。掌握 PromQL 语法是使用 Prometheus 的必备技能，笔者就不再详细介绍语法细节了。
 
 ## 4. 展示分析/预警
 
 采集/存储指标最终目的要用起来，也就是要“展示分析”以及“预警”。
 
-在数据分析和可视化领域，Grafana Labs 公司开发的 Grafana 已成为事实上的标准。最初，Grafana 专注于时间序列数据的监控与分析，但随着项目的发展，它已经扩展到所有需要数据可视化和监控的场景，包括 IT 运维、应用性能监控以及物联网、金融、医疗等行业。
+在数据分析和可视化领域，Grafana Labs 公司开发的 Grafana 已成为行业事实标准。图 9-5 展示了一个 Grafana 仪表板（Dashboard），它两个核心概念：
 
-图 9-5 展示了一个 Grafana 仪表板（Dashboard），它两个核心概念：
-
-- **数据源（Data Source）**：在 Grafana 中，数据源指的是为其提供数据的服务。Grafana 支持多种数据源，包括时序数据库（如 Prometheus、Graphite、InfluxDB）、日志数据库（如 Loki、Elasticsearch）、关系型数据库（如 MySQL、PostgreSQL），以及云监控平台（如 Google Cloud Monitoring、Amazon CloudWatch、Azure Monitor）。Grafana 插件库中提供了多达 165 种数据源。如果找不到某个特定的数据源，那通常意味着该数据源已经被市场淘汰。
-- **面板（Panel）**：面板是仪表板中的基本构建块，用于显示各种可视化图表。Grafana 提供了多种图表类型，如仪表盘、表格、折线图、柱状图、热力图、饼图和直方图等。每个面板可以单独配置，并具备交互选项。通过 Panel 的 Query Editor（查询编辑器），可以为每个面板设置不同的数据源。例如，如果以 Prometheus 作为数据源，那在 Query Editor 中，我们使用 PromQL 查询语言从 Prometheus 中查询出相应的数据，并且将其可视化。Grafana 支持多种数据源，每个面板可配置不同的数据源，这样就可以在一个统一的界面上（仪表板）整合和展示来自多种不同系统的数据。
-
-Grafana 几乎涵盖了所有的数据源和图表类型。正如 Grafana 的宣传语所言“只要你能想到的数据，都能转化为你想要的图表”。
+- **面板**（Panel）：仪表板中的基本构建块，用于显示各种可视化图表。Grafana 提供了多种图表类型，如仪表盘、表格、折线图、柱状图、热力图、饼图和直方图等。每个面板可配置不同的数据源，这样就可以在一个统一的界面上（仪表板）整合和展示来自多种不同系统的数据。
+- **数据源**（Data Source）：图表背后的数据服务。Grafana 支持多种数据源，包括时序数据库（如 Prometheus、Graphite、InfluxDB）、日志数据库（如 Loki、Elasticsearch）、关系型数据库（如 MySQL、PostgreSQL），以及云监控平台（如 Google Cloud Monitoring、Amazon CloudWatch、Azure Monitor）。Grafana 插件库中提供了多达 165 种数据源。如果找不到某个你想要的数据源，那通常意味着该数据源已经被市场淘汰。
 
 :::center
   ![](../assets/grafana-dashboard-english.png)<br/>
@@ -157,12 +145,9 @@ groups:
         summary: "High QPS detected on instance {{ $labels.instance }}"
         description: "Instance {{ $labels.instance }} (job {{ $labels.job }}) has had a QPS greater than 1000 for more than 5 minutes."
 ```
+上述的配置，定期使用 PromQL 语法检查过去 5 分钟内，某个被监控目标（instance）中指定服务（job）的 QPS 是否超过 1000。如果条件满足，Prometheus 就会触发告警，Alertmanager 负责对告警进一步处理，笔者列举部分操作供你参考：
 
-这段规则定期通过 PromQL 语法检测过去 5 分钟内某个被监控目标（instance）中的某个具体服务（job）的 QPS 是否大于 1000。如果条件满足，Prometheus 就会触发告警，并将其发送到 Alertmanager。
-
-Alertmanager 负责对告警进一步处理，例如：
-
-- 分组（Grouping）：将具有相似标签的告警进行分组，以减少告警冗余。例如，若多个实例的故障告警属于同一服务，Alertmanager 可以将这些告警合并为一个群组发送，而不是发送多个独立的通知。
-- 抑制（Inhibition）：定义规则来抑制某些告警的触发。当某个重要告警已触发时，可以避免其他相关但不那么重要的告警再次触发，从而防止告警风暴。例如，当整个服务宕机时，单个实例宕机的告警可以被抑制。
-- 静默（Silencing）：在特定时间段内禁用某些告警通知。静默操作可以通过指定标签、持续时间和备注等条件设置，常用于维护期间的告警屏蔽。
-- 路由（Routing）：根据告警标签或其他规则将告警路由到不同的接收端。Alertmanager 支持通过标签、优先级等条件进行灵活的路由设置。例如，将高优先级告警发送到短信和电话通知，而将低优先级告警仅通过邮件发送。
+- **分组**（Grouping）：将具有相似标签的告警进行分组，以减少告警冗余。例如，若多个实例的故障告警属于同一服务，Alertmanager 可以将这些告警合并为一个群组发送，而不是发送多个独立的通知。
+- **抑制**（Inhibition）：定义规则来抑制某些告警的触发。当某个重要告警已触发时，可以避免其他相关但不那么重要的告警再次触发，从而防止告警风暴。例如，当整个服务宕机时，单个实例宕机的告警可以被抑制。
+- **静默**（Silencing）：在特定时间段内禁用某些告警通知。静默操作可以通过指定标签、持续时间和备注等条件设置，常用于维护期间的告警屏蔽。
+- **路由**（Routing）：根据告警标签或其他规则将告警路由到不同的接收端。Alertmanager 支持通过标签、优先级等条件进行灵活的路由设置。比如高优先级告警短信通知、低优先级告警邮件通知。

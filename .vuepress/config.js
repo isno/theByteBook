@@ -290,7 +290,7 @@ export default defineUserConfig({
                     "/observability/What-is-Observability.md",
                     "/observability/Observability-vs-Monitoring.md",
                     {
-                        text: "9.3 可观测数据的分类及处理",
+                        text: "9.3 遥测数据的分类与处理",
                         link: '/observability/signals.md',
                         children: [
                             '/observability/metrics.md',
