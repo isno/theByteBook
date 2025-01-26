@@ -53,11 +53,17 @@ Elasticsearch 的另一项关键技术是“分片”（sharding）。每个分�
 - **存储空间占用高**：Elasticsearch 不仅存储原始数据和反向索引，为了加速分析能力，可能还额外存储一份列式数据（Column-oriented Data）；其次，为了避免单点故障，Elasticsearch 会为每个分片创建一个或多个副本副本（Replica），这导致 Elasticsearch 会占用极大的存储空间。
 
 
-## 2. 轻量化处理方案 Loki 
+## 2. 轻量化方案 Loki 
 
 Grafana Loki 是由 Grafana Labs 开发的一款日志聚合系统，其设计灵感来源于 Prometheus，目标是成为“日志领域的 Prometheus”。与 Elastic Stack 相比，Loki 具有轻量、低成本和与 Kubernetes 高度集成等特点。
 
-Loki 的架构如图 9-7所示，主要组件有 Promtail（日志代理）、Distributor（分发器）、Ingester（写入器）、Querier（查询器）、Query Frontend（查询前端）和 Ruler（规则处理器）。其中，Promtail 负责从多种来源收集日志；Distributor 验证并分发日志；Ingester 负责存储和索引日志；Querier 执行日志查询；Query Frontend 优化查询请求；Ruler 处理监控和告警规则的执行。
+Loki 的架构如图 9-7 所示，其组件以及作用如下：
+- **日志代理**（Promtail）：负责从多种来源（如文件系统、云日志服务）收集日志，并将其格式化后发送至 Loki 系统。
+- **分发器**（Distributor）：接收 Promtail 或其他来源发送的日志，验证日志的完整性，并根据分片规则将日志分发到合适的 Ingester 节点。
+- **写入器**（Ingester）：负责日志的临时存储和索引，将日志数据分段存储，并定期将数据持久化到长久存储（如对象存储）。
+- **查询器**（Querier）：执行用户的日志查询请求，从存储中提取所需数据并返回结果。
+- **查询前端**（Query Frontend）：用于优化查询性能，负责分解复杂查询、管理缓存以及合并查询结果，提高查询效率和用户体验。
+- **规则处理器**（Ruler）：处理监控和告警规则，对日志数据执行周期性评估，并根据预定义规则触发告警或生成报告。
 
 :::center
   ![](../assets/loki_architecture_components.svg)<br/>
@@ -69,15 +75,13 @@ Loki 的主要特点是，只对日志的元数据（如标签、时间戳）建
 - **索引**（Indexes）：Loki 的索引仅包含日志流的标签（如日志的来源、应用名、主机名等）和时间戳，并将其与相应的块关联。
 - **块**（Chunks）：块是 Loki 用来存储实际日志数据的基本单元。每个日志条目都会被压缩成一个块，并存储在持久化存储介质中，如对象存储（例如 Amazon S3、GCP、MinIO）或本地文件系统。
 
-当用户发起日志查询时，Loki 根据时间范围和标签等查询条件，首先在索引中查找与条件匹配的块。然后，Loki 使用这些索引信息找到对应的日志块，从块存储中读取日志数据，并将其解压缩后返回给用户。
-
 不难看出，Loki 通过仅索引元数据、以及索引和块的分离存储设计，让其在处理大规模日志数据时具有明显的成本优势。
 
 ## 3. 列式存储数据库 ClickHouse
 
 近几年，在日志处理场景，ClickHouse 一词频繁出现。
 
-ClickHouse 是一个用于 OLAP（On-Line Analytical Processing，在线分析处理）的列式数据库管理系统，由俄罗斯 Yandex [^1]公司在 2008 年开发，并于 2016 年 6 月 开源。 
+ClickHouse 是一个用于 OLAP（On-Line Analytical Processing，在线分析处理）的列式数据库管理系统，由俄罗斯 Yandex [^2]公司在 2008 年开发，并于 2016 年 6 月 开源。 
 
 ClickHouse 的关键特点是：列式存储、向量化查询执行、高效压缩、实时数据处理、水平扩展、复杂查询（支持 SQL 语法）...。这些特点使 ClickHouse 能够在海量数据（数十亿级别）的规模下，实现基于 SQL 语法查询的秒级响应，因此成为大规模数据分析、实时流式数据查询以及业务数据分析的理想选择。
 
@@ -139,15 +143,14 @@ CREATE TABLE example (
 ORDER BY id;
 ```
 
-ClickHouse 支持“分片”（Sharding）技术，也就是支持分布式并行计算。节点规模的上限即是 Clickhouse 处理能力的上限，只要有足够多的硬件资源，Clickhouse 能实现处理数百亿到数万亿条记录、数 PB 级别的数据。
-
-根据 Yandex 的内部跑分结果来看（图 9-9），一亿条记录的规模上，ClickHouse 比 Vertia（一款商业的 OLAP 分析软件）快约 5 倍、比 Hive 快 279 倍、比 InifniDB 快 31 倍。正如 ClickHouse 的宣传所言，其他的开源系统太慢，商用的又太贵。只有 ClickHouse 在存储成本与查询性能之间做到了良好平衡，不仅快且还开源。
+作为一款分布式数据系统，ClickHouse 自然支持分片”（Sharding）技术，只要有足够多的硬件资源，ClickHouse 能处理数万亿条记录、PB 级别的数据量。根据 Yandex 内部的基准测试结果来看（图 9-9），ClickHouse 的性能遥遥领先对手，比 Vertica（一款商业 OLAP 软件）快约 5 倍，比 Hive 快 279 倍，比 InfiniDB 快 31 倍。
 
 :::center
   ![](../assets/ClickHouse-benchmark.jpeg)<br/>
   图 9-9 ClickHouse 性能测试 [图片来源](http://clickhouse.yandex/benchmark.html)
 :::
 
+正如 ClickHouse 的宣传所言，其他的开源系统太慢，商用的又太贵。只有 ClickHouse 在存储成本与查询性能之间做到了良好平衡，不仅快且还开源。
+
 [^1]: Elastic 公司的发展始于创始人 Shay Banon 的个人兴趣，从开源、聚人、成立公司，到走向纽交所，再到股价一路狂飙（截止 2024 年 7 月 11 日，最新市值 $107 亿），几乎是最理想的工程师创业故事。
-[^1]: 以运营俄罗斯最受欢迎的搜索引擎闻名，被称为俄罗斯的 Google
-[^2]: 参见 https://mp.weixin.qq.com/s/dUs7WUKUDOf9lLG6tzdk0g
+[^2]: Yandex 是一家总部位于俄罗斯的跨国科技公司，被称为“俄罗斯的谷歌”，以其搜索引擎、互联网服务和技术创新而闻名。
