@@ -1,9 +1,6 @@
 # 2.5.2 HTTPS 优化实践
 
-众所周知，HTTPS 请求出了名的慢。
-
-未进行任何优化的情况下，HTTPS 的延迟比 HTTP 高出几百毫秒。本节，笔者介绍升级 TLS 协议、选择合适的密码套件、
-开启 OCSP Stapling 等手段降低 HTTPS 请求延迟。
+众所周知，HTTPS 请求出了名的慢。在未进行优化的情况下，HTTPS 的延迟比 HTTP 高出几百毫秒。本节，将介绍如何通过升级 TLS 协议、选择合适的密码套件以及启用 OCSP Stapling 等手段来降低 HTTPS 请求的延迟。
 
 ## 1. 使用 TLS1.3 协议 
 
@@ -18,7 +15,6 @@ server {
 	# 其他 SSL 配置...
 }
 ```
-
 ## 2. 使用 ECC 证书
 
 HTTPS 数字证书分为 RSA 证书和 ECC 证书，二者的区别在于：
@@ -150,10 +146,6 @@ OCSP Response Data:
 |ECC 证书 + TLS1.2| 639.39| 100|203.319ms|
 |ECC 证书 + TLS1.3| 627.39| 100|159.390ms|
 
-:::tip 
-表格中的 QAT 指的是 Quick Assist Technology。这是 Intel 公司推出的一种专用硬件加速技术
-::: 
+从测试结果上看，使用 ECC 证书明显比 RSA 证书性能提升很多。即使 RSA 证书使用了硬件加速技术 QAT（Quick Assist Technology），比起 ECC 证书还是存在明显差距。此外，使用 QAT 要额外购买硬件，维护成本也高，不再推荐使用。
 
-从测试结果上看，使用 ECC 证书明显比 RSA 证书性能提升很多。即使 RSA 证书使用了 QAT 加速，比起 ECC 证书还是存在明显差距。此外，使用 QAT 加速要额外购买硬件，硬件成本以及维护成本都很高，不再推荐使用。
-
-所以，HTTPS 配置推荐使用 TLS1.3 协议 + ECC 证书方式。
+综合上述，笔者推荐 HTTPS 的配置最好使用 TLS1.3 协议 + ECC 证书。
