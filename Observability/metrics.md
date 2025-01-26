@@ -1,47 +1,45 @@
-# 9.3.1 指标数据的处理
+# 9.3.1 指标的处理
 
-指标（Metrics）是监控系统的核心。
+提到指标，就不得不提 Prometheus 系统。
 
-提到监控系统，Prometheus 是绕不开的关键话题。Prometheus 的起源可以追溯到 Google 的内部监控系统 BorgMon。
+Prometheus 起源可以追溯到 Google 的内部监控系统 BorgMon。2012 年，前 Google 工程师 Julius Volz 加入 SoundCloud，他受到 BorgMon 启发，设计了 Prometheus，以满足 SoundCloud 对监控和告警的需求。2016 年 5 月，Prometheus 继 Kubernetes 之后成为云原生计算基金会（CNCF）的第二个正式项目。如今，Prometheus 已成为云原生系统中监控指标的事实标准。
 
-2012 年，前 Google 工程师 Julius Volz 加入 SoundCloud，并受到 BorgMon 的启发，设计了 Prometheus，以解决 SoundCloud 对监控和告警的需求。Prometheus 专注于通过时间序列数据库采集和存储指标数据。2016 年 5 月，它继 Kubernetes 之后成为云原生计算基金会（CNCF）的第二个正式项目。如今，Prometheus 已成为云原生系统中监控指标的事实标准。
+本节，我们将分析 Prometheus 系统的设计，深入了解指标的收集、存储和查询处理过程。
 
-本节，我们分析 Prometheus 系统的设计，理解指标的收集、存储、查询等相关处理。
-
-如图 9-3 所示，Prometheus 是一个高度模块化的系统。其中，服务发现（Service Discovery）自动发现监控目标；Exporter 将监控目标的指标转换为 Prometheus 可理解的格式；Pushgateway 处理短期任务的指标；Prometheus Server 处理指标的存储和查询；Alertmanager 负责度量指标，触发告警动作。
+根据图 9-3，我们首先对 Prometheus 的架构有个总体性的认识。Prometheus 是一个高度模块化的系统，主要的组件有：服务发现（Service Discovery）自动发现监控目标，Exporter 将监控目标的指标转换为 Prometheus 可理解的格式，Pushgateway 处理短期任务的指标，Prometheus Server 负责指标的存储和查询，Alertmanager 负责触发告警。
 
 :::center
   ![](../assets/prometheus-arch.png)<br/>
-  图 9-3 Prometheus 处理指标流程图
+  图 9-3 Prometheus 的架构
 :::
 
 ## 1. 定义指标的类型
 
-为方便用户理解和使用不同类型的指标，Prometheus 定义了四种类型的指标：
+为便于理解和使用不同类型的指标，Prometheus 定义了四种指标类型：
 
-- 计数器（Counter）：计数器是单调递增的，用于记录事件的累计次数。它只能递增或重置为 0，不能减少，适合记录不可逆的事件，如请求数、错误数等。常见的计数器指标包括 HTTP 请求次数、系统错误次数、数据包发送量等。
-- 仪表盘（Gauge）：仪表盘表示可增可减的数值，适合那些随时间波动的数据，例如系统资源利用率。它的值可以上下波动，常用于内存使用量、CPU 使用率等场景。
-- 直方图（Histogram）：直方图用于采样观测值，并将它们分配到预定义的区间（桶）中，适合统计分布情况，尤其适用于延迟、请求处理时间等场景。直方图不仅记录观测值的数量，还能够显示各个区间内的样本分布。常见应用包括 API 响应时间分布和任务处理延迟的测量。
-- 摘要（Summary）：摘要同样用于采样观测值，但它直接计算分位数（如 50%、90% 等），更适合需要精确分位数的数据分析。摘要常用于追踪延迟和响应时间，特别是需要获取特定分位数（如 99th 百分位）的精确结果。
+- **计数器**（Counter）：一种只增不减的指标类型，用于记录特定事件的发生次数。常用于统计请求次数、任务完成数量、错误发生次数等。在监控 Web 服务器时，可以使用 Counter 来记录 HTTP 请求的总数，通过观察这个指标的增长趋势，能了解系统的负载情况。
+- **仪表盘**（Gauge）：一种可以任意变化的指标，用于表示某个时刻的瞬时值。常用于监控系统的当前状态，如内存使用量、CPU 利用率、当前在线用户数等。
+- **直方图**（Histogram）：用于统计数据在不同区间的分布情况。它会将数据划分到多个预定义的桶（bucket）中，记录每个桶内数据的数量。常用于分析请求延迟、响应时间、数据大小等分布情况。比如监控服务响应时间时，Histogram 可以将响应时间划分到不同的桶中，如 0-100ms、100-200ms 等，通过观察各个桶中的数据分布，能快速定位响应时间的集中区间和异常情况。
+- **摘要**（Summary）：和直方图类似，摘要也是用于统计数据的分布情况，但与直方图不同的是，Summary 不能提供数据在各个具体区间的详细分布情况，更侧重于单一实例（例如单个服务实例）的数据进行计算。
 
 :::center
   ![](../assets/four-metrics-type.png)<br/>
-  图 9-4 Prometheus 定义的四种不同的指标类型
+  图 9-4 Prometheus 的四种指标类型
 :::
 
 ## 2. 通过 Exporter 收集指标
 
 定义完指标类型后，接下来的任务是从监控目标中收集这些指标。
 
-采集指标看似简单，但现实情况复杂得多。首先，应用程序、操作系统以及硬件设备的指标获取方式各式各样。其次，它们也不会直接暴露 Prometheus 格式的指标。例如：
+收集指标看似简单，但实际上复杂得多：首先，应用程序、操作系统和硬件设备的指标获取方式各不相同；其次，它们通常不会以 Prometheus 格式直接暴露。例如：
 
-- Linux 的许多指标信息以文件形式记录在 /proc 目录下。如 /proc/meminfo 提供内存信息，/proc/stat 提供 CPU 信息；
-- Redis 的监控信息需要通过 INFO 命令获取；
+- Linux 的许多指标信息存储在 /proc 目录下，如 /proc/meminfo 提供内存信息，/proc/stat 提供 CPU 信息。
+- Redis 的监控数据通过执行 INFO 命令获取。
 - 路由器等硬件设备的监控数据通常通过 SNMP 协议获取。
 
-为了解决上述问题，Prometheus 设计了 Exporter 用来实现指标收集与监控系统的解耦。Exporter 作为连接监控系统与被监控目标的桥梁，负责理解不同来源的监控数据，并将其转换为 Prometheus 支持的格式，然后通过 HTTP（通常暴露在 /metrics 端点）将指标提供给 Prometheus 进行抓取。
+为了解决上述问题，Prometheus 设计了 Exporter 作为监控系统与被监控目标之间的“中介”，负责将不同来源的监控数据转换为 Prometheus 支持的格式。Exporter 通过 HTTP 协议将指标暴露在指定的端点（通常是 /metrics）上，供 Prometheus 定期抓取。
 
-如下所示，Prometheus 请求 /metrics 接口获取名为 http_request_total、类型为 Counter 的指标。Prometheus 定期请求 metrics 接口，获取最新的指标数据，实现了对系统状态的实时监控。
+如下所示，Prometheus 请求某个 Exporter，获取名称为 http_request_total、类型为 Counter 的指标。Prometheus 定期请求这个接口，从而实现对系统状态的实时监控的目标。
 
 ```bash
 $ curl http://127.0.0.1:8080/metrics | grep http_request_total
@@ -68,12 +66,9 @@ http_request_total 5
  | 监控系统 |  Collectd Exporter、Graphite Exporter、InfluxDB Exporter、Nagios Exporter、SNMP Exporter 等 |
  | 其它 | Blockbox Exporter、JIRA Exporter、Jenkins Exporter、Confluence Exporter 等|
 
-
 ## 3. 存储指标
 
-存储数据本来是一项常规操作，但当面对存储指标类型的场景来说，必须换一种思路应对。
-
-举例来说，假设你负责管理一个小型集群，该集群有 10 个节点，运行着 30 个微服务系统。每个节点需要采集 CPU、内存、磁盘和网络等资源使用情况，而每个服务则需要采集业务相关和中间件相关的指标。假设这些加起来一共有 20 个指标，且按每 5 秒采集一次。那么一天的数据规模将是：
+存储数据本来是一项常规操作，但当面对存储指标类型的场景来说，必须换一种思路应对。举例来说，假设你负责管理一个小型集群，该集群有 10 个节点，运行着 30 个微服务系统。每个节点需要采集 CPU、内存、磁盘和网络等资源使用情况，而每个服务则需要采集业务相关和中间件相关的指标。假设这些加起来一共有 20 个指标，且按每 5 秒采集一次。那么一天的数据规模将是：
 
 ```
 10（节点）* 30（服务）* 20 (指标) * (86400/5) （秒） = 103,680,000（记录）
