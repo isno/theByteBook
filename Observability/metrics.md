@@ -2,11 +2,11 @@
 
 提到指标，就不得不提 Prometheus 系统。
 
-Prometheus 起源可以追溯到 Google 的内部监控系统 BorgMon。2012 年，前 Google 工程师 Julius Volz 加入 SoundCloud，他受到 BorgMon 启发，设计了 Prometheus，以满足 SoundCloud 对监控和告警的需求。2016 年 5 月，Prometheus 继 Kubernetes 之后成为云原生计算基金会（CNCF）的第二个正式项目。如今，Prometheus 已成为云原生系统中监控指标的事实标准。
+Prometheus 起源可以追溯到 Google 的内部监控系统 BorgMon。2012 年，前 Google 工程师 Julius Volz 加入 SoundCloud，他受到 BorgMon 启发，设计了 Prometheus，以满足 SoundCloud 对监控和告警的需求。2016 年 5 月，Prometheus 继 Kubernetes 之后成为云原生计算基金会（CNCF）的第二个正式项目。如今，Prometheus 已成为云原生系统中处理指标的事实标准。
 
-本节，我们将分析 Prometheus 系统的设计，深入了解指标的收集、存储和查询处理过程。
+本节，我们将分析 Prometheus 系统的设计，了解指标的收集、存储和使用过程。
 
-根据图 9-3，我们首先对 Prometheus 的架构有个总体性的认识。Prometheus 是一个高度模块化的系统，主要的组件有：服务发现（Service Discovery）自动发现监控目标，Exporter 将监控目标的指标转换为 Prometheus 可理解的格式，Pushgateway 处理短期任务的指标，Prometheus Server 负责指标的存储和查询，Alertmanager 负责触发告警。
+我们先对 Prometheus 的架构有个总体性的认识。如图 9-3 所示，Prometheus 是一个高度模块化的系统，主要的组件有：服务发现（Service Discovery）自动发现监控目标，Exporter 将监控目标的指标转换为 Prometheus 可理解的格式，Pushgateway 处理短期任务的指标，Prometheus Server 负责指标的存储和查询，Alertmanager 负责触发告警。
 
 :::center
   ![](../assets/prometheus-arch.png)<br/>
@@ -98,23 +98,20 @@ Prometheus 服务端内置了强大的时序数据库（与 Prometheus 同名）
 
 ## 4. 使用指标
 
-采集/存储指标最终目的要用起来，也就是要“展示分析”以及“预警”。
+采集和存储指标的最终目的是分析数据的趋势变化，预测业务需求（图形化），以及持续监控数据波动变化，及时发现问题（预警）。
 
-在数据分析和可视化领域，Grafana Labs 公司开发的 Grafana 已成为行业事实标准。图 9-5 展示了一个 Grafana 仪表板（Dashboard），它两个核心概念：
-
-- **面板**（Panel）：仪表板中的基本构建块，用于显示各种可视化图表。Grafana 提供了多种图表类型，如仪表盘、表格、折线图、柱状图、热力图、饼图和直方图等。每个面板可配置不同的数据源，这样就可以在一个统一的界面上（仪表板）整合和展示来自多种不同系统的数据。
-- **数据源**（Data Source）：图表背后的数据服务。Grafana 支持多种数据源，包括时序数据库（如 Prometheus、Graphite、InfluxDB）、日志数据库（如 Loki、Elasticsearch）、关系型数据库（如 MySQL、PostgreSQL），以及云监控平台（如 Google Cloud Monitoring、Amazon CloudWatch、Azure Monitor）。Grafana 插件库中提供了多达 165 种数据源。如果找不到某个你想要的数据源，那通常意味着该数据源已经被市场淘汰。
+Prometheus 提供了基本的展示功能，但其图形界面相对简单，许多用户会将 Prometheus 与 Grafana 配合使用（这也是 Prometheus 官方推荐的组合方案）。图 9-5 展示了一个 Grafana 仪表板（Dashboard）。将指标数据可视化，能够更方便地从中发现规律。例如，趋势分析可以帮助判断服务 QPS 的增长趋势，从而预测何时需要扩容；对照分析则能对比新旧版本的 CPU、内存等资源消耗，评估性能差异；在故障分析方面，服务性能的波动、瓶颈或潜在问题也更加容易识别。
 
 :::center
   ![](../assets/grafana-dashboard-english.png)<br/>
   图 9-5 Grafana 的仪表盘
 :::
 
-在预警方面，Prometheus 负责数据采集和预警信息的生成，而 Alertmanager 则专门处理这些预警信息。
+除了图形化展示外，指标的另一个主要用途是预警。例如，当某个服务的 QPS 超过设定的阈值时，系统自动发送一封邮件通知工程师及时处理，这就是一种预警。Prometheus 提供了专门的 Alertmanager 组件，用来管理和通知 Prometheus 生成的预警信息。
 
-下面是一个具体告警配置案例，展示如何使用 Prometheus 告警规则来监控某个 HTTP 接口的 QPS。
-
+如下面的例子所示，Prometheus 根据预设的条件定期检查数据，一旦满足预警条件，Prometheus 触发预警并将其发送到 Alertmanager。
 ```yaml
+// 定期使用 PromQL 语法检查过去 5 分钟内，某个被监控目标（instance）中指定服务（job）的 QPS 是否超过 1000。
 groups:
   - name: example-alerts
     rules:
@@ -127,11 +124,7 @@ groups:
         summary: "High QPS detected on instance {{ $labels.instance }}"
         description: "Instance {{ $labels.instance }} (job {{ $labels.job }}) has had a QPS greater than 1000 for more than 5 minutes."
 ```
-上述的配置，定期使用 PromQL 语法检查过去 5 分钟内，某个被监控目标（instance）中指定服务（job）的 QPS 是否超过 1000。如果条件满足，Prometheus 就会触发告警，Alertmanager 负责对告警进一步处理，笔者列举部分操作供你参考：
 
-- **分组**（Grouping）：将具有相似标签的告警进行分组，以减少告警冗余。例如，若多个实例的故障告警属于同一服务，Alertmanager 可以将这些告警合并为一个群组发送，而不是发送多个独立的通知。
-- **抑制**（Inhibition）：定义规则来抑制某些告警的触发。当某个重要告警已触发时，可以避免其他相关但不那么重要的告警再次触发，从而防止告警风暴。例如，当整个服务宕机时，单个实例宕机的告警可以被抑制。
-- **静默**（Silencing）：在特定时间段内禁用某些告警通知。静默操作可以通过指定标签、持续时间和备注等条件设置，常用于维护期间的告警屏蔽。
-- **路由**（Routing）：根据告警标签或其他规则将告警路由到不同的接收端。Alertmanager 支持通过标签、优先级等条件进行灵活的路由设置。比如高优先级告警短信通知、低优先级告警邮件通知。
+Alertmanager 接收到预警后，根据配置对预警进行分组（将相似标签的预警合并）、抑制（防止预警风暴发生）、静默（在维护期间，屏蔽预警）和路由（发送到短信、邮件、微信）处理。
 
 [^1]: https://db-engines.com/en/ranking/time+series+dbms
