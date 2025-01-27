@@ -37,7 +37,7 @@ Prometheus 起源可以追溯到 Google 的内部监控系统 BorgMon。2012 年
 
 为了解决上述问题，Prometheus 设计了 Exporter 作为监控系统与被监控目标之间的“中介”，负责将不同来源的监控数据转换为 Prometheus 支持的格式。
 
-Exporter 通过 HTTP 协议将指标暴露在指定的端点（通常是 /metrics）上，供 Prometheus 定期抓取。如下所示，Prometheus 定期请求某个 Exporter，获取名称为 http_request_total、类型为 Counter 的指标。
+Exporter 可以作为独立服务运行，也可以与应用程序共享同一进程，只需集成 Prometheus 客户端库即可。Exporter 通过 HTTP 协议返回符合 Prometheus 格式的文本数据，Prometheus 服务端会定期拉取这些数据。以下是一个 Exporter 示例，它返回名为 http_request_total 的 Counter 类型指标。
 
 ```bash
 $ curl http://127.0.0.1:8080/metrics | grep http_request_total
@@ -46,10 +46,10 @@ $ curl http://127.0.0.1:8080/metrics | grep http_request_total
 http_request_total 5
 ```
 
-现今，Prometheus 社区涌现出大量用于不同场景的 Exporter，涵盖了基础设施、中间件和网络等各个领域。如表 9-1 所示，这些 Exporter 扩展了 Prometheus 的监控范围，几乎覆盖了用户关心的所有监控目标。
+得益于 Prometheus 良好的社区生态，现在已有大量用于不同场景的 Exporter，涵盖了基础设施、中间件和网络等各个领域。如表 9-1 所示，这些 Exporter 扩展了 Prometheus 的监控范围，几乎覆盖了用户关心的所有监控目标。
 
 :::center
-表 9-1 Prometheus 中常用 Exporter
+表 9-1 常用的 Exporter
 :::
 
 | 范围 | 常用 Exporter |
@@ -66,7 +66,9 @@ http_request_total 5
 
 ## 3. 存储指标
 
-存储数据本来是一项常规操作，但当面对存储指标类型的场景来说，必须换一种思路应对。举例来说，假设你负责管理一个小型集群，该集群有 10 个节点，运行着 30 个微服务系统。每个节点需要采集 CPU、内存、磁盘和网络等资源使用情况，而每个服务则需要采集业务相关和中间件相关的指标。假设这些加起来一共有 20 个指标，且按每 5 秒采集一次。那么，一天的数据规模将是：
+存储数据本来是一项常规操作，但当面对存储指标类型的场景来说，必须换一种思路应对。
+
+举一个例子，假设你负责管理一个小型集群，该集群有 10 个节点，运行着 30 个微服务系统。每个节点需要采集 CPU、内存、磁盘和网络等资源使用情况，而每个服务则需要采集业务相关和中间件相关的指标。假设这些加起来一共有 20 个指标，且按每 5 秒采集一次。那么，一天的数据规模将是：
 
 ```
 10（节点）* 30（服务）* 20 (指标) * (86400/5) （秒） = 103,680,000（记录）
