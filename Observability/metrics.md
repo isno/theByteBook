@@ -1,16 +1,15 @@
 # 9.3.1 指标的处理
 
-提到指标，就不得不提 Prometheus 系统。
+提到指标，就不得不提 Prometheus 系统。Prometheus 是继 Kubernetes 之后，云原生计算基金会（CNCF）的第二个正式项目。该项目发展至今，已成为云原生系统中处理指标监控的事实标准。
 
-Prometheus 起源可以追溯到 Google 的内部监控系统 BorgMon。2012 年，前 Google 工程师 Julius Volz 加入 SoundCloud，他受到 BorgMon 启发，设计了 Prometheus，以满足 SoundCloud 对监控和告警的需求。2016 年 5 月，Prometheus 继 Kubernetes 之后成为云原生计算基金会（CNCF）的第二个正式项目。如今，Prometheus 已成为云原生系统中处理指标的事实标准。
+:::tip 额外知识
+有趣的是，像 Kubernetes 一样，Prometheus 也源自 Google 的 Borg 体系，其原型是与 Borg 同期诞生的内部监控系统 BorgMon。Prometheus 的发起原因与 Kubernetes 类似，都是希望以更好的方式将 Google 内部系统的设计理念传递给外部开发者。
+:::
 
-本节，我们将分析 Prometheus 系统的设计，了解指标的收集、存储和使用过程。
-
-我们先对 Prometheus 的架构有个总体性的认识。如图 9-3 所示，Prometheus 是一个高度模块化的系统，主要的组件有：服务发现（Service Discovery）自动发现监控目标，Exporter 将监控目标的指标转换为 Prometheus 可理解的格式，Pushgateway 处理短期任务的指标，Prometheus Server 负责指标的存储和查询，Alertmanager 负责触发告警。
-
+作为监控系统，Prometheus 的基本原理如图 9-3 所示，通过 pull（拉取）方式收集被监控对象的指标数据，并将其存储在 TSDB（时序数据库）中。其他组件（如 Grafana 和 Alertmanager）配合这一机制，实现指标数据可视化和预警功能。
 :::center
   ![](../assets/prometheus-arch.png)<br/>
-  图 9-3 Prometheus 的架构
+  图 9-3 Prometheus 的工作原理
 :::
 
 ## 1. 定义指标的类型
