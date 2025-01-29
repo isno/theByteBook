@@ -2,8 +2,8 @@
 
 2016 年，Buoyant 公司发布了 Linkerd。Matt Klein 离开 Twitter 并加入 Lyft，启动了 Envoy 项目。第一代服务网格稳步发展时，世界另一角落，Google 和 IBM 两个巨头联手，与 Lyft 一起启动了第二代服务网格 Istio。
 
-- 以 Linkerd 为代表的第一代服务网格，通过 Sidecar 控制微服务间的流量；
-- 以 Istio 为代表的第二代服务网格，新增控制平面，管理了所有 Sidecar。于是，Istio 对微服务系统掌握了前所未有的控制力。
+- 以 Linkerd 为代表的第一代服务网格，通过边车代理控制微服务间的流量；
+- 以 Istio 为代表的第二代服务网格，新增控制平面，管理了所有边车代理。于是，Istio 对微服务系统掌握了前所未有的控制力。
 
 依托行业巨头的背书与创新的控制平面设计理念，让 Istio 得到极大关注和发展，并迅速成为业界落地服务网格的主流选择。
 
@@ -14,7 +14,7 @@
 Buoyant 公司的第二代服务网格使用 Rust 构建数据平面 linkerd2-proxy ，使用 Go 开发了控制平面 Conduit，主打轻量化，目标是世界上最轻、最简单、最安全的 Kubernetes 专用服务网格。该产品最初以 Conduit 命名，Conduit 加入 CNCF 后不久，宣布与原有的 Linkerd 项目合并，被重新命名为 Linkerd 2[^1]。
 
 Linkerd2 的架构如图 8-13 所示，增加了控制平面，但整体相对简单：
-- 控制层面组件只有 destination（类似 Istio 中的 Pilot 组件）、identity（类似 Istio 中的 Citadel）和 proxy injector（代理注入器）。
+- 控制层面组件只有 destination（类似 Istio 中的 Pilot 组件）、identity（类似 Istio 中的 Citadel）和 proxy injector（代理注入器）；
 - 数据平面中 linkerd-init 设置 iptables 规则拦截 Pod 中的 TCP 连接，linkerd-proxy 实现对所有的流量管控（负载均衡、熔断..）。
 
 :::center
@@ -43,14 +43,14 @@ Linkerd2 的架构如图 8-13 所示，增加了控制平面，但整体相对�
 
 两年之后，Linkerd 与 Istio 都发布了多个更成熟的版本，两者的性能表现如何？笔者引用 William Morgan 文章《Benchmarking Linkerd and Istio》[^3]中的数据，向读者介绍 Linkerd v2.11.1、Istio v1.12.0 两个项目之间延迟与资源消耗的表现。
 
-首先是网络延迟层面的对比。如图 8-15 所示，中位数（P50）延迟的表现上，Linkerd 在 6ms 的基准延迟上增加了 6ms 额外延迟，而 Istio 的额外延迟为 15ms。值得注意的是，P90 以后两者出现明显差异，最极端的 Max 数据表现上，Linkerd 在 25ms 的基准延迟上增加了 25 ms 额外延迟，而 Istio 则增大了 5 倍，高达 253 ms 额外延迟。
+首先是网络延迟的对比。如图 8-15 所示，在中位数（P50）延迟上，Linkerd 在 6ms 的基准延迟基础上增加了 6ms，而 Istio 增加了 15ms。值得注意的是，从 P90 开始，两者的差异明显扩大。在最极端的 Max 数据上，Linkerd 在 25ms 的基准延迟上增加了 25ms，而 Istio 则增加了 5 倍，达到 253ms 的额外延迟。
 
 :::center
   ![](../assets/latency-200rps.png)<br/>
   图 8-15 Linkerd 与 Istio 的延迟对比
 :::
 
-接着是资源消耗层面的对比。如图 8-16 所示，Linkerd 代理消耗的内存最大 26 Mb，Istio 的 Envoy 代理消耗的内存最大 156.2 Mb，是 Linkerd 的 6倍。同样，Linkerd 的最大代理 CPU 时间记录为 36ms，而 Istio 的代理 CPU 时间记录为 67ms，比前者多出 85%。
+接下来是资源消耗的对比。如图 8-16 所示，Linkerd 代理的最大内存消耗为 26MB，而 Istio 的 Envoy 代理则为 156.2MB，是 Linkerd 的 6 倍。此外，Linkerd 的最大代理 CPU 时间为 36ms，而 Istio 的代理 CPU 时间为 67ms，比前者多出 85%。
 
 :::center
   ![](../assets/linkerd-resource.png)<br/>
