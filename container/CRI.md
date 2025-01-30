@@ -1,4 +1,4 @@
-# 7.4 容器运行时接口的演变
+# 7.4 容器运行时与 CRI 接口
 
 Docker 在诞生十多年后，未曾料到仍会重新成为舆论焦点。事件的起因是 Kubernetes 宣布将进入废弃 dockershim 支持的倒计时，随后讹传讹被人误以为 Docker 不能再用了。
 
@@ -6,11 +6,11 @@ Docker 在诞生十多年后，未曾料到仍会重新成为舆论焦点。事�
 
 ## 7.4.1 Docker 与 Kubernetes 
 
-由于 Docker 太流行了，Kubernetes 没有考虑支持其他容器引擎的可能性，完全依赖并绑定于 Docker。那时，Kubernetes 通过内部的 DockerManager 组件直接调用 Docker API 来创建和管理容器。
+由于 Docker 太流行了，Kubernetes 没有考虑支持其他容器引擎的可能性，完全依赖并绑定于 Docker。那时，Kubernetes 通过内部的 DockerManager 组件调用 Docker API 来创建和管理容器。
 
 :::center
   ![](../assets/k8s-runtime-v1.svg)<br/>
-  图 7-12 Kubernetes 早期调用 Docker 的链路
+  图 7-12 Kubernetes 通过内部的 DockerManager 组件管理容器
 :::
 
 随着市场上出现越来越多的容器运行时，比如 CoreOS 推出的开源容器引擎 Rocket（简称 rkt），Kubernetes 在 rkt 发布后采用类似强绑定 Docker 的方式，添加了对 rkt 的支持。随着容器技术的快速发展，如果继续采用与 Docker 类似的强绑定方式，Kubernetes 的维护工作将变得无比庞大。
@@ -56,7 +56,7 @@ service ImageService {
 
 :::center
   ![](../assets//cri-arc.png)<br/>
-  图 7-13 CRI 是通过 gRPC 实现的 API
+  图 7-13 CRI 的工作原理
 :::
 
 由此，市场上的各类容器运行时，只需按照规范实现 CRI 接口，就可以无缝接入 Kubernetes 生态。
@@ -74,7 +74,7 @@ Google 推出 CRI-O 的意图明显，即削弱 Docker 在容器编排领域的�
 
 不过，我们也可以想象，Docker 当时的内心一定充满了被抛弃的焦虑。
 
-## 7.4.4 Containerd 与 CRI 的关系演进
+## 7.4.4 Containerd 与 CRI 
 
 Docker 并没有“坐以待毙”，开始主动进行革新。回顾本书第一章 1.5.1 节关于 Docker 演进的内容，Docker 从 1.1 版本起开始重构，并拆分出了 Containerd。
 
@@ -85,7 +85,7 @@ Docker 并没有“坐以待毙”，开始主动进行革新。回顾本书第�
 
 :::center
   ![](../assets//k8s-runtime-v2.png)<br/>
-  图 7-15  Containerd 与 Docker 都不支持直接与 CRI 交互
+  图 7-15  早期的 Containerd 和 Docker，都不支持直接与 CRI 交互
 :::
 
 在这一阶段，Kubelet 和 dockershim 的代码都托管在同一个仓库中，意味着 dockershim 由 Kubernetes 负责组织、开发和维护。因此，每当 Docker 发布新版本时，Kubernetes 必须集中精力快速更新 dockershim。此外，Docker 作为容器运行时显得过于庞大。Kubernetes 弃用 dockershim 有了充分的理由和动力。
@@ -111,27 +111,28 @@ Kubernetes v1.24 版本正式移除 dockershim，实质上是废弃了内置的 
 
 ## 7.4.5 安全容器运行时
 
-尽管容器具备许多技术优势，但以 runc 为代表的基于共享内核的“软隔离”技术仍存在一定风险。如果某个恶意程序利用系统漏洞从容器中逃逸，可能对主机造成严重威胁，尤其公有云环境中，安全风险可能会影响到其他用户的数据和业务。
+事实上，虽然容器提供一个与系统中的其它进程资源相隔离的执行环境，但是与宿主机系统是共享内核的。如果有一个容器进程被恶意程序攻击，就有可能造成容器逃逸，轻则破坏当前的容器，重则造成 Linux 内核崩溃，导致整个机器宕机。
 
-出于对传统容器安全性的担忧，Intel 在 2015 年启动了基于虚拟机的容器技术：Clear Container。Clear Container 依赖 Intel VT 的硬件虚拟化技术，以及高度定制的 QEMU-KVM（qemu-lite）来提供高性能的虚拟机容器。2017 年，Clear Container 项目与 Hyper RunV 合并，后者是一个基于 hypervisor 的 OCI 运行时。最终，这些项目合并为如今广为人知的 Kata Containers 项目。
+为了提高安全性，许多负责大规模容器部署的运维人员将容器“嵌套”在虚拟机中，从逻辑上将容器与同一主机上的其他进程隔离。但在虚拟机中运行容器会丧失容器的速度和敏捷性优势。为了解决这个问题，Intel 和 Hyper.sh（现为蚂蚁集团的一部分）几乎同时开源了各自基于虚拟化技术的容器实现，分别是 Intel Clear Containers 和 runV 项目。
 
-Kata Containers 本质上是通过虚拟化技术模拟出一台“微型虚拟机”，虚拟机中运行一个精简的 Linux 内核，实现强隔离。此外，该虚拟机内有一个特殊的 init 进程，负责管理虚拟机内的所有进程，进程天然共享各个命名空间。因此，Kata Containers 天生和 Pod 具有等同的概念。 
+2017 年，两家公司将项目合并，互为补充，创建了开源项目 Kata Containers。该项目本质上，每个容器/Pod 采用其单独的内核，运行在一个精简后的轻量级虚拟机中，因此它“快如容器，稳似虚机”。
 
 :::center
   ![](../assets/kata-container.jpeg)<br/>
-  图 7-18 Kata Containers 与传统容器技术的对比 [图片来源](https://katacontainers.io/learn/)
+  图 7-18 Kata Containers 与传统容器对比 [图片来源](https://katacontainers.io/learn/)
 :::
 
-为了与上层的容器编排系统对接并融入容器生态，Kata Containers 运行时遵循 OCI 规范，并兼容 Kubernetes 的 CRI。Kata Containers 与 Kubernetes 的集成关系如图 7-19 所示。
+为了与上层容器编排系统对接，Kata Containers 启动一个进程（shimv2）来管理容器的生命周期。shimv2 相当于 Kata Containers 与容器运行时之间的兼容层，它使得 Kubernetes、Docker 等容器管理工具能够通过标准容器接口（如 CRI 或 Docker API）与 Kata Containers 进行交互，而无需直接处理虚拟机的复杂性。
 
 :::center
   ![](../assets/kata-container.jpg)<br/>
-  图 7-19 CRI 和 Kata Containers 的集成 [图片来源](https://github.com/kata-containers/documentation/blob/master/design/architecture.md)
+  图 7-19 Kubernetes 通过 CRI 接口管理 Kata Containers 容器 [图片来源](https://github.com/kata-containers/documentation/blob/master/design/architecture.md)
 :::
 
-除了 Kata Containers，2018 年末，AWS 发布了安全容器项目 Firecracker。该项目的核心其实是一个用 Rust 语言编写的，配合 KVM 使用的 VMM（Virtual Machine Manager，虚拟机管理程序）。Firecracker 必须配合 containerd 才能融入当今的容器生态。所以 AWS 又开源了 firecracker-containerd 项目，用于对接 Kubernetes 生态。
+除了 Kata Containers，2018 年底，AWS 发布了安全容器项目 Firecracker。其核心是一个用 Rust 编写的虚拟化管理器，利用现有的 Linux 内核虚拟化功能来创建和管理微虚拟机。
 
-本质上 Firecracker-containerd 是另外一个私有化、定制化的 Kata containers，整体架构和 Kata containers 类似，只是放弃了一些兼容性换取更简化的实现，其细节笔者就不再赘述了。
+不难看出，无论是 Kata Containers 还是 Firecracker，它们实现安全容器的方法殊途同归，都是为每个进程分配独立的操作系统内核，从而防止容器进程“逃逸”或夺取宿主机控制权的问题。
+
 
 ## 7.4.6 容器运行时生态
 
