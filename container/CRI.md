@@ -13,7 +13,7 @@ Docker 在诞生十多年后，未曾料到仍会重新成为舆论焦点。事�
   图 7-12 Kubernetes 早期调用 Docker 的链路
 :::
 
-随着市场上出现越来越多的容器运行时，例如 CoreOS 推出的开源容器引擎 Rocket（简称 rkt），Kubernetes 在 rkt 发布后采用类似强绑定 Docker 的方式，添加了对 rkt 的支持。随着容器技术的快速发展，如果继续采用这种与 Docker 类似的强绑定方式，Kubernetes 的维护工作将变得无比庞大。
+随着市场上出现越来越多的容器运行时，比如 CoreOS 推出的开源容器引擎 Rocket（简称 rkt），Kubernetes 在 rkt 发布后采用类似强绑定 Docker 的方式，添加了对 rkt 的支持。随着容器技术的快速发展，如果继续采用与 Docker 类似的强绑定方式，Kubernetes 的维护工作将变得无比庞大。
 
 Kubernetes 需要重新审视与各种容器运行时的适配问题了。
 
@@ -24,6 +24,7 @@ Kubernetes 需要重新审视与各种容器运行时的适配问题了。
 管理容器的接口称为“CRI 接口”（Container Runtime Interface，容器运行时接口）。如下面的代码所示，CRI 接口其实是一套通过 Protocol Buffer 定义的 API。
 
 ```protobuf
+// https://github.com/kubernetes/cri-api/blob/master/pkg/apis/services.go
 // RuntimeService 定义了管理容器的 API
 service RuntimeService {
 
@@ -62,52 +63,50 @@ service ImageService {
 
 ## 7.4.3 Kubernetes 专用容器运行时
 
-2017 年，由 Google、RedHat、Intel、SUSE 和 IBM 联合发起的 CRI-O（Container Runtime Interface Orchestrator）项目发布了首个正式版本。
-
-从名称可以看出，CRI-O 的目标非常明确，就是兼容 CRI 和 OCI，使得 Kubernetes 在不依赖于传统容器引擎（如 Docker）的情况下，也能实现对容器的管理。
+2017 年，Google、RedHat、Intel、SUSE 和 IBM 一众大厂联合发布了 CRI-O（Container Runtime Interface Orchestrator）项目。从名称可以看出，CRI-O 的目标是兼容 CRI 和 OCI，使 Kubernetes 能在不依赖传统容器引擎（如 Docker）的情况下，仍能有效管理容器。
 
 :::center
   ![](../assets//k8s-cri-o.png)<br/>
   图 7-14  Kubernetes 专用的轻量运行时 CRI-O
 :::
 
-Google 推出 CRI-O 的意图明显，即直接削弱 Docker 在容器编排领域的影响。但彼时的 Docker 在容器生态中的份额仍然占有绝对优势。对于普通用户来说，如果没有明确的收益，并没有什么动力要把 Docker 换成别的容器引擎。不过，我们也能够想像 Docker 心中肯定充斥了被抛弃的焦虑。
+Google 推出 CRI-O 的意图明显，即削弱 Docker 在容器编排领域的主导地位。但彼时 Docker 在容器生态中的市场份额仍占绝对优势。对于普通用户而言，如果没有明确的收益，并没么动力把 Docker 换成别的容器引擎。
+
+不过，我们也可以想象，Docker 当时的内心一定充满了被抛弃的焦虑。
 
 ## 7.4.4 Containerd 与 CRI 的关系演进
 
-Docker 没有“坐以待毙”，开始主动革新。
+Docker 并没有“坐以待毙”，开始主动进行革新。回顾本书第一章 1.5.1 节关于 Docker 演进的内容，Docker 从 1.1 版本起开始重构，并拆分出了 Containerd。
 
-回顾本书第一章 1.5.1 节关于 Docker 演进的介绍，Docker 从 1.1 版本起推动自身的重构，并拆分出 Containerd。
+早期，Containerd 单独开源，并未捐赠给 CNCF，还适配了其他容器编排系统，如 Swarm，因此并未直接实现 CRI 接口。出于诸多原因的考虑，Docker 对外部开放的接口也依然保持不变。在这种背景下，Kubernetes 中出现了两种调用链（如图 7-15 所示）：
 
-早期，Containerd 单独开源，并没有捐赠给 CNCF，Containerd 还适配了其他容器编排系统，如 Swarm，因此并没有直接实现 CRI 接口。出于诸多原因的考虑，Docker 对外部开放的接口也仍保持不变。
-
-上述两个背景下，Kubernetes 中出现了两种调用链（图 7-15 所示）：
-- 通过适配器 dockershim 调用：首先 dockershim 调用 Docker；接着，Docker 调用 Containerd；最后，Containerd 操作容器；
-- 通过适配器 CRI-containerd 调用：首先，CRI-containerd 调用 Containerd；接着，Containerd 操作容器。
+- **通过适配器 dockershim 调用**：首先 dockershim 调用 Docker，然后 Docker 调用 Containerd，最后 Containerd 操作容器；；
+- **通过适配器 CRI-containerd 调用**：首先 CRI-containerd 调用 Containerd，随后 Containerd 操作容器。
 
 :::center
   ![](../assets//k8s-runtime-v2.png)<br/>
   图 7-15  Containerd 与 Docker 都不支持直接与 CRI 交互
 :::
 
-在这个阶段，Kubelet 的代码和 dockershim 的代码都放在一个仓库内，这意味着 dockershim 由 Kubernetes 进行组织、开发和维护。因此，每当 Docker 发布新版本时，Kubernetes 必须集中精力快速更新和维护 dockershim。同时，Docker 仅作为容器运行时显得过于庞大，Kubernetes 弃用 dockershim 拥有了充分的理由和动力。
+在这一阶段，Kubelet 和 dockershim 的代码都托管在同一个仓库中，意味着 dockershim 由 Kubernetes 负责组织、开发和维护。因此，每当 Docker 发布新版本时，Kubernetes 必须集中精力快速更新 dockershim。此外，Docker 作为容器运行时显得过于庞大。Kubernetes 弃用 dockershim 有了充分的理由和动力。
 
-2018 年，Docker 将 Containerd 捐赠给 CNCF，并在 CNCF 的精心孵化下发布了 1.1 版。与 1.0 版相比，1.1 版的最大区别在于完美支持 CRI 标准，这意味着原本用作 CRI 适配器的 CRI-Containerd 可以抛弃了。
+再来看 Docker。2018 年，Docker 将 Containerd 捐赠给 CNCF，并在 CNCF 的支持下发布了 1.1 版。与 1.0 版相比，1.1 版的最大变化在于完全支持 CRI 标准，这意味着原本作为 CRI 适配器的 CRI-Containerd 也不再需要。
 
-Kubernetes v1.24 版本正式删除 dockershim，本质是废弃了内置的 dockershim 功能转而直接对接 Containerd。再观察 Kubernetes 与容器运行时之间的调用链，你会发现调用步骤相比 DockerShim、CRI-containerd 交互的步骤最多减少了两步。此时：
+Kubernetes v1.24 版本正式移除 dockershim，实质上是废弃了内置的 dockershim 功能，转而直接对接 Containerd。此时，再观察 Kubernetes 与容器运行时之间的调用链，你会发现，与 DockerShim 和 CRI-containerd 的交互相比，调用步骤最多减少了两步：
+
 - 用户只需抛弃 Docker 的情怀，容器编排至少可以省略一次调用，获得性能上的收益；
-- 从 Kubernetes 的角度来看，选择 Containerd 作为运行时组件，调用链更短、更稳定，占用节点资源也更少。
+- 对 Kubernetes 而言，选择 Containerd 作为容器运行时，调用链更短、更稳定、占用的资源更少。
 
 :::center
   ![](../assets//k8s-runtime-v3.png)<br/>
   图 7-16  Containerd 1.1 起，开始完美支持 CRI 
 :::
 
-根据 Kubernetes 官方提供的性能测试数据[^2]，Containerd 1.1 相比 Docker 18.03：Pod 的启动延迟降低了大约 20%；CPU 使用率降低了 68%；内存使用率降低了 12%。这是一个相当显著的性能改善。
+根据 Kubernetes 官方提供的性能测试数据[^2]，Containerd 1.1 相比 Docker 18.03，Pod 的启动延迟降低了 20%、CPU 使用率降低了 68%、内存使用率降低了 12%。这是一个相当显著的性能改善。
 
 :::center
   ![](../assets/k8s-runtime-v4.svg)<br/>
-  图 7-17 Containerd 与 Docker 的性能对比（结果越低越好）
+  图 7-17 Containerd 与 Docker 的性能对比
 :::
 
 ## 7.4.5 安全容器运行时
@@ -136,9 +135,9 @@ Kata Containers 本质上是通过虚拟化技术模拟出一台“微型虚拟�
 
 ## 7.4.6 容器运行时生态
 
-现如今，如图 7-20 所示，目前符合 CRI 规范的容器运行时已有十几种，选择哪一种取决于 Kubernetes 安装时宿主机的容器运行时环境。
+如图 7-20 所示，目前已有十几种容器运行时符合 CRI 规范，用户可根据 Kubernetes 安装时宿主机的容器运行时环境来选择合适的运行时。
 
-但对于云计算厂商而言，除非出于安全性需要（如必须实现内核隔离），大多数情况都会选择 Containerd 作为容器运行时。毕竟对于它们而言，性能与稳定性才是核心的生产力与竞争力。
+但对于云计算厂商而言，除非出于安全性需要（如必须实现内核级别的隔离），大多数情况都会选择 Containerd 作为容器运行时。毕竟对于它们而言，性能与稳定才是核心的生产力与竞争力。
 
 :::center
   ![](../assets/runtime.png)<br/>
