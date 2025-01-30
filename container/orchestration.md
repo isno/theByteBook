@@ -1,4 +1,4 @@
-# 7.2 容器的原理与演变
+# 7.2 容器技术的原理与演进
 
 字面上，“容器”这个词难以让人形象地理解真正含义，Kubernetes 中最核心的概念“Pod”也是如此。
 
@@ -32,7 +32,7 @@ bash-4.2# pwd
 除了 /bin 之外，如果我们将程序依赖的 /etc、/proc 等目录一同打包进去，实际上就得到了一个 rootfs 文件。因为 rootfs 包含的不仅是应用，还有整个操作系统的文件和目录，这意味着应用及其所有依赖都被封装在一起，这正是容器被广泛宣传为一致性解决方案的由来。
 :::
 
-我们再运行一个 docker，看看两者之间的区别。
+我们再运行一个 docker 容器，观察两者之间的区别。
 
 ```bash
 $ docker run -t -i ubuntu:18.04 /bin/bash
@@ -87,13 +87,15 @@ int pid = clone(main_function, stack_size, flags | SIGCHLD, NULL);
 
 ## 7.2.3 资源全方位限制
 
-进程的资源隔离已经完成，如果再对使用资源进行额度限制，就能对进程的运行环境实现进乎完美的隔离。这就要用 Linux 内核的第二项技术 —— Linux Control Cgroup（Linux 控制组群，简称 cgroups）。
+进程的资源隔离已经完成，如果再对使用资源进行额度限制，就能对进程的运行环境实现“进乎完美”的隔离。这就要用 Linux 内核的第二项技术 —— Linux Control Cgroup（Linux 控制组群，简称 cgroups）。
 
-cgroups 是 Linux 内核中用于隔离、分配并限制进程组使用资源配额的机制。例如用来控制进程 CPU 占用时间、内存的大小、磁盘 I/O 速度等。该项目由 Google 工程师（主要是 Paul Menage 和 Rohit Seth）在 2000 年发起，当时取名字叫“进程容器”（Process container）。不过，在 Linux 内核中，容器（container）这个名词有许多不同的意义。为了避免与其他“容器”相关概念混淆，于是被重命名为 cgroups 。
+cgroups 是 Linux 内核用于隔离、分配并限制进程组使用资源配额的机制。例如，它可以控制进程的 CPU 占用时间、内存大小、磁盘 I/O 速度等。该项目最初由 Google 工程师 Paul Menage 和 Rohit Seth 于 2000 年发起，当时称之为“进程容器”（Process Container）。由于“容器”这一名词在 Linux 内核中有不同含义，为避免混淆，最终将其重命名为 cgroups。
 
-2008 年，cgroups 合并到 Linux 内核 2.6.24 版本 后正式对外发布，这一阶段的 cgroups 被称为第一代 cgroups。2016 年 3 月发布的 Linux 内核 4.5 中引入了由 Facebook 工程师 Tejun Heo 重新编写的“第二代 cgroups”。相较于 v1 版本，第二代 cgroups 提供了更加统一的资源控制接口，使得对 CPU、内存、I/O 等资源的限制更加一致和统一。不过，由于兼容性和稳定性原因，目前多数容器运行时（container runtime）默认使用的仍然是第一代 cgroups。
+2008 年，cgroups 被合并到 Linux 内核 2.6.24 版本中，标志着第一代 cgroups 的发布。2016 年 3 月，Linux 内核 4.5 引入了由 Facebook 工程师 Tejun Heo 重写的第二代 cgroups。相比第一代，第二代提供了更加统一的资源控制接口，使得对 CPU、内存、I/O 等资源的限制更加一致。不过，考虑兼容性和稳定性，大多数容器运行时（container runtime）目前仍默认使用第一代 cgroups。
 
-Linux 系统通过文件系统向用户暴露 cgroups 的操作接口，这些接口以文件和目录的形式组织在 /sys/fs/cgroup 路径下。在 Linux 中执行 ls /sys/fs/cgroup 命令，可以看到在该路径下有许多子目录，如 blkio、cpu、memory 等。
+在 Linux 系统中，cgroups 通过文件系统向用户暴露其操作接口。这些接口以文件和目录的形式组织在 /sys/fs/cgroup 路径下。
+
+在 Linux 中执行 ls /sys/fs/cgroup 命令，可以看到在该路径下有许多子目录，如 blkio、cpu、memory 等。
 
 ```bash
 $ ll /sys/fs/cgroup
@@ -104,7 +106,8 @@ lrwxrwxrwx 1 root root 11 2月  17 2023 cpuacct -> cpu,cpuacct
 drwxr-xr-x 3 root root  0 2月  17 2023 memory
 ...
 ```
-在 cgroups 中，子目录也被称为“控制组子系统”（control group subsystems），它们明确了可以限制的资源类型。例如，内存子系统包含以下配置文件：
+在 cgroups 中，每个子目录被称为“控制组子系统”（control group subsystems），它们对应于不同类型的资源限制。每个子系统有多个配置文件，比如内存子系统：
+
 ```bash
 $ ls /sys/fs/cgroup/memory
 cgroup.clone_children               memory.memsw.failcnt
@@ -112,7 +115,7 @@ cgroup.event_control                memory.memsw.limit_in_bytes
 cgroup.procs                        memory.memsw.max_usage_in_bytes
 cgroup.sane_behavior                memory.memsw.usage_in_bytes
 ```
-这些文件各自具有不同的作用。例如，memory.kmem.limit_in_bytes 文件用于限制应用的总内存使用；memory.stat 用于统计内存使用情况；memory.failcnt 文件报告内存使用达到 memory.limit_in_bytes 设定的限制值的次数，等等。
+这些文件各自用于不同的功能。例如，memory.kmem.limit_in_bytes 用于限制应用程序的总内存使用；memory.stat 用于统计内存使用情况；memory.failcnt 文件报告内存使用达到了 memory.limit_in_bytes 限制值的次数等。
 
 目前，主流的 Linux 系统支持的控制组子系统如表 7-2 所示。
 
@@ -132,9 +135,9 @@ cgroup.sane_behavior                memory.memsw.usage_in_bytes
 | net_prio | 可以为各个 cgroup 中的应用程序动态配置每个网络接口的流量优先级 |
 |perf_event | 允许使用 perf 工具对 crgoups 中的进程和线程监控|
 
-Linux cgroups 的设计简单易用。对于 Docker 等容器系统，它们只需在每个子系统下为每个容器创建一个控制组（通过新建目录的方式），然后在容器进程启动后，将进程的 PID 写入对应控制组的 tasks 文件即可。
+Linux cgroups 的设计简洁易用。在 Docker 等容器系统中，只需为每个容器在每个子系统下创建一个控制组（通过创建目录），然后在容器进程启动后，将进程的 PID 写入相应子系统的 tasks 文件。
 
-如下代码所示，我们创建了一个内存控制组子系统（目录名为 $hostname），将进程（PID 为 3892）的内存限制为 1 GB，并限制其 CPU 使用时间为 1/4。
+如下面的代码所示，我们创建了一个内存控制组子系统（目录名为 $hostname），并将 PID 为 3892 的进程的内存限制为 1 GB，同时限制其 CPU 使用时间为 1/4。
 
 ```bash
 /sys/fs/cgroup/memory/$hostname/memory.limit_in_bytes=1GB // 容器进程及其子进程使用的总内存不超过 1GB
@@ -143,20 +146,16 @@ Linux cgroups 的设计简单易用。对于 Docker 等容器系统，它们只�
 echo 3892 > /sys/fs/cgroup/cpu/$hostname/tasks 
 ```
 
-最后，笔者补充一点，实际上 cgroups 对资源的限制也存在不完善之处。例如，常提到的 /proc 文件系统的问题，/proc 文件系统记录了进程对 CPU、内存等占用情况，这些数据也是 top 命令查看系统信息的主要来源。
+值得补充的是，cgroups 在资源限制方面仍有不完善之处。例如，/proc 文件系统记录了进程对 CPU、内存等资源的占用情况，这些数据是 top 命令查看系统信息的主要来源。然而，/proc 文件系统并未关联 cgroups 对进程的限制。因此，当在容器内部执行 top 命令时，显示的是宿主机的资源占用状态，而不是容器内的状态。为了解决这个问题，业内通常采用 LXCFS（LXC 用的 FUSE 文件系统）技术，维护一套专门用于容器的 /proc 文件系统，从而准确反映容器内的资源使用情况。
 
-问题在于，/proc 文件系统并未关联 cgroups 对进程施加的限制。因此，在容器内部执行 top 命令时，显示的是宿主机状态，而不是容器内的状态。为了解决这一问题，业内一般使用 LXCFS（FUSE filesystem for LXC）技术维护一套专用于容器的 /proc 文件系统。
-
-至此，相信读者们一定理解容器是什么。
-
-容器并不是轻量化的虚拟机，也没有创建出真正的沙盒（容器之间共享系统内核，这也是为什么出现了如 kata 和 gVisor 等内核隔离的沙盒容器，7.4.5 节详细介绍）。说白了，容器只是利用命名空间、cgroups 等技术进行资源隔离和限制，并拥有独立的根目录（rootfs）的特殊进程。
+至此，相信读者已经理解容器的概念。容器并不是轻量化的虚拟机，也不是一个完全的沙盒（容器共享宿主机内核，实现的是一种“软隔离”）。本质上，容器是通过命名空间、cgroups 等技术实现资源隔离和限制，并拥有独立根目录（rootfs）的特殊进程。
 
 
 ## 7.2.4 设计容器协作的方式
 
-既然容器是个特殊的进程，那联想到真正的操作系统内大部分进程也并非独自运行，而是以进程组有原则的组织在一起，共同协作完成某项工作。
+既然容器是个特殊的进程，那联想到真正的操作系统内大部分进程也并非独自运行，而是以进程组的形式被有序地组织和协作，完成特定任务。
 
-登录到一台 Linux 机器，执行 pstree -g 命令展示当前系统中正在运行进程的树状结构。
+例如，登录到 Linux 机器后，执行 pstree -g 命令可以查看当前系统中的进程树状结构。
 
 ```bash
 $ pstree -g
@@ -164,33 +163,25 @@ $ pstree -g
     |  |-{in:imuxsock) S 1(1089)
     | `-{rs:main Q:Reg}(1089)
 ```
-如上所示，展示了 Linux 系统中处理日志的 rsyslogd 程序的进程树结构。可以看到，rsyslogd 的主程序 main 以及内核日志模块 imklog 都属于进程组 1089。这些进程相互协作，共享 rsyslogd 程序的资源，共同履行 rsyslogd 的职责。
+如命令输出所示，rsyslogd 程序的进程树结构展示了其主程序 main 和内核日志模块 imklog 都属于进程组 1089。它们共享资源，共同完成 rsyslogd 的任务。对于操作系统而言，这种进程组管理更加方便。比如，Linux 操作系统可以通过向一个进程组发送信号（如 SIGKILL），使该进程组中的所有进程同时终止运行。
 
-对于操作系统而言，这种进程组管理更加方便。比如，Linux 操作系统可以通过向一个进程组发送信号（如 SIGKILL），使该进程组中的所有进程同时终止运行。
+现在，假设我们要将上述进程用容器改造，该如何设计呢？如果使用 Docker，通常会想到在容器内运行两个进程：
+- rsyslogd 负责业务逻辑；
+- imklog 处理日志。
 
-那么，现在思考一个问题：“如果把上面的进程用容器改造，该如何设计？”。
+但这种设计会遇到一个问题：容器中的 PID=1 进程应该是谁？在 Linux 系统中，PID 为 1 的进程是 init，它作为所有其他进程的祖先进程，负责监控进程状态，并处理孤儿进程。因此，容器中的第一个进程也需要具备类似的功能，能够处理 SIGTERM、SIGINT 等信号，优雅地终止容器内的其他进程。
 
-如果是使用 Docker，自然会想到在 Docker 容器内运行两个进程：
-- rsyslogd 进程执行具体的业务；
-- imklog 进程处理业务日志。
+Docker 的设计核心在于采用的是“单进程”模型。Docker 通过监控 PID 为 1 的进程的状态来判断容器的健康状态（在 Dockerfile 中用 ENTRYPOINT 指定启动的进程）。如果确实需要在一个 Docker 容器中运行多个进程，首个启动的进程应该具备资源监控和管理能力，例如，使用专为容器开发的 tinit 程序。
 
-但这种设计会遇到一个问题：“容器中的 PID=1 进程应该是谁？”。
-
-在 Linux 系统中，PID 为 1 的进程是 init，它作为所有其他进程的祖先进程，负责监控进程状态，并处理孤儿进程。因此，容器中的第一个进程也需要具备类似的功能，能够处理 SIGTERM、SIGINT 等信号，优雅地终止容器内的其他进程。
-
-Docker 的设计核心在于 Docker 容器采用的是“单进程”模型。Docker 通过监控 PID 为 1 的进程的状态来判断容器的健康状态（在 Dockerfile 中用 ENTRYPOINT 指定启动的进程）。如果确实需要在一个 Docker 容器中运行多个进程，首个启动的进程应该具备资源监控和管理能力，例如使用专为容器开发的 tinit 程序。
-
-通过 Docker，虽然可以勉强实现容器内运行多个进程，但进程间的协作远不止于资源回收那么简单。要让容器像操作系统中的进程组一样进行协作，下一步的演进是找到一个类似于“进程组”的概念。这是实现容器从隔离到协作的第一步。
+虽然通过 Docker 可以勉强实现容器内运行多个进程，但进程间的协作远不止于资源回收那么简单。要让容器像操作系统中的进程组一样进行协作，下一步的演进是找到类似“进程组”的概念。这是实现容器从“隔离”到“协作”的第一步。
 
 ## 7.2.5 超亲密容器组 Pod
 
-在 Kubernetes 中，与“进程组”对应的设计概念是 Pod。
+在 Kubernetes 中，与“进程组”对应的设计概念是 Pod。Pod 是一组紧密关联的容器集合，它们共享 IPC、Network 和 UTS 等命名空间，是 Kubernetes 管理的最基本单位。
 
-Pod 是一组紧密关联的容器集合，它们共享 IPC、Network 和 UTS 等命名空间，是 Kubernetes 的最基本单位。
+容器之间原本通过命名空间和 cgroups 进行隔离，Pod 的设计目标是打破这种隔离，使 Pod 内的容器能够像进程组一样共享资源和数据。为实现这一点，Kubernetes 引入了一个特殊容器 —— Infra Container。
 
-容器之间原本是通过命名空间和 cgroups 进行隔离的。Pod 首要解决的问题是如何打破这种隔离，使 Pod 内的容器能够像进程组一样自然地共享资源和数据。为了解决这个问题，Kubernetes 引入了一个特殊的容器 —— Infra Container。
-
-Infra Container 是 Pod 内第一个启动的容器，体积非常小，只有 300 KB 左右。它主要负责申请容器组的 UTS、IPC 和网络等命名空间。Pod 内的其他容器通过 setns（Linux 系统调用，用于将进程加入到指定的命名空间）来共享 Infra Container 的命名空间。此外，Infra Container 还可以作为 init 进程，用于管理子进程和回收资源等。
+Infra Container 是 Pod 内第一个启动的容器，体积非常小（约 300 KB）。它主要负责为 Pod 内的容器申请共享的 UTS、IPC 和网络等命名空间。Pod 内的其他容器通过 setns（Linux 系统调用，用于将进程加入指定命名空间）来共享 Infra Container 的命名空间。此外，Infra Container 也可以作为 init 进程，管理子进程和回收资源。
 
 :::tip 额外知识
 Infra Container 启动后，执行一个永远循环的 pause() 方法，因此又被称为“pause 容器”。
@@ -201,12 +192,12 @@ Infra Container 启动后，执行一个永远循环的 pause() 方法，因此�
   图 7-4 Pod 内的容器通过 Infra Container 共享网络命名空间
 :::
 
-通过 Infra Container 容器，同一 Pod 内的容器可以共享 UTS、Network、IPC 和 Time 命名空间。但需要注意的是，PID 命名空间和文件系统命名空间默认仍然是隔离的，原因如下：
+通过 Infra Container，Pod 内的容器可以共享 UTS、Network、IPC 和 Time 命名空间。不过，PID 命名空间和文件系统命名空间默认依然是隔离的，原因如下：
 
-- 文件系统隔离：容器之间需要独立的文件系统以避免冲突。如果容器之间需要实现文件共享，Kubernetes 提供了 Volume 支持（Volume 的概念将在本章 7.5 节中介绍）；
-- PID 隔离：PID 命名空间的隔离是为了避免某些容器进程不具备 PID=1 的情况，这可能会导致容器启动失败（例如，使用 systemd 的容器）。
+- **文件系统隔离**：容器需要独立的文件系统，以避免冲突。如果容器之间需要共享文件，Kubernetes 提供了 Volume 支持（将在本章 7.5 节中介绍）；
+- **PID 隔离**：PID 命名空间隔离是为了避免某些容器进程没有 PID=1 的问题，这可能导致容器启动失败（例如，使用 systemd 的容器）。
 
-如果要共享 PID 命名空间，可以在声明 Pod 时设置 shareProcessNamespace 为 true，如下所示的 YAML 配置：
+如果需要共享 PID 命名空间，可以在 Pod 声明中设置 shareProcessNamespace: true。Pod 的 YAML 配置如下所示：
 
 ```yaml
 apiVersion: v1
@@ -221,65 +212,58 @@ spec:
     ...
 ```
 
-在共享 PID 命名空间的 Pod 中，Infra Container 将承担 PID=1 进程的职责，负责处理信号、回收子进程资源等操作。
+在共享 PID 命名空间的 Pod 中，Infra Container 将承担 PID=1 进程的职责，负责处理信号和回收子进程资源等操作。
 
 ## 7.2.6 Pod 是 Kubernetes 的基本单位
 
 解决了容器的资源隔离、限制以及容器间协作问题，Kubernetes 的功能开始围绕容器和 Pod 不断向实际应用的场景扩展。
 
-因为 Pod 不可能只有一个实例，为了管理多个 Pod 实例的运行，Kubernetes 抽象了更高层的 Workload。例如：
+由于一个 Pod 不会仅有一个实例，Kubernetes 引入了更高层次的抽象来管理多个 Pod 实例。例如：
+- **Deployment**：用于管理无状态应用，支持滚动更新和扩缩容；
+- **StatefulSet**：用于管理有状态应用，确保 Pods 的顺序和持久性；
+- **DaemonSet**：确保每个节点上运行一个 Pod，常用于集群管理或监控；
+- **ReplicaSet**：确保指定数量的 Pod 副本处于运行状态；
+- **Job/CronJob**：管理一次性任务或定期任务。
 
-- Deployment：用于管理无状态应用程序的 Pods，支持滚动更新和扩缩容。
-- StatefulSet：用于管理有状态应用程序，保证 Pods 的顺序和持久性。
-- DaemonSet：确保在每个节点上运行一个 Pod，通常用于集群管理或监控。
-- ReplicaSet：用于确保指定数量的 Pod 副本在运行。
-- Job/CronJob：用于管理一次性任务或定期任务。
-
-由于 Pod 的 IP 地址是动态分配的，因此需要一种机制来提供稳定的网络访问入口，并在 Pod 实例之间实现负载均衡，这就是 Service 的作用。为了支持应用层协议（如 HTTP 或 HTTPS）并实现基于域名或路径的细粒度路由，引入了 Ingress。Ingress 充当反向代理，根据定义的规则将进入的请求路由到后端的 Service 或 Pod，从而允许更复杂的流量管理和访问控制策略，等等。
-
-围绕 Pod 的设计不断衍生，最终绘制出图 7-5 所示的 Kubernetes 核心功能全景图。
+鉴于 Pod 的 IP 地址是动态分配的，Kubernetes 引入了 Service 来提供稳定的网络访问入口并实现负载均衡。此外，Ingress 作为反向代理，根据定义的规则将流量路由至后端的 Service 或 Pod，从而实现基于域名或路径的细粒度路由和更复杂的流量管理。围绕 Pod 的设计不断衍生，最终绘制出图 7-5 所示的 Kubernetes 核心功能全景图。
 
 :::center
   ![](../assets/pod.svg)<br/>
   图 7-5 Kubernetes 核心功能全景图
 :::
 
-最后，上述的对象 Kubernetes 都将其抽象为“资源”进行管理。所有的资源通过 YAML 文件描述，通过不同层级描述依赖关系，再基于标准的 RESTful API 对资源进行增删查改。“一切皆为资源”是 Kubernetes 成功实施声明式 API 设计的必要前提，是 Kubernetes 中最重要的设计思想。
-
 ## 7.2.7 Pod 是调度的原子单位
 
 Pod 承担的另一个重要职责是作为调度的原子单位。
 
-协同调度是非常麻烦的事情。举个例子说明，有以下两个亲和性容器：
-- Nginx（资源需求：1G 内存），其职责是接收请求并将请求写入主机上的某个日志文件中；
-- LogCollector（资源需求：0.5G 内存），其职责是不断读取日志文件，并将日志转发到某个 Elasticsearch 集群中。
+调度（特别是协同调度）是非常麻烦的事情。举个例子，假设有两个具有亲和性的容器：
+- Nginx（资源需求：1GB 内存），负责接收请求并将其写入主机的日志文件；
+- LogCollector（资源需求：0.5GB 内存），负责读取日志并将其转发到 Elasticsearch 集群。
 
 假设当前集群的资源情况如下：
 
 - Node1：1.25G 可用内存；
 - Node2：2G 可用内存。
 
-如果这两个 Pod 需要协作并运行在同一台机器上，调度器可能首先将 Nginx 调度到 Node1。但由于 Node1 上只剩下 1.25G 的内存，而 Nginx 占用 1G 内存，LogCollector 将无法在 Node1 上运行，从而导致调度流程被阻塞。
+如果这两个容器必须协作并在同一台机器上运行，调度器可能会将 Nginx 调度到 Node1。然而，Node1 上只有 1.25GB 内存，而 Nginx 占用了 1GB，导致 LogCollector 无法在该节点上运行，从而阻塞了调度。尽管重新调度可以解决这个问题，但如果需要协调数以万计的容器呢？以下是两种典型的解决方案：
 
-尽管可以通过重新调度来解决这个问题，但考虑到如果需要解决数以万计的容器协同调度问题呢？以下为业内两种典型的解决方案：
-
-- **成组调度**：可以在集群中等待足够的空余资源以满足亲和性约束的容器需求后，再进行统一调度。这是一种典型的成组调度方式，但会导致调度效率降低、资源利用不足，并可能出现互相等待而导致死锁的问题；
+- **成组调度**：集群等到足够的资源满足容器需求后，统一调度。这种方法可能导致调度效率降低、资源利用不足，并可能出现互相等待而导致死锁的问题；
 - **提高单个调度效率**：
-通过提高单任务调度的效率来解决这一问题。如 Google 的 Omega 系统引入了一种基于共享状态的乐观绑定（Optimistic Binding）方式，以提高大规模系统调度的效率，但这种方案无疑非常复杂。笔者将在本章 7.7.3 节“调度器及扩展设计”中详细介绍该方案。
+通过提升单任务调度效率解决。像 Google 的 Omega 系统采用了基于共享状态的乐观绑定（Optimistic Binding）来优化大规模调度效率。但这种方案实现起来较为复杂，笔者将在第 7.7.3 节“调度器及扩展设计”中详细探讨。
 
-将资源需求声明直接定义在 Pod 上，并以 Pod 作为最小的原子单位来实现调度。Pod 与 Pod 之间不存在超亲密的关系，如果有关系，就通过网络通信实现关联。复杂的协同调度问题在 Kubernetes 中直接消失了。
+在 Pod 上直接声明资源需求，并以 Pod 作为原子单位来实现调度，Pod 与 Pod 之间不存在超亲密的关系，如果有关系，就通过网络通信实现关联。复杂的协同调度问题在 Kubernetes 中直接消失了！
 
-## 7.2.8 容器的设计模式 Sidecar
+## 7.2.8 容器边车模式
 
-组合多种不同角色的容器，共享资源、统一调度编排，在 Kubernetes 中是一种非常经典的容器设计模式 —— Sidecar（边车）模式。
+组合多种不同角色的容器，共享资源并统一调度编排，在 Kubernetes 中是一种经典的容器设计模式 —— 边车（Sidecar）模式。
 
-如图 7-6 所示，在 Sidecar 模式下，一个主容器（负责业务逻辑处理）与一个或多个辅助容器（提供附加功能）同处一个 Pod 内，辅助容器承担非业务逻辑的职责，例如日志记录、监控、安全保障或数据同步，将这部分逻辑从应用中剥离，使得开发一个高内聚、低耦合的软件变的更加容易。
+如图 7-6 所示，在边车模式下，一个主容器（负责业务逻辑处理）与一个或多个边车容器共同运行在同一个 Pod 内。边车容器负责处理非业务逻辑的任务，如日志记录、监控、安全保障或数据同步。边车容器将这些职能从主业务容器中分离，使得开发更加高内聚、低耦合的软件变得更加容易。
 
 :::center
   ![](../assets/sidecar.svg)<br/>
   图 7-6 容器 Sidecar 设计模式
 :::
 
-本书第 8 章《服务网格技术》中，笔者将以代理型 Sidecar 为例，进一步阐述容器 Sidecar 设计模式。
+在本书第 8 章《服务网格技术》中，笔者将以代理型边车为例，进一步阐述这种设计模式的优点。
 
 [^1]: 在 2000 年，Linux 内核 2.3 版本引入 pivot_root 技术来实现更安全的文件隔离。现如今的容器技术 LXC、Docker 等等都是使用 pivot_root 来实现文件隔离的。

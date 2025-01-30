@@ -122,7 +122,7 @@ Kubernetes v1.24 版本正式移除 dockershim，实质上是废弃了内置的 
   图 7-18 Kata Containers 与传统容器对比 [图片来源](https://katacontainers.io/learn/)
 :::
 
-为了与上层容器编排系统对接，Kata Containers 启动一个进程（shimv2）来负责容器的生命周期管理。shimv2 相当于 Kata Containers 与容器运行时之间的兼容层，支持标准的容器接口，如 CRI（容器运行时接口）或 Docker API。这使得容器编排系统能够像操作普通容器一样管理容器，而不需要意识到容器实际上是运行在一个虚拟机中。
+为了与上层容器编排系统对接，Kata Containers 会启动一个进程（shimv2）来负责容器的生命周期管理。shimv2 相当于 Kata Containers 与容器运行时之间的兼容层，支持标准的容器接口，如 CRI（容器运行时接口）或 Docker API。这使得容器编排系统能够像操作普通容器一样管理容器，而不需要意识到容器实际上是运行在一个虚拟机中。
 
 :::center
   ![](../assets/kata-container.jpg)<br/>
