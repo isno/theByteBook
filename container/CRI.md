@@ -1,31 +1,27 @@
 # 7.4 容器运行时接口的演变
 
-Docker 完全没有预料到，在它诞生的十多年后，仍然能够再次成为舆论的焦点。
+Docker 在诞生十多年后，未曾料到仍会重新成为舆论焦点。事件的起因是 Kubernetes 宣布将进入废弃 dockershim 支持的倒计时，随后讹传讹被人误以为 Docker 不能再用了。
 
-事件的起因是 Kubernetes 宣布进入废弃 dockershim 支持的倒计时，随后讹传讹被人误以为 Docker 不能再用了。虽说此次事件有众多标题党的推波助澜，但也侧面说明了 Kubernetes 与 Docker 的关系十分微妙。
-
-本节，我们把握这两者关系的变化，从中理解 Kubernetes 容器运行时接口的演变。
+虽说此次事件有众多标题党的推波助澜，但也从侧面说明了 Kubernetes 与 Docker 的关系十分微妙。本节，我们把握这两者关系的变化，从中理解 Kubernetes 容器运行时接口的演变。
 
 ## 7.4.1 Docker 与 Kubernetes 
 
-早期，Kubernetes 完全依赖并绑定于 Docker。
-
-当时 Docker 太流行了，所以 Kubernetes 没有过多考虑够日后使用其他容器引擎的可能性。当时 kubernetes 通过内部的 DockerManager 组件直接调用 Docker API 来创建和管理容器。
+由于 Docker 太流行了，Kubernetes 没有考虑支持其他容器引擎的可能性，完全依赖并绑定于 Docker。那时，Kubernetes 通过内部的 DockerManager 组件直接调用 Docker API 来创建和管理容器。
 
 :::center
   ![](../assets/k8s-runtime-v1.svg)<br/>
   图 7-12 Kubernetes 早期调用 Docker 的链路
 :::
 
-后来，市场上出现了越来越多的容器运行时，比如 CoreOS[^1] 推出的开源容器引擎 Rocket（简称 rkt）。rkt 出现之后，Kubernetes 用类似强绑定 Docker 的方式又实现了对 rkt 容器引擎的支持。随着容器技术的蓬勃发展，如果继续使用与 Docker 类似强绑定的方式，Kubernetes 的工作量将无比庞大。
+随着市场上出现越来越多的容器运行时，例如 CoreOS 推出的开源容器引擎 Rocket（简称 rkt），Kubernetes 在 rkt 发布后采用类似强绑定 Docker 的方式，添加了对 rkt 的支持。随着容器技术的快速发展，如果继续采用这种与 Docker 类似的强绑定方式，Kubernetes 的维护工作将变得无比庞大。
 
-Kubernetes 需要重新审视与市面上各类容器运行时的适配问题了。
+Kubernetes 需要重新审视与各种容器运行时的适配问题了。
 
 ## 7.4.2 容器运行时接口 CRI
 
-Kubernetes 从 1.5 版本开始，在遵循 OCI 的基础上，将对容器的各类操作抽象为一个个接口。这些接口作为 Kubelet（Kubernetes 中的节点代理）与容器运行时实现对接的桥梁。Kubelet 通过发送接口请求来实现对容器的各类管理。
+从 Kubernetes 1.5 版本开始，Kubernetes 在遵循 OCI 标准的基础上，将容器管理操作抽象为一系列接口。这些接口作为 Kubelet（Kubernetes 节点代理）与容器运行时之间的桥梁，使 Kubelet 能通过发送接口请求来管理容器。
 
-上述的接口，称为“CRI 接口”（Container Runtime Interface，容器运行时接口）。CRI 接口实现上是一套通过 Protocol Buffer 定义的 API。笔者列举部分容器操作接口供你参考：
+管理容器的接口称为“CRI 接口”（Container Runtime Interface，容器运行时接口）。如下面的代码所示，CRI 接口其实是一套通过 Protocol Buffer 定义的 API。
 
 ```protobuf
 // RuntimeService 定义了管理容器的 API
@@ -52,18 +48,17 @@ service ImageService {
 }
 ```
 
-从图 7-13 可以看出，CRI 规范的实现上主要由三个组件协作完成：gRPC Client、gRPC Server 和具体容器运行时实现（container runtime）。其中：
+根据图 7-13，CRI 的实现由三个主要组件协作完成：gRPC Client、gRPC Server 和具体的容器运行时。具体来说：
 
-- Kubelet 作为 gRPC Client 调用 CRI 接口；
-- CRI shim 作为 gRPC Server 响应 CRI 请求，并负责将 CRI 请求转换为具体的运行时管理操作。
+- Kubelet 充当 gRPC Client，调用 CRI 接口；
+- CRI shim 作为 gRPC Server，响应 CRI 请求，并将其转换为具体的容器运行时管理操作。
 
 :::center
   ![](../assets//cri-arc.png)<br/>
   图 7-13 CRI 是通过 gRPC 实现的 API
 :::
 
-因此，市场上的各类容器运行时，只要按照规范实现 CRI 接口，即可接入到 Kubernetes 生态之中。
-
+由此，市场上的各类容器运行时，只需按照规范实现 CRI 接口，就可以无缝接入 Kubernetes 生态。
 
 ## 7.4.3 Kubernetes 专用容器运行时
 
