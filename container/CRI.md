@@ -113,32 +113,27 @@ Kubernetes v1.24 版本正式移除 dockershim，实质上是废弃了内置的 
 
 事实上，虽然容器提供一个与系统中的其它进程资源相隔离的执行环境，但是与宿主机系统是共享内核的。如果有一个容器进程被恶意程序攻击，就有可能造成容器逃逸，轻则破坏当前的容器，重则造成 Linux 内核崩溃，导致整个机器宕机。
 
-为了提高安全性，许多负责大规模容器部署的运维人员将容器“嵌套”在虚拟机中，从逻辑上将容器与同一主机上的其他进程隔离。但在虚拟机中运行容器会丧失容器的速度和敏捷性优势。为了解决这个问题，Intel 和 Hyper.sh（现为蚂蚁集团的一部分）几乎同时开源了各自基于虚拟化技术的容器实现，分别是 Intel Clear Containers 和 runV 项目。
+为了提高安全性，很多运维人员会将容器“嵌套”在虚拟机中，从逻辑上将容器与同一主机上的其他进程隔离。但在虚拟机中运行容器会丧失容器的速度和敏捷性优势。为了解决这个问题，Intel 和 Hyper.sh（现为蚂蚁集团的一部分）几乎同时开源了各自基于虚拟化技术的容器实现，分别是 Intel Clear Containers 和 runV 项目。
 
-2017 年，两家公司将项目合并，互为补充，创建了开源项目 Kata Containers。该项目本质上，每个容器/Pod 采用其单独的内核，运行在一个精简后的轻量级虚拟机中，因此它“快如容器，稳似虚机”。
+2017 年，Intel 和 Hyper.sh 两家公司将各自的项目合并，互补优势，创建了开源项目 Kata Containers。该项目的原理如图 7-18 所示，本质上是通过硬件虚拟化技术（如 QEMU/KVM）为每个容器/Pod 分配独立的内核，将其运行在一个精简的轻量级虚拟机中。因此，它“像容器一样敏捷，像虚机一样安全”（The speed of containers, the security of VMs）。
 
 :::center
   ![](../assets/kata-container.jpeg)<br/>
   图 7-18 Kata Containers 与传统容器对比 [图片来源](https://katacontainers.io/learn/)
 :::
 
-为了与上层容器编排系统对接，Kata Containers 启动一个进程（shimv2）来管理容器的生命周期。shimv2 相当于 Kata Containers 与容器运行时之间的兼容层，它使得 Kubernetes、Docker 等容器管理工具能够通过标准容器接口（如 CRI 或 Docker API）与 Kata Containers 进行交互，而无需直接处理虚拟机的复杂性。
+为了与上层容器编排系统对接，Kata Containers 启动一个进程（shimv2）来负责容器的生命周期管理。shimv2 相当于 Kata Containers 与容器运行时之间的兼容层，支持标准的容器接口，如 CRI（容器运行时接口）或 Docker API。这使得容器编排系统能够像操作普通容器一样管理容器，而不需要意识到容器实际上是运行在一个虚拟机中。
 
 :::center
   ![](../assets/kata-container.jpg)<br/>
   图 7-19 Kubernetes 通过 CRI 接口管理 Kata Containers 容器 [图片来源](https://github.com/kata-containers/documentation/blob/master/design/architecture.md)
 :::
 
-除了 Kata Containers，2018 年底，AWS 发布了安全容器项目 Firecracker。其核心是一个用 Rust 编写的虚拟化管理器，利用现有的 Linux 内核虚拟化功能来创建和管理微虚拟机。
-
-不难看出，无论是 Kata Containers 还是 Firecracker，它们实现安全容器的方法殊途同归，都是为每个进程分配独立的操作系统内核，从而防止容器进程“逃逸”或夺取宿主机控制权的问题。
-
+除了 Kata Containers，2018 年底，AWS 发布了安全容器项目 Firecracker。其核心是一个用 Rust 编写的虚拟化管理器，利用 Linux 内核虚拟机（KVM）来创建和运行轻量级虚拟机。不难看出，无论是 Kata Containers 还是 Firecracker，它们实现安全容器的方法殊途同归，都是为每个进程分配独立的操作系统内核，从而有效防止容器进程“逃逸”或夺取宿主机控制权的问题。
 
 ## 7.4.6 容器运行时生态
 
-如图 7-20 所示，目前已有十几种容器运行时符合 CRI 规范，用户可根据 Kubernetes 安装时宿主机的容器运行时环境来选择合适的运行时。
-
-但对于云计算厂商而言，除非出于安全性需要（如必须实现内核级别的隔离），大多数情况都会选择 Containerd 作为容器运行时。毕竟对于它们而言，性能与稳定才是核心的生产力与竞争力。
+如图 7-20 所示，目前已有十几种容器运行时实现了 CRI 接口，具体选择哪一种取决于 Kubernetes 安装时宿主机的容器运行时环境。但对于云计算厂商而言，除非出于安全性需要（如必须实现内核级别的隔离），大多数情况都会选择 Containerd 作为容器运行时。毕竟对于它们而言，性能与稳定才是核心的生产力与竞争力。
 
 :::center
   ![](../assets/runtime.png)<br/>
