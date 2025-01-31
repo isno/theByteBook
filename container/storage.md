@@ -192,16 +192,16 @@ volumeBindingMode: Immediate
 
 ## 7.5.6 Kubernetes 存储系统设计
 
-相信大部分读者对如何使用 Volume 已经没有疑问了。接下来，我们将继续探讨存储系统与 Kubernetes 的集成，以及它们是如何与 Pod 相关联的。在深入这个高级主题之前，我们需要先掌握一些关于操作存储设备的基础知识。
+相信大部分读者对如何使用 Volume 已经没有疑问了。接下来，我们将继续探讨存储系统与 Kubernetes 的集成，以及它们是如何与 Pod 相关联的。
 
-Kubernetes 继承了操作系统接入外置存储的设计，将新增或卸载存储设备分解为以下三个操作：
+在深入这个高级主题之前，我们需要先掌握一些关于操作存储设备的基础知识。Kubernetes 继承了操作系统接入外置存储的设计，将新增或卸载存储设备分解为以下三个操作：
 
 - **准备**（Provision）：首先，需要确定哪种设备进行 Provision。这一步类似于给操作系统准备一块新的硬盘，确定接入存储设备的类型、容量等基本参数。其逆向操作为 delete（移除）设备。
 - **附加**（Attach）：接下来，将准备好的存储附加到系统中。Attach 可类比为将存储设备接入操作系统，此时尽管设备还不能使用，但你可以用操作系统的 fdisk -l 命令查看到设备。这一步确定存储设备的名称、驱动方式等面向系统的信息，其逆向操作为 Detach（分离）设备。
 - **挂载**（Mount）：最后，将附加好的存储挂载到系统中。Mount 可类比为将设备挂载到系统的指定位置，这就是操作系统中 mount 命令的作用，其逆向操作为卸载（Unmount）存储设备。
 
 :::tip 注意
-如果 Pod 中使用的是 EmptyDir、HostPath 这类普通 Volume，并不会经历附加/分离的操作，它们只会被挂载/卸载到某一个 Pod 中。
+如果 Pod 中使用的是 EmptyDir、HostPath 这类 Volume，并不会经历附加/分离的操作，它们只会被挂载/卸载到某一个 Pod 中。
 :::
 
 Kubernetes 中的 Volume 创建和管理主要由 VolumeManager（卷管理器）、AttachDetachController（挂载控制器）和 PVController（PV 生命周期管理器）负责。前面提到的 Provision、Delete、Attach、Detach、Mount 和 Unmount 操作由具体的 VolumePlugin（第三方存储插件，也称 CSI 插件）实现。

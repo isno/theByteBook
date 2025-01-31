@@ -180,7 +180,7 @@ $ docker network create -d macvlan \
 
 可以看出，Underlay 底层网络模式直接利用物理网络资源，绕过了容器网络桥接和 NAT，因此具有最佳的性能表现。不过，由于依赖硬件和底层网络环境，部署时需要根据具体的软硬件条件进行调整，缺乏 Overlay 网络那样的开箱即用的灵活性。
 
-## 7.6.4 CNI 插件以及生态
+## 7.6.4 CNI 插件及生态
 
 设计一个容器网络模型是一个很复杂的事情，Kubernetes 本身并不直接实现网络模型，而是通过 CNI（Container Network Interface，容器网络接口）把网络变成外部可扩展的功能。
 
