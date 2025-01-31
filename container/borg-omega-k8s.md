@@ -14,9 +14,9 @@ Borg 的架构如图 7-1 所示，是典型的 Master（图中 BorgMaster) + Age
   图 7-1 Borg 架构图 [图片来源](https://research.google/pubs/large-scale-cluster-management-at-google-with-borg/)
 :::
 
-开发 Borg 的过程中，Google 的工程师为 Borg 设计了两种工作负载（Workload）[^1]：
-- **长期运行服务（Long-Running Service）**：通常是对请求延迟敏感的在线业务，例如 Gmail、Google Docs 和 Web 搜索以及内部基础设施服务；
-- **批处理任务（Batch Job）**：用于一次性处理大量数据、需要较长的运行时间和较多的计算资源的“批处理任务”（Batch Job）。典型如 Apache Hadoop 或 Spark 框架执行的各类离线计算任务。
+开发 Borg 的过程中，Google 的工程师为 Borg 设计了两种工作负载（workload）：
+- **长期运行服务**（Long-Running Service）：通常是对请求延迟敏感的在线业务，例如 Gmail、Google Docs 和 Web 搜索以及内部基础设施服务；
+- **批处理任务**（Batch Job）：用于一次性处理大量数据、需要较长的运行时间和较多的计算资源的“批处理任务”（Batch Job）。典型如 Apache Hadoop 或 Spark 框架执行的各类离线计算任务。
 
 区分 2 种不同类型工作负载的原因在于：
 
@@ -51,16 +51,16 @@ Borg 生态的发展由 Google 内部不同团队推动。从迭代结果来看�
 
 Google 开发的第三套容器管理系统是 Kubernetes，其背景如下：
 
-- 全球越来越多的开发者开始对 Linux 容器产生兴趣（尽管 Linux 容器是 Google 的技术基础，但开发者们首先想到的是 Docker，Google 并没有吃到红利）。
-- 同时，Google 已将公有云基础设施作为业务重点并实现持续增长（虽然 Google 提出了云计算的概念，但市场领先者已被 AWS 和阿里云占据，Google 起了大早赶了个晚集）。
+- 全球越来越多的开发者开始对 Linux 容器产生兴趣（Linux 容器是 Google “家底”，但提到容器，开发者们首先想到的是 Docker。Google 并没有吃到容器技术的红利）；
+- 同时，Google 将公有云服务作为业务重点并实现持续增长（虽然 Google 提出了云计算的概念，但市场被 AWS 抢占先机。Google 起了大早赶了个晚集）。
 
 2013 年夏，Google 的工程师们开始讨论借鉴 Borg 的经验开发新一代容器编排系统，希望通过十几年的技术积累影响云计算市场格局。Kubernetes 项目获批后， 2014 年 6 月，Google 在 DockerCon 大会上宣布将其开源。
 
 通过图 7-3 观察 Kubernetes 架构，能看出大量设计来源于 Borg/Omega 系统：
 
 - Master 系统由多个分布式组件构成，包括 API Server、Scheduler、Controller Manager 和 Cloud Controller Manager；
-- Kubernetes 的最小运行单元 Pod，其原型是 Borg 系统中的 Alloc（资源分配的缩写）；
-- 工作节点上的 kubelet 组件，其设计来源于 Borg 系统中的 Borglet 组件；
+- Kubernetes 的最小运行单元 Pod，其原型是 Borg 系统对物理资源的抽象 Alloc；
+- 工作节点上的 kubelet 组件，其设计来源于 Borg 系统中各节点里面 Borglet 组件；
 - 基于 Raft 算法实现的分布式一致性键值存储 Etcd，对应 Omega 系统中基于 Paxos 算法实现的 Store。
 
 :::center
@@ -68,9 +68,9 @@ Google 开发的第三套容器管理系统是 Kubernetes，其背景如下：
   图 7-3 Kubernetes 架构以及组件概览 [图片来源](https://link.medium.com/oWobLWzCQJb)
 :::
 
-出于降低用户使用的门槛，并最终达成 Google 从底层进军云计算市场意图，Kubernetes 定下的设计目标是**享受容器带来的资源利用率提升的同时，让支撑分布式系统的基础设施标准化、操作更简单**。
+出于降低用户使用的门槛，并最终达成 Google 从底层进军云计算市场意图，Kubernetes 的设计目标是**享受容器带来的资源利用率改善，同时让支撑分布式系统的基础设施标准化、操作更简单**。
 
-为了进一步理解基础设施的标准化，来看 Kubernetes 从一开始就提供的东西 —— 用于描述各种资源需求的标准 API：
+为了进一步理解基础设施的标准化，来看 Kubernetes 从一开始就提供的东西 —— 用于描述各种资源需求的 API：
 
 - 描述 Pod、Container 等计算资源需求的 API；
 - 描述 Service、Ingress 等网络功能的 API；
@@ -87,12 +87,9 @@ Google 开发的第三套容器管理系统是 Kubernetes，其背景如下：
 
 ## 7.1.4 以应用为中心的转变
 
-从最初的 Borg 到 Kubernetes，容器化技术的价值早已超越了单纯提升资源利用率。更深远的变化在于，系统开发和运维理念从“以机器为中心”转向“以应用为中心”。
+从 Borg 到 Kubernetes，容器技术的价值早已超越了单纯提升资源利用率。更深远的影响在于，系统开发和运维的理念从“以机器为中心”转变为“以应用为中心”：
 
-- 容器封装了应用程序的运行环境，屏蔽了操作系统和硬件的细节，使得业务开发者和基础设施管理者不再需要关注底层实现。
-- 基础设施团队可以更灵活地引入新硬件或升级操作系统，最大限度减少对线上应用和开发者的影响。 
-- 每个设计良好的容器通常代表一个应用，因此管理容器就等于管理应用，而非管理机器。
-- 将收集的性能指标（如 CPU 使用率、内存用量、每秒查询率 QPS 等）与应用程序而非物理机器关联，显著提高了应用监控的精确度和可观测性，尤其是在系统垂直扩容、机器故障或主动运维等场景。
-
-
-[^1]: 在 Kubernetes 中的 Workload 资源包括多种类型，例如 Deployment、StatefulSet、DaemonSet、ReplicaSet 等等
+- 容器封装了应用程序的运行环境，屏蔽了操作系统和硬件的细节，使得业务开发者不再需要关注底层实现；
+- 基础设施团队可以更灵活地引入新硬件或升级操作系统，最大限度减少对线上应用和开发者的影响； 
+- 每个设计良好的容器通常代表一个应用，因此管理容器就等于管理应用，而非管理机器；
+- 将收集的性能指标（如 CPU 使用率、内存用量、QPS 等）与应用程序而非物理机器关联，显著提高了应用监控的精确度和可观测性。
