@@ -135,7 +135,7 @@ ORDER BY id;
 
 作为一款分布式数据系统，ClickHouse 自然支持“分片”（Sharding）技术。
 
-ClickHouse 将海量数据切分成多个较小的部分，并分布到多个物理节点。也就是说，只要有足够多的硬件资源，ClickHouse 就能处理数万亿条记录、PB 级别规模的数据量。根据 Yandex 内部的基准测试结果来看（图 9-9），ClickHouse 性能表现遥遥领先对手，比 Vertica（一款商业 OLAP 软件）快约 5 倍、比 Hive 快 279 倍、比 InfiniDB 快 31 倍。
+ClickHouse 将数据切分成多个部分，并分布到不同的物理节点。也就是说，只要有足够多的硬件资源，ClickHouse 就能处理数万亿条记录、PB 级别规模的数据量。根据 Yandex 公布的测试结果来看（图 9-9），ClickHouse 性能表现遥遥领先对手，比 Vertica（一款商业 OLAP 软件）快约 5 倍、比 Hive 快 279 倍、比 InfiniDB 快 31 倍。
 
 :::center
   ![](../assets/ClickHouse-benchmark.jpeg)<br/>
