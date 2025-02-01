@@ -43,7 +43,7 @@ $ cat curl-format.txt
 表 2-2 curl 支持的与请求延迟有关的变量
 :::
 
-| 变量名称 | 变量释义 |
+| 变量名称 | 说明 |
 |:--|:--|
 | time_namelookup | 从请求开始到域名解析完成的耗时 |
 | time_connect | 从请求开始到 TCP 三次握手完成的耗时 |
