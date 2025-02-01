@@ -4,11 +4,11 @@
 
 但传统的以太网在网络延迟、吞吐量和 CPU 资源消耗方面存在先天不足。此背景下，广泛应用于高性能计算领域的 RDMA（Remote Direct Memory Access，远程直接内存访问）技术，因其卓越的性能，逐渐成为满足上述需求的首选解决方案。
 
-RDMA 设计灵感来源于 DMA（Direct Memory Access，直接内存访问），是一种允许主机之间直接访问彼此内存的技术。DMA 技术中，无需 CPU 参与，主机内部的设备（如硬盘或网卡）能够直接与内存交换数据；RDMA 的工作原理如图 3-10 所示，应用程序通过专用的接口（RDMA Verbs API）绕过主机操作系统和 TCP/IP 协议栈，达到了直接访问远程主机内存的效果。
+RDMA 是一种允许主机之间直接访问彼此内存的技术，它的设计起源于 DMA（Direct Memory Access） 技术。在 DMA 技术中，无需 CPU 参与，主机内部的设备（如硬盘或网卡）能够直接与内存交换数据；而在 RDMA 中，应用程序通过 RDMA Verbs API 绕过操作系统和 TCP/IP 协议栈，实现类似 DMA 直接访问远程主机内存效果。
 
 :::center
   ![](../assets/RDMA.png)<br/>
-  图 3-10  RDMA 技术栈
+  图 3-10  RDMA 的技术原理
 :::
 
 RDMA 网络的协议实现分为三类：Infiniband、RoCE 和 iWARP，它们的含义及区别如下：
