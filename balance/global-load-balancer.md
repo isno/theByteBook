@@ -5,7 +5,7 @@
 图 6-14 展示了全局负载均衡系统设计：
 - 边车代理（Sidecar Proxy）和位于三个 Zone 的后端通信；
 - 边车代理、后端定期向全局负载均衡器（Global Load Balancer）汇报请求延迟、自身的负载等状态，全局负载均衡器根据状态做出最合适的配置策略；
-- 全局负载均衡器向边车代理下发配置策略，可以看到 90% 的流量到了 Zone C，Zone A 和 B 各只有 5%。
+- 全局负载均衡器向边车代理下发转发策略，可以看到 90% 的流量到了 Zone C，Zone A 和 B 各只有 5%。
 
 :::center
   ![](../assets/global-load-balancer.svg)<br/>
