@@ -1,4 +1,4 @@
-# 6.3.1 Paxos 算法起源
+# 5.3.1 Paxos 算法起源
 
 Paxos 算法最初的论文名称为《The Part-Time Parliament》，翻译成中文为“兼职议会”。
 
@@ -34,7 +34,7 @@ Paxos 算法最初的论文名称为《The Part-Time Parliament》，翻译成�
 
 :::center
   ![](../assets/paxos.png) <br/>
-  图 6-4 《Paxos Made Simple》论文摘要
+  图 5-4 《Paxos Made Simple》论文摘要
 :::
 
 然而，这篇论文还是非常难以理解，引用斯坦福大学学者 Diego Ongaro 和 John Ousterhout 在设计 Raft 时的论文[^4]中对 Paxos 的描述：
