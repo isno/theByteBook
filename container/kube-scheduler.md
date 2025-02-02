@@ -30,7 +30,7 @@ Kubernetes 默认调度器（kube-scheduler）双循环调度机制如图 7-36 �
 
 第二个控制循环是“Scheduling 循环”。其主要逻辑是从调度队列（PriorityQueue）中不断出队一个 Pod，并触发两个核心的调度阶段：预选阶段（图 7-36 中的 Predicates）和优选阶段（图 7-36 中的 Priority）。
 
-Kubernetes 从 v1.15 版本起，为默认调度器（kube-scheduler）设计了可扩展的机制 —— Scheduling Framework。其主要目的是在调度器生命周期的关键点（如图7-37中的绿色矩形箭头框所示）暴露可扩展接口，允许实现自定义的调度逻辑。这套可扩展的机制是使用标准 Go 语言插件机制实现的，需要按照规范编写 Go 代码，通过静态编译集成进去。所以，它的通用性和前文提到的 CNI、CSI 或者 CRI 无法相提并论。
+Kubernetes 从 v1.15 版本起，为默认调度器（kube-scheduler）设计了可扩展的机制 —— Scheduling Framework。其主要目的是在调度器生命周期的关键点（如图7-37中的绿色矩形箭头框所示）暴露可扩展接口，允许实现自定义的调度逻辑。这套机制基于标准 Go 语言插件机制，需要按照规范编写 Go 代码并进行静态编译集成，其通用性相较于 CNI、CSI 和 CRI 等较为有限。
 :::center
   ![](../assets/scheduling-framework-extensions.svg)<br/>
    图 7-37 Pod 的调度上下文以及调度框架公开的扩展点

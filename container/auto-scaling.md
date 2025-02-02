@@ -4,11 +4,11 @@
 
 ## 7.8.1 Pod 水平自动伸缩
 
-HPA（Horizontal Pod Autoscaler，Pod 水平自动扩缩）是根据工作负载（如 Deployment）的需求自动调整 Pod 副本的数量的机制。
+HPA（Horizontal Pod Autoscaler，Pod 水平自动扩缩）是根据工作负载（如 Deployment）的资源使用情况调整 Pod 副本数量的机制。
 
 HPA 的工作原理简单明了：
-- 当负载较高时，增加 Pod 副本数量；
-- 当负载较低时，减少 Pod 副本数量。
+- 当负荷较高时，增加 Pod 副本数量；
+- 当负荷较低时，减少 Pod 副本数量。
 
 因此，自动伸缩的关键在于准确监控资源使用情况。为此，Kubernetes 提供了 Metrics API，用于获取节点和 Pod 的资源信息。以下是 Metrics API 的响应示例，展示了 CPU 和内存的使用情况。
 
