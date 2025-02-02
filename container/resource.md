@@ -49,14 +49,14 @@ Kubernetes 使用以下两个属性来描述 Pod 的资源分配和限制：
 - **requests**：表示容器请求的资源量，Kubernetes 会确保 Pod 获得这些资源。requests 是调度的依据，调度器只有在节点上有足够可用资源时，才会将 Pod 调度到该节点。
 - **limits**：表示容器可使用的资源上限，防止容器过度消耗资源，导致节点过载。limits 会配置到 cgroups 中相应任务的 /sys/fs/cgroup 文件中。
 
-Pod 是由一个或多个容器组成的，因此资源需求是在容器级别进行描述的。如图 7-32 所示，每个容器都可以通过 resources 属性单独设定相应的 requests 和 limits。例如，container-1 指定其容器进程需要 500m/1000m（即 50% 的 CPU）才能被调度，并且允许最多使用 1000m/1000m（即 100% 的 CPU）。
+Pod 是由一个或多个容器组成的，因此资源需求是在容器级别进行描述的。如图 7-32 所示，每个容器都可以通过 resources 属性单独设定相应的 requests 和 limits。例如，container-1 指定其容器进程需要 500m（即 0.5 个 CPU）才能被调度，并且允许最多使用 1000m（即 1 个 CPU）。
 
 :::center
   ![](../assets/requests-limits.png)<br/>
   图 7-32 容器的 requests 与 limits 配置
 :::
 
-requests 和 limits 除了用于表明资源需求和限制资源使用之外，还有一个隐含的作用：它决定了 Pod 的 QoS（Quality of Service，服务质量）等级。
+requests 和 limits 除了用于表明资源需求和限制资源使用之外，还有一个隐含功能，它决定了 Pod 的 QoS（Quality of Service，服务质量）等级。
 
 ## 3. 服务质量等级
 
@@ -70,7 +70,7 @@ Kubernetes 根据每个 Pod 中容器资源配置情况，为 Pod 设置不同�
 
 :::center
   ![](../assets/qos.webp)<br/>
-  图 7-33 Pod 的 QoS 级别与资源配置对应关系
+  图 7-33 QoS 级别与资源配置对应关系
 :::
 
 从上述描述可见，未配置 requests 和 limits 时，Pod 的 QoS 等级最低，在节点资源紧张时最容易受到影响。因此，合理配置 requests 和 limits 参数，能够提高调度精确度，并增强服务的稳定性。
