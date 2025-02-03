@@ -1,8 +1,6 @@
-# 5.3.1 Paxos 算法起源
+# 6.3.1 Paxos 算法起源
 
-Paxos 算法最初的论文名称为《The Part-Time Parliament》，翻译成中文为“兼职议会”。
-
-这篇论文的开头描述了一个虚构的古希腊岛屿考古发现故事。如果不事先说明，或许你根本不会意识到下面是一篇关于分布式的论文。
+Paxos 算法最初的论文名称为《The Part-Time Parliament》，翻译成中文为“兼职议会”。论文的开头描述了一个虚构的古希腊岛屿考古发现故事。如果不事先说明，你可能不会意识到这是一篇关于分布式的论文。
 :::tip 《The Part-Time Parliament》
 
 公元十世纪初，爱情海上的 Paxos 小岛是一个繁荣的商业中心。随着财富的积累，政治变得愈加复杂，Paxon 的公民用议会制政府取代了古老的神权政治。然而，商业利益高于公民义务，没人愿意将一生投入到议会事务中。因此，Paxon 议会必须在议员频繁进出议会的情况下，保持正常运作……
@@ -12,7 +10,7 @@ Paxos 算法最初的论文名称为《The Part-Time Parliament》，翻译成�
 
 1990 年，Lamport 将《The Part-Time Parliament》论文提交给 TOCS 期刊。根据 Lamport 的本人的回忆[^1]，TOCS 审稿人阅读后认为“这篇论文不怎么重要，但还有些意思”，并建议删掉与 Paxos 相关的故事背景。Lamport 对这些缺乏幽默感的审稿人颇为不爽，拒绝对论文进行修改。于是，论文的发表被搁置。
 
-虽然论文没有发表，但不代表没有人关注这个算法，Bulter W.Lampson（1991 年图灵奖获得者）认识到 Paxos 算法的重要性，在他的论文《How to Build a Highly Availability System using Consensus》对 Paxos 算法进行了讲述。后来，De Prisco、Lynch 和 Lampson 几人联合在《理论计算机科学》期刊发表了论文《Revisiting the PAXOS algorithm》对 Paxos 算法进行了详细地描述和证明。经过 Lampson 等人的大力宣传，Paxos 算法逐渐被学术界重视。
+虽然论文没有发表，但不代表没有人关注这个算法。Bulter W.Lampson（1991 年图灵奖获得者）认识到 Paxos 算法的重要性，在他的论文《How to Build a Highly Availability System using Consensus》对 Paxos 算法进行了讲述。后来，De Prisco、Lynch 和 Lampson 几人联合在《理论计算机科学》期刊发表了论文《Revisiting the PAXOS algorithm》对 Paxos 算法进行了详细地描述和证明。经过 Lampson 等人的大力宣传，Paxos 算法逐渐被学术界重视。
 
 另一方面，这些介绍 Paxos 算法的论文使 Lamport 觉得《The Part-Time Parliament》重新发表的时间到了。
 
@@ -34,10 +32,10 @@ Paxos 算法最初的论文名称为《The Part-Time Parliament》，翻译成�
 
 :::center
   ![](../assets/paxos.png) <br/>
-  图 5-4 《Paxos Made Simple》论文摘要
+  图 6-4 《Paxos Made Simple》论文摘要
 :::
 
-然而，这篇论文还是非常难以理解，引用斯坦福大学学者 Diego Ongaro 和 John Ousterhout 在设计 Raft 时的论文[^4]中对 Paxos 的描述：
+然而，这篇论文还是非常难以理解，引用斯坦福大学学者 Diego Ongaro 和 John Ousterhout 在设计 Raft 时的论文[^4]中对 Paxos 的描述。
 
 :::tip 《In Search of an Understandable Consensus Algorithm》节选
 
@@ -50,7 +48,7 @@ we were not able to understand the complete protocol until after reading several
 
 连斯坦福的教授和博士都感觉难以理解。所以，他们的论文取名《In Search of an Understandable Consensus Algorithm》，意思是“易懂的共识算法还在寻找中”，根本不像 Lamport 说的那么简单。
 
-注意 Raft 论文发表于 2013 年，而论文《Paxos Made Simple》是 2001 年发表的，也就是说 Paxos 算法已经被研究了十几年，直到 Google 的分布式锁服务 Chubby 横空出世，Chubby 使用 Paxos 共识算法实现强一致性，帮助 Google 解决了分布式系统中的资源协调问题。得益于 Google 的行业影响力，辅以 Chubby 作者 Mike Burrows 那略显夸张但足够吸引眼球的评价推波助澜，Paxos 算法从理论进入工业实践，逐渐被大家熟知和认可。
+注意，Raft 论文发表于 2013 年，而论文《Paxos Made Simple》是 2001 年发表的。也就是说，Paxos 算法已经被研究了十几年。直到 Google 的分布式锁服务 Chubby 横空出世，Chubby 使用 Paxos 共识算法实现强一致性，帮助 Google 解决了分布式系统中的资源协调问题。得益于 Google 的行业影响力，辅以 Chubby 作者 Mike Burrows 那略显夸张但足够吸引眼球的评价推波助澜，Paxos 算法从理论进入工业实践，逐渐被大家熟知和认可。
 
 最终，Lamport 凭借他在分布式领域的贡献，于 2013 年获得图灵奖。
 

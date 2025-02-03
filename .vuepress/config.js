@@ -176,56 +176,8 @@ export default defineUserConfig({
                     '/network/conclusion.md',
                 ]
             },
-            
-            {
-                text: "第四章：数据一致性与分布式事务",
-                link: '/distributed-transaction/summary.md',
-                children: [
-                    '/distributed-transaction/ACID.md',
-                    '/distributed-transaction/CAP.md',       
-                    {
-                        text: "4.3 分布式事务模型",
-                        link: '/distributed-transaction/transaction.md',
-                        children: [
-                            '/distributed-transaction/BASE.md',
-                            '/distributed-transaction/TCC.md',
-                            '/distributed-transaction/Saga.md'
-                        ]
-                    },
-                    '/distributed-transaction/idempotent.md',
-                    '/distributed-transaction/conclusion.md'
-                ]
-            },
-            {
-                text: '第五章：分布式共识与算法',
-                collapsable: true,
-                link: '/consensus/summary.md',
-                sidebarDepth: 2,
-                children: [
-                    '/consensus/consensus.md',
-                    '/consensus/Replicated-State-Machine.md',
-                    {
-                        text: "5.3 Paxos 算法",
-                        link: '/consensus/Paxos.md',
-                        children: [
-                            '/consensus/Paxos-history.md',
-                            '/consensus/Basic-Paxos.md',
-                        ]
-                    },
-                    {
-                        text: "5.4 Raft 算法",
-                        link: '/consensus/Raft.md',
-                        children: [
-                            '/consensus/raft-leader-election.md',
-                            '/consensus/raft-log-replication.md',
-                            '/consensus/raft-ConfChange.md',
-                        ]
-                    },
-                    '/consensus/conclusion.md',
-                ]
-            },
-            {
-                text: '第六章：负载均衡与代理技术',
+             {
+                text: '第四章：负载均衡与代理技术',
                 link: '/balance/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
@@ -239,7 +191,54 @@ export default defineUserConfig({
                 '/balance/conclusion.md',
                 ]
             },
-           
+            
+            {
+                text: "第五章：数据一致性与分布式事务",
+                link: '/distributed-transaction/summary.md',
+                children: [
+                    '/distributed-transaction/ACID.md',
+                    '/distributed-transaction/CAP.md',       
+                    {
+                        text: "5.3 分布式事务模型",
+                        link: '/distributed-transaction/transaction.md',
+                        children: [
+                            '/distributed-transaction/BASE.md',
+                            '/distributed-transaction/TCC.md',
+                            '/distributed-transaction/Saga.md'
+                        ]
+                    },
+                    '/distributed-transaction/idempotent.md',
+                    '/distributed-transaction/conclusion.md'
+                ]
+            },
+            {
+                text: '第六章：分布式共识与算法',
+                collapsable: true,
+                link: '/consensus/summary.md',
+                sidebarDepth: 2,
+                children: [
+                    '/consensus/consensus.md',
+                    '/consensus/Replicated-State-Machine.md',
+                    {
+                        text: "6.3 Paxos 算法",
+                        link: '/consensus/Paxos.md',
+                        children: [
+                            '/consensus/Paxos-history.md',
+                            '/consensus/Basic-Paxos.md',
+                        ]
+                    },
+                    {
+                        text: "6.4 Raft 算法",
+                        link: '/consensus/Raft.md',
+                        children: [
+                            '/consensus/raft-leader-election.md',
+                            '/consensus/raft-log-replication.md',
+                            '/consensus/raft-ConfChange.md',
+                        ]
+                    },
+                    '/consensus/conclusion.md',
+                ]
+            },
             {
                 text: '第七章：容器编排技术',
                 link: '/container/summary.md',
