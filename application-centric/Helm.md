@@ -2,7 +2,7 @@
 
 相信读者朋友们知道 Linux 的包管理工具和封装格式，如 Debian 系的 apt-get 和 dpkg，RHEL 系的 yum 和 rpm。在 Linux 系统中，有了包管理工具，我们只要知道应用名称，就能从仓库中下载、安装、升级或回滚。而且，包管理工具掌握应用的依赖和版本信息，应用依赖的第三方库，在安装时都会一并处理好。
 
-Helm 于 2015 年由 Deis（后被 Microsoft 收购）创建，借鉴了各大 Linux 发行版的应用管理方式，引入了与 Linux 包管理对应的 Chart 格式和 Repository 仓库概念。对于用户而言，使用 Helm 无需手动编写部署文件、无需了解 Kubernetes 的 YAML 语法，只需一行命令，即可在 Kubernetes 集群内安装所需应用。
+2015 年，Deis（后被 Microsoft 收购）创建了 Helm，它借鉴了各大 Linux 发行版的应用管理方式，引入了与 Linux 包管理对应的 Chart 格式和 Repository 仓库概念。对于用户而言，使用 Helm 无需手动编写部署文件、无需了解 Kubernetes 的 YAML 语法，只需一行命令，即可在 Kubernetes 集群内安装所需应用。
 
 :::center
   ![](../assets/helm.webp)<br/>
@@ -52,6 +52,6 @@ Helm 提供了应用生命周期、版本、依赖项的管理能力，还支持
 
 不过，需要明确的是，Helm 本质是简化 Kubernetes 应用安装与配置的工具。对于“有状态应用”（Stateful Application）来说，Helm 无法进行精细的生命周期管理。例如，它无法处理数据备份、扩缩容、分区重平衡、动态扩展等操作，这些都是在管理复杂有状态应用时所必须考虑的细节！
 
-如何对复杂有状态应用提供全生命周期的管理，是接下介绍的 Operator 的课题。
+如何对复杂有状态应用提供全生命周期的管理，是接下将要介绍的 Operator 的课题。
 
 
