@@ -11,17 +11,14 @@
 
 1. 容器运行时：Docker、Containerd、CRI-O、Kata Containers。
 2. 镜像和仓库：Harbor、Dragonfly、Nydus。
-3. 应用封装：Kustomize、Helm。
+3. 应用封装：Kustomize、Helm、Operator、OAM。
 4. 持续集成：Gitlab、Tekton。
 5. 持续部署：ArgoCD、FluxCD。
 6. 容器编排：Kubernetes。
 7. 服务网格: Istio、Envoy、Linkerd。
-7. 网关：Ingress-Nginx、Kong、APISIX。
+7. 网关：Ingress-Nginx、Kong、Traefik。
 8. 日志：Grafana Loki、Elastic Stack、ClickHouse。
-9. 监控：Prometheus、Grafana。
-10. 可观测：OpenTelemetry。
+9. 监控/观测：Prometheus、Grafana、OpenTelemetry。
 10. 机器学习/离在线业务混合部署：Volcano、Koordinator...。
 
-以上方案或相似或不同，适应什么场景、解决了什么问题、如何以最佳的姿势匹配业务，容笔者在本书后续章节一一道来。
-
-
+以上方案或相似或不同，适应什么场景？、解决了什么问题？、如何以最佳的姿势匹配业务？容笔者在本书后续章节一一解答。
