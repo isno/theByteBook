@@ -26,7 +26,7 @@
   图 9-4 Prometheus 的四种指标类型
 :::
 
-## 2. 收集指标
+## 2. 使用 Exporter 收集指标
 
 收集指标看似简单，但实际上复杂得多：首先，应用程序、操作系统和硬件设备的指标获取方式各不相同；其次，它们通常不会以 Prometheus 格式直接暴露。例如：
 
@@ -63,7 +63,7 @@ http_request_total 5
  | 监控系统 |  Collectd Exporter、Graphite Exporter、InfluxDB Exporter、Nagios Exporter、SNMP Exporter 等 |
  | 其它 | Blockbox Exporter、JIRA Exporter、Jenkins Exporter、Confluence Exporter 等|
 
-## 3. 存储指标
+## 3. 使用时序数据库存储指标
 
 存储数据本来是一项常规操作，但当面对存储指标类型的场景来说，必须换一种思路应对。
 
@@ -97,7 +97,7 @@ http_request_total 5
 
 Prometheus 服务端内置了强大的时序数据库（与 Prometheus 同名），“强大”并非空洞的描述，它在 DB-Engines 排行榜中常年稳居前三[^1]。该数据库提供了专为时序数据设计的查询语言 PromQL（Prometheus Query Language），可轻松实现指标的查询、聚合、过滤和计算等操作。掌握 PromQL 语法是指标可视化和告警处理的基础，笔者就不再详细介绍其语法细节了，具体可以参考 Prometheus 文档。
 
-## 4. 使用指标
+## 4. 指标的图形化和预警
 
 采集和存储指标的最终目的是分析数据的趋势变化，预测业务需求（图形化），以及持续监控数据波动变化，及时发现问题（预警）。
 
