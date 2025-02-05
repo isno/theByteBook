@@ -305,7 +305,7 @@ export default defineUserConfig({
                 ]
             },
             {
-                text: '第十章：以“应用为中心”进行设计',
+                text: '第十章：应用封装与交付',
                 link: '/application-centric/summary.md',
                 collapsable: false,
                 sidebarDepth: 1,
