@@ -92,6 +92,4 @@ $  iptables -A INPUT -p tcp --dport 22 -j ACCEPT
   图 3-4 iptables 与 IPVS 的性能差异（结果越低，性能越好）[图片来源](https://www.tigera.io/blog/comparing-kube-proxy-modes-iptables-or-ipvs/)
 :::
 
-现在，你应当了解，当 Kubernetes 集群规模较大时，应尽量避免使用 iptables 模式，以避免性能瓶颈。
-
-如果使用的是 Cilium 作为容器间通信解决方案，还可以构建无需 kube-proxy 组件的 Kubernetes 集群，利用笔者稍后介绍的“内核旁路”技术绕过 iptables 限制，全方位提升容器网络性能。 
+现在，你应该理解了，当 Kubernetes 集群规模较大时，应尽量避免使用 iptables 模式，以避免性能瓶颈。如果使用的是 Cilium 作为容器间通信解决方案，还可以构建无需 kube-proxy 组件的 Kubernetes 集群，利用笔者稍后介绍的“内核旁路”技术绕过 iptables 限制，全方位提升容器网络性能。 
