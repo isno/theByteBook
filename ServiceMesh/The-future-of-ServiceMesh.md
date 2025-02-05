@@ -42,7 +42,7 @@ Cilium 无边车模式的服务网格工作原理如图 8-21 所示。在这种�
  图 8-21 经过 eBPF 加速的服务网格和传统服务网格的区别
 :::
 
-传统的服务网格，如 Linkerd 和 Istio，通常依赖 Linux 内核网络协议栈来处理请求，而 **Cilium 的无边车模式则基于 eBPF 技术在内核层面进行扩展，从而实现了天然的网络加速效果**。根据图 8-22 所示的性能测试结果，基于 eBPF 加速的 Envoy 在性能上显著优于默认未加速的 Istio。
+传统的服务网格（如 Linkerd 和 Istio），通常依赖 Linux 内核网络协议栈（如 iptables）来处理请求。而 **Cilium 的无边车模式则基于 eBPF 技术在内核层面进行扩展，从而实现了天然的网络加速效果**。如图 8-22 所示，基于 eBPF 加速的 Envoy 在性能上明显优于使用 iptables 的 Istio。
 
 :::center
   ![](../assets/cilium-istio-benchmark.webp)<br/>
