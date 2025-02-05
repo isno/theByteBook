@@ -6,24 +6,22 @@
 
 一个完整、未复用连接的 HTTPS 请求需要经过以下 5 个阶段：**DNS 域名解析、TCP 握手、SSL 握手、服务器处理、内容传输**。
 
-如图 2-1 请求阶段分析所示，这些阶段共需要 5 个 RTT（Round-Trip Time，往返时间）[^2] = 1 RTT（DNS Lookup，域名解析）+ 1 RTT（TCP Handshake，TCP 握手）+ 2 RTT（SSL Handshake，SSL 握手）+ 1 RTT（Data Transfer，HTTP 内容请求传输）。
+如图 2-1 所示，请求的各个阶段共需要 5 个 RTT（Round-Trip Time，往返时间）[^2] 具体为：1 RTT（DNS Lookup，域名解析）+ 1 RTT（TCP Handshake，TCP 握手）+ 2 RTT（SSL Handshake，SSL 握手）+ 1 RTT（Data Transfer，HTTP 内容传输）。
 
 :::center 
   ![](../assets/http-process.png)<br/>
   图 2-1 HTTPS（使用 TLS1.2 协议）请求阶段分析 [图片来源](https://blog.cloudflare.com/a-question-of-timing)
 :::
 
-RTT 是评估本地主机与远程主机间网络延迟的重要指标之一。
+RTT（往返时间）是评估本地主机与远程主机间网络延迟的重要指标之一。举个例子，北京到美国洛杉矶的 RTT 延迟为 190 ms，那么从北京访问洛杉矶的服务延迟大约为：4 * 190 ms + 后端业务处理时间。这里的“4”代表 HTTPS 请求的 4 个 RTT。
 
-举个例子，北京到美国洛杉矶的 RTT 延迟为 190 ms，那么从北京访问美国洛杉矶的服务延迟就是： 4 * 190（ms） + 后端业务处理时间（ms）。其中“4”代表 HTTPS 请求的 4 个 RTT。
-
-由于 RTT 反映的是因物理距离带来的延迟，而 SSL 阶段又包含大量的加密/解密计算消耗。因此，优化工作应该集中在减少 RTT 和降低 SSL 计算量上。
+由于 RTT 主要反映物理距离带来的延迟，而 SSL 阶段涉及大量的加密和解密计算，因此优化的重点应放在减少 RTT 和降低 SSL 计算消耗上。
 
 ## 2.2.2 各阶段耗时分析
 
-HTTPS 请求的各个阶段可以使用 curl 命令进行详细的延迟分析。
+可以使用 curl 命令对 HTTPS 请求的各个阶段进行详细的延迟分析。
 
-curl 命令提供了 -w 参数，该参数支持 curl 按照指定的格式打印与请求相关的信息，部分信息可以用特定的变量表示，例如 status_code、size_download、time_namelookup 等等。因为我们要进行耗时分析，所以只关注和请求延迟有关的变量（以 time_ 开头的变量）。往文本文件 curl-format.txt 写入下面的内容：
+curl 命令提供了 -w 参数，允许按照指定的格式打印与请求相关的信息，其中部分信息可以通过特定的变量表示，如 status_code、size_download、time_namelookup 等等。由于我们关注的是耗时分析，因此只需关注与请求延迟相关的变量（以 time_ 开头的变量）。各个阶段的耗时变量如下所示：
 
 ```bash
 $ cat curl-format.txt
@@ -37,10 +35,10 @@ $ cat curl-format.txt
          time_total:  %{time_total}\n
 ```
 
-上述的变量的含义，如表 2-2 所示。
+上述变量的含义如表 2-2 所示。
 
 :::center
-表 2-2 curl 支持的与请求延迟有关的变量
+表 2-2 curl 内部延迟变量
 :::
 
 | 变量名称 | 说明 |
@@ -54,7 +52,7 @@ $ cat curl-format.txt
 | time_total | 从请求开始到完成的总耗时 |
 
 
-我们先看看一个简单的请求，如下所示：
+让我们先看一个简单的请求，如下所示：
 
 ```bash
 $ curl -w "@curl-format.txt" -o /dev/null -s 'https://www.iq.com/'
@@ -95,7 +93,7 @@ time_total=0.088744
 - **域名解析优化**：减少域名解析产生的延迟。例如，提前获取域名解析结果备用，那么后续的 HTTPS 连接就能减少一个 RTT；
 - **对传输内容进行压缩**：传输数据的大小与耗时成正比，压缩传输内容是降低请求耗时最有效的手段之一；
 - **SSL 层优化**：升级 TLS 算法和 HTTPS 证书，例如升级 TLS 1.3 协议，可将 SSL 握手的 RTT 从 2 个减少到 1 个；
-- **传输层优化**：升级拥塞控制算法以提高网络吞吐量。将默认的 Cubic 升级为 BBR 对于大带宽、长链路的弱网环境尤其有效；
+- **传输层优化**：升级拥塞控制算法以提高网络吞吐量。将默认的 Cubic 升级为 BBR，对于大带宽、长链路的弱网环境尤其有效；
 - **网络层优化**：使用商业化的网络加速服务，通过路由优化数据包，实现动态服务加速；
 - **使用更现代的 HTTP 协议**：升级至 HTTP/2，进一步升级到基于 QUIC 协议的 HTTP/3。
 
