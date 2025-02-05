@@ -117,8 +117,8 @@ spec:
 ```
 要扩容的话也很简单，只要更新节点数量（比如 size 从 3 改到 5），再 apply 一下，它同样会监听这个自定义资源的变动，去做对应的更新。更高级的 Operator 还可以自动升级、扩容、备份、恢复，甚至于 Prometheus 系统集成，自动检测故障、自动转移故障。
 
-Operator 的实现上，其实是基于 CRD 构建“高层抽象”，通过 Kubernetes 的原生“控制器模式”将有状态应用的运维操作代码化。它与 StatefulSet 也并非竞争关系，你完全可以编写一个 Operator，在其控制循环里创建和管理 StatefulSet，而非直接管理 Pod。例如，业界知名的 Prometheus Operator 就是这么实现的。这种设计的优势，不仅在于简化操作，更在于它遵循 Kubernetes 基于资源和控制器的设计原则，同时不受限于内置资源的表达能力。只要开发者愿意编写代码，特定领域的经验都可以转化为可重用的 Operator 逻辑。
+Operator 的实现上，其实是基于 CRD 构建“高层抽象”，通过 Kubernetes 的原生“控制器模式”将有状态应用的运维操作代码化。它与 StatefulSet 也并非竞争关系，你完全可以编写一个 Operator，在其控制循环里创建和管理 StatefulSet，而非直接管理 Pod。例如，业界知名的 Prometheus Operator 就是这么实现的。这种设计的优势，不仅在于简化操作，更在于它遵循 Kubernetes 基于资源和控制器的设计原则，同时不受限于内置资源的表达能力。只要开发者愿意编写代码，特定领域的经验都可以转化为 Operator 逻辑。
 
-Red Hat 收购 CoreOS 之后，为开发者提供一套完整的工具集 Operator Framework 简化 Kubernetes Operator 的开发过程，但这依然不是一件轻松的工作。以 etcd 的 Operator 为例，尽管 etcd 本身算不上特别复杂的有状态应用，etcd Operator 的功能也相对基础，但其代码超过了9,000 行。这是因为，管理有状态应用本身就是非常复杂的事情，更何况在容器云平台上进行管理。
+Red Hat 收购 CoreOS 之后，为开发者提供一套完整的工具集 Operator Framework 简化 Operator 的开发过程，但这依然不是一件轻松的工作。以 etcd 的 Operator 为例，尽管 etcd 本身算不上特别复杂的有状态应用，etcd Operator 的功能也相对基础，但其代码超过了9,000 行。这是因为，管理有状态应用本身就是非常复杂的事情，更何况在容器云平台上进行管理。
 
-尽管业内对状态应用以容器形式部署存在激烈争议，但可以肯定的是，若希望有状态应用在 Kubernetes 上稳定运行，Operator 是当前最可行的方案！
+最后，尽管业内对状态应用以容器形式部署存在激烈争议，但可以肯定的是，若希望有状态应用在 Kubernetes 上稳定运行，Operator 是当前最可行的方案！
