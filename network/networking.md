@@ -12,7 +12,7 @@
 2. 网卡通过 DMA（Direct Memory Access，直接内存访问）技术，将数据包拷贝到内核中的 RingBuffer（环形缓冲区）等待 CPU 处理。RingBuffer 是一种首尾相接的环形数据结构，它作为缓冲区，缓解网卡接收数据的速度快于 CPU 处理数据的速度问题。
 3. 接着，网卡产生 IRQ（Interrupt Request，硬件中断），通知内核有新的数据包到达。
 4. 内核调用中断处理函数，标记新数据到达。接着，唤醒 ksoftirqd 内核线程，执行软中断（SoftIRQ）处理。
-5. 软中断处理中，内核调用网卡驱动的 NAPI（New API）poll 接口，从 RingBuffer 中提取数据包，并转换为 skb（Socket Buffer）格式。skb 网络子系统中用于描述网络数据包的核心数据结构。数据包的发送、接收还是转发，内核都会通过 skb 来处理。
+5. 软中断处理中，内核调用网卡驱动的 NAPI（New API）poll 接口，从 RingBuffer 中提取数据包，并转换为 skb（Socket Buffer）格式。skb 是描述网络数据包的核心数据结构，无论是数据包的发送、接收还是转发，Linux 内核都会以 skb 的形式来处理。
 6. skb 被传递到内核协议栈，在多个网络层次间处理：
 	- 网络层（L3 Network layer）：根据主机中的路由表，判断数据包路由到哪一个网络接口（Network Interface）。这里的网络接口可能是稍后介绍的虚拟设备，也可能是物理网卡 eth0 接口。
 	- 传输层（L4 Transport layer）：处理网络地址转换（NAT）、连接跟踪（conntrack）等。
