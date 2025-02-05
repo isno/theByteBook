@@ -13,7 +13,7 @@
 
 :::center
   ![](../assets/dsa.png)<br/>
- 图 2-24 动态加速原理 [图片来源](https://www.cdnetworks.com/cn/web-performance/dynamic-web-acceleration/)
+ 图 2-23 动态加速原理 [图片来源](https://www.cdnetworks.com/cn/web-performance/dynamic-web-acceleration/)
 :::
 
 笔者使用过 Akamai 的加速服务，根据表 2-4 所示的实践结果来看，HTTPS 请求延迟降低了 30% 左右。
