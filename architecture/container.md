@@ -108,7 +108,7 @@ Kubernetes 围绕容器抽象了一系列的“资源”概念能描述整个分
 
 随着 Kubernetes 资源模型越来越广泛的传播，现在已经能够用一组 Kubernetes 资源来描述一整个软件定义计算环境。**就像用 docker run 可以启动单个程序一样，现在用 kubectl apply -f 就能部署和运行一个分布式集群应用，而无需关心是在私有云还是公有云或者具体哪家云厂商上**。
 
-## 6.云原生阶段：百花齐放
+## 6.CNCF 阶段：百花齐放
 
 2015 年 7 月 21 日，Google 带头成立了 CNCF（Cloud Native Computing Foundation，云原生基金会）。
 
