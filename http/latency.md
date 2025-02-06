@@ -43,13 +43,13 @@ $ cat curl-format.txt
 
 | 变量名称 | 说明 |
 |:--|:--|
-| time_namelookup | 从请求开始到域名解析完成的耗时 |
-| time_connect | 从请求开始到 TCP 三次握手完成的耗时 |
-| time_appconnect | 从请求开始到 TLS 握手完成的耗时 |
-| time_pretransfer | 从请求开始到向服务器发送第一个 GET/POST 请求开始之前的耗时 |
-| time_redirect | 重定向耗时，包括到内容传输前的重定向的 DNS 解析、TCP 连接、内容传输等时间 |
-| time_starttransfer | 从请求开始到内容传输前的耗时 |
-| time_total | 从请求开始到完成的总耗时 |
+| time_namelookup | 从请求开始到域名解析完成的时间 |
+| time_connect | 从请求开始到 TCP 三次握手完成的时间 |
+| time_appconnect | 从请求开始到 TLS 握手完成的时间 |
+| time_pretransfer | 从请求开始到发送第一个 GET/POST 请求的时间 |
+| time_redirect | 重定向过程的总时间，包括 DNS 解析、TCP 连接和内容传输前的时间 |
+| time_starttransfer | 从请求开始到首个字节接收的时间 |
+| time_total | 请求总耗时 |
 
 
 让我们先看一个简单的请求，如下所示：
@@ -79,11 +79,11 @@ time_total=0.088744
 :::
 | 耗时 | 说明 |
 |:--|:--|
-| 域名解析耗时 = time_namelookup | 域名 NS 及本地 LocalDNS 解析耗时 |
-| TCP 握手耗时 = time_connect - time_namelookup | 建立 TCP 连接时间 |
-| SSL 耗时 = time_appconnect - time_connect | TLS 握手以及加解密处理 |
-| 服务器处理请求耗时 = time_starttransfer - time_pretransfer | 服务器响应第一个字节到全部传输完成耗时 |
-| TTFB  = time_starttransfer - time_appconnect | 服务器从接收请求到开始到收到第一个字节的耗时 |
+| 域名解析耗时 = time_namelookup | 从发起请求到获取域名对应的 IP 地址（DNS 解析成功）的时间 |
+| TCP 握手耗时 = time_connect - time_namelookup | 建立 TCP 连接所需的时间 |
+| SSL 耗时 = time_appconnect - time_connect | TLS 握手及加解密处理时间 |
+| 服务器处理请求耗时 = time_total - time_starttransfer |服务器处理请求的时间 |
+| TTFB  = time_starttransfer | 从请求开始到接收服务器首个字节的时间 |
 | 总耗时 = time_total | 整个 HTTPS 的请求耗时|
 
 ## 2.2.3 HTTPS 的优化总结
