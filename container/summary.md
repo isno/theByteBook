@@ -13,7 +13,6 @@
 过去十年间，Kubernetes 发展成为容器编排系统的事实标准，也成为大数据分析、机器学习以及在线服务等领域广泛认可的最佳技术底座。然而，Kubernetes 在解决复杂问题的同时，本身也演变成当今最复杂的软件系统之一。目前，包括官方文档在内的大多数 Kubernetes 资料都聚焦于“怎么做”，鲜有解释“为什么这么做”。自 2015 年起，Google 陆续发布了《Borg, Omega, and Kubernetes》及《Large-scale cluster management at Google with Borg》等论文，分享了 Google 内部开发 Borg、Omega 和 Kubernetes 系统的经验与教训。本章，我们将从这几篇论文展开，讨论容器编排系统中关于网络通信、持久化存储、资源模型和编排调度等方面的设计原理和应用。
 
 本章内容安排如图 7-0 所示。
-
 :::center
   ![](../assets/container-summary.png)<br/>
   图 7-0 本章内容导图
