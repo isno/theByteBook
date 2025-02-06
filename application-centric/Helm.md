@@ -6,7 +6,7 @@
 
 :::center
   ![](../assets/helm.webp)<br/>
-  图 Helm 的工作原理
+  图 10-2 Helm 的工作原理
 :::
 
 Chart 是一个包含描述 Kubernetes 相关资源的文件集合。以官方仓库中 WordPress 应用为例，它的 Chart 目录结构是这样的。

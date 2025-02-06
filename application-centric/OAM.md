@@ -9,22 +9,23 @@
 - **应用边界**（Application Scopes）:定义应用级别的部署特征，比如健康检查规则、安全组、防火墙、SLO、检验等模块。相对于运维特征而言，应用边界作用于一个应用的整体，而运维特征作用于应用中的某个组件。
 - **应用**（Application）：将 Component（必需）、Trait（必需）和 Scope（可选）组合并实例化，形成了一个完整的应用描述。
 
-OAM 使用上述自定义资源将原先 Kubernetes All-in-one 的复杂配置做了一定层次的解耦，应用研发人员负责管理 Component，运维人员 Component 组合并绑定 Trait 变成 Application，平台或基础设施提供方提供 OAM 的解释能力，将这些自定义资源映射到实际的基础设施。
+OAM 通过上述自定义资源将原本复杂的 Kubernetes All-in-one 配置进行了一定程度的解耦。应用研发人员负责管理 Component，运维人员将 Component 组合并绑定 Trait，形成 Application。平台或基础设施提供方则负责 OAM 的解释能力，将这些自定义资源映射到实际的基础设施上。各种角色的关注点恰当地分离，不同角色更聚焦更专业的做好本角色的工作。
 
-整个过程如图所示。
+整个过程如图 10-3 所示。
 :::center
   ![](../assets/OAM-how-it-works.png)<br/>
-  图 4-0 OAM 应用部署计划
+  图 10-3 OAM 工作原理
 :::
 
 KubeVela 是 OAM 规范在 Kubernetes 上的完整实现，它起源于 OAM 社区，由阿里巴巴、微软等技术专家共同维护。
 
-对于平台工程师（Platform Builder）来说，KubeVela 像一个可以无限扩展、Kubernetes 原生的应用构建引擎，他们准备应用部署环境、维护稳定可靠的基础设施功能，并将这些基础设施能力作为 KubeVela 模块注册到集群中；而对于最终用户（End User，研发人员或者运维人员）来说，他们选择部署环境、挑选能力模块并填写业务参数，就可以在不同运行环境上把应用随时运行起来！
+对于平台工程师（Platform Builder）来说，KubeVela 是一个具备无限扩展性的 Kubernetes 原生应用构建引擎。他们负责准备应用部署环境、维护稳定可靠的基础设施，并将这些基础设施能力作为 KubeVela 模块注册到集群中。对于最终用户（End User，研发人员或运维人员）来说，只需选择部署环境、挑选能力模块并填写业务参数，就可以在不同运行环境上把应用随时运行起来！
 
-KubeVela 工作流程如下图。
+
+KubeVela 工作流程如图 10-4。
 :::center
   ![](../assets/kubevela.jpg)<br/>
-  图 4-0 KubeVela 工作流程
+  图 10-4 KubeVela 工作原理
 :::
 
 :::tip 企业落地 Kubernetes 的难题
@@ -41,10 +42,10 @@ KubeVela 工作流程如下图。
 这里的关键点在于，上述能力在 Kubernetes 生态中都是常见且广泛支持的，有些甚至是 Kubernetes 内置功能。但是到了 PaaS 这里，要实现这些能力往往需要重新开发，而且由于先前的设计假设，可能还需要进行大规模的重构。
 :::
 
-KubeVela 本质上其实就是在 Kuberntes 上安装了一个 OAM 插件，从而使得平台工程师能够按照 OAM 规范，把 Kubernetes 生态中的各种能力或插件整合成一个应用交付平台。所以说，KubeVela 对最终用户提供媲美 PaaS 的使用体验，又为平台工程师带来 Kubernees 原生的高可扩展性和平台构建规范！
+KubeVela 本质上是在 Kubernetes 上安装了一个 OAM 插件，使平台工程师能够依据 OAM 规范，将 Kubernetes 生态中的各种能力和插件整合成一个应用交付平台。所以说，KubeVela 为最终用户提供了类似 PaaS 的使用体验，同时也为平台工程师带来了 Kubernetes 原生的高可扩展性和平台构建规范。
 
 
-不过，目前来看，KubeVela 背后的理论还是过于抽象，落地有一定的技术门槛！但 KubeVela 这种构建以”应用为中心“的上层平台的思想，无疑代表着云原生技术未来发展的趋向！
+不过，目前来看，KubeVela 背后的理论还是过于抽象，落地有一定的技术门槛！但 KubeVela 这种构建以”应用为中心“的上层平台的思想，毫无疑问代表着云原生技术未来的发展方向！
 
 
 
