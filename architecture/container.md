@@ -1,7 +1,7 @@
 # 1.5.1 容器技术
 
 :::tip Google Cloud 对容器的定义
-容器是轻量级应用代码包，它还包含依赖项，例如编程语言运行时的特定版本和运行软件服务所需的库。
+容器是轻量级应用代码包，其中还包含依赖项，例如编程语言运行时的特定版本和运行软件服务所需的库。
 :::
 
 Google 对容器的解释看起来也云里雾里！那么，我们延续本章 1.1 节解释云计算的方式，从容器技术出现开始，了解它发展的历史，讨论容器技术各个阶段试图解决的问题，从而深入理解容器技术。
@@ -83,7 +83,7 @@ Docker 把内部管理容器执行、分发、监控、网络、构建、日志�
   图 7-13 Containerd 架构 [图片来源](https://containerd.io/)
 :::
 
-根据图图 1-15，再来看 Docker 的架构。经过 runc、containerd 组件的拆分改造之后，Docker 就不再是一个简单的守护进程那么简单了，而是通过集成 containerd、containerd-shim、runc 等多个组件共同完成。
+根据图 1-15，再来看 Docker 的架构。经过 runc、containerd 组件的拆分改造之后，Docker 就不再是一个简单的守护进程那么简单了，而是通过集成 containerd、containerd-shim、runc 等多个组件共同完成。
 
 :::center
   ![](../assets/docker-arc.png)<br/>

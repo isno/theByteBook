@@ -11,7 +11,7 @@
  图 2-17 TLS1.3 对比 TLS1.2
 :::
 
-以 Nginx 配置为例，确保 Nginx 版本为 1.13.0 或更高，OpenSSL 版本为 1.1.1 或更高。然后，在配置文件中使用 ssl_protocols 指令启用 TLSv1.3 支持。
+以 Nginx 配置为例，确保 Nginx 版本 ≥ 1.13.0，OpenSSL 版本 ≥ 1.1.1。然后，在配置文件中使用 ssl_protocols 指令启用 TLSv1.3 支持。
 ```nginx
 server {
 	listen 443 ssl;
@@ -26,7 +26,7 @@ HTTPS 数字证书分为 RSA 证书和 ECC 证书，二者的区别如下：
 - **RSA 证书**使用 RSA 算法生成公钥，兼容性较好，但不支持完美前向保密（PFS）。PFS 可确保即使私钥泄露，泄露之前的通信内容仍无法被破解。
 - **ECC 证书**使用椭圆曲线加密算法（Elliptic Curve Cryptography）生成公钥，提供更高的计算速度和安全性，并支持 PFS。ECC 能以较小的密钥长度提供相同或更高的安全性。例如，256 位的 ECC 密钥相当于 3072 位的 RSA 密钥。
 
-ECC 证书的唯一缺点是兼容性稍差。在 Windows XP 上，只有 Firefox 支持访问使用 ECC 证书的网站（因其独立实现 TLS，不依赖操作系统）；在 Android 平台上，需 Android 4.0 以上版本才能支持 ECC 证书。好消息是，从 Nginx 1.11.0 开始，支持配置 RSA/ECC 双证书。在 TLS 握手过程中，Nginx 会根据双方协商的密码套件（Cipher Suite）返回证书。如果支持 ECDSA 算法，则返回 ECC 证书；否则，返回 RSA 证书。
+ECC 证书的唯一缺点是兼容性“稍差”。在 Windows XP 上，只有 Firefox 支持访问使用 ECC 证书的网站（因其独立实现 TLS，不依赖操作系统）；在 Android 平台上，需 Android 4.0 以上版本才能支持 ECC 证书。好消息是，从 Nginx 1.11.0 开始，支持配置 RSA/ECC 双证书。在 TLS 握手过程中，Nginx 会根据双方协商的密码套件（Cipher Suite）返回证书。如果支持 ECDSA 算法，则返回 ECC 证书；否则，返回 RSA 证书。
 
 Nginx 双证书配置示例如下：
 
@@ -137,7 +137,7 @@ OCSP Response Data:
  图 2-19 证书配置
 :::
 
-接着，对不同证书（ECC 和 RSA），不同 TLS 协议（TLS1.2 和 TLS1.3）进行压测，测试结果如表 2-2 所示。
+接着，对不同证书（ECC 和 RSA）、不同 TLS 协议（TLS1.2 和 TLS1.3）进行压测，测试结果如表 2-2 所示。
 
 :::center
 表 2-2 HTTPS 性能基准测试
@@ -151,6 +151,6 @@ OCSP Response Data:
 |ECC 证书 + TLS1.2| 639.39| 100|203.319ms|
 |ECC 证书 + TLS1.3| 627.39| 100|159.390ms|
 
-从测试结果来看，使用 ECC 证书相比 RSA 证书在性能上有显著提升。即使 RSA 证书启用了硬件加速技术 QAT（Quick Assist Technology），与 ECC 证书相比仍存在明显差距。此外，QAT 需要额外购买硬件，且维护成本较高，因此不再推荐使用。
+测试结果表明，使用 ECC 证书相比 RSA 证书在性能上有显著提升。即使 RSA 证书启用了硬件加速技术 QAT（Quick Assist Technology），与 ECC 证书相比仍存在明显差距。此外，QAT 需要额外购买硬件，且维护成本较高，因此不再推荐使用。
 
 综合考虑，建议 HTTPS 配置采用 TLS 1.3 协议与 ECC 证书。

@@ -1,6 +1,6 @@
 # 2.8 QUIC 设计原理与实践
 
-QUIC（Quick UDP Internet Connection，快速 UDP 网络连接）是一种基于 UDP 封装的安全可靠传输协议，旨在取代 TCP，成为新一代互联网的主流传输协议。
+QUIC（Quick UDP Internet Connection，快速 UDP 网络连接）是一种基于 UDP 封装的安全可靠传输协议，旨在取代 TCP 成为新一代互联网的主流传输协议。
 
 很多人可能以为是 IETF 在推动 QUIC 替代 TCP。实际上，这项工作始于 Google。
 

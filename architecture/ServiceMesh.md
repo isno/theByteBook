@@ -12,7 +12,7 @@
 —— by William Morgan
 :::
 
-ServiceMesh 之所以称为“服务网格”，是因为每台节点同时运行着业务逻辑和具备通信治理能力的网络代理（如 Envoy、Linkerd-proxy）。这个代理被形象地称为“边车代理”（Sidecar），其中业务逻辑相当于主驾驶，处理辅助功能的代理软件相当于边车。
+ServiceMesh 之所以称为“服务网格”，是因为每个节点同时运行着业务逻辑和具备通信治理能力的网络代理（如 Envoy、Linkerd-proxy）。这个代理被形象地称为“边车代理”（Sidecar），其中业务逻辑相当于主驾驶，处理辅助功能的代理软件相当于边车。
 
 :::center
   ![](../assets/sidecar-example.jpg)<br/>

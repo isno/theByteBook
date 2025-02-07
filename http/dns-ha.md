@@ -25,7 +25,7 @@ Facebook 官方发布的故障原因是，运维人员修改 BGP 路由规则时
 ```
 根据上一篇内容的介绍，这是“权威解析服务器”出现了问题。那影响范围可就大了，世界上所有的用户都无法再正常打开 Facebook 相关的网站、APP。
 
-用户无法正常登陆 APP 时，通常会“疯狂”地发起重试。Facebook 用户太多了，云服务商 Cloudflare 的 DNS 解析器（1.1.1.1）请求瞬间增大了 30 倍。如果 1.1.1.1 宕机，恐怕半个互联网都会受到影响。
+用户无法正常登录 APP 时，通常会“疯狂”地发起重试。Facebook 用户太多了，云服务商 Cloudflare 的 DNS 解析器（1.1.1.1）请求瞬间增大了 30 倍。如果 1.1.1.1 宕机，恐怕半个互联网都会受到影响。
 
 <div  align="center">
 	<img src="../assets/cloudflare-dns.png" width = "650"  align=center />
