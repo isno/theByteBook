@@ -12,7 +12,7 @@ iptables 默认包含 5 条规则链 PREROUTING、INPUT、FORWARD、OUTPUT、POS
 
 iptables 将常见的数据包管理操作抽象为具体的规则动作，当数据包在内核协议栈中经过 Netfilter 钩子时（也就是 iptables 的链），iptables 会根据数据包的源/目的 IP 地址、传输层协议（如 TCP、UDP）以及端口等信息进行匹配，并决定是否触发预定义的规则动作。
 
-iptables 常见的动作及含义如下。
+iptables 常见的动作及含义如下：
 
 - ACCEPT：允许数据包通过，继续执行后续的规则。
 - DROP：直接丢弃数据包。
