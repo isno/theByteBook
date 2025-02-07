@@ -8,27 +8,27 @@
 
 2015 年，Pivotal[^1] 公司的技术产品经理 Matt Stine，首次提出了“云原生”（Cloud Native）的概念。
 
-在 Matt Stine 所著的《迁移到云原生应用架构》的电子书中，他提出云原生程序应该具备的 5 个主要特征，如图 1-8 所示。
+在 Matt Stine 所著的《迁移到云原生应用架构》书中，他提出云原生架构应该具备 5 个主要特征，如图 1-8 所示。
 
 :::center
   ![](../assets/pivotal-cloud-native.svg)<br/>
-  图 1-8 Pivotal 对云原生定义
+  图 1-8 云原生架构的早期特征
 :::
 
-随着时间的推移，详细解释这些早期的特征已经没有什么必要，只要知道这些内容研究的是“用更恰当的姿势上云”即可。
+随着时间的推移，详细解释这些早期的特征已经没有什么必要了，只要知道这些内容研究的是“用更恰当的姿势上云”即可。
 
-2017 年 10 月，还是 Matt Stine，接受 InfoQ 采访时，他对云原生的定义做了小幅调整，云原生程序具有图 1-9 所示的 6 个特质。
+2017 年 10 月，还是 Matt Stine，他接受 InfoQ 采访时，对云原生的定义做了小幅调整，更新后的云原生架构特征如图 1-9 所示。
 
 :::center
   ![](../assets/pivotal-cloud-native-update.svg)<br/>
- 图 1-9 Matt Stine 更新后的云原生定义
+ 图 1-9 Matt Stine 更新后的云原生架构特征
 :::
 
 现在，在 Pivotal 官方网站中[^2]，对云原生的介绍则是关注如图 1-10 所示的 4 个要点：DevOps（开发运维）、Continuous Delivery（持续交付）、Microservices（微服务）、Containers（容器化），这也是大家最熟悉的版本。
 
 :::center
   ![](../assets/cloud-native.png)<br/>
- 图 1-10 Pivotal 云原生定义
+ 图 1-10 Pivotal 对云原生的定义
 :::
 
 可见云原生的定义在 Pivotal 内部也是不断更迭的，很多概念被放弃或者抽象，并且有新的东西加入。
@@ -69,7 +69,7 @@ CNCF 是 Linux 基金会旗下的基金会，可以理解为一个非盈利组�
 
 :::center
   ![](../assets/cncf-cloud-native.svg)<br/>
- 图1-11 CNCF定义的云原生代表技术
+ 图1-11 CNCF 定义的云原生代表技术
 :::
 
 ## 1.3.3 云原生定义之外
