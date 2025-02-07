@@ -118,10 +118,10 @@ Chain ISTIO_REDIRECT (2 references)
 
 传统的代理（如 HAProxy 或 Nginx）依赖静态配置文件来定义资源和数据转发规则，而 Envoy 则几乎所有配置都可以动态获取。Envoy 将代理转发行为的配置抽象为三类资源：Listener、Cluster 和 Router，并基于这些资源定义了一系列标准数据面 API，用于发现和操作这些资源。这套标准数据面 API 被称为 xDS。
 
-xDS 的全称是 "x Discovery Service"，这里的 "x" 代指表 8-1 中的协议族。
+xDS 的全称是“x Discovery Service”，这里的 “x” 指的是表 8-1 中的协议族。
 
 :::center
-表 9-1 xDS v3.0 协议族
+表 8-1 xDS v3.0 协议族
 :::
 | 简写 |                全称                |        描述        |
 | :--: | :--------------------------------: | :----------------: |
@@ -140,8 +140,7 @@ xDS 的全称是 "x Discovery Service"，这里的 "x" 代指表 8-1 中的协�
 | ECDS | Extension Config Discovery Service |  扩展配置发现服务  |
 | xDS  |        X Discovery Service         | 以上诸多API的统称  |
 
-具体到每个 xDS 协议都包含大量的内容，笔者无法一一详述。但通过这些协议操作的资源，再结合图 8-11，可大致说清楚它们的工作原理。
-
+具体到每个 xDS 协议都包含大量的内容，笔者无法一一详述。但通过这些协议操作的资源，再结合图 8-11 理解，可大致说清楚它们的工作原理。
 
 
 - **Listener**：Listener 可以理解为 Envoy 打开的一个监听端口，用于接收来自 Downstream（下游服务，即客户端）连接。每个 Listener 配置中核心包括监听地址、插件（Filter）等。Envoy 支持多个 Listener，不同 Listener 之间几乎所有的配置都是隔离的。
