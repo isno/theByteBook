@@ -55,7 +55,7 @@ spec:
         ports:
         - containerPort: 80
 ```
-该 YAML 文件提交给 Kubernetes 之后，Kubernetes 创建拥有 3 个副本的 nginx 服务实例，将持续保证我们所期望的状态。
+该 YAML 文件提交给 Kubernetes 之后，Kubernetes 会创建拥有 3 个副本的 nginx 服务实例，将持续保证我们所期望的状态。
 
 通过编写 YAML 文件表达我们的需求和意图，资源如何创建、服务如何关联，至于具体怎么实现，我们完全不需要关心，全部甩手给 Kubernetes。
 
