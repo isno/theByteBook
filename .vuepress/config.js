@@ -29,7 +29,7 @@ export default defineUserConfig({
     /**bundler: webpackBundler({
         postcss: {},
         vue: {},
-      }),*/
+      }),**/
     plugins: [
         mdEnhancePlugin({
           // 启用脚注
@@ -109,8 +109,8 @@ export default defineUserConfig({
                 collapsable: false,
                 sidebarDepth: 1,
                 children: [
-                    '/network/latency.md',
                     '/http/latency.md',
+                    '/http/https-latency.md',
                     {
                         text: '2.3 域名解析的原理与实践',
                         link:  '/http/dns.md',
