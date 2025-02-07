@@ -25,7 +25,7 @@ TCC（Try、Confirm、Cancel）事务模型源自 Pat Helland 在论文《Life b
 	- 支付服务：扣除冻结的 100 元。
 	- 仓库服务：标记冻结的库存为出库状态，并扣减库存。
 
-3. Cancel 阶：如果 Try 阶段任何一方反馈失败，将事务日志状态更新为 Cancel，进入 Cancel 阶段：
+3. Cancel 阶段：如果 Try 阶段任何一方反馈失败，将事务日志状态更新为 Cancel，进入 Cancel 阶段：
 	- 支付服务：释放被冻结的 100 元。
 	- 仓库服务：释放被冻结的库存。
 
