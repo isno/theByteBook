@@ -71,4 +71,4 @@ TLS 卸载（TLS Termination）是指将 TLS 加密/解密、证书管理等操�
 
 考虑各个服务器的处理能力存在差异，负载均衡算法又有了对服务器“**加权**”的补充。
 
-加权负载均衡算法增加了按权值高低分配的机制，权重较高的服务器处理更多的连接，从而保证集群内后端服务器的负荷整体上处于均衡状态。常用的加权负载均衡算法有加权轮询（Weighted Round Robin）、加权最小连接（Weighted Least-Connection）和加权随机（Weighted Random）等等，笔者就不再逐一介绍了。
+加权负载均衡算法通过按权值高低分配请求，使权重较高的服务器处理更多连接，从而保证集群内后端服务器的负荷整体均衡。常用的加权负载均衡算法有加权轮询（Weighted Round Robin）、加权最小连接（Weighted Least-Connection）和加权随机（Weighted Random）等等，笔者就不再逐一介绍了。
