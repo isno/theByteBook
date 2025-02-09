@@ -1,6 +1,6 @@
 # 前言
 
-如果你是一位互联网从业者，我猜出这几年你大概率被这些层出不穷的概念包围：云计算、PaaS、FaaS、CaaS、ServiceMesh、Serverless，当然不能遗漏了各种 Ops，诸如 DevOps、GitOps、MLOps、FinOps 等等。
+如果你是一位互联网从业者，我猜出这几年你大概率被这些层出不穷的概念包围：云计算、边缘计算、PaaS、FaaS、CaaS、ServiceMesh、Serverless，当然不能遗漏了各种 Ops，诸如 DevOps、GitOps、MLOps、FinOps 等等。
 
 近几年来，软件开发技术经历了翻天覆地的变革，这也直接对构建业务应用产生了重大的影响。在探讨那些令人兴奋的技术以及思考如何赋能业务之前，我们不妨先思考一下，推动这一波技术浪潮的核心驱动力是什么？
 
