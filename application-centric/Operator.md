@@ -99,7 +99,9 @@ port: 2379
 image: quay.io/coreos/etcd:v3.5.0
 ```
 
-这种设计“简化版”的 API 对象，就叫做“构建上层抽象”，“构建上层抽象”是简化应用管理的必要手段。接下来，看使用 Operator 后的情况，事情就变得简单多了。Etcd 的 Operator 提供了 EtcdCluster 自定义资源，在它的帮助下，仅用几十行代码，安装、启动、停止等基础的运维操作。
+这种设计“简化版”的 API 对象，就叫做“构建上层抽象”，“构建上层抽象”是简化应用管理的必要手段。
+
+接下来，再看使用 Operator 后的情况，事情就变得简单多了。Etcd 的 Operator 提供了 EtcdCluster 自定义资源，在它的帮助下，仅用几十行代码，安装、启动、停止等基础的运维操作。
 ```yaml
 apiVersion: operator.etcd.database.coreos.com/v1beta2
 kind: EtcdCluster
