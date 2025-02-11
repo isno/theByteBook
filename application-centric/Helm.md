@@ -48,7 +48,7 @@ spec:
 Release 是 Helm Chart 的运行实例，它将多个 Kubernetes 资源抽象为一个整体，用户无需单独操作每个资源，而是通过 Helm 提供的命令（如 helm install、helm upgrade、helm rollback 等）进行统一管理。
 
 
-Helm 提供了应用生命周期、版本、依赖项的管理能力，还支持与 CI/CD 流程的集成，强大的功能使它在业内备受瞩目，业内流行的应用纷纷提供 Helm Chart 格式的版本。2020 年，由云原生计算基金会（CNCF）牵头开发的 Artifact Hub，全球规模最大的 Helm 仓库，用户可以在这里找到数以千计的 Helm Charts，一键部署各种应用（如数据库、消息队列、监控工具、CI/CD 系统、日志处理工具）。
+Helm 提供了应用生命周期、版本、依赖项的管理能力，还支持与 CI/CD 流程的集成，强大的功能使它在业内备受瞩目，业内流行的应用纷纷提供 Helm Chart 格式的版本。2020 年，CNCF 牵头开发了 Artifact Hub，该项目已经成为全球规模最大的 Helm 仓库，用户可以在这里找到数以千计的 Helm Charts，一键部署各种应用（如数据库、消息队列、监控工具、CI/CD 系统、日志处理工具）。
 
 不过，需要明确的是，Helm 本质是简化 Kubernetes 应用安装与配置的工具。对于“有状态应用”（Stateful Application）来说，Helm 无法进行精细的生命周期管理。例如，它无法处理数据备份、扩缩容、分区重平衡、动态扩展等操作，这些都是在管理复杂有状态应用时所必须考虑的细节！
 
