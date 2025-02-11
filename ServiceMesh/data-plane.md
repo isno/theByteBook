@@ -116,9 +116,9 @@ Chain ISTIO_REDIRECT (2 references)
 
 通过 iptables 劫持流量，转发至边车代理后，边车代理根据配置接管应用程序之间的通信。
 
-传统的代理（如 HAProxy 或 Nginx）依赖静态配置文件来定义资源和数据转发规则，而 Envoy 则几乎所有配置都可以动态获取。Envoy 将代理转发行为的配置抽象为三类资源：Listener、Cluster 和 Router，并基于这些资源定义了一系列标准数据面 API，用于发现和操作这些资源。这套标准数据面 API 被称为 xDS。
+传统的代理（如 HAProxy 或 Nginx）依赖静态配置文件来定义资源和数据转发规则，而 Envoy 则几乎所有配置都可以动态获取。Envoy 将代理转发行为的配置抽象为三类资源：Listener、Cluster 和 Router，并基于这些资源定义了一系列标准数据面 API，用于发现和操作这些资源，这套标准数据面 API 被称为 xDS。
 
-xDS 的全称是“x Discovery Service”，这里的 “x” 指的是表 8-1 中的协议族。
+xDS 的全称是“x Discovery Service”，“x” 指的是表 8-1 中的协议族。
 
 :::center
 表 8-1 xDS v3.0 协议族
