@@ -15,14 +15,14 @@ Linux Bridge 作为虚拟交换机，其功能与物理交换机类似。将多�
  图 3-15 veth 网卡与 Linux Bridge
 :::
 
-1. 首先，创建一个 Linux Bridge 设备。如下命令，会创建一个名为 br0 的虚拟交换机，并将其激活。
+1. 首先，创建一个 Linux Bridge 设备。如下命令所示，创建一个名为 br0 的虚拟交换机，并将其激活。
 
 ```bash
 $ ip link add name br0 type bridge
 $ ip link set br0 up
 ```
 
-2. 接着，创建一对 Veth 设备，并将它们分别分配给两个命名空间。命令如下。
+2. 接着，创建一对 Veth 设备，并将它们分别分配给两个命名空间。
 
 ```bash
 # 创建 veth1 和 veth2
