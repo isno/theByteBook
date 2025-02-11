@@ -43,7 +43,7 @@ webhooks:
 
 ## 8.3.2 流量透明劫持
 
-Isito 通过准入控制器，还会注入一个初始化容器 istio-init，该容器的配置如下：
+Isito 通过准入控制器，还会注入一个名为 istio-init 的初始化容器 ，它的配置如下：
 
 ```yaml
 initContainers:
