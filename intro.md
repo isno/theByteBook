@@ -69,9 +69,7 @@
 
 ## 致谢
 
-首先，我要感谢我的爱人。在我决定开始写作时，她毫不犹豫地承担起照顾两个孩子的责任，并在三年里忍耐我将所有空闲时间投入到写作中。没有她的支持，我无法完成该作！其次，还要感谢在 Github 帮我校验书稿的网友，他们帮我指出了大量的笔误、不严谨的内容，提升了书稿的质量。感谢你们 songzhibin97、sunway910、HUGHNew、watermeion、CrypticDriver、nyufeng、MoguCloud
-MoguCloud、lengchu、chesha1、zhangwt-cn、Timmer2338
-Timmer2338、5isi、owen-kuai、zyp461476492、msqtt、hexody、zhuweileo、gcmutator、acechef、vikiboss、xxm1995、czy0538、binc4t、ercJuL、MarushiruDonato、ChengS-U、yiyungent、Snailclimb、cplayer、AllinProgram、wjp-cn、iakihsoug、MoshiCoCo、SSShooter、XBIsland、qinxuliang...。
+首先，我要感谢我的爱人。在我决定开始写作时，她毫不犹豫地承担起照顾两个孩子的责任，并在三年里忍耐我将所有空闲时间投入到写作中。没有她的支持，我无法完成该作！同时，要感谢我的工作单位爱奇艺，公司为我提供了宝贵的工作、学习、实践机会。其次，还要感谢 gtihub 上我校验书稿的网友（限于篇幅无法一一列出），他们帮我指出了大量的笔误、不严谨的内容，提升了书稿的质量。
 
 最后，谨将本书献给我的家人以及热爱技术的朋友们。
 
