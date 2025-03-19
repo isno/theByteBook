@@ -4,9 +4,9 @@ QUIC（Quick UDP Internet Connection，快速 UDP 网络连接）是一种基于
 
 很多人可能以为是 IETF 在推动 QUIC 替代 TCP。实际上，这项工作始于 Google。
 
-早在 2013 年，Google 就在自家服务（如 Google.com、YouTube.com）及 Chrome 浏览器中启用了名为“QUIC”（业内称为 gQUIC）的全新传输协议。2015 年，Google 将 gQUIC 提交给 IETF，经 IETF 规范化后的 QUIC 被称为“iQUIC”。早期的 iQUIC 有多个“草稿”版本，如 h3-27、h3-29 和 h3 v1。2018 年末，IETF 发布了基于 QUIC 协议的新一代互联网标准 HTTP/3。
+早在 2013 年，Google 就在自家服务（如 Google.com、YouTube.com）及 Chrome 浏览器中启用了名为“QUIC”（业内称为 gQUIC）的全新传输协议。2015 年，Google 将 gQUIC 提交给 IETF，经 IETF 规范化后的 QUIC 被称为“iQUIC”。早期的 iQUIC 有多个“草稿”版本，如 h3-27、h3-29 和 h3 v1。2018 年末，IETF 启动 HTTP/3 的标准化工作，并在 5 年后 (2022 年 6 月）将其正式定义为 RFC 9114，成为 HTTP 的第三个主要版本。
 
-根据图 2-24，可以看出 HTTP/3 最大的特点是底层基于 UDP 、默认集成了 TLS 安全协议。
+根据图 2-24，可以看出 HTTP/3 最大的特点是底层基于 QUIC/UDP、默认集成了 TLS 安全协议。
 
 :::center
   ![](../assets/http-quic.png)<br/>
