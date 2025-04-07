@@ -1,11 +1,10 @@
 # 2.5.2 HTTPS 优化实践
 
-众所周知，HTTPS 请求出了名的慢。在未进行优化的情况下，HTTPS 的延迟比 HTTP 高出几百毫秒。本节，将介绍 4 种优化手段来降低 HTTPS 请求的延迟。
+众所周知，HTTPS 请求出了名的慢。未优化的情况下，HTTPS 的延迟比 HTTP 高出几百毫秒。本节将介绍 4 种优化手段降低 HTTPS 请求的延迟。
 
 ## 1. 使用 TLS1.3 协议 
 
-2018 年发布的 TLS 1.3 协议优化了 SSL 握手过程，将握手时间缩短至 1 次 RTT；若复用已有连接，还能实现 0 RTT（通过 early_data 机制）。
-
+2018 年发布的 TLS 1.3 协议通过优化 SSL 握手过程，将握手时延缩短至 1 RTT；在复用连接的情况下，还可利用 early_data 机制实现 0 RTT。
 :::center
   ![](../assets/tls1.3.png)<br/>
  图 2-17 TLS1.3 对比 TLS1.2
@@ -23,10 +22,12 @@ server {
 ## 2. 使用 ECC 证书
 
 HTTPS 数字证书分为 RSA 证书和 ECC 证书，二者的区别如下：
-- **RSA 证书**使用 RSA 算法生成公钥，兼容性较好，但不支持完美前向保密（PFS）。PFS 可确保即使私钥泄露，泄露之前的通信内容仍无法被破解。
-- **ECC 证书**使用椭圆曲线加密算法（Elliptic Curve Cryptography）生成公钥，提供更高的计算速度和安全性，并支持 PFS。ECC 能以较小的密钥长度提供相同或更高的安全性。例如，256 位的 ECC 密钥相当于 3072 位的 RSA 密钥。
+- RSA 证书：在传统安全通信和数字签名应用中占主导地位，适用于对兼容性要求高，对性能要求不苛刻的场景。
+- ECC 证书：是新一代加密算法趋势，适合移动互联网、物联网等对资源敏感的场景，以及对安全性和性能要求高的新应用。
 
-ECC 证书的唯一缺点是兼容性“稍差”。在 Windows XP 上，只有 Firefox 支持访问使用 ECC 证书的网站（因其独立实现 TLS，不依赖操作系统）；在 Android 平台上，需 Android 4.0 以上版本才能支持 ECC 证书。好消息是，从 Nginx 1.11.0 开始，支持配置 RSA/ECC 双证书。在 TLS 握手过程中，Nginx 会根据双方协商的密码套件（Cipher Suite）返回证书。如果支持 ECDSA 算法，则返回 ECC 证书；否则，返回 RSA 证书。
+ECC 证书的优点是加密和解密操作更快速，对计算资源需求低，也更安全。在相同安全级别下，256 位的 ECC 密钥安全性大致相当于 3072 位的 RSA 密钥。
+
+ECC 证书的主要缺点是兼容性较弱，一些“古代”系统（如 Windows XP、Android 4.0 等）不支持。值得庆幸的是，Nginx 自 1.11.0 起支持同时配置 RSA 和 ECC 证书。在 TLS 握手时，Nginx 会根据客户端支持的密码套件（Cipher Suite）选择兼容的证书。
 
 Nginx 双证书配置示例如下：
 
@@ -45,9 +46,9 @@ server {
     # 其他 SSL 配置...
 }
 ```
-需要注意的是，配置了 ECC 证书并不意味着它一定会生效。ECC 证书的生效与客户端和服务端协商的密码套件（Cipher Suite）密切相关。密码套件决定了通信双方使用的加密、认证算法和密钥交换算法。
+需要注意的是，配置了 ECC 证书并不意味着它一定会生效。ECC 证书的生效与客户端和服务端协商的密码套件（Cipher Suite）密切相关。
 
-以下是密码套件的配置示例：
+Nginx 中密码套件的相关配置如下所示：
 
 ```nginx
 server {
@@ -59,7 +60,7 @@ server {
     # 其他 SSL 配置...
 }
 ```
-可以使用 openssl ciphers 命令查看服务器中指定的 ssl_ciphers 配置所支持的密码套件及其优先级。例如，运行以下命令查看支持的密码套件：
+接下来使用 openssl ciphers -V 命令查看服务端支持的密码套件，及其优先级：
 
 ```bash
 $ openssl ciphers -V 'ECDHE+CHACHA20:ECDHE+CHACHA20-draft:ECDSA+AES128:ECDHE+AES128:RSA+AES128:RSA+3DES' | column -t
@@ -73,12 +74,11 @@ $ openssl ciphers -V 'ECDHE+CHACHA20:ECDHE+CHACHA20-draft:ECDSA+AES128:ECDHE+AES
 
 通过上面的输出，可以看到使用 ECDSA 签名认证算法（Au=ECDSA）的密码套件优先于使用 RSA 签名认证算法（Au=RSA）的套件。这种优先级确保在客户端支持的情况下，服务器优先选择 ECC 证书。
 
-
 ## 3. 调整 https 会话缓存
 
-HTTPS 连接建立后，会生成一个会话（session），用于保存客户端和服务器之间的安全连接信息。如果会话未过期，后续连接可复用先前的握手结果，从而提高连接效率。
+HTTPS 连接建立后，会创建一个会话（session），用于存储客户端与服务器之间的安全连接信息。在会话未过期的情况下，后续连接可复用先前的握手结果，从而提升连接效率。
 
-Nginx 中与会话相关的配置如下：
+Nginx 处理会话的相关配置如下：
 
 ```nginx
 server {
@@ -151,6 +151,6 @@ OCSP Response Data:
 |ECC 证书 + TLS1.2| 639.39| 100|203.319ms|
 |ECC 证书 + TLS1.3| 627.39| 100|159.390ms|
 
-测试结果表明，使用 ECC 证书相比 RSA 证书在性能上有显著提升。即使 RSA 证书启用了硬件加速技术 QAT（Quick Assist Technology），与 ECC 证书相比仍存在明显差距。此外，QAT 需要额外购买硬件，且维护成本较高，因此不再推荐使用。
+测试结果表明，使用 ECC 证书相比 RSA 证书在性能上有显著提升。即使 RSA 证书使用了 QAT（Quick Assist Technology，Intel推出的硬件加速技术）加速，与 ECC 证书相比仍存在明显差距。此外，使用QAT 技术需要购买专用的硬件，维护成本较高，因此不再推荐使用。
 
 综合考虑，建议 HTTPS 配置采用 TLS 1.3 协议与 ECC 证书。
