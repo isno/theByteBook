@@ -14,6 +14,10 @@
         </div>
       </div>
       <CommentService :darkmode="isDarkMode" class="layout-comment" />
+       <div class="qrcode">
+         <img src="../../assets/qrcode-v2.png" width = "120"  align=center />
+      </div>
+
     </template>
   </ParentLayout>
 </template>
@@ -56,8 +60,9 @@
 <style lang="scss" scoped>
   .qrcode {
     position: fixed;
-    bottom: 60px;
+    bottom: 40px;
     right: 20px;
+    border:1px solid #444
   }
 
   @media screen and (max-width: 1024px) {
