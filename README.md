@@ -3,11 +3,14 @@
 
 ## 这是什么？
 
-这是一本关于架构设计的开源书籍，已经完稿。如果阅读文章发现问题，欢迎在 github 给我提交 PR 或者 issue。
+这是一本关于架构设计的开源书籍，已经出版。如果阅读文章发现问题，欢迎在 github 给我提交 PR 或者 issue。
 
-以下为我的公众号，欢迎与我讨论技术。
+- 出版书籍名称 **[《深入高可用系统原理与设计》](https://item.jd.com/14531549.html)**，在京东、淘宝搜索书名可购买。
+- 【京东购买】[https://item.jd.com/14531549.html](https://item.jd.com/14531549.html)
+
+
 <div  align="left">
-	<img src="./assets/qrcode-v2.png" width = "250"  align=center />
+    <img src="./assets/thebytebook.jpg" width = "500"  align=center />
 </div>
 
 

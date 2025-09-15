@@ -15,7 +15,8 @@
       </div>
       <CommentService :darkmode="isDarkMode" class="layout-comment" />
        <div class="qrcode">
-         <img src="../../assets/qrcode-v2.png" width = "120"  align=center />
+         <p>书籍已出版 <a href="https://item.jd.com/14531549.html">【在京东购买】</a> </p>
+        <p><img src="../../assets/thebytebook.jpg" width = "160"  align=center /></p>
       </div>
 
     </template>
@@ -59,10 +60,12 @@
 </script>
 <style lang="scss" scoped>
   .qrcode {
+    text-align: center;
     position: fixed;
     bottom: 40px;
     right: 20px;
-    border:1px solid #444
+    border:2px solid #444;
+    background: white;
   }
 
   @media screen and (max-width: 1024px) {
