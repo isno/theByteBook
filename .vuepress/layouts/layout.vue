@@ -15,7 +15,7 @@
       </div>
       <CommentService :darkmode="isDarkMode" class="layout-comment" />
        <div class="qrcode">
-         <p>书籍已出版 <a href="https://item.jd.com/14531549.html">【在京东购买】</a> </p>
+         <p>书籍已出版 <a href="https://item.jd.com/10183653901041.html">【在京东购买】</a> </p>
         <p><img src="../../assets/thebytebook.jpg" width = "160"  align=center /></p>
       </div>
 
