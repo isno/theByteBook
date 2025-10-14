@@ -16,7 +16,7 @@
       <CommentService :darkmode="isDarkMode" class="layout-comment" />
        <div class="qrcode">
          <p>书籍已出版 <a href="https://item.jd.com/14531549.html">【在京东购买】</a> </p>
-        <p><img src="../../assets/IMG_5253.JPG" width = "160"  align=center /></p>
+        <p><img src="../../assets/IMG_5253.jpg" width = "160"  align=center /></p>
       </div>
 
     </template>
